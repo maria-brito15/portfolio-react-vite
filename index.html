@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Duda Brito | Engenharia de Software & Arquitetura</title>
+    <meta
+      name="description"
+      content="Portfólio de Duda Brito – estudante de Engenharia de Software na interseção entre Software Architecture, System Design, Product Engineering e IA."
+    />
+    <meta property="og:title" content="Duda Brito — Engenharia de Software & Arquitetura" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/assets/og-image.png" />
+    <link rel="icon" type="image/png" href="/assets/portfolio.jpeg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      // Aplica o tema salvo antes do primeiro desenho, evitando o flash do tema errado.
+      try {
+        var theme = localStorage.getItem('portfolio-theme');
+        if (theme === 'light' || theme === 'dark')
+          document.documentElement.setAttribute('data-theme', theme);
+        if (localStorage.getItem('portfolio-lang') === 'en') document.documentElement.lang = 'en';
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

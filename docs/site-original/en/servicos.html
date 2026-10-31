@@ -1,0 +1,488 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      Web Services — Duda Brito | Websites, E-commerce & Custom Systems
+    </title>
+    <meta
+      name="description"
+      content="Custom websites, e-commerce, and systems in Belo Horizonte. From design to deploy – free quote."
+    />
+    <link rel="icon" type="image/png" href="../favicon.png" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../style.css" />
+  </head>
+  <body>
+    <div id="cur"></div>
+    <div id="cdot"></div>
+    <div class="grid-bg"></div>
+    <nav>
+      <a href="index.html" class="logo">mariab.dev</a>
+      <ul class="nav-links">
+        <li><a href="#services">Services</a></li>
+        <li><a href="#cases">Case Studies</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <div class="nav-right">
+        <button class="theme-toggle" onclick="toggleTheme()">
+          <span id="themeIcon">☀️</span><span id="themeLabel">Light Mode</span>
+        </button>
+        <button
+          class="theme-toggle"
+          onclick="window.location.href = '../pt/servicos.html'"
+        >
+          <span>🌍</span><span>PT-BR</span>
+        </button>
+      </div>
+    </nav>
+
+    <section class="hero">
+      <div class="glow"></div>
+      <div>
+        <div class="badge">
+          <span class="bdot"></span> OPEN FOR NEW PROJECTS
+        </div>
+        <h1>Websites & Systems<br /><em>tailored for you</em></h1>
+        <p class="hero-sub">
+          From design to deploy. Institutional websites, e-commerce, and systems
+          that combine solid code with flawless design.
+          <strong
+            >Robust backend (Node.js, Java) and solutions architected for
+            evolution, maintainability, and scalability.</strong
+          >
+        </p>
+        <div class="hero-ctas">
+          <a href="mailto:mariab.dev@zohomail.com" class="btn"
+            >Request a quote →</a
+          ><a href="#services" class="btn-o">View services</a>
+        </div>
+        <div class="trust-bar">
+          <span class="trust-item">⚡ Production Ready</span
+          ><span class="trust-item">🎨 Design Included</span
+          ><span class="trust-item">📱 100% Responsive</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="services" class="sec">
+      <div class="lbl">Services</div>
+      <h2 class="stitle">What I can<br /><em>offer you</em></h2>
+      <div class="services-grid">
+        <div class="svc-card ap">
+          <div class="svc-icon">🏢</div>
+          <h3>Institutional Website</h3>
+          <p>
+            Complete professional website with presentation, about, services and
+            contact pages. Responsive, fast and SEO‑friendly.
+          </p>
+          <div class="svc-meta">
+            <span class="svc-meta-item">💰 starting at $60 USD</span
+            ><span class="svc-meta-item">⏱ ~2 weeks</span
+            ><span class="svc-meta-item">🌐 domain ~$8/year</span>
+          </div>
+        </div>
+        <div class="svc-card ap">
+          <div class="svc-icon">🛍️</div>
+          <h3>Catalog + WhatsApp</h3>
+          <p>
+            Dynamic catalog with admin panel. Customers browse, choose, and are
+            redirected to WhatsApp with automatic message.
+          </p>
+          <div class="svc-meta">
+            <span class="svc-meta-item">💰 starting at $160 USD</span
+            ><span class="svc-meta-item">⏱ ~5 weeks</span
+            ><span class="svc-meta-item">🌐 ~$20/month (host + domain)</span>
+          </div>
+        </div>
+        <div class="svc-card ap">
+          <div class="svc-icon">🛒</div>
+          <h3>Full E‑commerce</h3>
+          <p>
+            Platform with cart, checkout, online payments (credit card, Pix,
+            boleto), order management and automatic shipping calculation.
+          </p>
+          <div class="svc-meta">
+            <span class="svc-meta-item">💰 starting at $500 USD</span
+            ><span class="svc-meta-item">⏱ ~12 weeks</span
+            ><span class="svc-meta-item">🌐 ~$30–40/month + 3–5% per sale</span>
+          </div>
+        </div>
+        <div class="svc-card ap">
+          <div class="svc-icon">⚡</div>
+          <h3>SPA / Landing Page</h3>
+          <p>
+            High‑conversion single page for campaigns, launches or lead capture.
+            Delivered fast, result‑focused.
+          </p>
+          <div class="svc-meta">
+            <span class="svc-meta-item">💰 starting at $40 USD</span
+            ><span class="svc-meta-item">⏱ ~1 week</span
+            ><span class="svc-meta-item">🌐 domain ~$8/year</span>
+          </div>
+        </div>
+        <div class="svc-card ap">
+          <div class="svc-icon">🔧</div>
+          <h3>Maintenance & Improvements</h3>
+          <p>
+            Update existing sites, bug fixes, performance/SEO improvements, new
+            sections and features.
+          </p>
+          <div class="svc-meta">
+            <span class="svc-meta-item">💰 quote based</span
+            ><span class="svc-meta-item">⏱ variable</span
+            ><span class="svc-meta-item">🌐 depends on current infra</span>
+          </div>
+        </div>
+        <a
+          href="mailto:mariab.dev@zohomail.com"
+          class="svc-card ap"
+          style="
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border-style: dashed;
+            border-color: rgba(255, 140, 0, 0.35);
+            background: rgba(255, 140, 0, 0.04);
+          "
+          ><div>
+            <div class="svc-icon">💬</div>
+            <h3 style="color: var(--g)">Didn't find what you need?</h3>
+            <p>
+              No problem — every project is unique. Send me a message anyway and
+              we'll talk about what you have in mind.
+            </p>
+          </div>
+          <span class="price-tag" style="align-self: flex-start"
+            >send a message →</span
+          ></a
+        >
+      </div>
+      <div class="design-disclaimer ap">
+        <div class="design-disclaimer-icon">🎨</div>
+        <div class="design-disclaimer-body">
+          <span class="design-disclaimer-label">✦ About design</span>
+          <h3>What about the design?</h3>
+          <p>
+            All projects already come with a visual — you don't need to worry
+            about that. If you <strong>don't have a design</strong>, I create
+            the interface using tools like Figma Make: you send me the idea,
+            references, or style you like, and I put together something suitable
+            for the project. If you
+            <strong>already have a design ready in Figma</strong> or a
+            well‑defined reference, I replicate it faithfully.
+          </p>
+          <p
+            style="
+              font-size: 0.82rem;
+              color: var(--t3);
+              margin-top: 0.5rem;
+              margin-bottom: 0;
+            "
+          >
+            ⚠️ I'm not a professional designer — the focus is to deliver
+            something functional and presentable. For projects that require
+            elaborated visual identity or branding, I recommend involving a
+            specialized designer.
+          </p>
+          <div class="svc-meta">
+            <span class="svc-meta-item">🖌️ Figma Make · AI generation</span
+            ><span class="svc-meta-item">✏️ Recreation of specified design</span
+            ><span class="svc-meta-item">✅ Included in all projects</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider">
+      <div class="section-divider-line"></div>
+      <div class="section-divider-label">✦ real cases</div>
+      <div class="section-divider-line"></div>
+    </div>
+    <section id="cases" class="sec">
+      <div class="lbl">Featured case studies</div>
+      <h2 class="stitle">Projects <em>delivered</em></h2>
+      <div class="case-card ap">
+        <div class="case-content">
+          <div class="case-badge">⭐ Complete case — Design + Dev</div>
+          <h3>BECAS | Study Room</h3>
+          <p>
+            Educational materials platform for higher education focused on
+            Medicine. I was responsible for the entire creative and technical
+            process: from visual identity to production system.
+          </p>
+          <p>
+            Brand design, store interface, and full backend with Hotmart
+            integration, PDF processing, JWT authentication, and deployment on
+            Render.
+          </p>
+          <div class="deliverables">
+            <span class="del-tag">Visual identity</span
+            ><span class="del-tag">UI / UX Design</span
+            ><span class="del-tag">Java Backend</span
+            ><span class="del-tag">Hotmart Integration</span
+            ><span class="del-tag">PDF Processing</span
+            ><span class="del-tag">Mobile-first</span>
+          </div>
+        </div>
+        <div class="case-img-grid cols-2">
+          <div class="img-wrap">
+            <img src="../cases/becas/1.jpeg" alt="BECAS" />
+          </div>
+          <div class="img-wrap">
+            <img src="../cases/becas/2.jpeg" alt="BECAS" />
+          </div>
+          <div class="img-wrap">
+            <img src="../cases/becas/3.jpeg" alt="BECAS" />
+          </div>
+          <div class="img-wrap">
+            <img src="../cases/becas/4.jpeg" alt="BECAS" />
+          </div>
+        </div>
+      </div>
+      <div class="case-card ap">
+        <div class="case-content">
+          <div class="case-badge">⭐ Design case</div>
+          <h3>Ágape Vestir</h3>
+          <p>
+            Urban Christian fashion brand with strong identity and clear
+            purpose.
+          </p>
+          <p>
+            I developed the complete design: visual identity, editorial layout,
+            and institutional website project with collection catalog — uniting
+            faith, authenticity, and urban style into a cohesive visual
+            experience.
+          </p>
+          <div class="deliverables">
+            <span class="del-tag">Visual identity</span
+            ><span class="del-tag">UI / UX Design</span
+            ><span class="del-tag">Responsive website</span
+            ><span class="del-tag">Collection catalog</span
+            ><span class="del-tag">Digital lookbook</span>
+          </div>
+        </div>
+        <div class="case-img-grid cols-3">
+          <div class="img-wrap">
+            <img src="../cases/agape/1.jpg" alt="Ágape" />
+          </div>
+          <div class="img-wrap">
+            <img src="../cases/agape/2.jpg" alt="Ágape" />
+          </div>
+          <div class="img-wrap">
+            <img src="../cases/agape/3.jpg" alt="Ágape" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq" class="sec" style="padding-top: 0">
+      <div class="faq-wrap ap">
+        <div style="margin-bottom: 1.5rem">
+          <span class="lbl" style="margin-bottom: 0.5rem">Questions</span>
+          <h3
+            style="
+              font-family: &quot;Syne&quot;, sans-serif;
+              font-size: 1.3rem;
+              font-weight: 800;
+              margin: 0;
+            "
+          >
+            Frequently Asked Questions
+          </h3>
+        </div>
+        <div class="faq-list">
+          <div class="faq-item">
+            <button class="faq-q" aria-expanded="false">
+              <span>Do I need to have a domain and hosting before hiring?</span
+              ><svg
+                class="faq-chevron"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </button>
+            <div class="faq-a">
+              <div class="faq-a-inner">
+                <p>
+                  No! I take care of everything for you. I recommend the best
+                  options according to your project, help you purchase, and do
+                  all the configuration.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" aria-expanded="false">
+              <span>What is the difference between hosting and domain?</span
+              ><svg
+                class="faq-chevron"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </button>
+            <div class="faq-a">
+              <div class="faq-a-inner">
+                <p>
+                  The <strong>domain</strong> is your website address — paid
+                  annually (~$8–15/year). <strong>Hosting</strong> is the server
+                  where files live — simple sites can use free plans,
+                  catalogs/e‑commerce need paid servers (~$20–40/month).
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" aria-expanded="false">
+              <span>How long does it take to be ready?</span
+              ><svg
+                class="faq-chevron"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </button>
+            <div class="faq-a">
+              <div class="faq-a-inner">
+                <p>
+                  Landing page ~1 week, institutional ~2 weeks, catalog ~5
+                  weeks, full e‑commerce ~12 weeks.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" aria-expanded="false">
+              <span>Will I be able to edit the website after it's ready?</span
+              ><svg
+                class="faq-chevron"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </button>
+            <div class="faq-a">
+              <div class="faq-a-inner">
+                <p>
+                  Yes! Projects with admin panel (catalog and e‑commerce) are
+                  built for you to manage on your own — add products, update
+                  prices, edit texts.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" aria-expanded="false">
+              <span>How does payment work?</span
+              ><svg
+                class="faq-chevron"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </button>
+            <div class="faq-a">
+              <div class="faq-a-inner">
+                <p>
+                  Usually 50% upfront, 50% upon delivery. Payment via bank
+                  transfer, Pix (Brazil), or PayPal.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" aria-expanded="false">
+              <span>Will the website appear on Google?</span
+              ><svg
+                class="faq-chevron"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </button>
+            <div class="faq-a">
+              <div class="faq-a-inner">
+                <p>
+                  All projects are delivered with basic SEO configured: titles,
+                  descriptions, semantic structure, and optimized speed.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="contact-wrap" id="contact">
+      <div class="cbg"></div>
+      <div class="cinner">
+        <div class="lbl" style="justify-content: center">Contact</div>
+        <h2 class="stitle">Let's create<br /><em>something amazing?</em></h2>
+        <p style="color: var(--t2); max-width: 440px; margin: 0 auto">
+          Open to website, e‑commerce, catalog, and system projects. Send me a
+          message — I reply fast!
+        </p>
+        <div class="clinks">
+          <a class="clink" href="mailto:mariab.dev@zohomail.com">✉️ Email</a
+          ><a
+            class="clink"
+            href="https://linkedin.com/in/maria-eduarda-brito-a18064358"
+            target="_blank"
+            >💼 LinkedIn</a
+          ><a
+            class="clink"
+            href="https://github.com/maria-brito15"
+            target="_blank"
+            >🐙 GitHub</a
+          >
+        </div>
+      </div>
+    </section>
+    <footer>
+      <p>Made with 💙 by Duda Brito · Belo Horizonte, MG · 2026</p>
+    </footer>
+    <div id="lightbox">
+      <button id="lb-close">✕</button><button id="lb-prev">‹</button
+      ><img id="lb-img" src="" /><button id="lb-next">›</button
+      ><span id="lb-counter"></span>
+    </div>
+    <script src="../script.js"></script>
+  </body>
+</html>

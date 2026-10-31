@@ -1,0 +1,18 @@
+# Configuração de publicação no Netlify (ver docs/DEPLOY.md).
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+  # Os três IDs do EmailJS são públicos e ficam no JavaScript do site por
+  # projeto do SDK. Sem isto, o "secrets scanning" do Netlify poderia reprovar
+  # o build ao encontrá-los em dist/.
+  SECRETS_SCAN_OMIT_KEYS = "VITE_EMAILJS_SERVICE_ID,VITE_EMAILJS_TEMPLATE_ID,VITE_EMAILJS_PUBLIC_KEY"
+
+# Fallback da SPA: qualquer rota vai para index.html (arquivos estáticos
+# existentes, como /assets/*, continuam sendo servidos normalmente).
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

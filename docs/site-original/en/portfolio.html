@@ -1,0 +1,498 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portfolio — Duda Brito | Software Engineering & Architecture</title>
+    <meta
+      name="description"
+      content="Duda Brito's portfolio – Software Engineering student at the intersection of Software Architecture, System Design, Product Engineering and AI. Real projects and how she thinks about systems."
+    />
+    <meta property="og:title" content="Portfolio — Duda Brito" />
+    <meta property="og:image" content="assets/og-image.png" />
+    <link rel="icon" type="image/png" href="../favicon.png" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../style.css" />
+  </head>
+  <body>
+    <div class="grid-bg"></div>
+    <nav>
+      <a href="index.html" class="logo">mariab.dev</a>
+      <ul class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#portfolio">Projects</a></li>
+        <li><a href="#extra">Extracurricular</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <div class="nav-right">
+        <button class="theme-toggle" onclick="toggleTheme()">
+          <span id="themeIcon">☀️</span><span id="themeLabel">Light mode</span>
+        </button>
+        <button
+          class="theme-toggle"
+          onclick="window.location.href = '../pt/portfolio.html'"
+        >
+          <span>🌍</span><span>PT-BR</span>
+        </button>
+      </div>
+    </nav>
+
+    <section class="hero">
+      <div class="glow"></div>
+      <div>
+        <div class="badge">
+          <span class="bdot"></span>
+          <span class="page-tag">Software Engineering · PUC Minas</span>
+        </div>
+        <h1>
+          I design systems,<br />
+          not just write <em>code</em>
+        </h1>
+        <p class="hero-sub">
+          I care more about how a whole system fits together than just writing
+          code to make it run. I work with
+          <strong>Software Architecture</strong>,
+          <strong>System Design</strong> and
+          <strong>Project Management</strong>, using Node.js/TypeScript and Java
+          day to day. But lately what interests me most is taking those
+          technical decisions and turning them into something that actually
+          makes sense for the business, planning, priorities, talking to
+          whoever's going to use it.
+        </p>
+        <div class="hero-ctas">
+          <a href="https://github.com/maria-brito15" target="_blank" class="btn"
+            >GitHub →</a
+          ><a href="#portfolio" class="btn-o">View Projects</a>
+        </div>
+        <div class="hero-pills">
+          <span class="hero-pill">Software Architecture</span
+          ><span class="hero-pill">System Design</span
+          ><span class="hero-pill">Project Management</span
+          ><span class="hero-pill">AI-Augmented Engineering</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" class="sec">
+      <div class="lbl">Who I am</div>
+      <h2 class="stitle">About <em>me</em></h2>
+      <div class="about-grid">
+        <div class="about-left ap">
+          <div class="about-avatar-wrap">
+            <div class="about-avatar">
+              <img
+                src="../assets/portfolio.jpeg"
+                alt="Photo of Maria Eduarda Brito"
+                style="width: 100%; height: 100%; object-fit: cover"
+              />
+            </div>
+            <div class="about-avatar-dot"></div>
+          </div>
+          <div class="about-name">Maria Eduarda "Duda" P. Brito</div>
+          <div class="about-role">Software Engineering · PUC Minas</div>
+          <div class="about-loc">
+            Belo Horizonte, Brazil<br />
+            Portuguese (native) · English (advanced) · French (basic)
+          </div>
+          <div class="about-links">
+            <a
+              href="mailto:mariaeduardadepaulabrito@gmail.com"
+              class="about-link"
+              >✉️ mariaeduardadepaulabrito@gmail.com</a
+            ><a href="https://github.com/maria-brito15" class="about-link"
+              >💻 github.com/maria-brito15</a
+            ><a
+              href="https://linkedin.com/in/maria-eduarda-brito-a18064358"
+              class="about-link"
+              >💼 LinkedIn</a
+            >
+          </div>
+        </div>
+        <div class="about-right ap">
+          <p class="about-bio">
+            I'm halfway through Software Engineering at PUC Minas (spent some
+            time in Computer Science too), and honestly that's what I do: take a
+            messy problem and figure out how to turn it into something
+            structured, something that works technically and actually makes
+            sense for whoever's using it.
+          </p>
+          <p class="about-bio">
+            Over time I noticed I like the architecture and planning side of
+            things more than just sitting down and coding. That pulled me toward
+            <strong>technical leadership</strong>,
+            <strong>strategic planning</strong>, and figuring out how to connect
+            a technical solution to what the business actually needs, talking to
+            stakeholders, hitting deadlines, delivering properly.
+          </p>
+          <p class="about-bio">
+            I've also been paying close attention to how AI is changing the way
+            software gets built. Not just as a shortcut to code faster, but as
+            something that changes the whole process, from
+            <strong>Specification-Driven Development</strong> to
+            <strong>AI-augmented engineering</strong>. I want to work somewhere
+            humans and AI complement each other instead of one replacing the
+            other. In the end, what I want is to work between architecture,
+            product and leadership, without forgetting that behind every system
+            there's someone trying to solve a real problem.
+          </p>
+
+          <div class="interests">
+            <div class="lbl">Areas of interest</div>
+            <div class="interests-list">
+              <span>Software Architecture</span>
+              <span>System Design</span>
+              <span>Project Management</span>
+              <span>Strategic Planning</span>
+              <span>Artificial Intelligence</span>
+              <span>Specification-Driven Development</span>
+              <span>AI-Augmented Engineering</span>
+              <span>Engineering Leadership</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider">
+      <div class="section-divider-line"></div>
+      <div class="section-divider-label">stack</div>
+      <div class="section-divider-line"></div>
+    </div>
+    <section id="skills" class="sec">
+      <div class="lbl">Tools</div>
+      <h2 class="stitle">What I <em>build with</em></h2>
+      <div class="skills-block">
+        <div class="sk-row ap">
+          <h3>Development</h3>
+          <p>
+            Java, Spring Boot · TypeScript, Node.js, Express · React, Next.js ·
+            HTML5, CSS3, Tailwind CSS, Bootstrap
+          </p>
+        </div>
+        <div class="sk-row ap">
+          <h3>Data & APIs</h3>
+          <p>
+            PostgreSQL, MongoDB, Redis · Prisma ORM · REST APIs, JWT, BCrypt ·
+            BullMQ (queues and workers) · AI API integration
+          </p>
+        </div>
+        <div class="sk-row ap">
+          <h3>Infrastructure</h3>
+          <p>Docker · GitHub Actions (CI/CD) · Git · Maven</p>
+        </div>
+        <div class="sk-row ap">
+          <h3>Engineering</h3>
+          <p>
+            Domain-Driven Design · Clean Architecture · unit testing (Jest,
+            JUnit) · agile methodologies
+          </p>
+        </div>
+        <div class="sk-row ap">
+          <h3>Management & Leadership</h3>
+          <p>
+            Project Management · Strategic Planning · Technical Leadership ·
+            Stakeholder Communication
+          </p>
+        </div>
+        <div class="sk-row ap">
+          <h3>AI & Spec-Driven Engineering</h3>
+          <p>
+            Specification-Driven Development · AI-augmented engineering · human
+            + AI agent workflows · traceable architectural decisions
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider">
+      <div class="section-divider-line"></div>
+      <div class="section-divider-label">projects</div>
+      <div class="section-divider-line"></div>
+    </div>
+    <section id="portfolio" class="sec">
+      <div class="lbl">Work</div>
+      <h2 class="stitle">Featured <em>projects</em></h2>
+      <p
+        style="
+          color: var(--t2);
+          max-width: 62ch;
+          margin-bottom: 2.5rem;
+          font-size: 0.92rem;
+          line-height: 1.7;
+        "
+      >
+        The projects here didn't all start with the same purpose. Some I built
+        to really dig into architecture and reliability; others just to fix some
+        annoying everyday problem. I've split them along that line.
+      </p>
+
+      <div class="proj-grid">
+        <!-- WhatsApp Dispatcher — top priority -->
+        <div class="featured-card ap">
+          <div class="proj-header">
+            <div class="proj-ico">⚙️</div>
+            <span class="proj-bdg case">Case Study · Architecture Design</span>
+          </div>
+          <h3>WhatsApp Dispatcher</h3>
+          <p>
+            A WhatsApp message dispatch system for campaigns and automated
+            flows. The code is private, but I wrote up the reasoning behind
+            every decision in detail, why this architecture, what trade-offs I
+            made, what I'd do differently today. It's probably the piece that
+            best shows how I think about systems:
+            <strong>Domain-Driven Design</strong>,
+            <strong>Clean Architecture</strong>, and a structure inspired by
+            hexagonal architecture.
+          </p>
+          <a href="cases/whatsapp-dispatcher.html" class="btn"
+            >Read the Case Study →</a
+          >
+        </div>
+
+        <!-- EcoShop — architectural evolution -->
+        <div class="ecoshop-card ap">
+          <div class="ecoshop-info">
+            <div class="proj-header">
+              <div class="proj-ico">🌿</div>
+              <span class="proj-bdg award">Finalist · PUC Minas</span>
+            </div>
+            <h3
+              style="
+                font-family: &quot;Syne&quot;, sans-serif;
+                font-size: 1.4rem;
+                font-weight: 700;
+                margin-bottom: 0.75rem;
+              "
+            >
+              EcoShop
+            </h3>
+            <p
+              style="
+                color: var(--t2);
+                font-size: 0.9rem;
+                line-height: 1.7;
+                margin-bottom: 1.75rem;
+                max-width: 68ch;
+              "
+            >
+              A sustainable e-commerce platform that identifies recyclable
+              materials from photos and analyzes sustainability using AI. It
+              started as a school project and I later rewrote it from scratch,
+              on my own, and honestly the interesting part isn't the current
+              version, it's the gap between the two.
+            </p>
+
+            <div class="evo-grid">
+              <div class="evo-col">
+                <span class="evo-tag">v1 · 2025</span>
+                <p class="evo-stack">Java + Spark Framework</p>
+                <p class="evo-desc">
+                  The school version, picked among the semester's best projects.
+                  Classic MVC architecture, Controller → Service → DAO, direct
+                  connection to PostgreSQL via JDBC.
+                </p>
+                <div class="evo-points">
+                  <div>> Controllers, Services and DAOs split by entity</div>
+                  <div>> Session-based auth with BCrypt</div>
+                  <div>> Manual InputSanitizer against XSS</div>
+                  <div>> Tests with JUnit 5 + Mockito</div>
+                  <div>> Docker deploy on Render</div>
+                </div>
+              </div>
+              <div class="evo-arrow">→</div>
+              <div class="evo-col current">
+                <span class="evo-tag current">v2 · 2026 · current</span>
+                <p class="evo-stack">Next.js 15 + TypeScript</p>
+                <p class="evo-desc">
+                  I rewrote everything with a more modern stack: App Router,
+                  two-layer cache, typed ORM, stateless auth, and validation on
+                  every route.
+                </p>
+                <div class="evo-points">
+                  <div>
+                    > Two-layer cache: Redis (server) + stale-while-revalidate
+                    Map (client)
+                  </div>
+                  <div>Manual JDBC → Prisma ORM with typed schema</div>
+                  <div>
+                    Sessions → stateless JWT with centralized middleware
+                  </div>
+                  <div>> Zod validation on every route</div>
+                  <div>> CI/CD with GitHub Actions + Container Registry</div>
+                  <div>
+                    External services (Azure Custom Vision, Gemini) with
+                    graceful degradation
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <a
+              href="https://github.com/maria-brito15/ecoshop-nextjs"
+              target="_blank"
+              class="btn"
+              style="
+                width: fit-content;
+                font-size: 0.8rem;
+                padding: 0.55rem 1.2rem;
+              "
+              >View on GitHub →</a
+            >
+          </div>
+        </div>
+
+        <!-- Planoriza -->
+        <div class="proj-card ap">
+          <div class="proj-header">
+            <div class="proj-ico">📅</div>
+            <span class="proj-bdg award">Finalist · PUC Minas</span>
+          </div>
+          <h3>Planoriza</h3>
+          <p>
+            Born from a problem almost every student knows: to-do lists that
+            grow way past what you can actually finish, and just end up causing
+            frustration. The fix caps how many tasks you can add per day, adds a
+            streak system to keep you consistent, an interactive calendar, and a
+            built-in timer. Preventing burnout became a product decision, not an
+            afterthought.
+          </p>
+          <div class="stacks">
+            <span class="st">HTML5</span><span class="st">CSS3</span
+            ><span class="st">JavaScript</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="minor-projects">
+        <div class="minor-projects-label">Other projects</div>
+        <div class="minor-list">
+          <a
+            href="https://github.com/maria-brito15/shorturl-express"
+            target="_blank"
+            class="minor-item ap"
+          >
+            <span class="minor-item-name">ShortURL</span>
+            <span class="minor-item-desc"
+              >REST API for shortening URLs, with Redis caching and per-link
+              click tracking.</span
+            >
+            <span class="minor-item-stack"
+              >Express · TypeScript · MongoDB · Redis · Docker · CI/CD</span
+            >
+          </a>
+          <a
+            href="https://github.com/maria-brito15/file-name-standardizer"
+            target="_blank"
+            class="minor-item ap"
+          >
+            <span class="minor-item-name">File Name Standardizer</span>
+            <span class="minor-item-desc"
+              >Batch-standardizes file names, strips accents, swaps spaces for
+              underscores. No dependencies at all.</span
+            >
+            <span class="minor-item-stack">JavaScript ES6+</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider">
+      <div class="section-divider-line"></div>
+      <div class="section-divider-label">extracurricular</div>
+      <div class="section-divider-line"></div>
+    </div>
+    <section id="extra" class="sec">
+      <div class="lbl">Beyond the classroom</div>
+      <h2 class="stitle">Extracurricular <em>activities</em></h2>
+      <div class="extra-grid">
+        <div class="extra-card ap">
+          <span class="extra-bdg highlight">Current</span>
+          <h3>WebTech — Extension Project</h3>
+          <p>
+            I'm part of this extension project, with deadline, deliverables and
+            real work. It's basically a bridge between school and partner
+            companies in tech.
+          </p>
+          <div class="extra-meta"><span class="extra-tag">Teamwork</span></div>
+        </div>
+        <div class="extra-card ap">
+          <span class="extra-bdg highlight">2025–2026</span>
+          <h3>Finalist — Best Projects, PUC Minas</h3>
+          <p>Two-time finalist: EcoShop and Planoriza.</p>
+          <div class="extra-meta"><span class="extra-tag">PUC Minas</span></div>
+        </div>
+        <div class="extra-card ap">
+          <span class="extra-bdg">02/2026</span>
+          <h3>Teaching Assistant — Web Interface Development</h3>
+          <p>Was a TA for this course at PUC Minas.</p>
+        </div>
+        <div class="extra-card ap">
+          <span class="extra-bdg">01/2026</span>
+          <h3>Alura Immersion — Data Analysis with Python</h3>
+          <p>Learned pandas and matplotlib to work with data.</p>
+        </div>
+        <div class="extra-card ap">
+          <span class="extra-bdg">01/2026</span>
+          <h3>DevArt — Web Development</h3>
+          <p>
+            Course with Gustavo Campelo, covering Figma, responsive design and
+            animations.
+          </p>
+        </div>
+        <div class="extra-card ap">
+          <span class="extra-bdg">02/2025</span>
+          <h3>SBC Marathon — ICPC Brazil</h3>
+          <p>Took part in the national competitive programming marathon.</p>
+          <div class="extra-meta">
+            <span class="extra-tag">Algorithms</span>
+          </div>
+        </div>
+        <div class="extra-card ap">
+          <span class="extra-bdg">01/2025</span>
+          <h3>Computer Science Speaker</h3>
+          <p>Gave a talk in a programming outreach project at PUC Minas.</p>
+          <div class="extra-meta"><span class="extra-tag">Teaching</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="contact-wrap" id="contact">
+      <div class="cbg"></div>
+      <div class="cinner">
+        <div class="lbl" style="justify-content: center">Contact</div>
+        <h2 class="stitle" style="margin-left: auto; margin-right: auto">
+          Let's <em>talk</em>?
+        </h2>
+        <p style="color: var(--t2); max-width: 440px; margin: 0 auto">
+          If you've got an opportunity, a collaboration, or a project that seems
+          like a fit, reach out.
+        </p>
+        <div class="clinks">
+          <a class="clink" href="mailto:mariaeduardadepaulabrito@gmail.com"
+            >✉️ Email</a
+          ><a
+            class="clink"
+            href="https://linkedin.com/in/maria-eduarda-brito-a18064358"
+            target="_blank"
+            >💼 LinkedIn</a
+          ><a
+            class="clink"
+            href="https://github.com/maria-brito15"
+            target="_blank"
+            >🐙 GitHub</a
+          >
+        </div>
+      </div>
+    </section>
+    <footer><p>Made by Duda Brito · BH · 2026</p></footer>
+    <div id="lightbox" role="dialog">
+      <button id="lb-close">✕</button><button id="lb-prev">‹</button
+      ><img id="lb-img" src="" alt="" /><button id="lb-next">›</button
+      ><span id="lb-counter"></span>
+    </div>
+    <script src="../script.js"></script>
+  </body>
+</html>

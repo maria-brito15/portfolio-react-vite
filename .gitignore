@@ -1,0 +1,10 @@
+node_modules
+dist
+.env
+.env.local
+.DS_Store
+coverage
+
+# Documentação local de deploy e protótipos — não enviar para GitHub
+docs/DEPLOY.md
+docs/PROTOTIPOS.md

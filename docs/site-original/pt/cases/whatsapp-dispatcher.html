@@ -1,0 +1,1597 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Estudo de Caso: WhatsApp Dispatcher — Duda Brito</title>
+    <meta
+      name="description"
+      content="Estudo de caso de arquitetura: design de um sistema de disparo de mensagens no WhatsApp para campanhas e fluxos, explicado em texto claro, sem jargão desnecessário."
+    />
+    <meta
+      property="og:title"
+      content="Estudo de Caso: WhatsApp Dispatcher — Duda Brito"
+    />
+    <meta property="og:image" content="../assets/og-image.png" />
+    <link rel="icon" type="image/png" href="../../favicon.png" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../style.css" />
+    <style>
+      .case-shell {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 7rem 1.5rem 5rem;
+        display: grid;
+        grid-template-columns: 220px minmax(0, 720px);
+        gap: 3.5rem;
+        align-items: start;
+        min-width: 0;
+      }
+      .case-shell > aside,
+      .case-shell > div {
+        min-width: 0;
+      }
+      .case-toc {
+        position: sticky;
+        top: 6.5rem;
+        font-size: 0.82rem;
+      }
+      .case-toc-label {
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-size: 0.7rem;
+        color: var(--t3);
+        margin-bottom: 0.9rem;
+        font-weight: 600;
+      }
+      .case-toc ol {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 0.55rem;
+        border-left: 1px solid var(--bdr);
+        padding-left: 0.9rem;
+      }
+      .case-toc a {
+        color: var(--t2);
+        text-decoration: none;
+        line-height: 1.4;
+        display: block;
+        transition: color 0.15s;
+      }
+      .case-toc a:hover {
+        color: var(--accent);
+      }
+      .case-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--t2);
+        text-decoration: none;
+        font-size: 0.85rem;
+        margin-bottom: 1.6rem;
+        transition: color 0.2s;
+      }
+      .case-back:hover {
+        color: var(--accent);
+      }
+      .case-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 1.4rem;
+      }
+      .case-title {
+        font-family: "Syne", sans-serif;
+        font-size: clamp(1.9rem, 4vw, 2.7rem);
+        font-weight: 800;
+        line-height: 1.15;
+        margin-bottom: 1rem;
+      }
+      .case-sub {
+        color: var(--t2);
+        font-size: 1.02rem;
+        line-height: 1.75;
+        margin-bottom: 2.6rem;
+        padding-bottom: 2.4rem;
+        border-bottom: 1px solid var(--bdr);
+      }
+      .case-body h2 {
+        font-family: "Syne", sans-serif;
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin: 3.2rem 0 1.1rem;
+        scroll-margin-top: 6rem;
+      }
+      .case-body h2:first-child {
+        margin-top: 0;
+      }
+      .case-body h3 {
+        font-family: "Syne", sans-serif;
+        font-size: 1.08rem;
+        font-weight: 700;
+        margin: 1.9rem 0 0.8rem;
+        scroll-margin-top: 6rem;
+      }
+      .case-body p {
+        color: var(--t2);
+        font-size: 0.98rem;
+        line-height: 1.85;
+        margin-bottom: 1.15rem;
+      }
+      .case-body strong {
+        color: #eef0f3;
+        font-weight: 600;
+      }
+      [data-theme="light"] .case-body strong {
+        color: #1a1a1a;
+      }
+      .case-body ul,
+      .case-body ol.list {
+        color: var(--t2);
+        font-size: 0.98rem;
+        line-height: 1.85;
+        margin: 0 0 1.15rem 1.3rem;
+      }
+      .case-body li {
+        margin-bottom: 0.55rem;
+      }
+      .case-body code {
+        font-family: "SFMono-Regular", Consolas, monospace;
+        background: var(--bg3);
+        padding: 2px 6px;
+        border-radius: 5px;
+        font-size: 0.85em;
+        color: var(--accent);
+      }
+      .case-callout {
+        background: var(--bg2);
+        border: 1px solid rgba(102, 144, 242, 0.25);
+        border-left: 3px solid var(--accent);
+        border-radius: var(--r);
+        padding: 1.2rem 1.4rem;
+        margin: 1.7rem 0 2rem;
+        font-size: 0.94rem;
+        line-height: 1.75;
+        color: var(--t2);
+        box-shadow: var(--card-shadow);
+      }
+      .case-callout strong {
+        color: var(--accent);
+      }
+      .case-tech {
+        background: rgba(163, 116, 242, 0.06);
+        border: 1px solid rgba(163, 116, 242, 0.22);
+        border-radius: var(--r);
+        padding: 1rem 1.3rem;
+        margin: 0 0 1.6rem;
+        font-size: 0.88rem;
+        line-height: 1.75;
+        color: var(--t2);
+        box-shadow: var(--card-shadow);
+      }
+      [data-theme="light"] .case-tech {
+        background: rgba(124, 58, 201, 0.05);
+        border: 1px solid rgba(124, 58, 201, 0.22);
+      }
+      [data-theme="light"] .case-callout {
+        border: 1px solid rgba(63, 99, 201, 0.25);
+        box-shadow: var(--card-shadow);
+      }
+      [data-theme="light"] .case-example {
+        box-shadow: var(--card-shadow);
+      }
+      .case-tech-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        font-size: 0.66rem;
+        color: var(--accent-2);
+        font-weight: 700;
+        margin-bottom: 0.55rem;
+      }
+      .case-tech code {
+        color: var(--accent-2);
+      }
+      .case-example {
+        background: var(--bg2);
+        border: 1px solid var(--bdr);
+        border-radius: var(--r);
+        padding: 1.3rem 1.5rem;
+        margin: 1.6rem 0 2rem;
+        box-shadow: var(--card-shadow);
+      }
+      .case-example-label {
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        font-size: 0.68rem;
+        color: var(--accent-2);
+        font-weight: 700;
+        margin-bottom: 0.7rem;
+        display: block;
+      }
+      .case-example p {
+        margin-bottom: 0;
+        font-size: 0.93rem;
+      }
+      .case-example p + p {
+        margin-top: 0.8rem;
+      }
+      .case-table-wrap {
+        overflow-x: auto;
+        margin: 0 0 2rem;
+        -webkit-overflow-scrolling: touch;
+      }
+      .case-table {
+        width: 100%;
+        min-width: 480px;
+        border-collapse: collapse;
+        margin: 0;
+        font-size: 0.88rem;
+      }
+      .case-table th,
+      .case-table td {
+        text-align: left;
+        padding: 0.65rem 0.8rem;
+        border-bottom: 1px solid var(--bdr);
+        color: var(--t2);
+        vertical-align: top;
+      }
+      .case-table th {
+        color: var(--t3);
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.72rem;
+        letter-spacing: 0.05em;
+      }
+      .case-ctas {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.8rem;
+        margin-top: 3.2rem;
+        padding-top: 2.4rem;
+        border-top: 1px solid var(--bdr);
+      }
+      @media (max-width: 720px) {
+        .case-shell {
+          grid-template-columns: minmax(0, 1fr);
+          padding: 5.5rem 1.1rem 3.5rem;
+          gap: 0;
+        }
+        .case-shell > div {
+          min-width: 0;
+        }
+        .case-toc {
+          position: static;
+          margin: 0 0 3rem;
+          padding-bottom: 2rem;
+          border-bottom: 1px solid var(--bdr);
+        }
+        .case-title {
+          word-break: break-word;
+        }
+        .case-sub {
+          font-size: 0.95rem;
+          margin-bottom: 2rem;
+          padding-bottom: 1.8rem;
+        }
+        .case-body h2 {
+          font-size: 1.2rem;
+          margin: 2.4rem 0 0.9rem;
+        }
+        .case-body h3 {
+          font-size: 1rem;
+        }
+        .case-body p,
+        .case-body ul,
+        .case-body ol.list {
+          font-size: 0.92rem;
+        }
+        .case-callout,
+        .case-example,
+        .case-tech {
+          padding: 1rem 1.1rem;
+          font-size: 0.9rem;
+        }
+        .case-ctas {
+          flex-direction: column;
+        }
+        .case-ctas a {
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="grid-bg"></div>
+    <nav>
+      <a href="../index.html" class="logo">mariab.dev</a>
+      <ul class="nav-links">
+        <li><a href="../portfolio.html#sobre">Sobre</a></li>
+        <li><a href="../portfolio.html#portfolio">Projetos</a></li>
+        <li><a href="../portfolio.html#extra">Extracurricular</a></li>
+        <li><a href="../portfolio.html#contact">Contato</a></li>
+      </ul>
+      <div class="nav-right">
+        <button class="theme-toggle" onclick="toggleTheme()">
+          <span id="themeIcon">☀️</span><span id="themeLabel">Modo claro</span>
+        </button>
+        <button
+          class="theme-toggle"
+          onclick="
+            window.location.href = '../../en/cases/whatsapp-dispatcher.html'
+          "
+        >
+          <span>🌍</span><span>EN</span>
+        </button>
+      </div>
+    </nav>
+
+    <div class="case-shell">
+      <aside class="case-toc">
+        <div class="case-toc-label">Neste estudo de caso</div>
+        <ol>
+          <li><a href="#contexto">Contexto e Escopo</a></li>
+          <li><a href="#problema">O Problema Real</a></li>
+          <li><a href="#linguagem">Linguagem do Domínio</a></li>
+          <li><a href="#modelagem">Campanha vs. Fluxo</a></li>
+          <li><a href="#maquina-estados">Como uma Execução se Comporta</a></li>
+          <li><a href="#camadas">Separação em Camadas</a></li>
+          <li><a href="#filas">Processamento Assíncrono</a></li>
+          <li><a href="#workers">Os Três Workers</a></li>
+          <li><a href="#idempotencia">Idempotência e Entrega</a></li>
+          <li><a href="#cache-lock">Redis: Cache e Lock</a></li>
+          <li><a href="#persistencia">Persistência e Auditoria</a></li>
+          <li><a href="#trade-offs">Trade-offs Assumidos</a></li>
+          <li><a href="#producao">Rumo à Produção Real</a></li>
+          <li><a href="#glossario">Glossário</a></li>
+        </ol>
+      </aside>
+
+      <div>
+        <a href="../portfolio.html#portfolio" class="case-back"
+          >← Voltar aos projetos</a
+        >
+
+        <div class="case-meta">
+          <span class="proj-bdg case"
+            >Estudo de Caso · Design de Arquitetura</span
+          >
+          <span class="proj-bdg">Repositório privado</span>
+        </div>
+
+        <h1 class="case-title">WhatsApp Dispatcher</h1>
+        <p class="case-sub">
+          Registro do raciocínio de arquitetura por trás de um sistema de
+          disparo de mensagens no WhatsApp, campanhas e fluxos automatizados. O
+          foco está nas decisões: por que cada parte do sistema existe, o
+          problema específico que resolve e o que foi deixado de fora de
+          propósito, e não na implementação em si, que é parcial e privada. Cada
+          seção traz uma explicação em linguagem simples, seguida de um bloco
+          técnico com os termos e padrões formais por trás da decisão.
+        </p>
+
+        <div class="case-body">
+          <h2 id="contexto">Contexto e escopo</h2>
+          <p>
+            O projeto parte de um problema deliberadamente pequeno: um
+            disparador de mensagens no WhatsApp, do tipo usado para campanhas de
+            marketing ou sequências automáticas de mensagens, como um lembrete
+            de pagamento ou um "sentimos sua falta" alguns dias depois de um
+            cliente sumir. O escopo reduzido permite desenhar a arquitetura
+            inteira com cuidado, sem que o volume de detalhes de produto
+            atrapalhe a análise das decisões estruturais.
+          </p>
+          <p>
+            Apesar do tamanho pequeno, o domínio concentra uma complexidade
+            real: muitas mensagens saindo ao mesmo tempo, falhas parciais
+            esperadas como parte normal da operação, e a exigência de que o
+            sistema permaneça consistente mesmo quando alguma parte falha no
+            meio do caminho. São os mesmos tipos de desafio presentes em
+            sistemas de mensageria de escala maior, concentrados numa superfície
+            pequena o suficiente para justificar cada decisão em texto.
+          </p>
+          <div class="case-callout">
+            O objetivo deste documento é registrar decisões de arquitetura:
+            quais problemas cada uma resolve, quais alternativas foram
+            descartadas e por quê, e onde o escopo foi conscientemente limitado.
+            Não é uma demonstração de sistema funcionando de ponta a ponta.
+          </div>
+          <div class="case-tech">
+            <span class="case-tech-label">Em termos técnicos</span><br />
+            O planejamento seguiu um plano de nove fases inspirado em
+            <strong><em>Domain-Driven Design*</em></strong> estratégico e
+            tático: <strong><em>event storming*</em></strong> e definição de
+            <strong><em>bounded context*</em></strong> antes de qualquer código,
+            seguidos de modelagem de entidades, definição de contratos entre
+            camadas (<code>ports</code> e <code>adapters</code>, no espírito de
+            <strong><em>arquitetura hexagonal*</em></strong
+            >), e só então implementação de infraestrutura. O corte de escopo
+            ocorreu no ponto em que domínio, schema de dados (Prisma/PostgreSQL)
+            e contratos de porta já estavam desenhados e majoritariamente
+            implementados, antes de fechar a integração externa com a API do
+            WhatsApp.
+          </div>
+
+          <h2 id="problema">O problema real</h2>
+          <p>
+            Um sistema de disparo de WhatsApp parece simples de cara: uma lista
+            de contatos, uma mensagem, e envio para todo mundo. Na prática, esse
+            enunciado esconde quatro problemas distintos que exigem solução
+            própria.
+          </p>
+          <p>
+            O <strong>primeiro</strong> é o limite de velocidade de envio. Um
+            número que manda milhares de mensagens em poucos minutos pode ser
+            lido como comportamento suspeito e sofrer bloqueio pela própria
+            plataforma, da mesma forma como um cartão de crédito é bloqueado
+            preventivamente ao registrar muitas compras em sequência rápida
+            demais. Isso exige espaçar os envios com pausas variáveis entre
+            mensagens, em vez de disparar tudo de uma vez.
+          </p>
+          <p>
+            O <strong>segundo</strong> é a existência de sequências automáticas,
+            chamadas aqui de fluxos: uma sequência de boas-vindas com mensagem
+            no dia 1, dica no dia 3, oferta no dia 7. Isso exige que o sistema
+            mantenha, para cada pessoa, o ponto exato da sequência em que ela
+            está, de forma resiliente a reinícios e instabilidades no meio do
+            caminho.
+          </p>
+          <p>
+            O <strong>terceiro</strong> é a falha parcial como comportamento
+            esperado, não como exceção. Uma campanha para mil contatos tem uma
+            fração de falhas previsível (número inexistente, instabilidade
+            momentânea de rede) enquanto o restante é entregue sem problema. O
+            sistema precisa isolar essas falhas sem travar o que está
+            funcionando normalmente.
+          </p>
+          <p>
+            O <strong>quarto</strong> é o risco de tarefas penduradas: uma
+            mensagem marcada como "processando" no exato momento em que o
+            processo responsável trava ou reinicia, ficando presa nesse estado
+            sem que ninguém a processe de fato.
+          </p>
+          <p>
+            O núcleo do desafio está em manter o sistema íntegro diante de
+            falhas parciais, reinícios e limites externos impostos pela
+            plataforma de mensageria, não no envio da mensagem em si.
+          </p>
+          <div class="case-tech">
+            <span class="case-tech-label">Em termos técnicos</span><br />
+            Os quatro problemas descritos correspondem a preocupações clássicas
+            de sistemas distribuídos:
+            <strong><em>rate limiting*</em></strong> (para evitar bloqueio do
+            número pela própria plataforma),
+            <strong>gerenciamento de estado de longa duração</strong> em
+            processos assíncronos com delays de dias entre etapas,
+            <strong>tolerância a falhas parciais</strong> em processamento em
+            lote, e <strong>recuperação de jobs órfãos</strong> (tarefas presas
+            em estado intermediário por crash de processo). Nenhum desses
+            problemas é resolvido pela integração com o WhatsApp em si; todos
+            são responsabilidade da camada de orquestração.
+          </div>
+
+          <h2 id="linguagem">Linguagem do domínio</h2>
+          <p>
+            Antes de qualquer decisão técnica, os termos do domínio foram
+            definidos com precisão. O objetivo é evitar que a mesma palavra
+            represente coisas diferentes em partes distintas do sistema, o que
+            gera ambiguidade estrutural e bugs de difícil rastreio.
+          </p>
+          <div class="case-table-wrap">
+            <table class="case-table">
+              <thead>
+                <tr>
+                  <th>Termo</th>
+                  <th>O que significa aqui</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Contato</strong></td>
+                  <td>
+                    Pessoa que recebe as mensagens, identificada pelo número de
+                    telefone. A remoção de um contato não o apaga do sistema;
+                    ele fica marcado como removido, preservando o histórico do
+                    que já foi enviado.
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Campanha</strong></td>
+                  <td>
+                    Disparo único de uma mesma mensagem para um grupo de
+                    contatos, como uma promoção enviada uma vez só. Após o
+                    envio, a campanha está encerrada e não se repete
+                    automaticamente.
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Fluxo</strong></td>
+                  <td>
+                    Sequência de mensagens programadas, cada uma com tempo de
+                    espera próprio, como uma sequência de boas-vindas. Ao
+                    contrário da campanha, um fluxo não acontece de uma vez;
+                    cada pessoa avança por ele no próprio ritmo.
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Execução de um fluxo</strong></td>
+                  <td>
+                    Registro de que uma pessoa específica está passando por um
+                    fluxo específico, guardando em qual mensagem da sequência
+                    ela está e se segue ativa, pausada, ou já concluiu a
+                    sequência inteira.
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Entrega</strong></td>
+                  <td>
+                    Registro de uma tentativa de envio de mensagem de campanha
+                    para uma pessoa específica, com resultado, número de
+                    tentativas e motivo de falha, quando houver.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            A separação entre campanha e fluxo importa mais do que parece. Ambos
+            enviam mensagens, o que tornaria tentador tratá-los como a mesma
+            estrutura por baixo dos panos. O comportamento, porém, é distinto:
+            <strong
+              >uma campanha acontece e termina; um fluxo é contínuo e percorrido
+              de forma individual por cada pessoa.</strong
+            >
+            Fundir os dois conceitos numa única estrutura seria um erro clássico
+            de modelagem, forçar duas ideias diferentes a caber na mesma caixa
+            porque parecem semelhantes à primeira vista.
+          </p>
+          <div class="case-tech">
+            <span class="case-tech-label">Em termos técnicos</span><br />
+            Essa etapa corresponde à construção da
+            <strong><em>linguagem ubíqua*</em></strong> do domínio, no
+            vocabulário de Eric Evans: termos que valem tanto no código quanto
+            na conversa com quem entende do negócio, sem tradução no meio do
+            caminho. <code>Contato</code>, <code>Campanha</code>,
+            <code>Fluxo</code>, <code>ExecucaoFluxo</code> e
+            <code>EntregaCampanha</code> são as entidades de domínio centrais,
+            cada uma com suas próprias invariantes. <code>Contato</code> e
+            <code>Fluxo</code> usam <strong><em>soft delete*</em></strong> via
+            campo <code>deletado_em</code>, preservando integridade referencial
+            com o histórico.
+          </div>
+
+          <h2 id="modelagem">Campanha vs. Fluxo, na prática</h2>
+          <div class="case-example">
+            <span class="case-example-label">Exemplo de campanha</span>
+            <p>
+              Notificação de mil contatos sobre uma promoção que termina no
+              mesmo dia. A campanha é criada, o envio começa com pausas entre um
+              disparo e outro, e termina em algumas horas. Não roda de novo, a
+              não ser que uma nova campanha seja criada do zero.
+            </p>
+          </div>
+          <div class="case-example">
+            <span class="case-example-label">Exemplo de fluxo</span>
+            <p>
+              Todo cliente novo recebe, ao longo de uma semana, três mensagens:
+              boas-vindas no mesmo dia, dica de uso no terceiro dia, cupom no
+              sétimo. Cada cliente inicia essa jornada no seu próprio momento.
+              Dois clientes podem estar no mesmo fluxo, porém em pontos
+              diferentes dele, e o sistema precisa acompanhar isso
+              individualmente para cada um.
+            </p>
+          </div>
+          <p>
+            O detalhe central de modelagem é a
+            <strong
+              >separação entre o fluxo (o roteiro, as instruções gerais) e a
+              execução do fluxo (o progresso de uma pessoa específica dentro
+              desse roteiro).</strong
+            >
+            Sem essa separação seria impossível ter cem pessoas na mesma
+            sequência de boas-vindas, cada uma em um ponto diferente, que é
+            exatamente o comportamento esperado na prática.
+          </p>
+          <div class="case-tech">
+            <span class="case-tech-label">Em termos técnicos</span><br />
+            No <strong>modelo relacional</strong>, <code>Contato</code> tem
+            cardinalidade um-para-muitos com <code>EntregaCampanha</code> e com
+            <code>ExecucaoFluxo</code>. <code>Fluxo</code> contém uma coleção
+            ordenada de <code>PassoFluxo</code> (campo <code>ordem</code>), e
+            cada <code>ExecucaoFluxo</code> referencia um <code>Fluxo</code> e
+            um <code>Contato</code>, guardando <code>passo_atual</code> como
+            ponteiro de posição. Essa separação entre definição
+            (<code>Fluxo</code>) e instância de execução
+            (<code>ExecucaoFluxo</code>) segue o mesmo princípio de diferenciar
+            uma classe de suas instâncias, ou um template de processo de uma
+            execução concreta dele (BPMN chamaria isso de process definition vs.
+            process instance).
+          </div>
+
+          <h2 id="maquina-estados">Como uma execução se comporta</h2>
+          <p>
+            O controle de progresso de uma execução de fluxo é a parte mais
+            central do sistema.
+            <strong
+              >A qualquer momento, é preciso responder: a execução está
+              avançando normalmente? Se parou, por quê? Pode retomar sozinha, ou
+              depende de intervenção manual?</strong
+            >
+          </p>
+          <p>
+            Isso foi modelado como <strong>três estados possíveis.</strong> Uma
+            execução pode estar <strong>ativa</strong>, avançando normalmente de
+            uma mensagem para a próxima conforme o tempo passa;
+            <strong>pausada</strong>, quando uma mensagem falhou ao ser enviada
+            ou quando um operador pausou aquela pessoa manualmente, por exemplo
+            a pedido do próprio contato; ou <strong>concluída</strong>, quando
+            todas as mensagens da sequência já foram entregues.
+          </p>
+          <p>
+            O ponto crítico é o
+            <strong
+              >motivo registrado junto da pausa: (1) falha técnica no envio, (2)
+              abandono detectado pelo próprio sistema, ou (3) pausa manual
+              solicitada por um operador.</strong
+            >
+            Essa distinção define o que pode acontecer depois. Uma pausa por
+            falha técnica passageira permite reativação automática após um tempo
+            de espera. Uma pausa manual não deveria ser revertida
+            automaticamente, sob risco de anular uma decisão explícita do
+            operador.
+          </p>
+          <p>
+            Essa regra foi colocada no centro da própria definição de execução
+            de fluxo, não em uma camada separada e distante. Na prática, isso
+            torna estruturalmente impossível existir uma execução "pausada" sem
+            motivo registrado, e impossível reativar automaticamente algo que
+            foi pausado manualmente. A restrição fica embutida no modelo de
+            dados, em vez de depender de disciplina de quem escreve o código.
+          </p>
+          <div class="case-tech">
+            <span class="case-tech-label">Em termos técnicos</span><br />
+            <code>ExecucaoFluxo</code> é uma
+            <strong><em>máquina de estados finita*</em></strong> com três
+            estados (<code>ATIVO</code>, <code>PAUSADO</code>,
+            <code>CONCLUIDO</code>) e transições controladas por métodos de
+            domínio (<code>pausar</code>, <code>reativar</code>,
+            <code>avancar_passo</code>, <code>concluir</code>), não por
+            atribuição direta de campo. O campo
+            <code>motivo_pausa</code> (<code>falha</code>, <code>manual</code>,
+            <code>abandonado</code>) é obrigatório sempre que
+            <code>status = PAUSADO</code>, uma invariante validada no construtor
+            e nos métodos de transição da própria entidade, e não em uma camada
+            de validação externa: a entidade se recusa a existir em estado
+            inconsistente, no espírito de "always-valid domain model" (Vaughn
+            Vernon).
+          </div>
+
+          <h2 id="camadas">Por que separar o sistema em camadas</h2>
+          <p>
+            Uma das decisões estruturais mais importantes do projeto foi
+            organizar o código em partes bem separadas, seguindo uma regra
+            simples:
+            <strong
+              >a camada de regras de negócio não deveria depender de como o
+              sistema está tecnicamente conectado ao mundo externo.</strong
+            >
+          </p>
+          <p>
+            A analogia é a de uma empresa definindo política de atendimento
+            (regra de negócio) sem se preocupar se o canal é telefone, WhatsApp
+            ou e-mail (infraestrutura). A regra é definida em um nível; a
+            execução concreta dela, em outro. No sistema, a decisão de quando
+            uma campanha deve começar, como um fluxo avança e o que fazer quando
+            um envio falha não depende de saber se, por trás, existe WhatsApp,
+            outra ferramenta de mensageria ou outro banco de dados.
+          </p>
+          <p>Os motivos concretos para pagar esse custo de complexidade:</p>
+          <ul>
+            <li>
+              <strong>Testabilidade isolada.</strong>
+              <br />
+              As regras de negócio podem ser verificadas sem enviar uma mensagem
+              real, tornando os testes rápidos e independentes de serviços
+              externos instáveis.
+            </li>
+            <li>
+              <strong
+                >Substituição de infraestrutura sem retrabalho na regra.</strong
+              >
+              <br />
+              Trocar o provedor de mensageria ou o banco de dados fica isolado
+              numa camada específica, sem exigir mudança na lógica de negócio.
+            </li>
+            <li>
+              <strong>Custo proporcional ao problema.</strong>
+              <br />
+              Para um sistema simples, essa separação seria complicação
+              desnecessária. Ela se justifica quando existe lógica de negócio
+              que precisa ser confiável e testável de forma isolada, que é o
+              caso aqui.
+            </li>
+          </ul>
+          <div class="case-tech">
+            <span class="case-tech-label">Em termos técnicos</span><br />
+            A estrutura segue <strong><em>Clean Architecture*</em></strong> /
+            <strong>arquitetura hexagonal</strong>, com regra de dependência
+            única: camadas internas nunca importam de camadas externas. A camada
+            de <code>application</code> define
+            <strong><em>portas de saída*</em></strong>
+            (<code>WhatsAppPort</code>, <code>QueuePort</code>,
+            <code>CachePort</code>, <code>DatabasePort</code>) como interfaces;
+            a camada de <code>infrastructure</code> as implementa via
+            <strong><em>injeção de dependência*</em></strong
+            >, nunca o contrário. O plano de trabalho incluía um teste
+            arquitetural automatizado (dependency-cruiser ou equivalente)
+            verificando que a camada de casos de uso não importa nenhum símbolo
+            de framework HTTP ou driver de banco, tornando a regra de
+            dependência verificável em CI, não apenas uma convenção documentada.
+          </div>
+
+          <h2 id="filas">Por que usar uma fila de processamento</h2>
+          <p>
+            A alternativa mais simples seria checar periodicamente o que precisa
+            ser enviado e processar tudo em sequência, dentro do mesmo programa.
+            Essa abordagem falha em três pontos: (1) não há garantia de saber
+            quais mensagens já saíram caso o processo reinicie no meio da
+            checagem; (2) instabilidades externas exigiriam lógica própria de
+            nova tentativa com espera crescente, escrita do zero; e (3) misturar
+            "decidir quando enviar" com "enviar de fato" no mesmo bloco de
+            código dificulta testar cada parte isoladamente.
+          </p>
+          <p>
+            A <strong><em>fila de processamento*</em></strong> resolve os três
+            pontos ao mesmo tempo. Cada mensagem pendente entra numa fila de
+            espera, e um grupo de <strong><em>workers*</em></strong> consome
+            essa fila item por item, cada um funcionando como um caixa de banco
+            que atende clientes em ordem, de forma que ter vários workers ao
+            mesmo tempo é o que permite atender mais gente por minuto sem
+            empilhar tudo atrás de uma única pessoa. Se um worker falha, a
+            mensagem permanece na fila para ser retomada por outro, em vez de se
+            perder, do mesmo jeito que a pessoa com a senha 42 continua sendo
+            chamada por outro caixa se o primeiro precisar sair do balcão no
+            meio do atendimento.
+          </p>
+          <p>
+            Duas outras peças fazem essa engrenagem funcionar sem acidentes. A
+            <strong><em>concorrência*</em></strong> de vários workers rodando ao
+            mesmo tempo cria o risco de dois deles chamarem a mesma senha sem
+            querer e atenderem a mesma pessoa duas vezes, risco que só é
+            eliminado com o
+            <strong><em>lock distribuído*</em></strong> explicado mais abaixo.
+            Já o <strong><em>backoff exponencial*</em></strong> é a lógica por
+            trás de uma nova tentativa após uma falha, aumentando o tempo de
+            espera a cada tentativa sem sucesso em vez de insistir sem parar, o
+            mesmo instinto de quem liga para um número ocupado e espera cada vez
+            mais entre uma redisca e outra para não piorar um problema que
+            talvez seja só temporário.
+          </p>
+          <div class="case-tech">
+            <span class="case-tech-label">Em termos técnicos</span><br />
+            A fila é implementada com <strong>BullMQ sobre Redis</strong>,
+            escolhida por oferecer retry configurável por job com
+            <strong>backoff exponencial</strong> nativo, limite de tentativas, e
+            persistência do estado da fila fora do processo que a consome. Isso
+            resolve os três problemas citados: concorrência não seria garantida
+            num loop simples de <code>setInterval</code>, backoff exigiria
+            implementação manual, e a separação entre produtor (scheduler) e
+            consumidor (worker) desacopla a decisão de agendamento da execução
+            do envio, permitindo escalar e testar cada lado independentemente.
+          </div>
+
+          <h2 id="workers">Os três processos que fazem o trabalho pesado</h2>
+          <p>
+            O processamento foi dividido em três processos com responsabilidade
+            única cada, seguindo o princípio de
+            <strong><em>separation of concerns*</em></strong
+            >.
+          </p>
+          <h3>O organizador (scheduler)</h3>
+          <p>
+            Responsável por checar periodicamente o que está pronto para envio:
+            campanhas a iniciar, pessoas em fluxos que atingiram o momento da
+            próxima mensagem. Processa um lote limitado por vez, evitando
+            sobrecarregar a fila de uma só vez, e marca cada item como
+            "processando" antes de enfileirar.
+          </p>
+          <p>
+            A concorrência entre múltiplas instâncias do organizador é
+            controlada por um <strong>lock distribuído</strong>: apenas quem
+            detém o lock processa determinado lote naquele momento, evitando que
+            duas instâncias peguem a mesma tarefa e gerem duplicidade, da mesma
+            forma como uma chave única de banheiro compartilhado garante que só
+            uma pessoa por vez tenha acesso, mesmo que várias tentem entrar ao
+            mesmo tempo.
+          </p>
+          <div class="case-tech">
+            <span class="case-tech-label">Em termos técnicos</span><br />
+            O scheduler roda em loop contínuo com
+            <strong>distributed lock via Redis</strong> (padrão semelhante a
+            <strong><em>Redlock*</em></strong
+            >), garantindo exclusão mútua entre múltiplas instâncias do worker.
+            Respeita um <code>BATCH_SIZE</code>
+            máximo por ciclo e marca os itens selecionados como
+            <code>processando</code> antes de enfileirar, criando uma janela de
+            estado intermediário que o worker de reconciliação audita
+            posteriormente.
+          </div>
+          <h3>O remetente (sender)</h3>
+          <p>
+            Consome a fila e executa o envio real via WhatsApp. O comportamento
+            pós-envio difere por tipo: em campanha, apenas marca a entrega como
+            concluída; em fluxo, também avança a execução para o próximo passo e
+            agenda o próximo envio.
+          </p>
+          <p>
+            Para não espalhar "se for campanha, faça isso; se for fluxo, faça
+            aquilo" pelo código inteiro, o sender usa o
+            <strong><em>Strategy Pattern*</em></strong
+            >: existe um único ponto que aciona "o que fazer depois do envio", e
+            o que acontece de fato depende de qual comportamento foi encaixado
+            ali para aquele tipo de tarefa, parecido com uma tomada de energia
+            universal cujo formato de encaixe é sempre o mesmo, mas o aparelho
+            ligado do outro lado é que decide o que vai acontecer quando a
+            energia passar.
+          </p>
+          <div class="case-tech">
+            <span class="case-tech-label">Em termos técnicos</span><br />
+            O sender usa <strong>Strategy Pattern</strong> para diferenciar o
+            handler de <code>Campanha</code> do handler de <code>Fluxo</code>:
+            mesma interface de execução, comportamento pós-envio diferente
+            injetado em tempo de execução, evitando condicionais espalhados pelo
+            código do worker.
+          </div>
+          <h3>O corretor (reconciliation)</h3>
+          <p>
+            Roda periodicamente à procura de falhas silenciosas: tarefas presas
+            em "processando" por tempo além do esperado, sinal de travamento em
+            algum ponto do fluxo de execução, que são recolocadas em estado de
+            nova tentativa. Também identifica execuções de fluxo aparentemente
+            abandonadas, pausando-as, e reativa automaticamente apenas as que
+            foram pausadas por falha técnica, nunca as pausadas manualmente,
+            após um intervalo de espera. Esse jeito de rodar em intervalos
+            fixos, o chamado <strong><em>polling periódico*</em></strong
+            >, é bem diferente de reagir a um aviso em tempo real: é a diferença
+            entre alguém que passa de hora em hora conferindo se algum prato
+            ficou esquecido no fogão e uma cozinha com um alarme que dispara
+            sozinho assim que um prato queima (esse segundo caso é o que se
+            chama de event-driven, "guiado por evento"); a segunda opção reage
+            mais rápido, mas exige instalar e manter o alarme, enquanto a
+            primeira é mais simples de montar ao custo de um atraso entre o
+            problema acontecer e alguém perceber.
+          </p>
+          <div class="case-tech">
+            <span class="case-tech-label">Em termos técnicos</span><br />
+            Reconciliação por <strong>polling periódico</strong> (não
+            event-driven), varrendo por <code>updated_at</code> mais antigo que
+            um <code>TIMEOUT_THRESHOLD</code> configurável. É uma escolha
+            simples de propósito: um listener event-driven reagiria mais rápido,
+            mas exigiria infraestrutura adicional como
+            <strong><em>dead letter exchange*</em></strong> (uma "central de
+            triagem" que o próprio message broker usa para redirecionar sozinho
+            mensagens problemáticas, sem intervenção manual) e
+            <strong><em>TTL de fila*</em></strong> (um prazo de validade
+            automático: se um item fica tempo demais parado ali, ele expira e é
+            removido ou redirecionado sozinho, do mesmo jeito que um alimento
+            vencido é retirado da prateleira), infraestrutura que não se
+            justificava no estágio atual do projeto.
+          </div>
+          <div class="case-callout">
+            O corretor existe porque, em sistemas que processam tarefas em
+            volume, é ingênuo assumir que toda operação termina de forma limpa,
+            com sucesso ou erro explícito. Processos travam, redes caem,
+            servidores reiniciam no meio de uma operação. O corretor é o
+            mecanismo de autocorreção do sistema diante desse tipo de falha
+            silenciosa.
+          </div>
+
+          <h2 id="idempotencia">
+            Garantindo que ninguém recebe a mesma mensagem duas vezes
+          </h2>
+          <p>
+            A garantia de <strong><em>idempotência*</em></strong> na entrega é
+            tratada como não negociável, resolvida em duas camadas
+            complementares.
+          </p>
+          <p>
+            A <strong>primeira</strong> é uma restrição no próprio banco de
+            dados: a existência de dois registros de entrega para a mesma
+            combinação de campanha e contato é estruturalmente impossível,
+            garantida pelo modelo de dados, não por disciplina de código.
+          </p>
+          <p>
+            A <strong>segunda</strong> ocorre no momento do envio: antes de
+            enviar, o remetente verifica se aquela entrega já foi marcada como
+            enviada, descartando a tentativa como duplicata caso positivo. Isso
+            cobre o cenário de uma mesma tarefa entrar duas vezes na fila por
+            falha técnica.
+          </p>
+          <p>
+            <strong>Cada tentativa</strong> de envio também registra quantidade
+            de tentativas e motivo de falha, permitindo distinguir falhas
+            permanentes (número inexistente) de falhas transitórias
+            (instabilidade de rede), evitando desperdiçar novas tentativas em
+            casos que claramente não vão se resolver.
+          </p>
+          <div class="case-tech">
+            <span class="case-tech-label">Em termos técnicos</span><br />
+            <strong
+              >Idempotência garantida em duas camadas: uma constraint</strong
+            >
+            <code>@@unique([campanha_id, contato_id])</code> no schema (e
+            equivalente para <code>ExecucaoFluxo</code>), que torna a
+            duplicidade estruturalmente impossível a nível de banco, e uma
+            checagem de status no worker antes de processar (<strong
+              >idempotency check</strong
+            >
+            em nível de aplicação) para cobrir o caso de mensagens duplicadas na
+            fila em cenários de retry. Os campos <code>tentativas</code> e
+            <code>ultimo_erro</code> em <code>EntregaCampanha</code>
+            permitem diferenciar falha permanente de falha transiente, evitando
+            retry cego.
+          </div>
+
+          <h2 id="cache-lock">Duas outras funções de uma mesma ferramenta</h2>
+          <p>
+            O Redis cumpre <strong>dois papéis distintos</strong> no sistema,
+            que vale explicar separadamente para não sugerir uma solução mágica
+            única.
+          </p>
+          <p>
+            O <strong>primeiro</strong> é cache de leitura para números caros de
+            recalcular a cada consulta, como contagem de mensagens enviadas e
+            falhas por campanha. Sem cache, um painel de acompanhamento geraria
+            consultas repetidas ao banco a cada atualização de tela. O valor
+            fica armazenado por um período curto e é invalidado quando algo muda
+            de fato, como fazer uma conta de cabeça complicada uma vez e anotar
+            o resultado num post-it: da próxima vez que alguém perguntar, basta
+            olhar o post-it em vez de refazer a conta inteira do zero, e o
+            post-it só é jogado fora e refeito quando algo realmente muda.
+          </p>
+          <p>
+            O <strong>segundo</strong> é o
+            <strong>lock distribuído</strong> usado pelo organizador, garantindo
+            que apenas uma instância processe cada lote de tarefas por vez,
+            mesmo em cenário de múltiplas instâncias rodando simultaneamente, a
+            mesma ideia da chave única de um banheiro compartilhado por várias
+            lojas citada mais acima: só quem está com a chave pode agir, e todo
+            o resto espera a devolução dela antes de tentar. Sem esse mecanismo,
+            escalar o sistema horizontalmente introduziria risco real de
+            processamento duplicado, justamente o problema que a garantia de
+            idempotência tenta eliminar.
+          </p>
+          <p>
+            São dois usos independentes da mesma ferramenta, como uma mesma faca
+            usada tanto para cortar legumes quanto para abrir uma caixa: o Redis
+            aqui não é uma solução mágica única, é só um banco de dados rápido o
+            bastante para servir dois propósitos diferentes dentro do sistema.
+          </p>
+          <div class="case-tech">
+            <span class="case-tech-label">Em termos técnicos</span><br />
+            Cache de leitura com <strong>invalidação explícita</strong>
+            (não TTL cego) via endpoint dedicado, para contagens agregadas de
+            status por campanha. O lock distribuído é um
+            <strong><em>mutex*</em></strong> baseado em Redis com TTL de
+            segurança; implementação simples, sem
+            <strong><em>fencing tokens*</em></strong
+            >, limitação conhecida e documentada na seção de produção mais
+            abaixo.
+          </div>
+
+          <h2 id="persistencia">
+            Como os dados são guardados e o histórico é mantido
+          </h2>
+          <p>
+            Remoção de contato ou fluxo é implementada como
+            <strong>soft delete</strong>: o registro é marcado como removido,
+            não apagado fisicamente. A justificativa é a necessidade de manter
+            histórico de campanhas e sequências concluídas; exclusão física
+            quebraria a possibilidade de auditar o que foi enviado a um contato
+            no passado. Ações específicas cuidam de marcar algo como removido e
+            de restaurá-lo depois, se necessário, em vez de deixar essa checagem
+            espalhada de forma implícita em várias partes do sistema.
+          </p>
+          <p>
+            Existe também um <strong><em>audit log*</em></strong
+            >, registrando cada mudança relevante de estado (envio, início de
+            campanha, pausa de fluxo) com os detalhes daquele momento. A decisão
+            de projeto foi manter um único formato de registro para todo tipo de
+            evento, em vez de um sistema de log distinto por tipo de informação.
+            O volume de eventos, na fase atual do projeto, não justifica essa
+            complexidade adicional.
+          </p>
+          <div class="case-tech">
+            <span class="case-tech-label">Em termos técnicos</span><br />
+            Soft delete via campo <code>deletado_em</code> (nullable datetime),
+            com métodos de domínio explícitos <code>soft_delete()</code> e
+            <code>restaurar()</code> na entidade, em vez de filtro implícito
+            <code>WHERE deletado_em IS NULL</code> espalhado em queries. A
+            tabela <code>Auditoria</code> é
+            <strong><em>append-only*</em></strong
+            >, com um payload <code>JSON</code> genérico por evento, uma escolha
+            deliberada de não normalizar em tabelas de log por entidade neste
+            estágio, priorizando simplicidade de schema sobre performance de
+            consulta de auditoria.
+          </div>
+
+          <h2 id="trade-offs">
+            O que foi ganho e o que foi cedido em cada escolha
+          </h2>
+          <p>
+            Nenhuma decisão de arquitetura é gratuita: toda escolha resolve um
+            problema e introduz outro, geralmente menor. Registrar esse
+            trade-off junto da decisão é tão relevante quanto registrar a
+            decisão em si.
+          </p>
+          <div class="case-table-wrap">
+            <table class="case-table">
+              <thead>
+                <tr>
+                  <th>Decisão</th>
+                  <th>Ganho</th>
+                  <th>Custo aceito</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Separar o sistema em camadas</td>
+                  <td>
+                    Testabilidade isolada das regras de negócio e substituição
+                    de ferramentas técnicas sem afetá-las
+                  </td>
+                  <td>
+                    Mais partes e mais organização do que um sistema simples
+                    exigiria
+                  </td>
+                </tr>
+                <tr>
+                  <td>Os três processos rodam juntos, no mesmo projeto</td>
+                  <td>Menos custo e complexidade de manutenção nesta fase</td>
+                  <td>
+                    Cada processo ainda não escala de forma totalmente
+                    independente dos outros
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    O corretor verifica problemas em intervalos, não em tempo
+                    real
+                  </td>
+                  <td>Mais simples de construir e de entender</td>
+                  <td>
+                    Um problema pode demorar um pouco para ser percebido e
+                    corrigido, em vez de instantâneo
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    Formato único de registro de auditoria para todo tipo de
+                    evento
+                  </td>
+                  <td>Menos estrutura para manter</td>
+                  <td>
+                    Consulta ao histórico de um tipo específico de evento é um
+                    pouco menos otimizada
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h2 id="producao">O que mudaria para um cenário real de produção</h2>
+          <p>
+            Registrar o que mudaria em produção real é tão relevante quanto
+            registrar o que já foi decidido: evidencia que o escopo atual foi
+            delimitado de propósito para um projeto de estudo, não confundido
+            com um sistema pronto para milhares de clientes reais.
+          </p>
+          <ul>
+            <li>
+              <strong>Independência total entre os três processos.</strong>
+              <br />
+              Hoje o organizador, o remetente e o corretor rodam juntos, de
+              propósito, dentro do mesmo projeto, evitando complexidade ainda
+              desnecessária. Em produção, cada processo escalaria conforme sua
+              própria demanda: se o volume de campanhas aumentar muito, é
+              possível rodar mais cópias do remetente sem precisar duplicar o
+              organizador ou o corretor junto, algo parecido com uma cozinha que
+              aumenta o número de cozinheiros na hora de finalizar pratos sem
+              precisar contratar mais gente para receber pedidos.
+            </li>
+            <li>
+              <strong>Lock distribuído mais resiliente.</strong>
+              <br />
+              Existe um cenário raro em que instabilidade de rede prolongada
+              permite que um lock seja "roubado" indevidamente: um processo
+              demora tanto para responder que o sistema assume que ele caiu,
+              libera a trava para outro processo, e depois o primeiro processo
+              "acorda" achando que ainda está com a posse dela. É como duas
+              pessoas acharem que estão com a mesma chave de um cofre ao mesmo
+              tempo. Técnicas como
+              <strong>fencing tokens</strong> resolveriam isso antes de uso
+              real, adicionando um número sequencial que invalida qualquer ação
+              de quem perdeu a posse da chave sem perceber.
+            </li>
+            <li>
+              <strong
+                ><strong><em>Circuit breaker*</em></strong> para
+                indisponibilidade prolongada do WhatsApp.</strong
+              >
+              <br />
+              Hoje, cada mensagem esgota tentativas individualmente, sem que o
+              sistema perceba um padrão maior por trás das falhas. Se o WhatsApp
+              cair por completo, o sistema continuaria tentando enviar milhares
+              de mensagens que, sozinhas, não têm nenhuma chance de sucesso,
+              desperdiçando tempo e recurso. Uma versão madura detectaria esse
+              tipo de indisponibilidade sistêmica, de forma parecida com um
+              disjuntor elétrico que desliga um circuito inteiro ao notar
+              sobrecarga, e pausaria novas tentativas por um tempo, testando
+              esporadicamente se o serviço já voltou antes de retomar o fluxo
+              normal.
+            </li>
+            <li>
+              <strong
+                >Fila de revisão manual (<strong
+                  ><em>dead-letter queue*</em></strong
+                >).</strong
+              >
+              <br />
+              Hoje, uma mensagem que esgota tentativas fica apenas marcada como
+              "falhou" no banco de dados, misturada com o restante do histórico.
+              Uma versão madura teria uma fila separada, dedicada só a essas
+              falhas terminais, funcionando como uma caixa de correspondência
+              devolvida pelos Correios: em vez de descartar a carta, ela vai
+              para um lugar específico onde alguém pode abrir, entender o motivo
+              e decidir se tenta reenviar manualmente ou não.
+            </li>
+          </ul>
+          <div class="case-tech">
+            <span class="case-tech-label">Em termos técnicos</span><br />
+            Em ordem: <strong>fencing tokens</strong> no lock distribuído
+            (contador monotônico validado no momento da escrita, não apenas
+            posse da chave), <strong>circuit breaker</strong> na integração com
+            a API do WhatsApp (padrão open/half-open/closed, evitando esgotar
+            retries individuais quando o provedor está sistematicamente
+            indisponível), e uma <strong>dead-letter queue</strong> explícita no
+            BullMQ para jobs que excedem <code>maxAttempts</code>, com fila
+            separada de revisão em vez de status terminal silencioso no banco.
+          </div>
+
+          <h2 id="glossario">Glossário</h2>
+          <p>
+            Termos técnicos citados ao longo do documento, com um exemplo
+            prático para cada um.
+          </p>
+          <div class="case-table-wrap">
+            <table class="case-table">
+              <thead>
+                <tr>
+                  <th>Termo</th>
+                  <th>Definição e exemplo</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Event Storming</strong></td>
+                  <td>
+                    Técnica de modelagem colaborativa em que eventos de domínio
+                    (fatos relevantes que acontecem no sistema) são mapeados
+                    para descobrir processos, regras e limites antes de qualquer
+                    código ser escrito.
+                    <br /><br />
+                    <strong>Exemplo:</strong> reunir post-its com frases como
+                    "Campanha foi criada", "Mensagem falhou ao enviar", "Fluxo
+                    foi pausado" numa linha do tempo, para enxergar todo o ciclo
+                    de vida de uma campanha antes de desenhar qualquer tabela de
+                    banco de dados.
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Linguagem ubíqua</strong></td>
+                  <td>
+                    Vocabulário comum e preciso, compartilhado entre código e
+                    negócio, usado para eliminar ambiguidade sobre o significado
+                    de cada termo do domínio.
+                    <br /><br />
+                    <strong>Exemplo:</strong> se o time de negócio chama de
+                    "disparo" o que o código chama de "job", toda conversa exige
+                    tradução mental; ao adotar "Campanha" e "Fluxo" como termos
+                    únicos, uma reunião de negócio e uma revisão de código
+                    passam a falar exatamente a mesma língua.
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Bounded Context</strong></td>
+                  <td>
+                    Fronteira explícita dentro da qual um modelo de domínio e
+                    sua linguagem são válidos e consistentes. Fora dela, o mesmo
+                    termo pode significar algo diferente.
+                    <br /><br />
+                    <strong>Exemplo:</strong> a palavra "Cliente" no contexto de
+                    disparo de mensagens significa apenas um número de telefone
+                    com preferências de contato; no contexto de faturamento de
+                    uma empresa, a mesma palavra "Cliente" carregaria CPF,
+                    endereço e histórico de pagamento, um modelo completamente
+                    diferente.
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Domain-Driven Design (DDD)</strong></td>
+                  <td>
+                    Abordagem de design que estrutura o software em torno do
+                    domínio de negócio e sua linguagem, priorizando modelagem
+                    cuidadosa sobre detalhes técnicos de implementação.
+                    <br /><br />
+                    <strong>Exemplo:</strong>
+                    antes de decidir qual banco de dados usar, o esforço vai
+                    para entender e nomear corretamente o que é uma "Campanha",
+                    um "Fluxo" e uma "Execução de Fluxo", e só depois disso
+                    desenhar tabelas e endpoints.
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Arquitetura hexagonal</strong></td>
+                  <td>
+                    Estilo de arquitetura em que o núcleo de regras de negócio
+                    fica no centro, isolado, e se comunica com o mundo externo
+                    (banco de dados, APIs, fila) apenas através de portas e
+                    adaptadores bem definidos, próximo ao espírito de Clean
+                    Architecture.
+                    <br /><br />
+                    <strong>Exemplo:</strong> o miolo do sistema não sabe se
+                    está falando com o WhatsApp de verdade ou com uma versão de
+                    teste; ele só conhece uma "porta de envio de mensagem"
+                    genérica, e quem está plugado nessa porta pode ser trocado
+                    sem que o miolo perceba.
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Portas de saída (output ports)</strong></td>
+                  <td>
+                    Interfaces que a camada de regras de negócio define para
+                    descrever o que precisa do mundo externo, sem dizer como
+                    isso é feito. Quem implementa a interface fica numa camada
+                    separada, de infraestrutura.
+                    <br /><br />
+                    <strong>Exemplo:</strong> a regra de negócio define uma
+                    porta chamada "enviar mensagem", como uma tomada de parede
+                    esperando um encaixe padrão; não importa se do outro lado
+                    está o WhatsApp de verdade ou uma versão falsa usada em
+                    teste, contanto que o encaixe seja respeitado.
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Injeção de dependência</strong></td>
+                  <td>
+                    Técnica em que um componente recebe de fora aquilo de que
+                    depende para funcionar, em vez de criar essa dependência
+                    internamente, facilitando trocar a peça por outra (inclusive
+                    uma versão de teste).
+                    <br /><br />
+                    <strong>Exemplo:</strong> em vez de uma pessoa fazer sua
+                    própria xícara de café do zero toda vez, alguém entrega a
+                    xícara pronta na mesa; se amanhã o café for trocado por chá,
+                    a pessoa nem precisa saber, só recebe o que foi entregue.
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Redlock</strong></td>
+                  <td>
+                    Algoritmo específico para implementar lock distribuído
+                    usando múltiplas instâncias independentes de Redis ao mesmo
+                    tempo, reduzindo o risco de o lock falhar por causa de uma
+                    única instância de Redis fora do ar.
+                    <br /><br />
+                    <strong>Exemplo:</strong> em vez de confiar numa única chave
+                    física de banheiro compartilhado, o sistema pede a posse da
+                    chave a várias cópias independentes da fechadura ao mesmo
+                    tempo, e só considera a chave válida se a maioria delas
+                    concordar.
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Mutex</strong></td>
+                  <td>
+                    Abreviação de "mutual exclusion" (exclusão mútua): um
+                    mecanismo que garante que apenas um processo por vez execute
+                    um trecho específico de código ou acesse um recurso
+                    específico.
+                    <br /><br />
+                    <strong>Exemplo:</strong> o próprio lock distribuído citado
+                    acima é um tipo de mutex; a chave única do banheiro
+                    compartilhado garante exclusão mútua entre as lojas que a
+                    disputam.
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Clean Architecture</strong></td>
+                  <td>
+                    Estilo de arquitetura em camadas onde regras de negócio
+                    ficam isoladas de detalhes de infraestrutura (banco de
+                    dados, frameworks, APIs externas), permitindo testar e
+                    substituir cada parte de forma independente.
+                    <br /><br />
+                    <strong>Exemplo:</strong> trocar o WhatsApp por outro
+                    provedor de mensageria, ou trocar PostgreSQL por outro
+                    banco, sem alterar uma linha sequer da regra "uma campanha
+                    não pode começar sem pelo menos um contato".
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Rate limiting</strong></td>
+                  <td>
+                    Controle da taxa de operações permitidas em um intervalo de
+                    tempo, usado aqui para evitar bloqueio por parte da
+                    plataforma de mensageria diante de envio em volume.
+                    <br /><br />
+                    <strong>Exemplo:</strong> em vez de mandar mil mensagens em
+                    um segundo, o sistema limita o envio a, por exemplo, uma
+                    mensagem a cada dois ou três segundos por número, do mesmo
+                    jeito que um pedágio libera um carro por vez em vez de
+                    deixar todos passarem ao mesmo tempo.
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Job / Worker</strong></td>
+                  <td>
+                    Job é uma unidade de trabalho a ser processada (por exemplo,
+                    "enviar esta mensagem"). Worker é o processo que consome
+                    jobs de uma fila e os executa.
+                    <br /><br />
+                    <strong>Exemplo:</strong> um job é a ficha de um pedido
+                    específico numa cozinha; o worker é o cozinheiro que pega
+                    essa ficha e prepara o prato descrito nela.
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong>Fila de processamento (message queue)</strong>
+                  </td>
+                  <td>
+                    Estrutura que armazena tarefas pendentes em ordem,
+                    permitindo que sejam processadas de forma assíncrona e
+                    resiliente a falhas, sem exigir que quem cria a tarefa
+                    espere o processamento terminar.
+                    <br /><br />
+                    <strong>Exemplo:</strong> uma fila de banco em que cada
+                    cliente pega uma senha e continua sua vida normalmente,
+                    sabendo que será atendido em ordem, em vez de ficar parado
+                    exatamente na frente do caixa esperando.
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Concorrência</strong></td>
+                  <td>
+                    Situação em que múltiplos processos ou instâncias executam
+                    ao mesmo tempo e podem, sem controle, acessar ou modificar o
+                    mesmo recurso simultaneamente.
+                    <br /><br />
+                    <strong>Exemplo:</strong> dois caixas de banco chamando a
+                    mesma senha ao mesmo tempo sem perceber e atendendo a mesma
+                    pessoa duas vezes, por falta de um controle que garanta que
+                    só um caixa por vez trate daquela senha.
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Backoff exponencial</strong></td>
+                  <td>
+                    Estratégia de nova tentativa após falha em que o tempo de
+                    espera entre uma tentativa e outra aumenta a cada insucesso,
+                    em vez de tentar de novo imediatamente e sem parar.
+                    <br /><br />
+                    <strong>Exemplo:</strong> quem liga para um número ocupado
+                    não redisca a cada segundo; espera um pouco, tenta de novo,
+                    e se continuar ocupado, espera ainda mais na tentativa
+                    seguinte.
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Strategy Pattern</strong></td>
+                  <td>
+                    Padrão de projeto em que um mesmo ponto de execução aciona
+                    comportamentos diferentes dependendo do que foi encaixado
+                    ali, sem precisar de condicionais espalhados pelo código.
+                    <br /><br />
+                    <strong>Exemplo:</strong> uma tomada de energia universal
+                    cujo formato de encaixe é sempre o mesmo, mas o aparelho
+                    ligado do outro lado é que decide o que vai acontecer quando
+                    a energia passar.
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Polling periódico</strong></td>
+                  <td>
+                    Técnica de checagem em intervalos fixos de tempo, em vez de
+                    reagir a um aviso em tempo real assim que algo acontece.
+                    <br /><br />
+                    <strong>Exemplo:</strong> alguém que passa de hora em hora
+                    conferindo se algum prato ficou esquecido no fogão, em vez
+                    de esperar um alarme tocar avisando na hora exata em que o
+                    prato queima.
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>TTL de fila</strong></td>
+                  <td>
+                    Prazo de validade automático configurado numa fila ou item
+                    de fila; passado esse tempo, o item expira e é removido ou
+                    redirecionado sozinho, sem intervenção manual.
+                    <br /><br />
+                    <strong>Exemplo:</strong> um alimento com data de validade
+                    vencida sendo retirado sozinho da prateleira, sem que alguém
+                    precise checar item por item todo dia.
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Dead letter exchange</strong></td>
+                  <td>
+                    Mecanismo do próprio message broker que redireciona
+                    automaticamente mensagens problemáticas para um destino
+                    separado, sem que a aplicação precise implementar essa
+                    lógica manualmente.
+                    <br /><br />
+                    <strong>Exemplo:</strong> uma central de triagem dos
+                    Correios que já separa automaticamente as cartas com
+                    endereço inválido, em vez de deixar cada carteiro decidir
+                    por conta própria o que fazer com elas.
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Idempotência</strong></td>
+                  <td>
+                    Propriedade de uma operação que produz o mesmo resultado
+                    final mesmo se executada mais de uma vez, usada aqui para
+                    garantir que reprocessar uma tarefa não gere entrega
+                    duplicada.
+                    <br /><br />
+                    <strong>Exemplo:</strong> apertar um botão de elevador que
+                    já está aceso não chama o elevador duas vezes; apertar de
+                    novo não muda o resultado final.
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Lock distribuído</strong></td>
+                  <td>
+                    Mecanismo de exclusão mútua entre múltiplos processos ou
+                    instâncias, garantindo que apenas um deles execute
+                    determinada operação por vez.
+                    <br /><br />
+                    <strong>Exemplo:</strong> a chave única de um banheiro
+                    público compartilhado por várias lojas; quem está com a
+                    chave física é a única pessoa que pode usar o banheiro
+                    naquele momento, todo o resto espera a devolução da chave.
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Fencing token</strong></td>
+                  <td>
+                    Contador monotônico usado junto de um lock distribuído para
+                    invalidar ações de um processo que perdeu a posse do lock
+                    sem perceber, evitando execução indevida mesmo em cenários
+                    de falha de rede.
+                    <br /><br />
+                    <strong>Exemplo:</strong> um número de senha sequencial
+                    emitido junto com a posse da chave; se alguém aparece
+                    tentando agir com a senha "12" depois de a senha "13" já ter
+                    sido emitida para outra pessoa, o sistema sabe que aquela
+                    posse antiga não vale mais.
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Circuit breaker</strong></td>
+                  <td>
+                    Padrão que interrompe temporariamente chamadas a um serviço
+                    externo detectado como indisponível, evitando desperdício de
+                    tentativas e permitindo recuperação gradual quando o serviço
+                    volta ao normal.
+                    <br /><br />
+                    <strong>Exemplo:</strong> um disjuntor elétrico de uma casa
+                    que desarma sozinho diante de uma sobrecarga, interrompendo
+                    o circuito antes que o problema se espalhe, em vez de deixar
+                    a fiação inteira queimar.
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Dead-letter queue</strong></td>
+                  <td>
+                    Fila secundária para onde vão tarefas que falharam
+                    repetidamente e esgotaram suas tentativas automáticas,
+                    permitindo revisão manual em vez de descarte silencioso.
+                    <br /><br />
+                    <strong>Exemplo:</strong> uma carta que os Correios não
+                    conseguem entregar depois de várias tentativas não é jogada
+                    fora, ela vai parar numa central de correspondências não
+                    entregues, para alguém decidir o que fazer com ela.
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Soft delete</strong></td>
+                  <td>
+                    Estratégia de remoção lógica em que um registro é marcado
+                    como removido, sem exclusão física do banco de dados,
+                    preservando histórico e auditoria.
+                    <br /><br />
+                    <strong>Exemplo:</strong> arquivar um e-mail em vez de
+                    excluí-lo, o e-mail some da caixa de entrada, mas continua
+                    existindo e pode ser recuperado depois, se necessário.
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Audit log</strong></td>
+                  <td>
+                    Registro histórico e imutável de eventos relevantes do
+                    sistema, usado para reconstrução de histórico e auditoria.
+                    <br /><br />
+                    <strong>Exemplo:</strong> o extrato bancário de uma conta,
+                    que mostra cada depósito e saque em ordem cronológica, sem
+                    que uma linha antiga possa ser apagada ou reescrita depois.
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Append-only</strong></td>
+                  <td>
+                    Característica de uma estrutura de dados ou tabela que só
+                    permite adicionar novas linhas ao final, nunca alterar ou
+                    apagar linhas já existentes.
+                    <br /><br />
+                    <strong>Exemplo:</strong> um diário físico em que só se
+                    escreve páginas novas para frente; ninguém arranca ou
+                    reescreve uma página antiga, mesmo que o que foi escrito ali
+                    estivesse errado, a correção vira uma nova entrada.
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Separation of concerns</strong></td>
+                  <td>
+                    Princípio de design que distribui responsabilidades
+                    distintas entre partes diferentes do sistema, reduzindo
+                    acoplamento e facilitando manutenção e testes.
+                    <br /><br />
+                    <strong>Exemplo:</strong> numa cozinha profissional, quem
+                    corta os ingredientes não é a mesma pessoa que finaliza o
+                    prato no fogo; cada estação tem uma responsabilidade clara,
+                    e um problema numa estação não trava as outras.
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Máquina de estados finita</strong></td>
+                  <td>
+                    Modelo computacional composto por um conjunto finito de
+                    estados e regras de transição entre eles, usado para
+                    garantir que uma entidade só assuma combinações válidas de
+                    estado e contexto.
+                    <br /><br />
+                    <strong>Exemplo:</strong> um semáforo só pode estar em
+                    vermelho, amarelo ou verde, nunca em dois ao mesmo tempo, e
+                    a transição entre eles segue sempre a mesma ordem, nunca
+                    pulando direto de vermelho para amarelo sem passar pelo
+                    verde antes.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="case-ctas">
+          <a href="../portfolio.html#portfolio" class="btn-o"
+            >← Voltar aos projetos</a
+          >
+          <a href="../portfolio.html#contact" class="btn"
+            >Vamos conversar sobre isso →</a
+          >
+        </div>
+      </div>
+    </div>
+
+    <footer><p>Feito por Duda Brito · BH · 2026</p></footer>
+    <script src="../../script.js"></script>
+  </body>
+</html>

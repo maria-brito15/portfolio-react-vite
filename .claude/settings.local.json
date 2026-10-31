@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install *)",
+      "Bash(python -)",
+      "Bash(node \"C:/Users/maria/AppData/Local/Temp/claude/c--Users-maria-Downloads-portfolio-react-vite/83999325-f72e-4695-9078-254ef057bd14/scratchpad/e6.mjs\")",
+      "Bash(npx prettier *)",
+      "Bash(npm test *)",
+      "Bash(grep -v \"^$\")",
+      "Bash(sed -i 's#/Não foi possível enviar|inativo|ainda não/i#/ainda não está ativo/#' src/components/ContactForm.test.jsx)",
+      "Bash(npm run *)",
+      "Bash(node \"C:/Users/maria/AppData/Local/Temp/claude/c--Users-maria-Downloads-portfolio-react-vite/83999325-f72e-4695-9078-254ef057bd14/scratchpad/e7.mjs\")",
+      "Bash(node -p \"require\\('./node_modules/@emailjs/browser/package.json'\\).version\")",
+      "Bash(node \"C:/Users/maria/AppData/Local/Temp/claude/c--Users-maria-Downloads-portfolio-react-vite/83999325-f72e-4695-9078-254ef057bd14/scratchpad/e8.mjs\")",
+      "Bash(node \"C:/Users/maria/AppData/Local/Temp/claude/c--Users-maria-Downloads-portfolio-react-vite/83999325-f72e-4695-9078-254ef057bd14/scratchpad/e9.mjs\")",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(git check-ignore *)",
+      "Bash(sed -E 's/=.+/=<preenchido>/' .env)",
+      "Bash(awk '/^## 🚀 Deploy/,/^## 📁|^## 🗂/' README.md)",
+      "Bash(cd /c/Users/maria/Downloads/portfolio-react-vite/src/sections/portfolio && grep -n \"className=\" Hero.jsx About.jsx Skills.jsx Experience.jsx | cut -c1-140 | head -50; grep -n \"timeline-item\\\\|@media\" ../../styles/portfolio.css | head)",
+      "Read(//c/Users/maria/styles/**)",
+      "Bash(node \"C:/Users/maria/AppData/Local/Temp/claude/c--Users-maria-Downloads-portfolio-react-vite/83999325-f72e-4695-9078-254ef057bd14/scratchpad/e10.mjs\")",
+      "Bash(node)"
+    ]
+  }
+}

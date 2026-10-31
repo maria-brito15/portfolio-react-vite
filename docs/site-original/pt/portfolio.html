@@ -1,0 +1,506 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portfólio — Duda Brito | Engenharia de Software & Arquitetura</title>
+    <meta
+      name="description"
+      content="Portfólio de Duda Brito – estudante de Engenharia de Software na interseção entre Software Architecture, System Design, Product Engineering e IA. Projetos reais e forma de pensar sobre sistemas."
+    />
+    <meta property="og:title" content="Portfólio — Duda Brito" />
+    <meta property="og:image" content="assets/og-image.png" />
+    <link rel="icon" type="image/png" href="../favicon.png" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../style.css" />
+  </head>
+  <body>
+    <div class="grid-bg"></div>
+    <nav>
+      <a href="index.html" class="logo">mariab.dev</a>
+      <ul class="nav-links">
+        <li><a href="#sobre">Sobre</a></li>
+        <li><a href="#portfolio">Projetos</a></li>
+        <li><a href="#extra">Extracurricular</a></li>
+        <li><a href="#contact">Contato</a></li>
+      </ul>
+      <div class="nav-right">
+        <button class="theme-toggle" onclick="toggleTheme()">
+          <span id="themeIcon">☀️</span><span id="themeLabel">Modo claro</span>
+        </button>
+        <button
+          class="theme-toggle"
+          onclick="window.location.href = '../en/portfolio.html'"
+        >
+          <span>🌍</span><span>EN</span>
+        </button>
+      </div>
+    </nav>
+
+    <section class="hero">
+      <div class="glow"></div>
+      <div>
+        <div class="badge">
+          <span class="bdot"></span>
+          <span class="page-tag">Engenharia de Software · PUC Minas</span>
+        </div>
+        <h1>
+          Projeto sistemas,<br />
+          não só escrevo <em>código</em>
+        </h1>
+        <p class="hero-sub">
+          Gosto mais de pensar em como um sistema inteiro se encaixa do que só
+          escrever código pra ele funcionar. Trabalho com
+          <strong>Software Architecture</strong>,
+          <strong>System Design</strong> e <strong>Gestão de Projetos</strong>,
+          usando Node.js/TypeScript e Java no dia a dia. Mas o que mais me
+          interessa ultimamente é pegar essas decisões técnicas e transformar em
+          algo que faça sentido pro negócio: planejamento, prioridade, conversa
+          com quem vai usar aquilo.
+        </p>
+        <div class="hero-ctas">
+          <a href="https://github.com/maria-brito15" target="_blank" class="btn"
+            >GitHub →</a
+          ><a href="#portfolio" class="btn-o">Ver Projetos</a>
+        </div>
+        <div class="hero-pills">
+          <span class="hero-pill">Software Architecture</span
+          ><span class="hero-pill">System Design</span
+          ><span class="hero-pill">Gestão de Projetos</span
+          ><span class="hero-pill">AI-Augmented Engineering</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="sobre" class="sec">
+      <div class="lbl">Quem sou</div>
+      <h2 class="stitle">Sobre <em>mim</em></h2>
+      <div class="about-grid">
+        <div class="about-left ap">
+          <div class="about-avatar-wrap">
+            <div class="about-avatar">
+              <img
+                src="../assets/portfolio.jpeg"
+                alt="Foto de Maria Eduarda Brito"
+                style="width: 100%; height: 100%; object-fit: cover"
+              />
+            </div>
+            <div class="about-avatar-dot"></div>
+          </div>
+          <div class="about-name">Maria Eduarda "Duda" P. Brito</div>
+          <div class="about-role">Engenharia de Software · PUC Minas</div>
+          <div class="about-loc">
+            Belo Horizonte, MG<br />
+            Português (nativo) · Inglês (avançado) · Francês (básico)
+          </div>
+          <div class="about-links">
+            <a
+              href="mailto:mariaeduardadepaulabrito@gmail.com"
+              class="about-link"
+              >✉️ mariaeduardadepaulabrito@gmail.com</a
+            ><a href="https://github.com/maria-brito15" class="about-link"
+              >💻 github.com/maria-brito15</a
+            ><a
+              href="https://linkedin.com/in/maria-eduarda-brito-a18064358"
+              class="about-link"
+              >💼 LinkedIn</a
+            >
+          </div>
+        </div>
+        <div class="about-right ap">
+          <p class="about-bio">
+            Estou no meio da Engenharia de Software na PUC Minas (passei também
+            por um tempo em Ciência da Computação) e, no fim das contas, é isso
+            que eu faço: pego um problema meio bagunçado e tento entender como
+            transformar ele em algo estruturado, que funcione tecnicamente e que
+            também faça sentido pra quem vai usar.
+          </p>
+          <p class="about-bio">
+            Com o tempo fui percebendo que gosto mais da parte de decidir
+            arquitetura e organizar o trabalho do que só sentar e codar. Isso me
+            levou pra <strong>liderança técnica</strong>,
+            <strong>planejamento estratégico</strong> e pra pensar em como
+            conectar uma solução técnica com o que o negócio realmente precisa,
+            conversar com quem vai usar, cumprir prazo, entregar direito.
+          </p>
+          <p class="about-bio">
+            Também tenho acompanhado de perto como a IA muda a forma de
+            construir software. Não só como atalho pra codar mais rápido, mas
+            como algo que muda o processo inteiro, de
+            <strong>Specification-Driven Development</strong> a
+            <strong>AI-augmented engineering</strong>. Quero trabalhar num lugar
+            onde humano e IA se completem em vez de um substituir o outro. No
+            fim, o que eu quero é atuar entre arquitetura, produto e liderança,
+            sem esquecer que por trás de qualquer sistema tem gente tentando
+            resolver um problema real.
+          </p>
+
+          <div class="interests">
+            <div class="lbl">Áreas de interesse</div>
+            <div class="interests-list">
+              <span>Software Architecture</span>
+              <span>System Design</span>
+              <span>Gestão de Projetos</span>
+              <span>Planejamento Estratégico</span>
+              <span>Artificial Intelligence</span>
+              <span>Specification-Driven Development</span>
+              <span>AI-Augmented Engineering</span>
+              <span>Engineering Leadership</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider">
+      <div class="section-divider-line"></div>
+      <div class="section-divider-label">stack</div>
+      <div class="section-divider-line"></div>
+    </div>
+    <section id="skills" class="sec">
+      <div class="lbl">Ferramentas</div>
+      <h2 class="stitle">Com o que eu <em>construo</em></h2>
+      <div class="skills-block">
+        <div class="sk-row ap">
+          <h3>Desenvolvimento</h3>
+          <p>
+            Java, Spring Boot · TypeScript, Node.js, Express · React, Next.js ·
+            HTML5, CSS3, Tailwind CSS, Bootstrap
+          </p>
+        </div>
+        <div class="sk-row ap">
+          <h3>Dados & APIs</h3>
+          <p>
+            PostgreSQL, MongoDB, Redis · Prisma ORM · REST APIs, JWT, BCrypt ·
+            BullMQ (filas e workers) · Integração de APIs de IA
+          </p>
+        </div>
+        <div class="sk-row ap">
+          <h3>Infraestrutura</h3>
+          <p>Docker · GitHub Actions (CI/CD) · Git · Maven</p>
+        </div>
+        <div class="sk-row ap">
+          <h3>Engenharia</h3>
+          <p>
+            Domain-Driven Design · Clean Architecture · testes unitários (Jest,
+            JUnit) · metodologias ágeis
+          </p>
+        </div>
+        <div class="sk-row ap">
+          <h3>Gestão & Liderança</h3>
+          <p>
+            Gestão de Projetos · Planejamento Estratégico · Liderança Técnica ·
+            Comunicação com Stakeholders
+          </p>
+        </div>
+        <div class="sk-row ap">
+          <h3>AI & Engenharia orientada por especificação</h3>
+          <p>
+            Specification-Driven Development · AI-augmented engineering ·
+            workflows humano + agentes de IA · rastreabilidade de decisões
+            arquiteturais
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider">
+      <div class="section-divider-line"></div>
+      <div class="section-divider-label">projetos</div>
+      <div class="section-divider-line"></div>
+    </div>
+    <section id="portfolio" class="sec">
+      <div class="lbl">Trabalhos</div>
+      <h2 class="stitle">Projetos em <em>destaque</em></h2>
+      <p
+        style="
+          color: var(--t2);
+          max-width: 62ch;
+          margin-bottom: 2.5rem;
+          font-size: 0.92rem;
+          line-height: 1.7;
+        "
+      >
+        Nem todo projeto aqui nasceu com o mesmo propósito. Alguns eu fiz pra
+        estudar arquitetura e confiabilidade de verdade; outros só pra resolver
+        um problema chato do dia a dia. Separei por essa diferença.
+      </p>
+
+      <div class="proj-grid">
+        <!-- WhatsApp Dispatcher — máxima prioridade -->
+        <div class="featured-card ap">
+          <div class="proj-header">
+            <div class="proj-ico">⚙️</div>
+            <span class="proj-bdg case"
+              >Estudo de Caso · Design de Arquitetura</span
+            >
+          </div>
+          <h3>WhatsApp Dispatcher</h3>
+          <p>
+            Um sistema de disparo de mensagens no WhatsApp pra campanhas e
+            fluxos automatizados. O código é privado, mas escrevi em detalhes o
+            raciocínio por trás de cada decisão, por que essa arquitetura, que
+            trocas eu fiz, o que faria diferente hoje. É provavelmente o
+            material que melhor mostra como eu penso sistema:
+            <strong>Domain-Driven Design</strong>,
+            <strong>Clean Architecture</strong> e uma estrutura inspirada em
+            arquitetura hexagonal.
+          </p>
+          <a href="cases/whatsapp-dispatcher.html" class="btn"
+            >Ler o Estudo de Caso →</a
+          >
+        </div>
+
+        <!-- EcoShop — evolução arquitetural -->
+        <div class="ecoshop-card ap">
+          <div class="ecoshop-info">
+            <div class="proj-header">
+              <div class="proj-ico">🌿</div>
+              <span class="proj-bdg award">Finalista · PUC Minas</span>
+            </div>
+            <h3
+              style="
+                font-family: &quot;Syne&quot;, sans-serif;
+                font-size: 1.4rem;
+                font-weight: 700;
+                margin-bottom: 0.75rem;
+              "
+            >
+              EcoShop
+            </h3>
+            <p
+              style="
+                color: var(--t2);
+                font-size: 0.9rem;
+                line-height: 1.7;
+                margin-bottom: 1.75rem;
+                max-width: 68ch;
+              "
+            >
+              E-commerce sustentável que identifica materiais recicláveis por
+              imagem e analisa sustentabilidade usando IA. Começou como trabalho
+              de faculdade e depois eu reescrevi do zero, sozinha, e o mais
+              interessante aqui não é a versão atual, é ver a distância entre as
+              duas.
+            </p>
+
+            <div class="evo-grid">
+              <div class="evo-col">
+                <span class="evo-tag">v1 · 2025</span>
+                <p class="evo-stack">Java + Spark Framework</p>
+                <p class="evo-desc">
+                  A versão de faculdade, selecionada entre os melhores projetos
+                  do semestre. Arquitetura MVC clássica, Controller → Service →
+                  DAO, conexão direta com PostgreSQL via JDBC.
+                </p>
+                <div class="evo-points">
+                  <div>
+                    > Controllers, Services e DAOs separados por entidade
+                  </div>
+                  <div>> Autenticação por sessão com BCrypt</div>
+                  <div>> InputSanitizer manual contra XSS</div>
+                  <div>> Testes com JUnit 5 + Mockito</div>
+                  <div>> Deploy com Docker no Render</div>
+                </div>
+              </div>
+              <div class="evo-arrow">→</div>
+              <div class="evo-col current">
+                <span class="evo-tag current">v2 · 2026 · atual</span>
+                <p class="evo-stack">Next.js 15 + TypeScript</p>
+                <p class="evo-desc">
+                  Reescrevi tudo com uma stack mais moderna: App Router, cache
+                  em duas camadas, ORM tipado, autenticação stateless e
+                  validação em todas as rotas.
+                </p>
+                <div class="evo-points">
+                  <div>
+                    > Cache em duas camadas: Redis (servidor) + Map
+                    stale-while-revalidate (cliente)
+                  </div>
+                  <div>> JDBC manual → Prisma ORM com schema tipado</div>
+                  <div>
+                    > Sessões → JWT stateless com middleware centralizado
+                  </div>
+                  <div>> Validação com Zod em todas as rotas</div>
+                  <div>> CI/CD com GitHub Actions + Container Registry</div>
+                  <div>
+                    Serviços externos (Azure Custom Vision, Gemini) com
+                    degradação graciosa
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <a
+              href="https://github.com/maria-brito15/ecoshop-nextjs"
+              target="_blank"
+              class="btn"
+              style="
+                width: fit-content;
+                font-size: 0.8rem;
+                padding: 0.55rem 1.2rem;
+              "
+              >Ver no GitHub →</a
+            >
+          </div>
+        </div>
+
+        <!-- Planoriza -->
+        <div class="proj-card ap">
+          <div class="proj-header">
+            <div class="proj-ico">📅</div>
+            <span class="proj-bdg award">Finalista · PUC Minas</span>
+          </div>
+          <h3>Planoriza</h3>
+          <p>
+            Surgiu de um problema que quase todo estudante conhece: lista de
+            tarefas que cresce mais do que dá pra cumprir e só gera frustração.
+            A solução limita quantas tarefas você pode colocar por dia, tem
+            sistema de streak pra manter a consistência, calendário interativo e
+            temporizador. Prevenir o burnout virou uma decisão de produto, não
+            um detalhe.
+          </p>
+          <div class="stacks">
+            <span class="st">HTML5</span><span class="st">CSS3</span
+            ><span class="st">JavaScript</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="minor-projects">
+        <div class="minor-projects-label">Outros projetos</div>
+        <div class="minor-list">
+          <a
+            href="https://github.com/maria-brito15/shorturl-express"
+            target="_blank"
+            class="minor-item ap"
+          >
+            <span class="minor-item-name">ShortURL</span>
+            <span class="minor-item-desc"
+              >API REST pra encurtar URLs, com cache em Redis e rastreamento de
+              clique por link.</span
+            >
+            <span class="minor-item-stack"
+              >Express · TypeScript · MongoDB · Redis · Docker · CI/CD</span
+            >
+          </a>
+          <a
+            href="https://github.com/maria-brito15/file-name-standardizer"
+            target="_blank"
+            class="minor-item ap"
+          >
+            <span class="minor-item-name">File Name Standardizer</span>
+            <span class="minor-item-desc"
+              >Padroniza nomes de arquivo em lote, tira acento, troca espaço por
+              underscore. Sem nenhuma dependência.</span
+            >
+            <span class="minor-item-stack">JavaScript ES6+</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider">
+      <div class="section-divider-line"></div>
+      <div class="section-divider-label">extracurricular</div>
+      <div class="section-divider-line"></div>
+    </div>
+    <section id="extra" class="sec">
+      <div class="lbl">Além da sala de aula</div>
+      <h2 class="stitle">Atividades <em>extracurriculares</em></h2>
+      <div class="extra-grid">
+        <div class="extra-card ap">
+          <span class="extra-bdg highlight">Atual</span>
+          <h3>WebTech — Projeto de Extensão</h3>
+          <p>
+            Faço parte desse projeto de extensão, com prazos, entregas e
+            projetos reais. É uma ponte entre a faculdade e empresas parceiras
+            do setor de tecnologia.
+          </p>
+          <div class="extra-meta">
+            <span class="extra-tag">Trabalho em equipe</span>
+          </div>
+        </div>
+        <div class="extra-card ap">
+          <span class="extra-bdg highlight">2025–2026</span>
+          <h3>Finalista — Melhores Trabalhos, PUC Minas</h3>
+          <p>Duas vezes finalista: EcoShop e Planoriza.</p>
+          <div class="extra-meta"><span class="extra-tag">PUC Minas</span></div>
+        </div>
+        <div class="extra-card ap">
+          <span class="extra-bdg">02/2026</span>
+          <h3>Monitoria — Desenvolvimento de Interfaces Web</h3>
+          <p>Fui monitora dessa disciplina na PUC Minas.</p>
+        </div>
+        <div class="extra-card ap">
+          <span class="extra-bdg">01/2026</span>
+          <h3>Imersão Alura — Análise de Dados com Python</h3>
+          <p>Estudei pandas e matplotlib pra trabalhar com dados.</p>
+        </div>
+        <div class="extra-card ap">
+          <span class="extra-bdg">01/2026</span>
+          <h3>DevArt — Desenvolvimento Web</h3>
+          <p>
+            Curso com o Gustavo Campelo, cobrindo Figma, design responsivo e
+            animações.
+          </p>
+        </div>
+        <div class="extra-card ap">
+          <span class="extra-bdg">02/2025</span>
+          <h3>Maratona SBC — ICPC Brasil</h3>
+          <p>Participei da maratona nacional de programação competitiva.</p>
+          <div class="extra-meta">
+            <span class="extra-tag">Algoritmos</span>
+          </div>
+        </div>
+        <div class="extra-card ap">
+          <span class="extra-bdg">01/2025</span>
+          <h3>Palestrante de Computação</h3>
+          <p>
+            Dei uma palestra em projeto de extensão de programação na PUC Minas.
+          </p>
+          <div class="extra-meta"><span class="extra-tag">Ensino</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="contact-wrap" id="contact">
+      <div class="cbg"></div>
+      <div class="cinner">
+        <div class="lbl" style="justify-content: center">Contato</div>
+        <h2 class="stitle" style="margin-left: auto; margin-right: auto">
+          Vamos <em>conversar?</em>
+        </h2>
+        <p style="color: var(--t2); max-width: 440px; margin: 0 auto">
+          Se tiver alguma oportunidade, colaboração ou projeto que ache que
+          combina comigo, me chama.
+        </p>
+        <div class="clinks">
+          <a class="clink" href="mailto:mariaeduardadepaulabrito@gmail.com"
+            >✉️ E-mail</a
+          ><a
+            class="clink"
+            href="https://linkedin.com/in/maria-eduarda-brito-a18064358"
+            target="_blank"
+            >💼 LinkedIn</a
+          ><a
+            class="clink"
+            href="https://github.com/maria-brito15"
+            target="_blank"
+            >🐙 GitHub</a
+          >
+        </div>
+      </div>
+    </section>
+    <footer><p>Feito por Duda Brito · BH · 2026</p></footer>
+    <div id="lightbox" role="dialog">
+      <button id="lb-close">✕</button><button id="lb-prev">‹</button
+      ><img id="lb-img" src="" alt="" /><button id="lb-next">›</button
+      ><span id="lb-counter"></span>
+    </div>
+    <script src="../script.js"></script>
+  </body>
+</html>
