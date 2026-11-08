@@ -249,7 +249,7 @@ const commands = [
           <div>
             <dt>{lang === 'pt' ? 'formulário' : 'form'}</dt>
             <dd>
-              <TermLink to="/#contato">/#contato</TermLink>
+              <TermLink to="/contato">/contato</TermLink>
             </dd>
           </div>
         </dl>

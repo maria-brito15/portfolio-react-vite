@@ -8,10 +8,15 @@ const ROUTES = [
   '/curriculo',
   '/academico',
   '/servicos',
+  '/sobre',
+  '/habilidades',
+  '/projetos',
+  '/experiencias',
+  '/contato',
   '/estudos-de-caso/whatsapp-dispatcher',
   '/pagina-que-nao-existe',
 ];
-const MENU_HREFS = ['/', '/curriculo', '/academico', '/#projetos', '/servicos', '/#contato'];
+const MENU_HREFS = ['/', '/curriculo', '/academico', '/projetos', '/servicos', '/contato'];
 
 const barInput = () => screen.getByRole('textbox', { name: 'Barra de comandos do site' });
 const menuHrefs = () =>
@@ -94,8 +99,11 @@ describe('item ativo do menu', () => {
     ['/resume', ['Currículo']],
     ['/academico', ['Acadêmico']],
     ['/servicos', ['Serviços']],
-    ['/#projetos', ['Projetos']],
-    ['/estudos-de-caso/whatsapp-dispatcher', []],
+    ['/projetos', ['Projetos']],
+    ['/projects', ['Projetos']],
+    ['/contato', ['Contato']],
+    ['/sobre', []],
+    ['/estudos-de-caso/whatsapp-dispatcher', ['Projetos']],
   ])('%s marca %j', (route, expected) => {
     renderApp(route);
     expect(current()).toEqual(expected);

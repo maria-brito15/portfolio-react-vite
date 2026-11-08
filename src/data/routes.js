@@ -4,8 +4,8 @@
 //
 // - `name` / `alias`: nome do "diretório" em português e em inglês (o mesmo
 //   nome do comando que mostra a visão em terminal);
-// - `path`: onde a página própria mora (seções da home usam `/#âncora`);
-// - `kind`: "page" (rota própria) ou "section" (âncora da página inicial);
+// - `path`: onde a página própria mora;
+// - `kind`: sempre "page" (a home é só o terminal; tudo o mais é página própria);
 // - `command`: comando que mostra a visão em terminal (`/?cmd=<command>`);
 // - `parent`: id da rota-mãe no breadcrumb.
 
@@ -21,8 +21,9 @@ export const routes = [
   },
   {
     id: 'sobre',
-    kind: 'section',
-    path: '/#sobre',
+    kind: 'page',
+    path: '/sobre',
+    aliases: ['/about'],
     name: 'sobre',
     alias: 'about',
     command: 'sobre',
@@ -31,8 +32,9 @@ export const routes = [
   },
   {
     id: 'habilidades',
-    kind: 'section',
-    path: '/#habilidades',
+    kind: 'page',
+    path: '/habilidades',
+    aliases: ['/skills'],
     name: 'habilidades',
     alias: 'skills',
     command: 'habilidades',
@@ -41,8 +43,9 @@ export const routes = [
   },
   {
     id: 'projetos',
-    kind: 'section',
-    path: '/#projetos',
+    kind: 'page',
+    path: '/projetos',
+    aliases: ['/projects'],
     name: 'projetos',
     alias: 'projects',
     command: 'projetos',
@@ -51,8 +54,9 @@ export const routes = [
   },
   {
     id: 'experiencias',
-    kind: 'section',
-    path: '/#experiencias',
+    kind: 'page',
+    path: '/experiencias',
+    aliases: ['/experience'],
     name: 'experiencias',
     alias: 'experience',
     command: 'experiencias',
@@ -61,8 +65,9 @@ export const routes = [
   },
   {
     id: 'contato',
-    kind: 'section',
-    path: '/#contato',
+    kind: 'page',
+    path: '/contato',
+    aliases: ['/contact'],
     name: 'contato',
     alias: 'contact',
     command: 'contato',
@@ -125,7 +130,6 @@ export const menu = menuIds.map(routeById);
 // Seções e páginas que aparecem em `ls`, `cd` e no autocompletar.
 export const directories = routes.filter((r) => r.name && !r.hidden);
 
-const hashOf = (path) => (path.includes('#') ? `#${path.split('#')[1]}` : '');
 export const normalizePath = (path) => path.replace(/(.)\/$/, '$1');
 
 // Página (rota própria) que atende a um caminho, ou undefined para o 404.
@@ -143,15 +147,12 @@ export function findDirectory(arg) {
   return directories.find((d) => d.name === name || d.alias === name);
 }
 
-// Item do menu marcado como página atual.
-export function activeMenuId(path, hash) {
-  const clean = normalizePath(path);
-  if (clean === '/') {
-    return (hash && menu.find((r) => r.id !== 'home' && hashOf(r.path) === hash)?.id) || 'home';
-  }
-  // `findPageByPath` resolve apelidos como /resume e /academics.
-  const page = findPageByPath(clean);
-  return menu.find((r) => r.id !== 'home' && !hashOf(r.path) && r.id === page?.id)?.id;
+// Item do menu marcado como página atual (a página-filha marca a mãe:
+// o estudo de caso marca "Projetos"). `findPageByPath` resolve /resume etc.
+export function activeMenuId(path) {
+  const page = findPageByPath(path);
+  const id = page?.parent ?? page?.id;
+  return menu.some((r) => r.id === id) ? id : undefined;
 }
 
 // Segmentos do breadcrumb e do título da janela: [{ label, to }], sem o "~".
@@ -175,6 +176,3 @@ export function windowPath(route, lang) {
 
 // URL da home que já executa o comando da página (visão em terminal).
 export const terminalUrl = (route) => `/?cmd=${route.command}`;
-
-// Âncora da própria home (`/#projetos`): não precisa de "carregando".
-export const isHomeAnchor = (to) => to.startsWith('/#');

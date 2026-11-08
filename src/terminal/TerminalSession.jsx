@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from '../router';
 import { useLanguage } from '../i18n/LanguageContext';
 import { useTheme } from '../hooks/useTheme';
-import { isHomeAnchor, normalizePath, routes } from '../data/routes';
+import { normalizePath, routes } from '../data/routes';
 import { findCommand, runCommand } from './commands';
 import { SessionContext } from './sessionContext';
 
@@ -60,7 +60,6 @@ function buildEntry(id, input, ctx) {
       ? {
           to: result.redirect,
           status: ctx.replay ? 'done' : 'idle',
-          direct: isHomeAnchor(result.redirect),
         }
       : null,
   };
@@ -180,10 +179,9 @@ export function TerminalProvider({ children }) {
       setEntry(next);
       if (next?.redirect) {
         const { to } = next.redirect;
-        // Âncoras da própria home (e "ir para a home" estando nela) não precisam
-        // de carregamento; qualquer outra página passa pelo fluxo.
-        if (isHomeAnchor(to) || (to === '/' && normalizePath(path) === '/')) {
-          setEntry({ ...next, redirect: { ...next.redirect, status: 'done' } });
+        // "Ir para a home" estando nela não precisa de carregamento.
+        if (to === '/' && normalizePath(path) === '/') {
+          setEntry({ ...next, redirect: { ...next.redirect, status: 'done', direct: true } });
           navigate(to);
         } else {
           startRedirect(to, id);

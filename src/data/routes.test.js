@@ -45,7 +45,8 @@ describe('tabela de rotas', () => {
     expect(findPageByPath('/academics/')?.id).toBe('academico');
     expect(findPageByPath('/estudos-de-caso/whatsapp-dispatcher')?.id).toBe('whatsapp-dispatcher');
     expect(findPageByPath('/nada')).toBeUndefined();
-    // seções da home não são páginas próprias
+    expect(findPageByPath('/about')?.id).toBe('sobre');
+    // âncoras antigas da home não existem mais
     expect(findPageByPath('/#sobre')).toBeUndefined();
   });
 
@@ -58,11 +59,13 @@ describe('tabela de rotas', () => {
   });
 
   it('o item ativo do menu acompanha caminho e âncora', () => {
-    expect(activeMenuId('/', '')).toBe('home');
-    expect(activeMenuId('/', '#projetos')).toBe('projetos');
-    expect(activeMenuId('/', '#sobre')).toBe('home');
-    expect(activeMenuId('/academics', '')).toBe('academico');
-    expect(activeMenuId('/estudos-de-caso/whatsapp-dispatcher', '')).toBeUndefined();
+    expect(activeMenuId('/')).toBe('home');
+    expect(activeMenuId('/projetos')).toBe('projetos');
+    expect(activeMenuId('/contact')).toBe('contato');
+    expect(activeMenuId('/sobre')).toBeUndefined();
+    expect(activeMenuId('/academics')).toBe('academico');
+    // a página-filha marca a mãe
+    expect(activeMenuId('/estudos-de-caso/whatsapp-dispatcher')).toBe('projetos');
   });
 
   it('breadcrumb e título da janela usam o vocabulário do idioma', () => {

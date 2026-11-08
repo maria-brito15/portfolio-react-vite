@@ -6,7 +6,7 @@ const FORBIDDEN =
   /atual|current|a confirmar|to be confirmed|em andamento|concluído|a divulgar|to be published|indispon|not available/i;
 
 function timeline() {
-  renderApp('/');
+  renderApp('/projetos');
   return screen.getByRole('list', { name: /Linha do tempo|Project timeline/ });
 }
 
@@ -92,7 +92,7 @@ describe('timeline de projetos', () => {
 
 describe('experiência WebTech na página', () => {
   it('mostra o período e a descrição atualizados', () => {
-    renderApp('/');
+    renderApp('/experiencias');
     const section = document.getElementById('experiencias');
     expect(section).toHaveTextContent('2º semestre de 2026 – em andamento');
     expect(section).toHaveTextContent(/workshop e de um laboratório de Spec-Driven Development/);

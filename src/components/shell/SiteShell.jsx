@@ -14,9 +14,8 @@ import Footer from './Footer';
 // o 404 não está na tabela e informa só o caminho digitado (`missingPath`).
 //
 // - `children` vai dentro da Window (o terminal, no caso da home);
-// - `after` vai logo abaixo dela (as demais seções da home);
 // - `badge` é o selo à direita da barra de título.
-export default function SiteShell({ routeId, missingPath, badge, variant, children, after }) {
+export default function SiteShell({ routeId, missingPath, badge, variant, children }) {
   const { lang, t } = useLanguage();
   const { back } = useRouter();
   const route = routeId ? routeById(routeId) : null;
@@ -65,7 +64,6 @@ export default function SiteShell({ routeId, missingPath, badge, variant, childr
             {children}
           </Window>
         </section>
-        {after}
       </main>
       <Footer />
     </>

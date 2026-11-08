@@ -39,7 +39,7 @@ function activityRow(entry, lang, { projects, experienceGroups }) {
       title: p.name,
       detail: p[lang].badge,
       kind: 'project',
-      to: '/#projetos',
+      to: '/projetos',
     };
   }
   for (const group of experienceGroups) {

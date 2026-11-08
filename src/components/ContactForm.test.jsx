@@ -42,7 +42,7 @@ describe('formulário de contato', () => {
 
   it('mostra erros acessíveis e não envia quando o formulário é inválido', async () => {
     const user = userEvent.setup();
-    renderApp('/');
+    renderApp('/contato');
     await user.click(screen.getByRole('button', { name: 'Enviar mensagem' }));
     expect(screen.getByText('Informe seu nome.')).toBeInTheDocument();
     expect(screen.getByLabelText('Nome')).toHaveAttribute('aria-invalid', 'true');
@@ -52,7 +52,7 @@ describe('formulário de contato', () => {
 
   it('valida o formato do e-mail e limpa o erro ao corrigir', async () => {
     const user = userEvent.setup();
-    renderApp('/');
+    renderApp('/contato');
     await fill(user, { email: 'ana@' });
     await user.click(screen.getByRole('button', { name: 'Enviar mensagem' }));
     expect(screen.getByText(/e-mail válido/)).toBeInTheDocument();
@@ -64,7 +64,7 @@ describe('formulário de contato', () => {
     const user = userEvent.setup();
     let resolve;
     impl = () => new Promise((r) => (resolve = r));
-    renderApp('/');
+    renderApp('/contato');
     await fill(user);
     await user.click(screen.getByRole('button', { name: 'Enviar mensagem' }));
     expect(calls).toEqual([
@@ -81,7 +81,7 @@ describe('formulário de contato', () => {
     const user = userEvent.setup();
     const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
     impl = () => Promise.reject(new Error('rede'));
-    renderApp('/');
+    renderApp('/contato');
     await fill(user);
     await user.click(screen.getByRole('button', { name: 'Enviar mensagem' }));
     expect(await screen.findByText(/Não foi possível enviar/)).toBeInTheDocument();
@@ -94,7 +94,7 @@ describe('formulário de contato', () => {
     const user = userEvent.setup();
     impl = () =>
       Promise.reject(Object.assign(new EmailNotConfiguredError(), { notConfigured: true }));
-    renderApp('/');
+    renderApp('/contato');
     await fill(user);
     await user.click(screen.getByRole('button', { name: 'Enviar mensagem' }));
     expect(await screen.findByText(/ainda não está ativo/)).toBeInTheDocument();
@@ -107,7 +107,7 @@ describe('formulário de contato', () => {
     const user = userEvent.setup();
     let resolve;
     impl = () => new Promise((r) => (resolve = r));
-    renderApp('/');
+    renderApp('/contato');
     await fill(user);
     const form = screen.getByRole('button', { name: 'Enviar mensagem' }).closest('form');
     fireEvent.submit(form);
@@ -122,7 +122,7 @@ describe('formulário de contato', () => {
     const user = userEvent.setup();
     const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
     impl = () => Promise.reject({ status: 0, text: '' });
-    renderApp('/');
+    renderApp('/contato');
     await fill(user);
     await user.click(screen.getByRole('button', { name: 'Enviar mensagem' }));
     expect(await screen.findByText(/Sem conexão/)).toBeInTheDocument();
@@ -134,7 +134,7 @@ describe('formulário de contato', () => {
   });
 
   it('descarta envio quando o campo-armadilha é preenchido (bot)', () => {
-    renderApp('/');
+    renderApp('/contato');
     const form = screen.getByRole('button', { name: 'Enviar mensagem' }).closest('form');
     fireEvent.change(form.elements.website, { target: { value: 'http://spam' } });
     fireEvent.submit(form);
@@ -142,7 +142,7 @@ describe('formulário de contato', () => {
   });
 
   it('campos têm rótulo, obrigatoriedade e limites; a armadilha fica oculta ao teclado e a leitores de tela', () => {
-    renderApp('/');
+    renderApp('/contato');
     expect(screen.getByLabelText('Nome')).toHaveAttribute('maxlength', '100');
     expect(screen.getByLabelText('Mensagem')).toHaveAttribute('maxlength', '5000');
     for (const label of ['Nome', 'E-mail', 'Mensagem']) {
@@ -155,7 +155,7 @@ describe('formulário de contato', () => {
 
   it('mensagens de erro seguem o idioma escolhido', async () => {
     const user = userEvent.setup();
-    renderApp('/');
+    renderApp('/contato');
     await user.click(screen.getByRole('button', { name: /Switch to English/ }));
     await user.click(screen.getByRole('button', { name: 'Send message' }));
     await waitFor(() => expect(screen.getByText('Please enter your name.')).toBeInTheDocument());

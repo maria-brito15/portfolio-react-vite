@@ -54,7 +54,6 @@ describe('terminal da página inicial', () => {
     expect(document.documentElement.getAttribute('data-theme')).not.toBe(before);
     await user.type(terminalInput(), 'idioma{Enter}');
     expect(document.documentElement.lang).toBe('en');
-    expect(screen.getByRole('heading', { name: /About me/ })).toBeInTheDocument();
     // o histórico é redesenhado no novo idioma
     expect(screen.getByText('language: English')).toBeInTheDocument();
   });

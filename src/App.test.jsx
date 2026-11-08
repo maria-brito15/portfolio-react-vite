@@ -3,18 +3,26 @@ import userEvent from '@testing-library/user-event';
 import { renderApp } from './test/helpers';
 
 describe('página inicial', () => {
-  it('tem cada seção principal uma única vez, na ordem pedida', () => {
+  it('é só o terminal: sem bloco de marketing rolável abaixo da janela', () => {
     renderApp('/');
     const ids = [...document.querySelectorAll('main section[id]')].map((s) => s.id);
-    expect(ids).toEqual(['inicio', 'sobre', 'habilidades', 'projetos', 'experiencias', 'contato']);
-    expect(document.querySelectorAll('[id]').length).toBe(
-      new Set([...document.querySelectorAll('[id]')].map((e) => e.id)).size,
-    );
-    expect(screen.getAllByRole('heading', { level: 2, name: /Experiências/ })).toHaveLength(1);
+    expect(ids).toEqual(['inicio']);
+    expect(document.querySelectorAll('.win')).toHaveLength(1);
+    expect(document.querySelector('main').nextElementSibling.tagName).toBe('FOOTER');
+  });
+
+  it('cada página tem ids únicos', () => {
+    for (const path of ['/', '/sobre', '/habilidades', '/projetos', '/experiencias', '/contato']) {
+      const { unmount } = renderApp(path);
+      const ids = [...document.querySelectorAll('[id]')].map((e) => e.id);
+      expect(new Set(ids).size, path).toBe(ids.length);
+      unmount();
+    }
+    expect(screen.queryAllByRole('heading', { level: 2, name: /Experiências/ })).toHaveLength(0);
   });
 
   it('lista os projetos na timeline sem repetir nenhum', () => {
-    renderApp('/');
+    renderApp('/projetos');
     const timeline = screen.getByRole('list', { name: /Linha do tempo/ });
     const names = within(timeline)
       .getAllByRole('heading', { level: 3 })
@@ -27,13 +35,13 @@ describe('página inicial', () => {
 
   it('troca de idioma, mantém na página e persiste a escolha', async () => {
     const user = userEvent.setup();
-    renderApp('/');
+    renderApp('/sobre');
     expect(screen.getByRole('heading', { name: /Sobre mim/ })).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: /Switch to English/ }));
     expect(screen.getByRole('heading', { name: /About me/ })).toBeInTheDocument();
     expect(document.documentElement.lang).toBe('en');
     expect(localStorage.getItem('portfolio-lang')).toBe('en');
-    expect(window.location.pathname).toBe('/');
+    expect(window.location.pathname).toBe('/sobre');
   });
 
   it('alterna o tema e persiste no localStorage', async () => {
@@ -61,15 +69,14 @@ describe('página inicial', () => {
 describe('navegação', () => {
   it('abre o estudo de caso e a página de serviços sem recarregar', async () => {
     const user = userEvent.setup();
-    renderApp('/');
+    renderApp('/projetos');
     await user.click(screen.getByRole('link', { name: /Ler o Estudo de Caso/ }));
     expect(window.location.pathname).toBe('/estudos-de-caso/whatsapp-dispatcher');
     expect(
       screen.getByRole('heading', { level: 1, name: 'WhatsApp Dispatcher' }),
     ).toBeInTheDocument();
     await user.click(screen.getAllByRole('link', { name: /Voltar aos projetos/ })[0]);
-    expect(window.location.pathname).toBe('/');
-    expect(window.location.hash).toBe('#projetos');
+    expect(window.location.pathname).toBe('/projetos');
   });
 
   it('mostra a página 404 para rotas desconhecidas', () => {
@@ -79,7 +86,16 @@ describe('navegação', () => {
 
   it('todas as rotas renderizam sem erro nos dois idiomas', async () => {
     const user = userEvent.setup();
-    for (const path of ['/', '/servicos', '/estudos-de-caso/whatsapp-dispatcher']) {
+    for (const path of [
+      '/',
+      '/sobre',
+      '/habilidades',
+      '/projetos',
+      '/experiencias',
+      '/contato',
+      '/servicos',
+      '/estudos-de-caso/whatsapp-dispatcher',
+    ]) {
       const { unmount } = renderApp(path);
       expect(screen.getByRole('main')).toBeInTheDocument();
       await user.click(screen.getByRole('button', { name: /Switch to English/ }));

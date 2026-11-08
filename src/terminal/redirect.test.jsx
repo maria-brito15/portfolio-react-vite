@@ -66,12 +66,12 @@ describe('carregamento antes de redirecionar', () => {
     expect(window.location.pathname).toBe('/academico');
   });
 
-  it('âncoras da própria home não têm carregamento', async () => {
+  it('"cd ~" na própria home não tem carregamento', async () => {
     const user = setup();
     renderApp('/');
-    await user.type(terminalInput(), 'cd projetos{Enter}');
-    expect(window.location.pathname + window.location.hash).toBe('/#projetos');
+    await user.type(terminalInput(), 'cd ~{Enter}');
     expect(log()).not.toHaveTextContent('%');
+    expect(window.location.pathname).toBe('/');
   });
 
   it('Esc cancela o carregamento e a URL não muda', async () => {

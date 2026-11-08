@@ -4,7 +4,7 @@
 import { createContext, useContext } from 'react';
 import { Link, useRouter } from '../router';
 import { useLanguage } from '../i18n/LanguageContext';
-import { isHomeAnchor, normalizePath, routeById, terminalUrl } from '../data/routes';
+import { normalizePath, routeById, terminalUrl } from '../data/routes';
 import ViewActions from '../components/shell/ViewActions';
 import { useTerminalSession } from './sessionContext';
 
@@ -21,11 +21,11 @@ export const Cmd = ({ children }) => <span className="t-cmd">{children}</span>;
 export const EntryContext = createContext(null);
 
 // Link para outra página dentro de uma saída: mostra o carregamento antes de
-// navegar. Âncoras da própria home (`/#projetos`) navegam direto.
+// navegar.
 export function TermLink({ to, onClick, ...rest }) {
   const session = useTerminalSession();
   const entryId = useContext(EntryContext);
-  if (isHomeAnchor(to) || !session || entryId == null) return <Link to={to} {...rest} />;
+  if (!session || entryId == null) return <Link to={to} {...rest} />;
   return (
     <Link
       to={to}
@@ -54,9 +54,7 @@ export function ActionLine({ routeId }) {
   const terminal = onHome
     ? { onClick: () => document.getElementById('inicio')?.scrollIntoView({ behavior: 'smooth' }) }
     : { to: terminalUrl(route) };
-  const page = isHomeAnchor(route.path)
-    ? { to: route.path }
-    : { onClick: () => session.openPage(route.path, entryId) };
+  const page = { onClick: () => session.openPage(route.path, entryId) };
 
   return (
     <p className="t-actions">

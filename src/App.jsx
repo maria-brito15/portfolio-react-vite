@@ -6,6 +6,7 @@ import Services from './pages/Services';
 import CaseStudy from './pages/CaseStudy';
 import Resume from './pages/Resume';
 import Academics from './pages/Academics';
+import SectionPage from './pages/SectionPage';
 import NotFound from './pages/NotFound';
 
 // Rota (src/data/routes.js) → página.
@@ -13,6 +14,12 @@ function Page({ id }) {
   switch (id) {
     case 'home':
       return <Home />;
+    case 'sobre':
+    case 'habilidades':
+    case 'projetos':
+    case 'experiencias':
+    case 'contato':
+      return <SectionPage routeId={id} />;
     case 'curriculo':
       return <Resume />;
     case 'academico':

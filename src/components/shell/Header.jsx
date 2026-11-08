@@ -13,7 +13,7 @@ export default function Header() {
   const { path, hash } = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuId = useId();
-  const activeId = activeMenuId(path, hash);
+  const activeId = activeMenuId(path);
 
   // Fecha o menu ao trocar de rota ou âncora.
   const [lastLocation, setLastLocation] = useState(path + hash);

@@ -52,7 +52,7 @@ export default function WhatsAppDispatcherEn() {
         </ol>
       </aside>
       <div>
-        <Link to="/#projetos" className="case-back">
+        <Link to="/projetos" className="case-back">
           ← Back to projects
         </Link>
         <div className="case-meta">
@@ -1141,10 +1141,10 @@ export default function WhatsAppDispatcherEn() {
           </div>
         </div>
         <div className="case-ctas">
-          <Link to="/#projetos" className="btn-o">
+          <Link to="/projetos" className="btn-o">
             ← Back to projects
           </Link>{' '}
-          <Link to="/#contato" className="btn">
+          <Link to="/contato" className="btn">
             Let's talk about it →
           </Link>
         </div>

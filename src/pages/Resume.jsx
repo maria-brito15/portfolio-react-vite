@@ -266,7 +266,7 @@ export default function Resume() {
                   <ul className="aw-instances">
                     {instances.map((p) => (
                       <li key={p.id}>
-                        <Link to="/#projetos">{p.name}</Link>
+                        <Link to="/projetos">{p.name}</Link>
                         <span className="doc-date">{formatProjectDate(p.date)}</span>
                       </li>
                     ))}
