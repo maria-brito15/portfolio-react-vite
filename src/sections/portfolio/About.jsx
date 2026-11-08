@@ -1,13 +1,13 @@
 import Reveal from '../../components/Reveal';
+import SectionTitle from '../../components/ui/SectionTitle';
 import { profile } from '../../data/profile';
 
 export default function About({ content }) {
   return (
     <section id="sobre" className="sec" aria-labelledby="sobre-title">
-      <div className="lbl">{content.label}</div>
-      <h2 className="stitle" id="sobre-title">
+      <SectionTitle id="sobre-title" label={content.label}>
         {content.title}
-      </h2>
+      </SectionTitle>
       <div className="about-grid">
         <Reveal className="about-left">
           <div className="about-avatar-wrap">

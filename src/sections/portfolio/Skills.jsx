@@ -1,12 +1,12 @@
 import Reveal from '../../components/Reveal';
+import SectionTitle from '../../components/ui/SectionTitle';
 
 export default function Skills({ content }) {
   return (
     <section id="habilidades" className="sec" aria-labelledby="habilidades-title">
-      <div className="lbl">{content.label}</div>
-      <h2 className="stitle" id="habilidades-title">
+      <SectionTitle id="habilidades-title" label={content.label}>
         {content.title}
-      </h2>
+      </SectionTitle>
       <div className="skills-block">
         {content.rows.map(([area, tools]) => (
           <Reveal className="sk-row" key={area}>

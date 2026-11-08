@@ -112,13 +112,6 @@
   padding: 2.2rem 0 1rem;
   scroll-margin-top: calc(var(--top-h) + var(--space-4));
 }
-.doc-sec h2 {
-  font-family: 'Syne', sans-serif;
-  font-size: 1.35rem;
-  margin-bottom: 1.1rem;
-  display: flex;
-  align-items: baseline;
-}
 .doc-sec p + p {
   margin-top: 0.8rem;
 }
@@ -226,10 +219,6 @@
   gap: 0.8rem;
 }
 .ac-stats li {
-  border: 1px solid var(--bdr);
-  background: var(--bg2);
-  border-radius: var(--r);
-  padding: 0.9rem 1rem;
   display: grid;
 }
 .ac-stats strong {
@@ -316,12 +305,6 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.9rem;
 }
-.ac-program {
-  padding: 1rem 1.1rem;
-  border: 1px solid var(--bdr);
-  border-radius: var(--r);
-  background: var(--bg2);
-}
 .ac-program h3 {
   font-size: 1rem;
   margin: 0.3rem 0 0.1rem;
@@ -330,62 +313,8 @@
 .ac-year + .ac-year {
   margin-top: 1.6rem;
 }
-.ac-table-wrap {
-  overflow-x: auto;
-  border: 1px solid var(--bdr);
-  border-radius: var(--r);
-}
-.ac-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.9rem;
-}
-.ac-table th,
-.ac-table td {
-  text-align: left;
-  padding: 0.65rem 0.9rem;
-  border-bottom: 1px solid var(--bdr);
-  vertical-align: top;
-}
-.ac-table th {
-  font-family: var(--font-mono);
-  font-weight: 500;
-  font-size: 0.72rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--t3);
-  background: var(--bg2);
-}
-.ac-table tbody tr:last-child td {
-  border-bottom: 0;
-}
-.ac-table tfoot td {
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  color: var(--t2);
-  background: var(--bg2);
-  border-top: 1px solid var(--bdr);
-  border-bottom: 0;
-}
 .ac-grade {
   font-family: var(--font-mono);
-}
-.ac-chip {
-  display: inline-block;
-  font-size: 0.72rem;
-  padding: 1px 8px;
-  border-radius: 100px;
-  color: var(--accent-2);
-  background: rgba(163, 116, 242, 0.1);
-  border: 1px solid rgba(163, 116, 242, 0.22);
-  white-space: nowrap;
-  text-transform: none;
-  letter-spacing: 0;
-}
-.ac-live {
-  color: var(--term-ok);
-  background: transparent;
-  border-color: currentColor;
 }
 .ac-dev-hint {
   margin-top: 1.2rem;
@@ -495,34 +424,9 @@
   }
 }
 
-/* Colunas iguais entre as tabelas de anos diferentes. */
-.ac-table {
-  table-layout: fixed;
-  min-width: 560px;
-}
-.ac-table th:nth-child(2) {
-  width: 11rem;
-}
-.ac-table th:nth-child(3) {
-  width: 10rem;
-}
-.ac-table td.doc-date {
-  white-space: normal;
-}
-.ac-table-wrap + p,
 .ac-year + p {
   margin-top: 1.2rem;
 }
-@media print {
-  .ac-table {
-    min-width: 0;
-  }
-}
-.ac-courses th:nth-child(2),
-.ac-courses th:nth-child(4) {
-  width: 6rem;
-}
-
 /* Celular: marcos da linha do tempo em lista e tabelas de atividades em cartões. */
 @media (max-width: 600px) {
   .ac-track {
@@ -550,30 +454,6 @@
   .ac-marks li {
     position: relative !important;
     left: auto !important;
-  }
-  .ac-table:not(.ac-courses) {
-    min-width: 0;
-    table-layout: auto;
-  }
-  .ac-table:not(.ac-courses) thead {
-    display: none;
-  }
-  .ac-table:not(.ac-courses) tr {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 0.3rem 0.8rem;
-    padding: 0.7rem 0.9rem;
-    border-bottom: 1px solid var(--bdr);
-  }
-  .ac-table:not(.ac-courses) tbody tr:last-child {
-    border-bottom: 0;
-  }
-  .ac-table:not(.ac-courses) td {
-    padding: 0;
-    border: 0;
-  }
-  .ac-table:not(.ac-courses) td:first-child {
-    grid-column: 1 / -1;
   }
 }
 
@@ -637,10 +517,7 @@
   gap: 0.8rem;
 }
 .xp-card {
-  padding: 1rem 1.2rem;
-  border: 1px solid var(--bdr);
-  border-radius: var(--r);
-  background: var(--bg2);
+  padding: var(--space-4) 1.2rem;
 }
 .xp-head {
   display: grid;
@@ -695,14 +572,6 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem;
-}
-.xp-tags li {
-  font-size: 0.72rem;
-  padding: 1px 9px;
-  border-radius: 100px;
-  color: var(--accent-2);
-  background: rgba(163, 116, 242, 0.1);
-  border: 1px solid rgba(163, 116, 242, 0.22);
 }
 
 .aw-head {
@@ -784,8 +653,4 @@
   text-transform: none;
   letter-spacing: 0;
   color: var(--t2);
-}
-.ac-empty td {
-  color: var(--t3);
-  font-style: italic;
 }

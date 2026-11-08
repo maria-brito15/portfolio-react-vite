@@ -60,7 +60,12 @@ export function ActionLine({ routeId }) {
 
   return (
     <p className="t-actions">
-      <ViewActions view="terminal" terminal={terminal} page={page} />
+      <ViewActions
+        view="terminal"
+        active={onHome ? 'terminal' : null}
+        terminal={terminal}
+        page={page}
+      />
     </p>
   );
 }

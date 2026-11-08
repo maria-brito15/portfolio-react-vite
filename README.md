@@ -51,13 +51,29 @@ Páginas:
 | `/servicos` | Serviços web oferecidos, cases (BECAS, Ágape Vestir), FAQ e contato |
 | `/estudos-de-caso/whatsapp-dispatcher` | Estudo de caso de arquitetura (PT/EN) |
 
+Todas as páginas usam o mesmo esqueleto (`SiteShell`): **Header** único (Início, Currículo, Acadêmico, Projetos, Serviços, Contato; o item atual leva `aria-current="page"`) → **barra de comandos** fixa → **Window** (a "janelinha" com título `visitante@mariab.dev: ~/rota`) → conteúdo → **Footer**. Fora da home há também **← Voltar** (`history.back()` quando a página anterior é do site; senão vai para `/`) e **breadcrumb** (`~ / academico`). Todos os caminhos, nomes de comando, rótulos de menu e breadcrumbs vêm de uma tabela só: [`src/data/routes.js`](src/data/routes.js).
+
+### Duas visualizações: "no terminal" e "página própria"
+
+Todo comando que tem página dedicada (`sobre`, `habilidades`, `projetos`, `experiencias`, `curriculo`, `academico`, `servicos`, `contato`) **mostra primeiro a visão em terminal** e termina com `[ ver no terminal ]  [ abrir página própria ↗ ]`. Só `cd <página>` e o botão "abrir página própria" navegam, passando por um carregamento (`abrindo /academico… [■■■■□□□□] 48%` → `pronto ✓`; `Esc` ou `Ctrl+C` cancelam; com `prefers-reduced-motion` vira `carregando…`). Nas páginas dedicadas, a barra de título da Window tem o mesmo par: `[ ver no terminal ]` leva à home com o comando já executado (`/?cmd=academico`).
+
+| Tecla / comando | O que faz |
+| --- | --- |
+| `ajuda`, `ls`, `cd <seção>` | lista comandos, seções/páginas e navega (âncoras da home não têm carregamento) |
+| `curriculo`, `academico`, `servicos` | visão em terminal da página, com as duas ações |
+| `tema`, `idioma`, `historico`, `limpar` | tema claro/escuro, PT/EN, comandos digitados, volta ao banner |
+| Tab · ↑/↓ · Ctrl+L · Ctrl+C | completar (com lista de sugestões), histórico, limpar, interromper |
+| Ctrl+K ou / | foca a barra de comandos (exceto dentro de campos de formulário); em tela estreita ela vira o botão `>_`, que abre a barra em tela cheia |
+
+Cada comando limpa a tela: ficam visíveis só o último comando e sua saída (o histórico de ↑/↓ e `historico` continua inteiro). A barra de comandos e o terminal da home compartilham a mesma sessão (`src/terminal/TerminalSession.jsx`).
+
 ---
 
 ## ✨ Funcionalidades principais
 
-- 💻 **Terminal interativo na abertura** (`src/terminal/`): o visitante digita comandos como `ajuda`, `sobre`, `ls`, `cd projetos`, `projetos`, `experiencias`, `curriculo`, `academico`, `contato`, `tema` e `idioma` (nomes em PT ou EN). Tem autocompletar com Tab, histórico com ↑/↓, `Ctrl+L` para limpar, saída redesenhada ao trocar de idioma e histórico mantido durante a visita. Atalhos clicáveis abaixo do terminal deixam tudo acessível no celular.
+- 💻 **Terminal interativo na abertura** (`src/terminal/`): o visitante digita comandos como `ajuda`, `sobre`, `ls`, `cd projetos`, `projetos`, `experiencias`, `curriculo`, `academico`, `contato`, `tema` e `idioma` (nomes em PT ou EN). Tem autocompletar com Tab, histórico com ↑/↓, `Ctrl+L` para limpar, saída redesenhada ao trocar de idioma, uma entrada por vez na tela e histórico mantido durante a visita. Atalhos clicáveis abaixo do terminal deixam tudo acessível no celular.
 - 📄 **Currículo web** (`/curriculo`): versão em página do currículo, com seções numeradas, índice fixo, competências com tempo de uso (contado a partir do primeiro projeto ou curso com cada tecnologia, em `src/data/skillTimeline.js`), experiências em cards numerados com "Mostrar mais", formação e reconhecimentos com contagem (2× finalista) e impressão limpa (o botão abre a janela de impressão; "Salvar como PDF" gera o arquivo).
-- 🎓 **Página Acadêmico** (`/academico`): linha do tempo de 2025 até a previsão de conclusão (2029) com a posição de hoje, formação, números de destaque e atividades por ano. A seção **Disciplinas e notas** por semestre (carga horária, modalidade, nota e média) já vem com 4 semestres como placeholder (01/2025, 02/2025 e 01/2026 em Ciência da Computação; 02/2026 em Engenharia de Software, em andamento). Para preencher, adicione as disciplinas em `courses` dentro de `src/data/academics.js` (formato documentado no próprio arquivo); carga horária e média aparecem sozinhas.
+- 🎓 **Página Acadêmico** (`/academico`): linha do tempo de 2025 até a previsão de conclusão (2029) com a posição de hoje, formação, números de destaque e atividades por ano (anos e itens do mais recente ao mais antigo, ordenação calculada por `sortByDateDesc` em `src/utils/projectDate.js`). A seção **Disciplinas e notas** por semestre (carga horária, modalidade, nota e média) já vem com 4 semestres como placeholder, listados do mais recente ao mais antigo (01/2025, 02/2025 e 01/2026 em Ciência da Computação; 02/2026 em Engenharia de Software, em andamento). Para preencher, adicione as disciplinas em `courses` dentro de `src/data/academics.js` (formato documentado no próprio arquivo); carga horária e média aparecem sozinhas.
 - 🌍 **Português e inglês** com troca no cabeçalho, preferência salva em `localStorage` e permanência na página/seção atual.
 - 🌗 **Tema claro/escuro**, salvo em `localStorage` e aplicado antes do primeiro desenho (sem "flash").
 - 🕰️ **Timeline de projetos dinâmica**, gerada de `src/data/projects.jsx` e ordenada do mais antigo ao mais recente por data `{ ano, mês? }`. A data aparece como `MM/AAAA` ou só `AAAA`; quando o mês não é conhecido e há outro projeto no mesmo ano, a interface indica que a ordem entre eles é indeterminada.
@@ -98,19 +114,26 @@ Páginas:
 SPA estática, sem back-end. Textos e dados ficam em `src/data`, separados dos componentes; páginas montam seções; seções usam componentes reutilizáveis.
 
 ```text
-main.jsx → RouterProvider → LanguageProvider → App (escolhe a página pela rota)
-                                                ├─ Home      → sections/portfolio/*
-                                                ├─ Services  → Faq, ImageGallery, ContactLinks
-                                                ├─ CaseStudy → pages/case-study/* (JSX do original)
-                                                └─ NotFound
+main.jsx → RouterProvider → LanguageProvider → ThemeProvider → App
+App → TerminalProvider (sessão do terminal) → página escolhida por data/routes.js
+        ├─ Home      → SiteShell(Terminal) + sections/portfolio/*
+        ├─ Resume    → DocPage → SiteShell
+        ├─ Academics → DocPage → SiteShell
+        ├─ Services  → SiteShell → Faq, ImageGallery, ContactLinks
+        ├─ CaseStudy → SiteShell → pages/case-study/* (JSX do original)
+        └─ NotFound  → SiteShell
+
+SiteShell = Header → CommandBar → [Voltar + Breadcrumb] → Window → conteúdo → Footer
 ```
 
 Decisões:
 
-- **Roteamento próprio** (`src/router.jsx`): são só três rotas e uma 404; evita uma dependência. Usa a History API e trata links com âncora (`/#projetos`), botão voltar e recarga. Em produção exige o fallback `/* → /index.html` da hospedagem.
+- **Roteamento próprio** (`src/router.jsx`): poucas rotas e uma 404; evita uma dependência. Usa a History API e trata links com âncora (`/#projetos`), `?cmd=`, botão voltar e recarga; cada entrada do histórico guarda quantas navegações internas a precedem, o que permite ao "Voltar" saber se a página anterior é do site. Em produção exige o fallback `/* → /index.html` da hospedagem.
 - **Internacionalização sem biblioteca:** `LanguageContext` guarda o idioma (PT/EN) em `localStorage` e em `<html lang>`. Textos de interface ficam em `src/i18n/ui.js`; conteúdo em `src/data/*` com chaves `pt` e `en`. A troca mantém rota e seção.
 - **Tema claro/escuro:** atributo `data-theme` no `<html>`, aplicado por script inline em `index.html` antes do React, para evitar flash.
-- **Organização:** `pages/` (uma por rota) → `sections/portfolio/` (blocos da home) → `components/` (reutilizáveis: Header, Faq, Lightbox, ImageGallery, ContactForm). Dados e regras ficam fora do JSX: `utils/projectDate.js` (datas e ordenação), `utils/validateContact.js` (validação).
+- **Organização:** `pages/` (uma por rota) → `sections/portfolio/` (blocos da home) → `components/shell/` (esqueleto compartilhado), `components/ui/` (Card, Chip, DataTable, SectionTitle, ActionLink) e `components/` (Faq, Lightbox, ImageGallery, ContactForm…).
+- **Tokens de design** em `src/styles/tokens.css` (espaçamento, raios, sombras, fontes, cores da janela/terminal nos temas claro e escuro); os componentes novos só usam essas variáveis.
+- **Uma sessão de terminal:** `useTerminal` (teclas de uma linha de comando) + `TerminalProvider` (histórico, última saída, carregamento/cancelamento) alimentam o terminal da home e a barra de comandos das outras páginas. Dados e regras ficam fora do JSX: `utils/projectDate.js` (datas e ordenação), `utils/validateContact.js` (validação).
 - **Timeline orientada a dados:** datas com precisão variável `{ year, month? }`; nenhum mês é presumido.
 - **Sem `dangerouslySetInnerHTML`:** o HTML original virou JSX e os `addEventListener` do script original viraram componentes (`Reveal`, `Faq`, `Lightbox`, `handleRadialGlow`) com limpeza no desmontar.
 - **EmailJS isolado** em `src/services/emailService.js`; o formulário só conhece `sendContactMessage` e `classifySendError`. Chamada única por envio, sem resposta automática e sem armazenamento. Trade-off: as chaves do EmailJS ficam no JavaScript do navegador (são públicas por desenho), então a proteção real está nas restrições da conta (domínio e limite de envios).
@@ -222,14 +245,22 @@ Resumo: criar o repositório no GitHub → importar no Netlify (build `npm run b
 ├── src/
 │   ├── main.jsx · App.jsx · router.jsx
 │   ├── pages/                 # Home, Resume, Academics, Services, CaseStudy, NotFound
-│   ├── terminal/              # Terminal.jsx (interface) + commands.jsx (interpretador)
 │   │   └── case-study/        # estudo de caso original em JSX (PT e EN)
+│   ├── terminal/              # sessão e interface do terminal
+│   │   ├── TerminalSession.jsx  # provedor: histórico, última saída, carregamento, ?cmd=
+│   │   ├── useTerminal.js       # hook: teclas de uma linha de comando
+│   │   ├── CommandInput.jsx · Terminal.jsx · TerminalOutput.jsx · Prompt.jsx
+│   │   ├── commands.jsx         # interpretador e comandos
+│   │   └── outputs.jsx · views.jsx  # saídas (ações, progresso) e visões em terminal
 │   ├── sections/portfolio/    # About, Skills, Projects, Experience, Contact
-│   ├── components/            # Header, Footer, Reveal, Faq, Lightbox, ImageGallery, ContactForm…
-│   ├── data/                  # profile, portfolio, projects, experiences, services, resume, academics
+│   ├── components/
+│   │   ├── shell/             # SiteShell, Header, CommandBar, Window, Breadcrumb, ViewActions, Footer
+│   │   ├── ui/                # SectionTitle, Card, Chip, DataTable, ActionLink
+│   │   └── …                  # DocPage, Reveal, Faq, Lightbox, ImageGallery, ContactForm…
+│   ├── data/                  # routes (tabela de rotas), profile, portfolio, projects, experiences, services, resume, academics
 │   ├── i18n/                  # LanguageContext + textos de interface
 │   ├── hooks/ · utils/ · services/
-│   ├── styles/                # original.css (preservado), portfolio.css, case-study.css, terminal.css, resume.css
+│   ├── styles/                # tokens.css, ui.css, shell.css, terminal.css, resume.css, original.css (preservado), portfolio.css, case-study.css
 │   └── test/                  # configuração dos testes (os *.test.* ficam junto do código)
 ├── docs/
 │   ├── sdd/                   # requisitos, análise de lacunas e plano de tarefas
@@ -256,6 +287,16 @@ Resumo: criar o repositório no GitHub → importar no Netlify (build `npm run b
 | **Serviços** | **Estudo de caso** |
 | ![Serviços](docs/screenshots/servicos-desktop.png) | ![Estudo de caso](docs/screenshots/estudo-de-caso-desktop.png) |
 
+**Navegação unificada e terminal v2** (1440×900 e 390×844, temas escuro e claro; capturas `docs/screenshots/v2-*.png`):
+
+| Início (terminal) | Currículo (claro) |
+| :---: | :---: |
+| ![Início](docs/screenshots/v2-home-desktop-dark.png) | ![Currículo](docs/screenshots/v2-curriculo-desktop-light.png) |
+| **Acadêmico** | **Serviços** |
+| ![Acadêmico](docs/screenshots/v2-academico-desktop-dark.png) | ![Serviços](docs/screenshots/v2-servicos-desktop-dark.png) |
+| **Barra de comandos + carregamento** | **Barra em tela cheia (celular)** |
+| ![Carregando](docs/screenshots/v2-carregando-desktop.png) | ![Barra no celular](docs/screenshots/v2-barra-comandos-mobile.png) |
+
 Mobile (390 px): ![Projetos no celular](docs/screenshots/projetos-mobile.png) ![Terminal no celular](docs/screenshots/terminal-mobile.png)
 
 ---
@@ -263,7 +304,7 @@ Mobile (390 px): ![Projetos no celular](docs/screenshots/projetos-mobile.png) ![
 ## 🧪 Testes
 
 ```bash
-npm test        # 71 testes: terminal, currículo, acadêmico, validação, timeline, idioma, tema, navegação, FAQ, lightbox, formulário, serviço de e-mail
+npm test        # terminal (limpeza por comando, carregamento, cancelamento, replay), layout das 6 rotas, barra de comandos, ordenação decrescente, currículo, acadêmico, validação, timeline, idioma, tema, FAQ, lightbox, formulário, serviço de e-mail
 npm run lint
 npm run build
 ```

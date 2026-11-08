@@ -1,4 +1,5 @@
 import SiteShell from './shell/SiteShell';
+import SectionTitle from './ui/SectionTitle';
 import { useLanguage } from '../i18n/LanguageContext';
 
 // Conteúdo comum de Currículo e Acadêmico, dentro da Window do SiteShell:
@@ -32,12 +33,9 @@ export default function DocPage({ routeId, sections, actions, children }) {
 export function DocSection({ id, index, title, summary, children }) {
   return (
     <section className="doc-sec" id={id} aria-labelledby={`${id}-title`}>
-      <h2 id={`${id}-title`}>
-        <span className="doc-num" aria-hidden="true">
-          {String(index).padStart(2, '0')}
-        </span>
+      <SectionTitle id={`${id}-title`} index={index} size="md">
         {title}
-      </h2>
+      </SectionTitle>
       {summary && <p className="doc-summary">{summary}</p>}
       {children}
     </section>

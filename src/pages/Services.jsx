@@ -1,5 +1,7 @@
 import Reveal from '../components/Reveal';
 import SiteShell from '../components/shell/SiteShell';
+import SectionTitle from '../components/ui/SectionTitle';
+import Card from '../components/ui/Card';
 import SectionDivider from '../components/SectionDivider';
 import ContactLinks from '../components/ContactLinks';
 import ImageGallery from '../components/ImageGallery';
@@ -43,13 +45,12 @@ export default function Services() {
       </section>
 
       <section id="servicos" className="sec" aria-labelledby="servicos-title">
-        <div className="lbl">{c.services.label}</div>
-        <h2 className="stitle" id="servicos-title">
+        <SectionTitle id="servicos-title" label={c.services.label}>
           {c.services.title}
-        </h2>
+        </SectionTitle>
         <div className="services-grid">
           {c.services.items.map((item) => (
-            <Reveal className="svc-card" key={item.title}>
+            <Reveal as={Card} className="svc-card" key={item.title}>
               <div className="svc-icon" aria-hidden="true">
                 {item.icon}
               </div>
@@ -64,7 +65,8 @@ export default function Services() {
               </div>
             </Reveal>
           ))}
-          <Reveal as="a" href={mailto} className="svc-card svc-card-custom">
+          {/* Cartão que é um link: mesma classe `card`, mas a tag é <a>. */}
+          <Reveal as="a" href={mailto} className="card svc-card svc-card-custom">
             <div>
               <div className="svc-icon" aria-hidden="true">
                 💬
@@ -97,12 +99,11 @@ export default function Services() {
 
       <SectionDivider label={c.cases.divider} />
       <section id="cases" className="sec" aria-labelledby="cases-title">
-        <div className="lbl">{c.cases.label}</div>
-        <h2 className="stitle" id="cases-title">
+        <SectionTitle id="cases-title" label={c.cases.label}>
           {c.cases.title}
-        </h2>
+        </SectionTitle>
         {c.cases.items.map((item) => (
-          <Reveal className="case-card" key={item.id}>
+          <Reveal as={Card} className="case-card" key={item.id}>
             <div className="case-content">
               <div className="case-badge">{item.badge}</div>
               <h3>{item.title}</h3>
@@ -141,12 +142,9 @@ export default function Services() {
       <section className="contact-wrap" id="contato" aria-labelledby="svc-contato-title">
         <div className="cbg" aria-hidden="true"></div>
         <div className="cinner">
-          <div className="lbl" style={{ justifyContent: 'center' }}>
-            {c.contact.label}
-          </div>
-          <h2 className="stitle" id="svc-contato-title">
+          <SectionTitle id="svc-contato-title" label={c.contact.label} center>
             {c.contact.title}
-          </h2>
+          </SectionTitle>
           <p className="contact-text">{c.contact.text}</p>
           <ContactLinks email={profile.servicesEmail} emailLabel={c.contact.email} />
         </div>

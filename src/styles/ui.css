@@ -1,6 +1,8 @@
 /* Componentes compartilhados (src/components/ui): título de seção, cartão,
    chip e tabela. Uma implementação só, usada por Home, Currículo, Acadêmico e
-   Serviços. Valores vêm de tokens.css; cores gerais, de original.css. */
+   Serviços. Valores vêm de tokens.css; cores gerais, de original.css.
+   É carregado ANTES de original.css: as classes de cada seção (.svc-card,
+   .featured-card…) só ajustam o que é específico delas. */
 
 /* ---------- SectionTitle ---------- */
 .lbl--center {
@@ -10,7 +12,7 @@
   margin-left: auto;
   margin-right: auto;
 }
-.stitle--md {
+.stitle.stitle--md {
   display: flex;
   align-items: baseline;
   max-width: none;
@@ -24,6 +26,14 @@
   border: 1px solid var(--bdr);
   border-radius: var(--r);
   background: var(--bg2);
+  box-shadow: var(--card-shadow);
+}
+@media print {
+  .card {
+    border: 0;
+    background: none;
+    box-shadow: none;
+  }
 }
 
 /* ---------- Chip ---------- */

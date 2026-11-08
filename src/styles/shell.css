@@ -204,6 +204,9 @@ html {
   backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--bdr);
 }
+.cmdbar:focus-within {
+  border-bottom-color: var(--accent);
+}
 .cmdbar-body {
   position: relative;
 }

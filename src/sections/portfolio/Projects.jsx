@@ -3,6 +3,7 @@ import { projects, sortProjectsChronologically } from '../../data/projects';
 import { findUndeterminedOrder } from '../../utils/projectDate';
 import { useLanguage } from '../../i18n/LanguageContext';
 import ProjectCard from './ProjectCard';
+import SectionTitle from '../../components/ui/SectionTitle';
 
 // Timeline dinâmica: os projetos vêm de src/data/projects.jsx e são ordenados
 // do mais antigo ao mais recente; cada um mantém a apresentação original.
@@ -12,10 +13,9 @@ export default function Projects({ content }) {
   const undetermined = useMemo(() => findUndeterminedOrder(projects), []);
   return (
     <section id="projetos" className="sec" aria-labelledby="projetos-title">
-      <div className="lbl">{content.label}</div>
-      <h2 className="stitle" id="projetos-title">
+      <SectionTitle id="projetos-title" label={content.label}>
         {content.title}
-      </h2>
+      </SectionTitle>
       <p className="section-intro">{content.intro}</p>
       <ol className="timeline" aria-label={t.timeline.label}>
         {ordered.map((project) => (

@@ -5,6 +5,7 @@ import { RouterProvider } from './router';
 import { LanguageProvider } from './i18n/LanguageContext';
 import { ThemeProvider } from './hooks/useTheme';
 import './styles/tokens.css';
+import './styles/ui.css';
 import './styles/original.css';
 import './styles/portfolio.css';
 import './styles/terminal.css';

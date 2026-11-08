@@ -4,6 +4,7 @@ import { useLanguage } from '../../i18n/LanguageContext';
 import { handleRadialGlow } from '../../utils/radialGlow';
 import { formatProjectDate } from '../../utils/projectDate';
 import ProjectMedia from './ProjectMedia';
+import Card from '../../components/ui/Card';
 
 function RepoLink({ project, className = 'btn' }) {
   const { t } = useLanguage();
@@ -31,7 +32,7 @@ function Stack({ tech }) {
 function Featured({ project, copy }) {
   const { t } = useLanguage();
   return (
-    <div className="featured-card">
+    <Card className="featured-card">
       <div className="proj-header">
         <div className="proj-ico" aria-hidden="true">
           {project.icon}
@@ -48,13 +49,13 @@ function Featured({ project, copy }) {
         <RepoLink project={project} />
       </div>
       <ProjectMedia project={project} />
-    </div>
+    </Card>
   );
 }
 
 function Evolution({ project, copy }) {
   return (
-    <div className="ecoshop-card">
+    <Card className="ecoshop-card">
       <div className="ecoshop-info">
         <div className="proj-header">
           <div className="proj-ico" aria-hidden="true">
@@ -93,13 +94,13 @@ function Evolution({ project, copy }) {
           <RepoLink project={project} />
         </div>
       </div>
-    </div>
+    </Card>
   );
 }
 
-function Card({ project, copy }) {
+function Standard({ project, copy }) {
   return (
-    <div className="proj-card" onMouseMove={handleRadialGlow}>
+    <Card className="proj-card" onMouseMove={handleRadialGlow}>
       <div className="proj-header">
         <div className="proj-ico" aria-hidden="true">
           {project.icon}
@@ -115,7 +116,7 @@ function Card({ project, copy }) {
           <RepoLink project={project} className="btn-o" />
         </div>
       )}
-    </div>
+    </Card>
   );
 }
 
@@ -137,7 +138,7 @@ function toDateTime({ year, month }) {
   return month ? `${year}-${String(month).padStart(2, '0')}` : String(year);
 }
 
-const VARIANTS = { featured: Featured, evolution: Evolution, card: Card, minor: Minor };
+const VARIANTS = { featured: Featured, evolution: Evolution, card: Standard, minor: Minor };
 
 export default function ProjectCard({ project, orderUndetermined = false }) {
   const { lang, t } = useLanguage();

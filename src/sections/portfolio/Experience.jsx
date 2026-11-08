@@ -1,4 +1,5 @@
 import Reveal from '../../components/Reveal';
+import SectionTitle from '../../components/ui/SectionTitle';
 import { experienceGroups } from '../../data/experiences';
 import { useLanguage } from '../../i18n/LanguageContext';
 
@@ -8,10 +9,9 @@ export default function Experience({ content }) {
   const { lang } = useLanguage();
   return (
     <section id="experiencias" className="sec" aria-labelledby="experiencias-title">
-      <div className="lbl">{content.label}</div>
-      <h2 className="stitle" id="experiencias-title">
+      <SectionTitle id="experiencias-title" label={content.label}>
         {content.title}
-      </h2>
+      </SectionTitle>
       {experienceGroups.map((group) => (
         <div className="extra-group" key={group.id}>
           <h3 className="extra-group-title">{group.title[lang]}</h3>

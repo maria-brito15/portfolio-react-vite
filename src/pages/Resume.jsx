@@ -8,11 +8,13 @@ import { profile } from '../data/profile';
 import { projects } from '../data/projects';
 import { skillTimeline, formatSince } from '../data/skillTimeline';
 import { formatProjectDate } from '../utils/projectDate';
+import { experienceStats, finalistProjects } from '../utils/resume';
+import Card from '../components/ui/Card';
+import Chip from '../components/ui/Chip';
 import { useLanguage } from '../i18n/LanguageContext';
 import { useDocumentMeta } from '../hooks/useDocumentMeta';
 
 const pick = (value, lang) => (typeof value === 'string' ? value : value[lang]);
-const yearOf = (period) => Math.min(...(period.match(/\d{4}/g) ?? []).map(Number));
 
 // Descrições longas começam recolhidas, como no azal.im; na impressão abrem.
 function ExperienceCard({ index, item, kind, c, lang }) {
@@ -21,7 +23,7 @@ function ExperienceCard({ index, item, kind, c, lang }) {
   const long = description.length > 160;
   const id = `exp-${item.id}`;
   return (
-    <li className="xp-card">
+    <Card as="li" className="xp-card">
       <div className="xp-head">
         <span className="xp-num" aria-hidden="true">
           {String(index).padStart(2, '0')}
@@ -50,10 +52,10 @@ function ExperienceCard({ index, item, kind, c, lang }) {
       )}
       {item.tag && (
         <ul className="xp-tags">
-          <li>{item.tag[lang]}</li>
+          <Chip as="li">{item.tag[lang]}</Chip>
         </ul>
       )}
-    </li>
+    </Card>
   );
 }
 
@@ -64,11 +66,11 @@ export default function Resume() {
 
   const groups = experienceGroups.filter((g) => g.id !== 'awards');
   const experiences = groups.flatMap((g) => g.items.map((item) => ({ item, kind: g.title[lang] })));
-  const firstYear = Math.min(...experiences.map(({ item }) => yearOf(item.period.pt)));
+  const { firstYear } = experienceStats(experienceGroups);
 
   // Reconhecimentos: o card "Finalista" das experiências, com uma linha por
   // projeto finalista (projetos cujo selo começa com "Finalista").
-  const finalists = projects.filter((p) => /^Finalista/.test(p.pt.badge ?? ''));
+  const finalists = finalistProjects(projects);
   const awards = experienceGroups
     .find((g) => g.id === 'awards')
     .items.map((item) => ({
@@ -214,7 +216,7 @@ export default function Resume() {
       <DocSection id="formacao" index={5} title={c.sections.education}>
         <ol className="xp-list">
           {[...academics.programs].reverse().map((p, i) => (
-            <li className="xp-card" key={p.id}>
+            <Card as="li" className="xp-card" key={p.id}>
               <div className="xp-head">
                 <span className="xp-num" aria-hidden="true">
                   {String(i + 1).padStart(2, '0')}
@@ -228,7 +230,7 @@ export default function Resume() {
                   {p.expected ? ` (${c.expected})` : ''}
                 </span>
               </div>
-            </li>
+            </Card>
           ))}
         </ol>
         <p>
@@ -249,7 +251,7 @@ export default function Resume() {
           {awards.map(({ item, instances }) => {
             const times = Math.max(1, instances.length);
             return (
-              <li className="xp-card aw-card" key={item.id}>
+              <Card as="li" className="xp-card aw-card" key={item.id}>
                 <div className="aw-head">
                   <span className="aw-count">{times}×</span>
                   <div>
@@ -270,7 +272,7 @@ export default function Resume() {
                     ))}
                   </ul>
                 )}
-              </li>
+              </Card>
             );
           })}
         </ul>

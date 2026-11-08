@@ -13,7 +13,11 @@ export default function DataTable({
   const span = columns.length;
   return (
     <div className="data-table-wrap">
-      <table className={['data-table', stack && 'data-table--stack', className].filter(Boolean).join(' ')}>
+      <table
+        className={['data-table', stack && 'data-table--stack', className]
+          .filter(Boolean)
+          .join(' ')}
+      >
         <thead>
           <tr>
             {columns.map((col) => (

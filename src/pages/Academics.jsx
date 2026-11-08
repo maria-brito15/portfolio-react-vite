@@ -1,4 +1,7 @@
 import DocPage, { DocSection } from '../components/DocPage';
+import Card from '../components/ui/Card';
+import Chip from '../components/ui/Chip';
+import DataTable from '../components/ui/DataTable';
 import { Link } from '../router';
 import { academics } from '../data/academics';
 import { projects } from '../data/projects';
@@ -128,6 +131,42 @@ export default function Academics() {
   const showCourses = academics.semesters.length > 0;
   if (showCourses) sections.push({ id: 'disciplinas', title: c.sections.courses });
 
+  const activityColumns = [
+    {
+      key: 'activity',
+      label: c.cols.activity,
+      render: (row) => (
+        <>
+          {row.to ? <Link to={row.to}>{row.title}</Link> : <strong>{row.title}</strong>}
+          {row.detail && <span className="doc-muted"> · {row.detail}</span>}
+        </>
+      ),
+    },
+    {
+      key: 'type',
+      label: c.cols.type,
+      size: 'l',
+      render: (row) => <Chip>{c.kinds[row.kind]}</Chip>,
+    },
+    { key: 'period', label: c.cols.period, size: 'm', className: 'doc-date' },
+  ];
+  const courseColumns = [
+    { key: 'name', label: c.courseCols.name, render: (course) => pick(course.name, lang) },
+    { key: 'hours', label: c.courseCols.hours, size: 's' },
+    {
+      key: 'modality',
+      label: c.courseCols.modality,
+      render: (course) => c.modality[course.modality] ?? course.modality,
+    },
+    {
+      key: 'grade',
+      label: c.courseCols.grade,
+      size: 's',
+      className: 'ac-grade',
+      render: (course) => course.grade ?? '—',
+    },
+  ];
+
   return (
     <DocPage routeId="academico" sections={sections}>
       <header className="doc-head">
@@ -135,10 +174,10 @@ export default function Academics() {
         <p className="doc-muted">{c.intro}</p>
         <ul className="ac-stats">
           {stats.map(([value, label]) => (
-            <li key={label}>
+            <Card as="li" key={label}>
               <strong>{value}</strong>
               <span>{label}</span>
-            </li>
+            </Card>
           ))}
         </ul>
       </header>
@@ -171,14 +210,14 @@ export default function Academics() {
       <DocSection id="formacao-academica" index={2} title={c.sections.programs}>
         <div className="ac-programs">
           {[...academics.programs].reverse().map((p) => (
-            <article key={p.id} className="ac-program">
+            <Card as="article" key={p.id} className="ac-program">
               <span className="doc-date">
                 {p.start}–{p.end}
                 {p.expected ? ` (${c.expected})` : ''}
               </span>
               <h3>{p.degree[lang]}</h3>
               <p className="doc-muted">{p.institution}</p>
-            </article>
+            </Card>
           ))}
         </div>
       </DocSection>
@@ -187,35 +226,7 @@ export default function Academics() {
         {activitiesByYear(academics, { projects, experienceGroups }, lang).map((y) => (
           <div className="ac-year" key={y.year}>
             <h3 className="doc-group-title">{y.year}</h3>
-            <div className="ac-table-wrap">
-              <table className="ac-table">
-                <thead>
-                  <tr>
-                    <th scope="col">{c.cols.activity}</th>
-                    <th scope="col">{c.cols.type}</th>
-                    <th scope="col">{c.cols.period}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {y.rows.map((row) => (
-                    <tr key={row.key}>
-                      <td>
-                        {row.to ? (
-                          <Link to={row.to}>{row.title}</Link>
-                        ) : (
-                          <strong>{row.title}</strong>
-                        )}
-                        {row.detail && <span className="doc-muted"> · {row.detail}</span>}
-                      </td>
-                      <td>
-                        <span className="ac-chip">{c.kinds[row.kind]}</span>
-                      </td>
-                      <td className="doc-date">{row.period}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <DataTable columns={activityColumns} rows={y.rows} rowKey={(row) => row.key} stack />
           </div>
         ))}
         {!showCourses && import.meta.env.DEV && <p className="ac-dev-hint">{c.devHint}</p>}
@@ -233,42 +244,19 @@ export default function Academics() {
                 <h3 className="doc-group-title">
                   {s.label[lang]}
                   <span className="ac-program-name">{programName(s.program, lang)}</span>
-                  {s.inProgress && <span className="ac-chip ac-live">{c.inProgress}</span>}
+                  {s.inProgress && <Chip tone="live">{c.inProgress}</Chip>}
                 </h3>
-                <div className="ac-table-wrap">
-                  <table className="ac-table ac-courses">
-                    <thead>
-                      <tr>
-                        <th scope="col">{c.courseCols.name}</th>
-                        <th scope="col">{c.courseCols.hours}</th>
-                        <th scope="col">{c.courseCols.modality}</th>
-                        <th scope="col">{c.courseCols.grade}</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {s.courses.length === 0 && (
-                        <tr className="ac-empty">
-                          <td colSpan={4}>{c.emptySemester}</td>
-                        </tr>
-                      )}
-                      {s.courses.map((course) => (
-                        <tr key={pick(course.name, 'pt')}>
-                          <td>{pick(course.name, lang)}</td>
-                          <td>{course.hours}</td>
-                          <td>{c.modality[course.modality] ?? course.modality}</td>
-                          <td className="ac-grade">{course.grade ?? '—'}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                    {s.courses.length > 0 && (
-                      <tfoot>
-                        <tr>
-                          <td colSpan={4}>{c.totals(totals.done, totals.total, totals.average)}</td>
-                        </tr>
-                      </tfoot>
-                    )}
-                  </table>
-                </div>
+                <DataTable
+                  columns={courseColumns}
+                  rows={s.courses}
+                  rowKey={(course) => pick(course.name, 'pt')}
+                  empty={c.emptySemester}
+                  footer={
+                    s.courses.length > 0
+                      ? c.totals(totals.done, totals.total, totals.average)
+                      : null
+                  }
+                />
               </div>
             );
           })}

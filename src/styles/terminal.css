@@ -123,9 +123,6 @@
   text-decoration-color: currentColor;
 }
 
-.term-input-line {
-  margin-top: 0.6rem;
-}
 .term-input {
   flex: 1;
   min-width: 8ch;
@@ -308,7 +305,7 @@
     margin-bottom: 0.3rem;
   }
   .t-table li {
-    grid-template-columns: 9ch 1fr;
+    grid-template-columns: 11ch 1fr;
     gap: 0 0.8rem;
   }
   .t-table li > :nth-child(n + 3) {
@@ -317,7 +314,7 @@
   .t-table.t-table-act li,
   .t-table.t-table-svc li,
   .t-numbered li {
-    grid-template-columns: 9ch 1fr;
+    grid-template-columns: 11ch 1fr;
   }
 }
 
