@@ -2,12 +2,7 @@
    não foi alterado; aqui ficam só ajustes para elementos que mudaram de
    marcação (botões, listas, timeline, menu mobile, formulário, lightbox). */
 
-html {
-  scroll-padding-top: 5rem;
-}
-section[id] {
-  scroll-margin-top: 5rem;
-}
+/* O deslocamento das âncoras (topo fixo) está em shell.css. */
 button {
   font: inherit;
 }
@@ -36,7 +31,7 @@ button {
     align-items: center;
     justify-content: center;
   }
-  nav {
+  .site-nav {
     flex-wrap: wrap;
   }
   .nav-links {

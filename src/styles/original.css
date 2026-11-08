@@ -100,7 +100,7 @@ button:focus-visible {
 }
 
 /* ========== NAVIGATION ========== */
-nav {
+.site-nav {
   position: fixed;
   top: 0;
   left: 0;
@@ -1386,7 +1386,7 @@ footer {
 
 /* ========== RESPONSIVE ========== */
 @media (max-width: 720px) {
-  nav {
+  .site-nav {
     padding: 0.75rem 1.1rem;
   }
   .nav-links {

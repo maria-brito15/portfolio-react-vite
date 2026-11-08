@@ -1,0 +1,438 @@
+/* Esqueleto comum a todas as páginas: topo fixo (Header + barra de comandos),
+   voltar/breadcrumb, a Window e as ações "ver no terminal / página própria".
+   Só usa as variáveis de tokens.css. */
+
+/* ---------- Topo fixo: Header + barra de comandos ---------- */
+.site-top {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+}
+.site-top .site-nav {
+  position: static;
+  min-height: var(--nav-h);
+  box-sizing: border-box;
+}
+html {
+  scroll-padding-top: calc(var(--top-h) + var(--space-4));
+}
+
+.nav-links a[aria-current='page'] {
+  color: var(--accent);
+}
+
+/* ---------- Corpo ---------- */
+.shell {
+  position: relative;
+  z-index: 1;
+  padding-top: calc(var(--top-h) + var(--space-5));
+}
+.shell-stage {
+  position: relative;
+  max-width: calc(var(--win-max) + 2 * var(--gutter));
+  margin: 0 auto;
+  padding: 0 var(--gutter) var(--space-6);
+}
+.shell--home .shell-stage {
+  padding-bottom: var(--space-7);
+}
+.shell-glow {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.shell-nav {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-3) var(--space-4);
+  margin-bottom: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--fs-chrome);
+}
+.shell-back {
+  font: inherit;
+  color: var(--t2);
+  background: var(--bg2);
+  border: 1px solid var(--bdr);
+  border-radius: var(--radius-pill);
+  padding: 0.25rem 0.8rem;
+  cursor: pointer;
+  transition:
+    color 0.2s,
+    border-color 0.2s;
+}
+.shell-back:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.crumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  color: var(--t3);
+}
+.crumbs li + li::before {
+  content: '/';
+  margin-right: var(--space-2);
+}
+.crumbs a {
+  color: var(--t2);
+  text-decoration: none;
+}
+.crumbs a:hover {
+  color: var(--accent);
+}
+.crumbs [aria-current='page'] {
+  color: var(--t);
+}
+
+/* ---------- Window ---------- */
+.win {
+  position: relative;
+  z-index: 1;
+  background: var(--term-bg);
+  border: 1px solid var(--bdr);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--win-shadow);
+  /* `clip` arredonda os cantos sem criar um contêiner de rolagem (o índice
+     fixo do currículo continua "grudando"). */
+  overflow: clip;
+}
+.win--terminal {
+  cursor: text;
+  transition: border-color 0.2s;
+}
+.win--terminal:focus-within {
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+}
+.win-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  padding: 0.6rem 0.9rem;
+  background: var(--term-bar);
+  border-bottom: 1px solid var(--bdr);
+  font-family: var(--font-mono);
+  font-size: var(--fs-chrome);
+  color: var(--term-dim);
+}
+.win-dots {
+  display: inline-flex;
+  gap: 6px;
+}
+.win-dots i {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--dot-close);
+}
+.win-dots i:nth-child(2) {
+  background: var(--dot-min);
+}
+.win-dots i:nth-child(3) {
+  background: var(--dot-max);
+}
+.win-title {
+  flex: 1 1 12rem;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.win-badge {
+  border: 1px solid var(--bdr);
+  border-radius: var(--radius-pill);
+  padding: 1px 9px;
+  white-space: nowrap;
+}
+
+/* ---------- Ações "[ ver no terminal ]  [ página própria ]" ---------- */
+.view-actions {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+}
+.action-link {
+  font-family: var(--font-mono);
+  font-size: var(--fs-chrome);
+  color: var(--term-path);
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.action-link::before {
+  content: '[ ';
+}
+.action-link::after {
+  content: ' ]';
+}
+.action-link:hover {
+  text-decoration: underline;
+}
+.action-link.is-active {
+  color: var(--term-text);
+  font-weight: 700;
+}
+.term .action-link {
+  color: var(--term-path);
+  text-decoration: none;
+  font-size: inherit;
+}
+.term .action-link:hover {
+  text-decoration: underline;
+}
+.term .action-link.is-active {
+  color: var(--term-text);
+}
+
+/* ---------- Barra de comandos ---------- */
+.cmdbar {
+  position: relative;
+  height: var(--cmdbar-h);
+  background: var(--nav-bg);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--bdr);
+}
+.cmdbar-body {
+  position: relative;
+}
+.cmdbar-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  max-width: calc(var(--win-max) + 2 * var(--gutter));
+  height: var(--cmdbar-h);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+  box-sizing: border-box;
+}
+.cmd-input {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-chrome);
+  line-height: 1.4;
+  flex-wrap: nowrap;
+}
+.cmd-input--bar {
+  font-size: 0.82rem;
+}
+.cmd-input--bar .term-input {
+  min-width: 0;
+}
+.cmd-input--bar .cmd-suggest {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: 2;
+  margin: 0 !important;
+  padding: var(--space-2) var(--space-3);
+  background: var(--term-bg);
+  border: 1px solid var(--bdr);
+  border-radius: var(--radius-md);
+  box-shadow: var(--win-shadow);
+}
+.cmd-input .t-suggest {
+  flex-basis: 100%;
+}
+.cmdbar .t-prompt {
+  flex: none;
+}
+.cmdbar-kbd {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--t3);
+  border: 1px solid var(--bdr);
+  border-radius: var(--radius-sm);
+  padding: 0 6px;
+}
+.cmdbar-toggle,
+.cmdbar-close {
+  display: none;
+}
+.cmdbar-close,
+.cmdbar-panel-close {
+  font: inherit;
+  color: var(--t2);
+  background: none;
+  border: 1px solid var(--bdr);
+  border-radius: var(--radius-sm);
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+}
+.cmdbar-live {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+}
+.cmdbar-panel {
+  position: relative;
+  max-width: var(--win-max);
+  max-height: 55vh;
+  margin: 0 auto;
+  padding: var(--space-4) var(--space-5);
+  overflow-y: auto;
+  background: var(--term-bg);
+  border: 1px solid var(--bdr);
+  border-top: 0;
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  box-shadow: var(--win-shadow);
+  box-sizing: border-box;
+}
+.cmdbar-panel p {
+  margin: 0;
+}
+.cmdbar-panel-close {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+}
+
+/* ---------- Conteúdo dentro da Window ---------- */
+.win-body .hero {
+  min-height: 0;
+  padding: var(--space-7) var(--space-6) var(--space-6);
+}
+.win-body .sec {
+  padding: var(--space-7) var(--space-6);
+}
+.win-body .not-found {
+  padding: var(--space-7) var(--space-5);
+  min-height: 0;
+}
+.win-body .case-shell {
+  max-width: none;
+  padding: var(--space-6) var(--space-5) var(--space-7);
+}
+
+/* ---------- Celular: janela de borda a borda, barra vira `>_` ---------- */
+@media (max-width: 720px) {
+  :root {
+    --nav-h: 3.4rem;
+  }
+  .shell-nav {
+    padding: 0 var(--space-4);
+  }
+  .win {
+    border-left: 0;
+    border-right: 0;
+    border-radius: 0;
+  }
+  .win-badge {
+    display: none;
+  }
+  .win-title {
+    text-align: left;
+  }
+  .win-body .hero,
+  .win-body .sec {
+    padding-left: var(--space-4);
+    padding-right: var(--space-4);
+  }
+
+  .cmdbar-toggle {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    width: 100%;
+    height: var(--cmdbar-h);
+    padding: 0 var(--space-4);
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--term-dim);
+    background: none;
+    border: 0;
+    cursor: pointer;
+  }
+  .cmdbar-toggle > span:first-child {
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .cmdbar-body,
+  .cmdbar-kbd {
+    display: none;
+  }
+  .cmdbar.is-open {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg);
+    backdrop-filter: none;
+  }
+  .cmdbar.is-open .cmdbar-toggle {
+    display: none;
+  }
+  .cmdbar.is-open .cmdbar-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+  }
+  .cmdbar.is-open .cmdbar-row {
+    flex: none;
+    width: 100%;
+    padding: 0 var(--space-4);
+    border-bottom: 1px solid var(--bdr);
+  }
+  .cmdbar.is-open .cmdbar-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .cmdbar.is-open .cmdbar-live {
+    position: static;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+  }
+  .cmdbar.is-open .cmdbar-panel {
+    max-height: none;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    padding: var(--space-4);
+  }
+}
+
+/* ---------- Impressão: some o chrome, fica só o conteúdo ---------- */
+@media print {
+  .site-top,
+  .shell-nav,
+  .win-bar,
+  .shell-glow,
+  .grid-bg {
+    display: none !important;
+  }
+  .shell {
+    padding-top: 0;
+  }
+  .shell-stage {
+    max-width: none;
+    padding: 0;
+  }
+  .win {
+    background: none;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    overflow: visible;
+  }
+}

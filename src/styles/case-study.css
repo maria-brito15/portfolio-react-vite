@@ -14,7 +14,7 @@
 }
 .case-toc {
   position: sticky;
-  top: 6.5rem;
+  top: calc(var(--top-h) + var(--space-4));
   font-size: 0.82rem;
 }
 .case-toc-label {
@@ -82,7 +82,7 @@
   font-size: 1.4rem;
   font-weight: 700;
   margin: 3.2rem 0 1.1rem;
-  scroll-margin-top: 6rem;
+  scroll-margin-top: calc(var(--top-h) + var(--space-4));
 }
 .case-body h2:first-child {
   margin-top: 0;
@@ -92,7 +92,7 @@
   font-size: 1.08rem;
   font-weight: 700;
   margin: 1.9rem 0 0.8rem;
-  scroll-margin-top: 6rem;
+  scroll-margin-top: calc(var(--top-h) + var(--space-4));
 }
 .case-body p {
   color: var(--t2);

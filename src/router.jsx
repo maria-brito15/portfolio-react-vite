@@ -1,11 +1,20 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
-// Roteamento mínimo baseado na History API: o site tem só três páginas,
-// então uma biblioteca de rotas completa não se justifica.
+// Roteamento mínimo baseado na History API: o site tem poucas páginas, então
+// uma biblioteca de rotas completa não se justifica. Cada entrada do histórico
+// guarda `{ idx }` (quantas navegações internas existem antes dela): com
+// `idx > 0` a página anterior é do próprio site e "Voltar" pode usar history.back().
 const RouterContext = createContext(null);
 
+const currentIndex = () => window.history.state?.idx ?? 0;
+
 function readLocation() {
-  return { path: window.location.pathname, hash: window.location.hash };
+  return {
+    path: window.location.pathname,
+    hash: window.location.hash,
+    search: window.location.search,
+    idx: currentIndex(),
+  };
 }
 
 function scrollToHash(hash) {
@@ -30,19 +39,37 @@ export function RouterProvider({ children }) {
     if (!location.hash) window.scrollTo(0, 0);
   }, [location]);
 
-  const navigate = useCallback((to) => {
+  // `replace` troca a entrada atual em vez de empilhar uma nova.
+  const navigate = useCallback((to, { replace = false } = {}) => {
     const url = new URL(to, window.location.href);
-    const next = { path: url.pathname, hash: url.hash };
-    if (next.path === window.location.pathname && next.hash === window.location.hash) {
-      if (next.hash) scrollToHash(next.hash);
+    if (
+      url.pathname === window.location.pathname &&
+      url.hash === window.location.hash &&
+      url.search === window.location.search
+    ) {
+      if (url.hash) scrollToHash(url.hash);
       else window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
-    window.history.pushState(null, '', url.pathname + url.hash);
-    setLocation(next);
+    const idx = replace ? currentIndex() : currentIndex() + 1;
+    window.history[replace ? 'replaceState' : 'pushState'](
+      { idx },
+      '',
+      url.pathname + url.search + url.hash,
+    );
+    setLocation(readLocation());
   }, []);
 
-  const value = useMemo(() => ({ ...location, navigate }), [location, navigate]);
+  // "Voltar": history.back() se a página anterior é do site; senão, a home.
+  const back = useCallback(() => {
+    if (currentIndex() > 0) window.history.back();
+    else navigate('/');
+  }, [navigate]);
+
+  const value = useMemo(
+    () => ({ ...location, canGoBack: location.idx > 0, navigate, back }),
+    [location, navigate, back],
+  );
   return <RouterContext.Provider value={value}>{children}</RouterContext.Provider>;
 }
 

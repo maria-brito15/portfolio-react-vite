@@ -1,16 +1,19 @@
 import { useEffect, useId, useState } from 'react';
-import { Link, useRouter } from '../router';
-import { useLanguage } from '../i18n/LanguageContext';
-import { useTheme } from '../hooks/useTheme';
+import { Link, useRouter } from '../../router';
+import { useLanguage } from '../../i18n/LanguageContext';
+import { useTheme } from '../../hooks/useTheme';
+import { activeMenuId, menu } from '../../data/routes';
 
-// Barra de navegação do site original. Cada página informa seus links;
-// em telas pequenas eles ficam num menu recolhível (antes simplesmente sumiam).
-export default function Header({ links }) {
-  const { t, toggleLang } = useLanguage();
+// Barra de navegação única do site: os mesmos links em todas as páginas,
+// vindos da tabela de rotas (src/data/routes.js). O item da página atual leva
+// aria-current="page". Em telas pequenas os links ficam num menu recolhível.
+export default function Header() {
+  const { lang, t, toggleLang } = useLanguage();
   const [theme, toggleTheme] = useTheme();
   const { path, hash } = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuId = useId();
+  const activeId = activeMenuId(path, hash);
 
   // Fecha o menu ao trocar de rota ou âncora.
   const [lastLocation, setLastLocation] = useState(path + hash);
@@ -29,15 +32,19 @@ export default function Header({ links }) {
   const dark = theme === 'dark';
 
   return (
-    <nav aria-label={t.nav.main}>
+    <nav className="site-nav" aria-label={t.nav.main}>
       <Link to="/" className="logo" aria-label={t.nav.home}>
         mariab.dev
       </Link>
       <ul id={menuId} className={`nav-links${menuOpen ? ' open' : ''}`}>
-        {links.map((link) => (
-          <li key={link.to}>
-            <Link to={link.to} onClick={() => setMenuOpen(false)}>
-              {link.label}
+        {menu.map((item) => (
+          <li key={item.id}>
+            <Link
+              to={item.path}
+              aria-current={item.id === activeId ? 'page' : undefined}
+              onClick={() => setMenuOpen(false)}
+            >
+              {item.label[lang]}
             </Link>
           </li>
         ))}

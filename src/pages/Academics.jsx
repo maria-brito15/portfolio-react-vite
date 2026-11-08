@@ -21,7 +21,6 @@ const TEXT = {
       description:
         'Trajetória acadêmica de Maria Eduarda Brito na PUC Minas: formação, projetos finalistas, monitoria, extensão e competições.',
     },
-    command: 'cd ~/academico && ls -la',
     title: 'Trajetória acadêmica',
     intro:
       'Formação na PUC Minas, de Ciência da Computação a Engenharia de Software, com os projetos, monitorias e atividades de cada ano.',
@@ -62,7 +61,6 @@ const TEXT = {
       description:
         "Maria Eduarda Brito's academic record at PUC Minas: degrees, finalist projects, teaching assistantship, outreach and competitions.",
     },
-    command: 'cd ~/academics && ls -la',
     title: 'Academic record',
     intro:
       'Studies at PUC Minas, from Computer Science to Software Engineering, with the projects, TA work and activities of each year.',
@@ -131,7 +129,7 @@ export default function Academics() {
   if (showCourses) sections.push({ id: 'disciplinas', title: c.sections.courses });
 
   return (
-    <DocPage command={c.command} sections={sections}>
+    <DocPage routeId="academico" sections={sections}>
       <header className="doc-head">
         <h1>{c.title}</h1>
         <p className="doc-muted">{c.intro}</p>

@@ -6,83 +6,18 @@
 // - os efeitos (navegar, trocar tema/idioma) passam por `ctx` e só rodam
 //   quando `ctx.replay` é falso. No replay (histórico restaurado ao voltar
 //   para a página) a saída é refeita sem repetir os efeitos.
-import { Link } from '../router';
 import { profile } from '../data/profile';
 import { projects } from '../data/projects';
 import { experienceGroups } from '../data/experiences';
 import { portfolio } from '../data/portfolio';
-import { academics } from '../data/academics';
+import { directories, findDirectory } from '../data/routes';
 import { formatProjectDate } from '../utils/projectDate';
+import { ActionLine, Cmd, Ext, TermLink } from './outputs';
+import { AcademicsView, ResumeView, ServicesView } from './views';
 
 const L = (pt, en) => ({ pt, en });
 const pick = (value, lang) =>
   value && typeof value === 'object' && 'pt' in value ? value[lang] : value;
-
-// Diretórios: seções da página inicial e páginas do site.
-export const directories = [
-  { name: 'sobre', alias: 'about', to: '/#sobre', desc: L('quem sou', 'who I am') },
-  {
-    name: 'habilidades',
-    alias: 'skills',
-    to: '/#habilidades',
-    desc: L('stack e ferramentas', 'stack and tools'),
-  },
-  {
-    name: 'projetos',
-    alias: 'projects',
-    to: '/#projetos',
-    desc: L('linha do tempo de projetos', 'project timeline'),
-  },
-  {
-    name: 'experiencias',
-    alias: 'experience',
-    to: '/#experiencias',
-    desc: L('além da sala de aula', 'beyond the classroom'),
-  },
-  {
-    name: 'contato',
-    alias: 'contact',
-    to: '/#contato',
-    desc: L('e-mail, LinkedIn, GitHub', 'email, LinkedIn, GitHub'),
-  },
-  {
-    name: 'curriculo',
-    alias: 'resume',
-    to: '/curriculo',
-    desc: L('currículo em uma página', 'one-page resume'),
-    page: true,
-  },
-  {
-    name: 'academico',
-    alias: 'academics',
-    to: '/academico',
-    desc: L('formação e trajetória', 'education and record'),
-    page: true,
-  },
-  {
-    name: 'servicos',
-    alias: 'services',
-    to: '/servicos',
-    desc: L('sites e landing pages', 'websites and landing pages'),
-    page: true,
-  },
-];
-
-function findDirectory(arg) {
-  const name = (arg ?? '')
-    .toLowerCase()
-    .replace(/^\.?\/+|\/+$/g, '')
-    .replace(/^~\/?/, '');
-  return directories.find((d) => d.name === name || d.alias === name);
-}
-
-const Ext = ({ href, children }) => (
-  <a href={href} target="_blank" rel="noopener noreferrer">
-    {children}
-  </a>
-);
-
-const Cmd = ({ children }) => <span className="t-cmd">{children}</span>;
 
 // ---------------------------------------------------------------------------
 // Comandos. `names[0]` é o nome em português, `names[1]` o em inglês.
@@ -124,6 +59,7 @@ const commands = [
   {
     names: ['sobre', 'whoami'],
     aliases: ['about', 'quemsou'],
+    route: 'sobre',
     desc: L('quem é a Duda', 'who Duda is'),
     run: () => ({
       output: (lang) => {
@@ -141,10 +77,6 @@ const commands = [
               {lang === 'pt' ? 'interesses: ' : 'interests: '}
               {about.interests.join(' · ')}
             </p>
-            <p className="t-dim">
-              {lang === 'pt' ? 'mais em ' : 'more at '}
-              <Link to="/#sobre">/#sobre</Link>
-            </p>
           </div>
         );
       },
@@ -159,10 +91,10 @@ const commands = [
         <ul className="t-ls">
           {directories.map((d) => (
             <li key={d.name}>
-              <Link to={d.to} className={d.page ? 't-file' : 't-dir'}>
+              <TermLink to={d.path} className={d.kind === 'page' ? 't-file' : 't-dir'}>
                 {lang === 'pt' ? d.name : d.alias}
-                {d.page ? '' : '/'}
-              </Link>
+                {d.kind === 'page' ? '' : '/'}
+              </TermLink>
               <span className="t-dim">{d.desc[lang]}</span>
             </li>
           ))}
@@ -175,11 +107,10 @@ const commands = [
     aliases: ['abrir', 'open'],
     usage: L('<seção>', '<section>'),
     desc: L('vai até uma seção ou página', 'go to a section or page'),
-    run: (args, ctx) => {
+    run: (args) => {
       const arg = args[0];
       if (!arg || arg === '~' || arg === '..' || arg === '/') {
-        if (!ctx.replay) ctx.navigate('/');
-        return { output: () => null };
+        return { output: () => null, redirect: '/' };
       }
       const dir = findDirectory(arg);
       if (!dir) {
@@ -193,25 +124,13 @@ const commands = [
           ),
         };
       }
-      if (!ctx.replay) ctx.navigate(dir.to);
-      return {
-        output: (lang) => (
-          <p className="t-dim">
-            {dir.page
-              ? lang === 'pt'
-                ? 'abrindo '
-                : 'opening '
-              : lang === 'pt'
-                ? 'indo para '
-                : 'going to '}
-            <Link to={dir.to}>{dir.to}</Link>
-          </p>
-        ),
-      };
+      // Só `cd` e "abrir página própria" navegam; páginas passam pelo carregamento.
+      return { output: () => null, redirect: dir.path };
     },
   },
   {
     names: ['projetos', 'projects'],
+    route: 'projetos',
     desc: L('lista os projetos', 'list the projects'),
     run: () => ({
       output: (lang) => (
@@ -225,22 +144,21 @@ const commands = [
                 <span>
                   {p.repo && <Ext href={p.repo}>github</Ext>}
                   {p.caseStudy && (
-                    <Link to={p.caseStudy}>{lang === 'pt' ? 'estudo de caso' : 'case study'}</Link>
+                    <TermLink to={p.caseStudy}>
+                      {lang === 'pt' ? 'estudo de caso' : 'case study'}
+                    </TermLink>
                   )}
                 </span>
               </li>
             ))}
           </ul>
-          <p className="t-dim">
-            {lang === 'pt' ? 'detalhes: ' : 'details: '}
-            <Cmd>cd {lang === 'pt' ? 'projetos' : 'projects'}</Cmd>
-          </p>
         </div>
       ),
     }),
   },
   {
     names: ['habilidades', 'skills'],
+    route: 'habilidades',
     aliases: ['stack'],
     desc: L('stack e ferramentas', 'stack and tools'),
     run: () => ({
@@ -258,6 +176,7 @@ const commands = [
   },
   {
     names: ['experiencias', 'experience'],
+    route: 'experiencias',
     aliases: ['exp'],
     desc: L('experiências e atividades', 'experience and activities'),
     run: () => ({
@@ -284,43 +203,26 @@ const commands = [
   {
     names: ['curriculo', 'resume'],
     aliases: ['cv'],
-    desc: L('abre o currículo', 'open the resume'),
-    run: (args, ctx) => openPage('/curriculo', ctx),
+    route: 'curriculo',
+    desc: L('resumo do currículo', 'resume summary'),
+    run: () => ({ output: (lang) => <ResumeView lang={lang} /> }),
   },
   {
     names: ['academico', 'academics'],
     aliases: ['formacao', 'education'],
-    desc: L('abre a trajetória acadêmica', 'open the academic record'),
-    run: (args, ctx) => {
-      const result = openPage('/academico', ctx);
-      return {
-        output: (lang) => (
-          <div>
-            <ul className="t-table">
-              {academics.programs.map((p) => (
-                <li key={p.id}>
-                  <span className="t-dim">
-                    {p.start}–{p.end}
-                    {p.expected ? '*' : ''}
-                  </span>
-                  <span className="t-accent">{p.institution}</span>
-                  <span className="t-wrap">{p.degree[lang]}</span>
-                </li>
-              ))}
-            </ul>
-            {result.output(lang)}
-          </div>
-        ),
-      };
-    },
+    route: 'academico',
+    desc: L('trajetória acadêmica', 'academic record'),
+    run: () => ({ output: (lang) => <AcademicsView lang={lang} /> }),
   },
   {
     names: ['servicos', 'services'],
-    desc: L('abre a página de serviços', 'open the services page'),
-    run: (args, ctx) => openPage('/servicos', ctx),
+    route: 'servicos',
+    desc: L('serviços oferecidos', 'services offered'),
+    run: () => ({ output: (lang) => <ServicesView lang={lang} /> }),
   },
   {
     names: ['contato', 'contact'],
+    route: 'contato',
     aliases: ['social', 'email'],
     desc: L('e-mail e redes', 'email and socials'),
     run: () => ({
@@ -347,7 +249,7 @@ const commands = [
           <div>
             <dt>{lang === 'pt' ? 'formulário' : 'form'}</dt>
             <dd>
-              <Link to="/#contato">/#contato</Link>
+              <TermLink to="/#contato">/#contato</TermLink>
             </dd>
           </div>
         </dl>
@@ -446,18 +348,6 @@ const commands = [
   },
 ];
 
-function openPage(to, ctx) {
-  if (!ctx.replay) ctx.navigate(to);
-  return {
-    output: (lang) => (
-      <p className="t-dim">
-        {lang === 'pt' ? 'abrindo ' : 'opening '}
-        <Link to={to}>{to}</Link>
-      </p>
-    ),
-  };
-}
-
 function allNames(command) {
   return [...new Set([...command.names, ...(command.aliases ?? [])])];
 }
@@ -486,7 +376,20 @@ export function runCommand(input, ctx) {
       ),
     };
   }
-  return command.run(args, ctx);
+  const result = command.run(args, ctx);
+  if (!command.route || !result.output) return result;
+  // Todo comando com página dedicada termina com o par "ver no terminal /
+  // abrir página própria".
+  const body = result.output;
+  return {
+    ...result,
+    output: (lang) => (
+      <>
+        {body(lang)}
+        <ActionLine routeId={command.route} />
+      </>
+    ),
+  };
 }
 
 // Autocompletar com Tab: completa o comando e, depois de `cd`, o diretório.

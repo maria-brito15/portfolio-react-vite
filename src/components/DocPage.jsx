@@ -1,30 +1,14 @@
-import Header from './Header';
-import Footer from './Footer';
+import SiteShell from './shell/SiteShell';
 import { useLanguage } from '../i18n/LanguageContext';
-import { Prompt } from '../terminal/Terminal';
 
-// Moldura comum de Currículo e Acadêmico: cabeçalho do site, a "linha de
-// comando" que abriu a página e um índice numerado das seções.
-export default function DocPage({ command, sections, actions, children }) {
+// Conteúdo comum de Currículo e Acadêmico, dentro da Window do SiteShell:
+// índice numerado das seções à esquerda e o corpo do documento à direita.
+export default function DocPage({ routeId, sections, actions, children }) {
   const { t } = useLanguage();
-  const links = [
-    { to: '/', label: t.nav.portfolio },
-    { to: '/curriculo', label: t.nav.resume },
-    { to: '/academico', label: t.nav.academics },
-    { to: '/#projetos', label: t.nav.projects },
-    { to: '/#contato', label: t.nav.contact },
-  ];
   return (
-    <>
-      <Header links={links} />
-      <main className="doc">
-        <div className="doc-cmd">
-          <p className="term-line">
-            <Prompt />
-            <span className="t-input">{command}</span>
-          </p>
-          {actions}
-        </div>
+    <SiteShell routeId={routeId}>
+      <div className="doc">
+        {actions}
         <div className="doc-layout">
           <aside className="doc-toc" aria-label={t.doc.toc}>
             <ol>
@@ -40,9 +24,8 @@ export default function DocPage({ command, sections, actions, children }) {
           </aside>
           <div className="doc-body">{children}</div>
         </div>
-      </main>
-      <Footer>{t.footer}</Footer>
-    </>
+      </div>
+    </SiteShell>
   );
 }
 

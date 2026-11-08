@@ -1,39 +1,9 @@
-/* Páginas de Currículo e Acadêmico: leitura de documento, com índice
-   numerado à esquerda e a linha de comando que "abriu" a página no topo. */
+/* Páginas de Currículo e Acadêmico: leitura de documento dentro da Window,
+   com índice numerado à esquerda. */
 
 .doc {
-  max-width: 1080px;
-  margin: 0 auto;
-  padding: 6.5rem 2.5rem 4rem;
+  padding: var(--space-6) var(--space-6) var(--space-7);
   position: relative;
-  z-index: 1;
-}
-.doc-cmd {
-  font-family: var(--mono);
-  font-size: 0.85rem;
-  color: var(--t2);
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 0.8rem 1rem;
-  border: 1px solid var(--bdr);
-  border-radius: 10px;
-  background: var(--bg2);
-  margin-bottom: 2.5rem;
-}
-.doc-cmd .t-input {
-  color: var(--t);
-}
-.doc-cmd .t-user {
-  color: var(--term-user);
-}
-.doc-cmd .t-path {
-  color: var(--term-path);
-}
-.doc-cmd .t-dim {
-  color: var(--t3);
 }
 .doc-actions {
   display: flex;
@@ -41,6 +11,7 @@
   gap: 0.8rem;
   flex-wrap: wrap;
   font-size: 0.75rem;
+  margin-bottom: var(--space-5);
 }
 .doc-actions .btn {
   border: 0;
@@ -57,7 +28,7 @@
 }
 .doc-toc {
   position: sticky;
-  top: 6rem;
+  top: calc(var(--top-h) + var(--space-4));
   font-size: 0.85rem;
 }
 .doc-toc ol {
@@ -83,7 +54,7 @@
   border-left-color: var(--accent);
 }
 .doc-num {
-  font-family: var(--mono);
+  font-family: var(--font-mono);
   color: var(--accent);
   font-size: 0.8em;
   margin-right: 0.6rem;
@@ -139,7 +110,7 @@
 
 .doc-sec {
   padding: 2.2rem 0 1rem;
-  scroll-margin-top: 6rem;
+  scroll-margin-top: calc(var(--top-h) + var(--space-4));
 }
 .doc-sec h2 {
   font-family: 'Syne', sans-serif;
@@ -225,7 +196,7 @@
   margin-top: 0.15rem;
 }
 .doc-date {
-  font-family: var(--mono);
+  font-family: var(--font-mono);
   font-size: 0.8rem;
   color: var(--t3);
   white-space: nowrap;
@@ -234,7 +205,7 @@
   margin-top: 1.3rem;
 }
 .doc-group-title {
-  font-family: var(--mono);
+  font-family: var(--font-mono);
   font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -262,7 +233,7 @@
   display: grid;
 }
 .ac-stats strong {
-  font-family: var(--mono);
+  font-family: var(--font-mono);
   font-size: 1.6rem;
   background: var(--grad-text);
   -webkit-background-clip: text;
@@ -294,7 +265,7 @@
   position: absolute;
   top: -1.9rem;
   transform: translateX(-50%);
-  font-family: var(--mono);
+  font-family: var(--font-mono);
   font-size: 0.72rem;
   color: var(--accent);
   display: flex;
@@ -336,7 +307,7 @@
   border: 2px solid var(--accent);
 }
 .ac-marks strong {
-  font-family: var(--mono);
+  font-family: var(--font-mono);
   color: var(--t);
 }
 
@@ -377,7 +348,7 @@
   vertical-align: top;
 }
 .ac-table th {
-  font-family: var(--mono);
+  font-family: var(--font-mono);
   font-weight: 500;
   font-size: 0.72rem;
   text-transform: uppercase;
@@ -389,7 +360,7 @@
   border-bottom: 0;
 }
 .ac-table tfoot td {
-  font-family: var(--mono);
+  font-family: var(--font-mono);
   font-size: 0.78rem;
   color: var(--t2);
   background: var(--bg2);
@@ -397,7 +368,7 @@
   border-bottom: 0;
 }
 .ac-grade {
-  font-family: var(--mono);
+  font-family: var(--font-mono);
 }
 .ac-chip {
   display: inline-block;
@@ -418,7 +389,7 @@
 }
 .ac-dev-hint {
   margin-top: 1.2rem;
-  font-family: var(--mono);
+  font-family: var(--font-mono);
   font-size: 0.78rem;
   color: var(--accent-warm);
   border: 1px dashed currentColor;
@@ -428,7 +399,7 @@
 
 @media (max-width: 860px) {
   .doc {
-    padding: 5.5rem 1rem 3rem;
+    padding: var(--space-5) var(--space-4) var(--space-6);
   }
   .doc-layout {
     grid-template-columns: 1fr;
@@ -479,10 +450,9 @@
 
 /* Impressão: o currículo vira um documento limpo, sem navegação. */
 @media print {
-  nav,
+  .site-top,
   footer,
   .grid-bg,
-  .doc-cmd,
   .doc-toc,
   .no-print {
     display: none !important;
@@ -610,7 +580,7 @@
 /* ---------- Currículo no estilo azal.im: skills com tempo, cards numerados ---------- */
 .doc-sec h2 + .doc-summary {
   margin: -0.6rem 0 1.2rem;
-  font-family: var(--mono);
+  font-family: var(--font-mono);
   font-size: 0.78rem;
   color: var(--t3);
 }
@@ -640,7 +610,7 @@
   flex: 1;
 }
 .sk-time {
-  font-family: var(--mono);
+  font-family: var(--font-mono);
   font-size: 0.78rem;
   color: var(--accent);
   white-space: nowrap;
@@ -653,7 +623,7 @@
 .sk-all summary {
   cursor: pointer;
   color: var(--t2);
-  font-family: var(--mono);
+  font-family: var(--font-mono);
   font-size: 0.8rem;
   margin-bottom: 0.8rem;
 }
@@ -679,7 +649,7 @@
   align-items: baseline;
 }
 .xp-num {
-  font-family: var(--mono);
+  font-family: var(--font-mono);
   font-size: 0.8rem;
   color: var(--accent);
 }
@@ -741,7 +711,7 @@
   align-items: center;
 }
 .aw-count {
-  font-family: var(--mono);
+  font-family: var(--font-mono);
   font-size: 1.6rem;
   font-weight: 700;
   line-height: 1;
@@ -767,7 +737,7 @@
 .aw-instances li::before {
   content: '└';
   color: var(--t3);
-  font-family: var(--mono);
+  font-family: var(--font-mono);
 }
 
 @media (max-width: 600px) {

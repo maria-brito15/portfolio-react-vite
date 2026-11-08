@@ -1,17 +1,16 @@
-import Header from '../components/Header';
 import { Link, useRouter } from '../router';
 import { useLanguage } from '../i18n/LanguageContext';
 import { useDocumentMeta } from '../hooks/useDocumentMeta';
-import { Prompt } from '../terminal/Terminal';
+import SiteShell from '../components/shell/SiteShell';
+import Prompt from '../terminal/Prompt';
 
 export default function NotFound() {
   const { t } = useLanguage();
   const { path } = useRouter();
   useDocumentMeta({ title: `${t.notFound.title} | Duda Brito`, description: t.notFound.text });
   return (
-    <>
-      <Header links={[]} />
-      <main className="not-found">
+    <SiteShell missingPath={path}>
+      <div className="not-found">
         <p className="term-line not-found-cmd">
           <Prompt />
           <span className="t-input">cd {path}</span>
@@ -22,7 +21,7 @@ export default function NotFound() {
         <Link to="/" className="btn">
           {t.notFound.back}
         </Link>
-      </main>
-    </>
+      </div>
+    </SiteShell>
   );
 }

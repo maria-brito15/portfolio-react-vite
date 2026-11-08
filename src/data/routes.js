@@ -1,0 +1,180 @@
+// Tabela única de rotas e seções do site. Alimenta o menu do Header, o
+// breadcrumb, o título da Window, os comandos `cd`/`ls`, o autocompletar do
+// terminal e o "abrir página própria": nenhum outro arquivo repete caminhos.
+//
+// - `name` / `alias`: nome do "diretório" em português e em inglês (o mesmo
+//   nome do comando que mostra a visão em terminal);
+// - `path`: onde a página própria mora (seções da home usam `/#âncora`);
+// - `kind`: "page" (rota própria) ou "section" (âncora da página inicial);
+// - `command`: comando que mostra a visão em terminal (`/?cmd=<command>`);
+// - `parent`: id da rota-mãe no breadcrumb.
+
+const L = (pt, en) => ({ pt, en });
+
+export const routes = [
+  {
+    id: 'home',
+    kind: 'page',
+    path: '/',
+    label: L('Início', 'Home'),
+    desc: L('terminal e seções', 'terminal and sections'),
+  },
+  {
+    id: 'sobre',
+    kind: 'section',
+    path: '/#sobre',
+    name: 'sobre',
+    alias: 'about',
+    command: 'sobre',
+    label: L('Sobre', 'About'),
+    desc: L('quem sou', 'who I am'),
+  },
+  {
+    id: 'habilidades',
+    kind: 'section',
+    path: '/#habilidades',
+    name: 'habilidades',
+    alias: 'skills',
+    command: 'habilidades',
+    label: L('Habilidades', 'Skills'),
+    desc: L('stack e ferramentas', 'stack and tools'),
+  },
+  {
+    id: 'projetos',
+    kind: 'section',
+    path: '/#projetos',
+    name: 'projetos',
+    alias: 'projects',
+    command: 'projetos',
+    label: L('Projetos', 'Projects'),
+    desc: L('linha do tempo de projetos', 'project timeline'),
+  },
+  {
+    id: 'experiencias',
+    kind: 'section',
+    path: '/#experiencias',
+    name: 'experiencias',
+    alias: 'experience',
+    command: 'experiencias',
+    label: L('Experiências', 'Experience'),
+    desc: L('além da sala de aula', 'beyond the classroom'),
+  },
+  {
+    id: 'contato',
+    kind: 'section',
+    path: '/#contato',
+    name: 'contato',
+    alias: 'contact',
+    command: 'contato',
+    label: L('Contato', 'Contact'),
+    desc: L('e-mail, LinkedIn, GitHub', 'email, LinkedIn, GitHub'),
+  },
+  {
+    id: 'curriculo',
+    kind: 'page',
+    path: '/curriculo',
+    aliases: ['/resume'],
+    name: 'curriculo',
+    alias: 'resume',
+    command: 'curriculo',
+    label: L('Currículo', 'Resume'),
+    desc: L('currículo em uma página', 'one-page resume'),
+  },
+  {
+    id: 'academico',
+    kind: 'page',
+    path: '/academico',
+    aliases: ['/academics'],
+    name: 'academico',
+    alias: 'academics',
+    command: 'academico',
+    label: L('Acadêmico', 'Academics'),
+    desc: L('formação e trajetória', 'education and record'),
+  },
+  {
+    id: 'servicos',
+    kind: 'page',
+    path: '/servicos',
+    aliases: ['/services'],
+    name: 'servicos',
+    alias: 'services',
+    command: 'servicos',
+    label: L('Serviços', 'Services'),
+    desc: L('sites e landing pages', 'websites and landing pages'),
+  },
+  {
+    // Fora do `ls`: é uma página dentro de "projetos".
+    id: 'whatsapp-dispatcher',
+    kind: 'page',
+    path: '/estudos-de-caso/whatsapp-dispatcher',
+    parent: 'projetos',
+    segment: L('whatsapp-dispatcher', 'whatsapp-dispatcher'),
+    command: 'projetos',
+    label: L('Estudo de caso', 'Case study'),
+    hidden: true,
+  },
+];
+
+// Itens do menu do Header, iguais em todas as páginas.
+export const menuIds = ['home', 'curriculo', 'academico', 'projetos', 'servicos', 'contato'];
+
+export const routeById = (id) => routes.find((r) => r.id === id);
+
+export const menu = menuIds.map(routeById);
+
+// Seções e páginas que aparecem em `ls`, `cd` e no autocompletar.
+export const directories = routes.filter((r) => r.name && !r.hidden);
+
+const hashOf = (path) => (path.includes('#') ? `#${path.split('#')[1]}` : '');
+export const normalizePath = (path) => path.replace(/(.)\/$/, '$1');
+
+// Página (rota própria) que atende a um caminho, ou undefined para o 404.
+export function findPageByPath(path) {
+  const clean = normalizePath(path);
+  return routes.find((r) => r.kind === 'page' && (r.path === clean || r.aliases?.includes(clean)));
+}
+
+// Diretório pelo nome em PT ou EN; aceita `./x`, `~/x`, `/x` e barra final.
+export function findDirectory(arg) {
+  const name = (arg ?? '')
+    .toLowerCase()
+    .replace(/^\.?\/+|\/+$/g, '')
+    .replace(/^~\/?/, '');
+  return directories.find((d) => d.name === name || d.alias === name);
+}
+
+// Item do menu marcado como página atual.
+export function activeMenuId(path, hash) {
+  const clean = normalizePath(path);
+  if (clean === '/') {
+    return (hash && menu.find((r) => r.id !== 'home' && hashOf(r.path) === hash)?.id) || 'home';
+  }
+  // `findPageByPath` resolve apelidos como /resume e /academics.
+  const page = findPageByPath(clean);
+  return menu.find((r) => r.id !== 'home' && !hashOf(r.path) && r.id === page?.id)?.id;
+}
+
+// Segmentos do breadcrumb e do título da janela: [{ label, to }], sem o "~".
+export function crumbsFor(route, lang) {
+  if (!route || route.id === 'home') return [];
+  const own = {
+    label: route.segment ? route.segment[lang] : lang === 'pt' ? route.name : route.alias,
+    to: route.path,
+  };
+  const parent = route.parent ? routeById(route.parent) : null;
+  return parent
+    ? [{ label: lang === 'pt' ? parent.name : parent.alias, to: parent.path }, own]
+    : [own];
+}
+
+// Caminho exibido no título da janela: "~/academico", "~/projetos/whatsapp-dispatcher".
+export function windowPath(route, lang) {
+  const parts = crumbsFor(route, lang).map((c) => c.label);
+  return `~${parts.length ? `/${parts.join('/')}` : ''}`;
+}
+
+// URL da home que já executa o comando da página (visão em terminal).
+export const terminalUrl = (route) => `/?cmd=${route.command}`;
+
+// Âncora da própria home (`/#projetos`): não precisa de "carregando".
+export const isHomeAnchor = (to) => to.startsWith('/#');

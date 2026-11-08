@@ -96,7 +96,7 @@ export default function Resume() {
   );
 
   return (
-    <DocPage command={c.command} sections={sections} actions={actions}>
+    <DocPage routeId="curriculo" sections={sections} actions={actions}>
       <header className="doc-head">
         <h1>{c.name}</h1>
         <p className="doc-headline">{c.headline}</p>

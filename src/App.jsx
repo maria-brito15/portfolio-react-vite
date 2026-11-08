@@ -1,4 +1,6 @@
 import { useRouter } from './router';
+import { findPageByPath } from './data/routes';
+import { TerminalProvider } from './terminal/TerminalSession';
 import Home from './pages/Home';
 import Services from './pages/Services';
 import CaseStudy from './pages/CaseStudy';
@@ -6,23 +8,30 @@ import Resume from './pages/Resume';
 import Academics from './pages/Academics';
 import NotFound from './pages/NotFound';
 
-const routes = {
-  '/': Home,
-  '/servicos': Services,
-  '/estudos-de-caso/whatsapp-dispatcher': CaseStudy,
-  '/curriculo': Resume,
-  '/resume': Resume,
-  '/academico': Academics,
-  '/academics': Academics,
-};
+// Rota (src/data/routes.js) → página.
+function Page({ id }) {
+  switch (id) {
+    case 'home':
+      return <Home />;
+    case 'curriculo':
+      return <Resume />;
+    case 'academico':
+      return <Academics />;
+    case 'servicos':
+      return <Services />;
+    case 'whatsapp-dispatcher':
+      return <CaseStudy />;
+    default:
+      return <NotFound />;
+  }
+}
 
 export default function App() {
   const { path } = useRouter();
-  const Page = routes[path.replace(/(.)\/$/, '$1')] ?? NotFound;
+  const route = findPageByPath(path);
   return (
-    <>
-      <div className="grid-bg" aria-hidden="true"></div>
-      <Page />
-    </>
+    <TerminalProvider>
+      <Page id={route?.id} />
+    </TerminalProvider>
   );
 }

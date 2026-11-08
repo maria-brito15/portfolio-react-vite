@@ -1,29 +1,7 @@
-/* Terminal interativo da página inicial. Usa as mesmas variáveis de cor do
-   site (original.css), então acompanha os temas claro e escuro. */
-
-:root {
-  --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  --term-bg: #0d0f13;
-  --term-bar: #161920;
-  --term-text: #dfe3ea;
-  --term-dim: #7d8492;
-  --term-user: #7fd88f;
-  --term-path: #7ea6ff;
-  --term-err: #ff7b86;
-  --term-ok: #7fd88f;
-  --term-cmd: #e6a15c;
-}
-[data-theme='light'] {
-  --term-bg: #ffffff;
-  --term-bar: #eceef2;
-  --term-text: #1d2128;
-  --term-dim: #6b717c;
-  --term-user: #1f8a3a;
-  --term-path: #3f63c9;
-  --term-err: #c4323f;
-  --term-ok: #1f8a3a;
-  --term-cmd: #a5601f;
-}
+/* Terminal: texto, cores e saídas dos comandos. Serve ao terminal da página
+   inicial e ao painel de saída da barra de comandos (ambos têm a classe
+   `.term`). A moldura é da Window (shell.css); as cores e tamanhos vêm de
+   tokens.css. */
 
 .sr-only {
   position: absolute;
@@ -37,80 +15,16 @@
   border: 0;
 }
 
-.hero.hero-terminal {
-  min-height: 100vh;
-  min-height: 100svh;
-  padding-top: 6.5rem;
-}
-.hero.hero-terminal > .term-wrap {
-  width: 100%;
-  max-width: 900px;
-}
-
 .term {
-  font-family: var(--mono);
-  font-size: 0.9rem;
-  line-height: 1.65;
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono);
+  line-height: var(--lh-mono);
   color: var(--term-text);
-  background: var(--term-bg);
-  border: 1px solid var(--bdr);
-  border-radius: 14px;
-  box-shadow:
-    0 30px 80px rgba(0, 0, 0, 0.35),
-    0 0 0 1px rgba(102, 144, 242, 0.06);
-  overflow: hidden;
-  cursor: text;
-  position: relative;
-  z-index: 1;
-}
-[data-theme='light'] .term {
-  box-shadow: 0 20px 60px rgba(20, 22, 26, 0.12);
-}
-
-.term-bar {
-  display: flex;
-  align-items: center;
-  gap: 0.9rem;
-  padding: 0.6rem 0.9rem;
-  background: var(--term-bar);
-  border-bottom: 1px solid var(--bdr);
-  font-size: 0.75rem;
-  color: var(--term-dim);
-}
-.term-dots {
-  display: inline-flex;
-  gap: 6px;
-}
-.term-dots i {
-  width: 11px;
-  height: 11px;
-  border-radius: 50%;
-  background: #ff5f57;
-}
-.term-dots i:nth-child(2) {
-  background: #febc2e;
-}
-.term-dots i:nth-child(3) {
-  background: #28c840;
-}
-.term-title {
-  flex: 1;
-  text-align: center;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.term-badge {
-  border: 1px solid var(--bdr);
-  border-radius: 100px;
-  padding: 1px 9px;
-  white-space: nowrap;
 }
 
 .term-screen {
-  padding: 1.4rem 1.5rem 1.2rem;
-  max-height: min(68vh, 640px);
-  min-height: 420px;
+  padding: var(--space-5) var(--space-5) var(--space-4);
+  height: max(var(--win-h), var(--win-min-h));
   overflow-y: auto;
   overscroll-behavior: contain;
 }
@@ -122,7 +36,7 @@
   margin-bottom: 1rem;
 }
 .term-name {
-  font-family: var(--mono);
+  font-family: var(--font-mono);
   font-size: clamp(2.2rem, 7vw, 4.2rem);
   font-weight: 700;
   line-height: 1.05;
@@ -227,9 +141,6 @@
   color: var(--term-dim);
   opacity: 0.7;
 }
-.term:focus-within {
-  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
-}
 
 /* Saídas dos comandos */
 .t-help dl,
@@ -288,27 +199,71 @@
 .t-suggest {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.3rem 1.5rem;
-  margin-top: 0.4rem !important;
+  gap: 0.3rem 1.2rem;
+  list-style: none;
+  padding: 0;
+  margin: 0.4rem 0 0 !important;
   color: var(--term-dim);
+}
+.t-suggest button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+.t-suggest button:hover {
+  color: var(--term-text);
+  text-decoration: underline;
+}
+
+/* Visões em terminal de currículo, acadêmico e serviços. */
+.t-numbered {
+  list-style: none;
+  margin: 0.2rem 0;
+  padding: 0;
+}
+.t-numbered li {
+  display: grid;
+  grid-template-columns: 3ch 28ch 1fr;
+  gap: 1rem;
+}
+.t-table.t-table-act li {
+  grid-template-columns: 11ch 1fr auto;
+}
+.t-table.t-table-svc li {
+  grid-template-columns: 26ch 1fr;
+}
+
+/* Linha de progresso do redirecionamento e dica de cancelamento. */
+.t-progress {
+  white-space: pre-wrap;
+}
+.t-hint {
+  opacity: 0.7;
+}
+
+/* Par "ver no terminal / abrir página própria" no fim das saídas. */
+.t-actions {
+  margin-top: 0.7rem !important;
 }
 
 /* Atalhos clicáveis */
 .term-quick {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 1rem;
-  position: relative;
-  z-index: 1;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-5) var(--space-4);
+  border-top: 1px solid var(--bdr);
 }
 .term-quick button {
-  font-family: var(--mono);
+  font-family: var(--font-mono);
   font-size: 0.8rem;
   color: var(--t2);
   background: var(--bg2);
   border: 1px solid var(--bdr);
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   padding: 0.35rem 0.8rem;
   cursor: pointer;
   transition:
@@ -321,6 +276,10 @@
   border-color: var(--accent);
   transform: translateY(-1px);
 }
+.term-quick button:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
 .term-quick button span {
   color: var(--accent);
 }
@@ -332,19 +291,8 @@
 }
 
 @media (max-width: 720px) {
-  .hero.hero-terminal {
-    padding: 5.5rem 0.9rem 2.5rem;
-  }
-  .term {
-    font-size: 0.8rem;
-  }
   .term-screen {
-    padding: 1rem;
-    min-height: 360px;
-    max-height: 70vh;
-  }
-  .term-badge {
-    display: none;
+    padding: var(--space-4);
   }
   .term-sub {
     font-size: 0.9rem;
@@ -366,10 +314,15 @@
   .t-table li > :nth-child(n + 3) {
     grid-column: 2;
   }
+  .t-table.t-table-act li,
+  .t-table.t-table-svc li,
+  .t-numbered li {
+    grid-template-columns: 9ch 1fr;
+  }
 }
 
 .not-found-cmd {
-  font-family: var(--mono);
+  font-family: var(--font-mono);
   font-size: 0.85rem;
   justify-content: center;
   word-break: break-all;

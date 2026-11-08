@@ -10,7 +10,6 @@ export const resume = {
       description:
         'Currículo de Maria Eduarda Brito, estudante de Engenharia de Software na PUC Minas: competências, projetos, formação e experiências.',
     },
-    command: 'cat curriculo.md',
     name: 'Maria Eduarda de Paula Brito',
     headline: 'Estágio em Engenharia de Software · Desenvolvimento e Testes de Software',
     location: 'Estudante de Engenharia de Software — PUC Minas · Belo Horizonte, MG',
@@ -107,7 +106,6 @@ export const resume = {
       description:
         'Resume of Maria Eduarda Brito, Software Engineering student at PUC Minas: skills, projects, education and experience.',
     },
-    command: 'cat resume.md',
     name: 'Maria Eduarda de Paula Brito',
     headline: 'Software Engineer Intern · Software Development and Testing',
     location: 'Software Engineering student at PUC Minas · Belo Horizonte, MG, Brazil',

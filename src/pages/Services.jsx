@@ -1,6 +1,5 @@
 import Reveal from '../components/Reveal';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import SiteShell from '../components/shell/SiteShell';
 import SectionDivider from '../components/SectionDivider';
 import ContactLinks from '../components/ContactLinks';
 import ImageGallery from '../components/ImageGallery';
@@ -11,158 +10,147 @@ import { useLanguage } from '../i18n/LanguageContext';
 import { useDocumentMeta } from '../hooks/useDocumentMeta';
 
 export default function Services() {
-  const { lang, t } = useLanguage();
+  const { lang } = useLanguage();
   const c = services[lang];
   useDocumentMeta(c.meta);
   const mailto = `mailto:${profile.servicesEmail}`;
-  const links = [
-    { to: '/', label: t.nav.portfolio },
-    { to: '/servicos#servicos', label: t.nav.services },
-    { to: '/servicos#cases', label: t.nav.cases },
-    { to: '/servicos#faq', label: t.nav.faq },
-    { to: '/servicos#contato', label: t.nav.contact },
-  ];
   return (
-    <>
-      <Header links={links} />
-      <main>
-        <section className="hero">
-          <div className="glow" aria-hidden="true"></div>
-          <div>
-            <div className="badge">
-              <span className="bdot" aria-hidden="true"></span> {c.hero.badge}
-            </div>
-            <h1>{c.hero.title}</h1>
-            <p className="hero-sub">{c.hero.sub}</p>
-            <div className="hero-ctas">
-              <a href={mailto} className="btn">
-                {c.hero.quote}
-              </a>
-              <a href="#servicos" className="btn-o">
-                {c.hero.viewServices}
-              </a>
-            </div>
-            <div className="trust-bar">
-              {c.hero.trust.map((item) => (
-                <span className="trust-item" key={item}>
-                  {item}
-                </span>
-              ))}
-            </div>
+    <SiteShell routeId="servicos">
+      <section className="hero">
+        <div className="glow" aria-hidden="true"></div>
+        <div>
+          <div className="badge">
+            <span className="bdot" aria-hidden="true"></span> {c.hero.badge}
           </div>
-        </section>
-
-        <section id="servicos" className="sec" aria-labelledby="servicos-title">
-          <div className="lbl">{c.services.label}</div>
-          <h2 className="stitle" id="servicos-title">
-            {c.services.title}
-          </h2>
-          <div className="services-grid">
-            {c.services.items.map((item) => (
-              <Reveal className="svc-card" key={item.title}>
-                <div className="svc-icon" aria-hidden="true">
-                  {item.icon}
-                </div>
-                <h3>{item.title}</h3>
-                <p>{item.text}</p>
-                <div className="svc-meta">
-                  {item.meta.map((m) => (
-                    <span className="svc-meta-item" key={m}>
-                      {m}
-                    </span>
-                  ))}
-                </div>
-              </Reveal>
+          <h1>{c.hero.title}</h1>
+          <p className="hero-sub">{c.hero.sub}</p>
+          <div className="hero-ctas">
+            <a href={mailto} className="btn">
+              {c.hero.quote}
+            </a>
+            <a href="#servicos" className="btn-o">
+              {c.hero.viewServices}
+            </a>
+          </div>
+          <div className="trust-bar">
+            {c.hero.trust.map((item) => (
+              <span className="trust-item" key={item}>
+                {item}
+              </span>
             ))}
-            <Reveal as="a" href={mailto} className="svc-card svc-card-custom">
-              <div>
-                <div className="svc-icon" aria-hidden="true">
-                  💬
-                </div>
-                <h3>{c.services.custom.title}</h3>
-                <p>{c.services.custom.text}</p>
-              </div>
-              <span className="price-tag">{c.services.custom.cta}</span>
-            </Reveal>
           </div>
-          <Reveal className="design-disclaimer">
-            <div className="design-disclaimer-icon" aria-hidden="true">
-              🎨
-            </div>
-            <div className="design-disclaimer-body">
-              <span className="design-disclaimer-label">{c.services.design.label}</span>
-              <h3>{c.services.design.title}</h3>
-              <p>{c.services.design.text}</p>
-              <p className="design-note">{c.services.design.note}</p>
+        </div>
+      </section>
+
+      <section id="servicos" className="sec" aria-labelledby="servicos-title">
+        <div className="lbl">{c.services.label}</div>
+        <h2 className="stitle" id="servicos-title">
+          {c.services.title}
+        </h2>
+        <div className="services-grid">
+          {c.services.items.map((item) => (
+            <Reveal className="svc-card" key={item.title}>
+              <div className="svc-icon" aria-hidden="true">
+                {item.icon}
+              </div>
+              <h3>{item.title}</h3>
+              <p>{item.text}</p>
               <div className="svc-meta">
-                {c.services.design.meta.map((m) => (
+                {item.meta.map((m) => (
                   <span className="svc-meta-item" key={m}>
                     {m}
                   </span>
                 ))}
               </div>
-            </div>
-          </Reveal>
-        </section>
-
-        <SectionDivider label={c.cases.divider} />
-        <section id="cases" className="sec" aria-labelledby="cases-title">
-          <div className="lbl">{c.cases.label}</div>
-          <h2 className="stitle" id="cases-title">
-            {c.cases.title}
-          </h2>
-          {c.cases.items.map((item) => (
-            <Reveal className="case-card" key={item.id}>
-              <div className="case-content">
-                <div className="case-badge">{item.badge}</div>
-                <h3>{item.title}</h3>
-                {item.paragraphs.map((p) => (
-                  <p key={p}>{p}</p>
-                ))}
-                <div className="deliverables">
-                  {item.deliverables.map((d) => (
-                    <span className="del-tag" key={d}>
-                      {d}
-                    </span>
-                  ))}
-                </div>
-              </div>
-              <ImageGallery
-                columns={item.columns}
-                images={item.images.map((src, i) => ({
-                  src,
-                  alt: `${item.alt} ${i + 1}/${item.images.length}`,
-                }))}
-              />
             </Reveal>
           ))}
-        </section>
-
-        <section id="faq" className="sec faq-section" aria-labelledby="faq-title">
-          <Reveal className="faq-wrap">
-            <div className="faq-head">
-              <span className="lbl">{c.faq.label}</span>
-              <h3 id="faq-title">{c.faq.title}</h3>
+          <Reveal as="a" href={mailto} className="svc-card svc-card-custom">
+            <div>
+              <div className="svc-icon" aria-hidden="true">
+                💬
+              </div>
+              <h3>{c.services.custom.title}</h3>
+              <p>{c.services.custom.text}</p>
             </div>
-            <Faq items={c.faq.items} />
+            <span className="price-tag">{c.services.custom.cta}</span>
           </Reveal>
-        </section>
-
-        <section className="contact-wrap" id="contato" aria-labelledby="svc-contato-title">
-          <div className="cbg" aria-hidden="true"></div>
-          <div className="cinner">
-            <div className="lbl" style={{ justifyContent: 'center' }}>
-              {c.contact.label}
-            </div>
-            <h2 className="stitle" id="svc-contato-title">
-              {c.contact.title}
-            </h2>
-            <p className="contact-text">{c.contact.text}</p>
-            <ContactLinks email={profile.servicesEmail} emailLabel={c.contact.email} />
+        </div>
+        <Reveal className="design-disclaimer">
+          <div className="design-disclaimer-icon" aria-hidden="true">
+            🎨
           </div>
-        </section>
-      </main>
-      <Footer>{c.footer}</Footer>
-    </>
+          <div className="design-disclaimer-body">
+            <span className="design-disclaimer-label">{c.services.design.label}</span>
+            <h3>{c.services.design.title}</h3>
+            <p>{c.services.design.text}</p>
+            <p className="design-note">{c.services.design.note}</p>
+            <div className="svc-meta">
+              {c.services.design.meta.map((m) => (
+                <span className="svc-meta-item" key={m}>
+                  {m}
+                </span>
+              ))}
+            </div>
+          </div>
+        </Reveal>
+      </section>
+
+      <SectionDivider label={c.cases.divider} />
+      <section id="cases" className="sec" aria-labelledby="cases-title">
+        <div className="lbl">{c.cases.label}</div>
+        <h2 className="stitle" id="cases-title">
+          {c.cases.title}
+        </h2>
+        {c.cases.items.map((item) => (
+          <Reveal className="case-card" key={item.id}>
+            <div className="case-content">
+              <div className="case-badge">{item.badge}</div>
+              <h3>{item.title}</h3>
+              {item.paragraphs.map((p) => (
+                <p key={p}>{p}</p>
+              ))}
+              <div className="deliverables">
+                {item.deliverables.map((d) => (
+                  <span className="del-tag" key={d}>
+                    {d}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <ImageGallery
+              columns={item.columns}
+              images={item.images.map((src, i) => ({
+                src,
+                alt: `${item.alt} ${i + 1}/${item.images.length}`,
+              }))}
+            />
+          </Reveal>
+        ))}
+      </section>
+
+      <section id="faq" className="sec faq-section" aria-labelledby="faq-title">
+        <Reveal className="faq-wrap">
+          <div className="faq-head">
+            <span className="lbl">{c.faq.label}</span>
+            <h3 id="faq-title">{c.faq.title}</h3>
+          </div>
+          <Faq items={c.faq.items} />
+        </Reveal>
+      </section>
+
+      <section className="contact-wrap" id="contato" aria-labelledby="svc-contato-title">
+        <div className="cbg" aria-hidden="true"></div>
+        <div className="cinner">
+          <div className="lbl" style={{ justifyContent: 'center' }}>
+            {c.contact.label}
+          </div>
+          <h2 className="stitle" id="svc-contato-title">
+            {c.contact.title}
+          </h2>
+          <p className="contact-text">{c.contact.text}</p>
+          <ContactLinks email={profile.servicesEmail} emailLabel={c.contact.email} />
+        </div>
+      </section>
+    </SiteShell>
   );
 }

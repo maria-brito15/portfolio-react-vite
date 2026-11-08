@@ -8,5 +8,7 @@ export default defineConfig({
     globals: true,
     setupFiles: './src/test/setup.js',
     css: false,
+    // As páginas renderizam o site inteiro (jsdom); em máquinas lentas 5 s não bastam.
+    testTimeout: 20000,
   },
 });

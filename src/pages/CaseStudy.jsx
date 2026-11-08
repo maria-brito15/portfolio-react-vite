@@ -1,5 +1,4 @@
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import SiteShell from '../components/shell/SiteShell';
 import { useLanguage } from '../i18n/LanguageContext';
 import { useDocumentMeta } from '../hooks/useDocumentMeta';
 import WhatsAppDispatcherPt from './case-study/WhatsAppDispatcherPt';
@@ -20,19 +19,11 @@ const META = {
 };
 
 export default function CaseStudy() {
-  const { lang, t } = useLanguage();
+  const { lang } = useLanguage();
   useDocumentMeta(META[lang]);
-  const links = [
-    { to: '/#sobre', label: t.nav.about },
-    { to: '/#projetos', label: t.nav.projects },
-    { to: '/#experiencias', label: t.nav.experience },
-    { to: '/#contato', label: t.nav.contact },
-  ];
   return (
-    <>
-      <Header links={links} />
-      <main>{lang === 'pt' ? <WhatsAppDispatcherPt /> : <WhatsAppDispatcherEn />}</main>
-      <Footer>{t.footer}</Footer>
-    </>
+    <SiteShell routeId="whatsapp-dispatcher">
+      {lang === 'pt' ? <WhatsAppDispatcherPt /> : <WhatsAppDispatcherEn />}
+    </SiteShell>
   );
 }

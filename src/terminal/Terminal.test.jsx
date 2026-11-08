@@ -35,14 +35,15 @@ describe('terminal da página inicial', () => {
     expect(within(log).getAllByRole('link', { name: 'github' }).length).toBeGreaterThan(0);
   });
 
-  it('o atalho "curriculo" abre a página do currículo', async () => {
+  it('o atalho "curriculo" mostra a visão em terminal, sem navegar', async () => {
     const user = userEvent.setup();
     renderApp('/');
     await user.click(screen.getByRole('button', { name: /curriculo/ }));
-    expect(window.location.pathname).toBe('/curriculo');
-    expect(
-      screen.getByRole('heading', { level: 1, name: 'Maria Eduarda de Paula Brito' }),
-    ).toBeInTheDocument();
+    expect(window.location.pathname).toBe('/');
+    const log = document.querySelector('.term-log');
+    expect(within(log).getByText('Maria Eduarda de Paula Brito')).toBeInTheDocument();
+    expect(within(log).getByRole('button', { name: /ver no terminal/ })).toBeInTheDocument();
+    expect(within(log).getByRole('button', { name: /abrir página própria/ })).toBeInTheDocument();
   });
 
   it('tema e idioma pelo terminal atualizam o resto do site', async () => {
@@ -69,16 +70,27 @@ describe('terminal da página inicial', () => {
     expect(document.querySelectorAll('.term-entry')).toHaveLength(0);
   });
 
-  it('restaura o histórico ao voltar para a página, sem repetir a navegação', async () => {
+  it('cada comando limpa a tela: fica só a última entrada', async () => {
     const user = userEvent.setup();
-    const { unmount } = renderApp('/');
-    await user.type(terminalInput(), 'contato{Enter}');
-    await user.type(terminalInput(), 'cd curriculo{Enter}');
-    expect(window.location.pathname).toBe('/curriculo');
-    unmount();
+    renderApp('/');
+    await user.type(terminalInput(), 'ajuda{Enter}');
+    await user.type(terminalInput(), 'projetos{Enter}');
+    expect(document.querySelectorAll('.term-entry')).toHaveLength(1);
+    expect(screen.queryByText(/Comandos disponíveis/)).not.toBeInTheDocument();
+    // o histórico digitado continua inteiro
+    await user.type(terminalInput(), '{ArrowUp}');
+    expect(terminalInput()).toHaveValue('projetos');
+    await user.type(terminalInput(), '{ArrowUp}');
+    expect(terminalInput()).toHaveValue('ajuda');
+  });
+
+  it('restaura só a última saída ao voltar para a página, sem repetir a navegação', () => {
+    sessionStorage.setItem('portfolio-terminal', JSON.stringify(['contato', 'cd curriculo']));
     renderApp('/');
     expect(window.location.pathname).toBe('/');
-    expect(document.querySelectorAll('.term-entry')).toHaveLength(2);
+    expect(document.querySelectorAll('.term-entry')).toHaveLength(1);
+    expect(document.querySelector('.term-entry')).toHaveTextContent('cd curriculo');
+    expect(document.querySelector('.term-entry')).toHaveTextContent('abrindo /curriculo… pronto ✓');
   });
 });
 

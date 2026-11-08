@@ -1,0 +1,75 @@
+/* Tokens de design do site: espaçamento, raios, sombras, tipografia e as cores
+   da janela/terminal. Os componentes novos (Window, CommandBar, SiteShell, ui/)
+   só usam estas variáveis; as cores gerais do site continuam em original.css
+   (--bg, --t, --accent…). Tema escuro é o padrão; `[data-theme='light']`
+   sobrescreve só o que muda. */
+
+:root {
+  /* Espaçamento */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --gutter: 1.5rem;
+
+  /* Raios */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-pill: 100px;
+
+  /* Tipografia */
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --fs-chrome: 0.75rem; /* barra de título, breadcrumb, badges */
+  --fs-mono: 0.95rem; /* terminal e barra de comandos */
+  --fs-mono-sm: 0.8rem; /* mesmo, em telas estreitas */
+  --lh-mono: 1.65;
+
+  /* Layout */
+  --win-max: 1100px;
+  --win-min-h: 520px;
+  --win-h: 75vh;
+  --nav-h: 3.9rem;
+  --cmdbar-h: 2.5rem;
+  --top-h: calc(var(--nav-h) + var(--cmdbar-h));
+
+  /* Janela e terminal (escuro) */
+  --term-bg: #0d0f13;
+  --term-bar: #161920;
+  --term-text: #dfe3ea;
+  --term-dim: #7d8492;
+  --term-user: #7fd88f;
+  --term-path: #7ea6ff;
+  --term-err: #ff7b86;
+  --term-ok: #7fd88f;
+  --term-cmd: #e6a15c;
+  --win-shadow: 0 30px 80px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(102, 144, 242, 0.06);
+  --dot-close: #ff5f57;
+  --dot-min: #febc2e;
+  --dot-max: #28c840;
+}
+
+[data-theme='light'] {
+  --term-bg: #ffffff;
+  --term-bar: #eceef2;
+  --term-text: #1d2128;
+  --term-dim: #6b717c;
+  --term-user: #1f8a3a;
+  --term-path: #3f63c9;
+  --term-err: #c4323f;
+  --term-ok: #1f8a3a;
+  --term-cmd: #a5601f;
+  --win-shadow: 0 20px 60px rgba(20, 22, 26, 0.12);
+}
+
+@media (max-width: 720px) {
+  :root {
+    --gutter: 0;
+    --fs-mono: var(--fs-mono-sm);
+    --win-min-h: 360px;
+    --win-h: 70vh;
+  }
+}
