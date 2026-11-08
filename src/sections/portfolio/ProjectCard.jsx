@@ -1,7 +1,5 @@
-import Reveal from '../../components/Reveal';
 import { Link } from '../../router';
 import { useLanguage } from '../../i18n/LanguageContext';
-import { handleRadialGlow } from '../../utils/radialGlow';
 import { formatProjectDate } from '../../utils/projectDate';
 import ProjectMedia from './ProjectMedia';
 import Card from '../../components/ui/Card';
@@ -100,7 +98,7 @@ function Evolution({ project, copy }) {
 
 function Standard({ project, copy }) {
   return (
-    <Card className="proj-card" onMouseMove={handleRadialGlow}>
+    <Card className="proj-card">
       <div className="proj-header">
         <div className="proj-ico" aria-hidden="true">
           {project.icon}
@@ -144,7 +142,7 @@ export default function ProjectCard({ project, orderUndetermined = false }) {
   const { lang, t } = useLanguage();
   const Variant = VARIANTS[project.variant];
   return (
-    <Reveal as="li" className="timeline-item">
+    <li className="timeline-item">
       <div className="timeline-date">
         <time dateTime={toDateTime(project.date)}>{formatProjectDate(project.date)}</time>
         {orderUndetermined && (
@@ -152,6 +150,6 @@ export default function ProjectCard({ project, orderUndetermined = false }) {
         )}
       </div>
       <Variant project={project} copy={project[lang]} />
-    </Reveal>
+    </li>
   );
 }

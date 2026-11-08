@@ -37,7 +37,7 @@
 }
 .term-name {
   font-family: var(--font-mono);
-  font-size: clamp(2.2rem, 7vw, 4.2rem);
+  font-size: clamp(2rem, 6vw, 3.4rem);
   font-weight: 700;
   line-height: 1.05;
   letter-spacing: -0.03em;
@@ -335,4 +335,31 @@
   .t-table.t-table-exp li > * {
     grid-column: 1;
   }
+}
+
+/* Saída "digitada": cada linha da entrada aparece da esquerda para a direita,
+   em degraus, uma depois da outra. Só CSS; com prefers-reduced-motion a
+   regra global de base.css encurta a animação para ~0. */
+@keyframes term-type {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+.term-entry > * {
+  animation: term-type 0.35s steps(24, end) both;
+}
+.term-entry > :nth-child(2) {
+  animation-delay: 0.08s;
+}
+.term-entry > :nth-child(3) {
+  animation-delay: 0.16s;
+}
+.term-entry > :nth-child(4) {
+  animation-delay: 0.24s;
+}
+.term-entry > :nth-child(n + 5) {
+  animation-delay: 0.32s;
 }

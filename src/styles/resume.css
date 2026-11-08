@@ -73,10 +73,11 @@
 }
 .doc-head h1 {
   font-family: var(--font-mono);
-  font-size: clamp(1.9rem, 4.5vw, 2.8rem);
+  font-size: var(--fs-h1);
   line-height: 1.1;
   letter-spacing: -0.02em;
   margin-bottom: 0.6rem;
+  font-weight: 700;
 }
 .doc-headline {
   font-weight: 600;
@@ -105,7 +106,7 @@
   color: inherit;
 }
 .doc .btn {
-  color: #fff;
+  color: var(--on-accent);
 }
 
 .doc-sec {

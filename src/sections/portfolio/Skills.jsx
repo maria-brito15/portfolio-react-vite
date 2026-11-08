@@ -1,4 +1,3 @@
-import Reveal from '../../components/Reveal';
 import SectionTitle from '../../components/ui/SectionTitle';
 
 export default function Skills({ content }) {
@@ -9,10 +8,10 @@ export default function Skills({ content }) {
       </SectionTitle>
       <div className="skills-block">
         {content.rows.map(([area, tools]) => (
-          <Reveal className="sk-row" key={area}>
+          <div className="sk-row" key={area}>
             <h3>{area}</h3>
             <p>{tools}</p>
-          </Reveal>
+          </div>
         ))}
       </div>
     </section>

@@ -1,4 +1,3 @@
-import Reveal from '../../components/Reveal';
 import SectionTitle from '../../components/ui/SectionTitle';
 import { profile } from '../../data/profile';
 
@@ -9,7 +8,7 @@ export default function About({ content }) {
         {content.title}
       </SectionTitle>
       <div className="about-grid">
-        <Reveal className="about-left">
+        <div className="about-left">
           <div className="about-avatar-wrap">
             <div className="about-avatar">
               <img src={profile.photo} alt={content.photoAlt} width="768" height="768" />
@@ -44,8 +43,8 @@ export default function About({ content }) {
               💼 LinkedIn
             </a>
           </div>
-        </Reveal>
-        <Reveal className="about-right">
+        </div>
+        <div className="about-right">
           {content.bio.map((paragraph, i) => (
             <p className="about-bio" key={i}>
               {paragraph}
@@ -59,7 +58,7 @@ export default function About({ content }) {
               ))}
             </ul>
           </div>
-        </Reveal>
+        </div>
       </div>
     </section>
   );

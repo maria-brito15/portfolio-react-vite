@@ -17,7 +17,8 @@
   align-items: baseline;
   max-width: none;
   margin-bottom: var(--space-4);
-  font-size: 1.35rem;
+  font-size: var(--fs-h2);
+  font-weight: 600;
 }
 
 /* ---------- Card ---------- */
@@ -143,4 +144,26 @@
   .data-table {
     min-width: 0;
   }
+}
+
+/* ---------- Tipografia: hierarquia por peso e tamanho, uma família só ---------- */
+.lbl::before {
+  content: '//';
+  color: var(--dim);
+}
+.stitle em {
+  font-style: normal;
+  color: var(--accent);
+}
+.stitle.stitle--md:not(:has(.doc-num))::before {
+  content: '##';
+  margin-right: 1ch;
+  color: var(--dim);
+}
+.about-bio,
+.section-intro,
+.contact-text,
+.doc-sec > p,
+.case-body p {
+  max-width: var(--measure);
 }

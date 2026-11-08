@@ -1,4 +1,3 @@
-import Reveal from '../../components/Reveal';
 import SectionTitle from '../../components/ui/SectionTitle';
 import { experienceGroups } from '../../data/experiences';
 import { useLanguage } from '../../i18n/LanguageContext';
@@ -17,7 +16,7 @@ export default function Experience({ content }) {
           <h3 className="extra-group-title">{group.title[lang]}</h3>
           <div className="extra-grid">
             {group.items.map((item) => (
-              <Reveal className="extra-card" key={item.id}>
+              <div className="extra-card" key={item.id}>
                 <span className={`extra-bdg${item.highlight ? ' highlight' : ''}`}>
                   {item.period[lang]}
                 </span>
@@ -31,7 +30,7 @@ export default function Experience({ content }) {
                     <span className="extra-tag">{item.tag[lang]}</span>
                   </div>
                 )}
-              </Reveal>
+              </div>
             ))}
           </div>
         </div>

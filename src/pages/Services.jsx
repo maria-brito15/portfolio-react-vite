@@ -1,4 +1,3 @@
-import Reveal from '../components/Reveal';
 import SiteShell from '../components/shell/SiteShell';
 import SectionTitle from '../components/ui/SectionTitle';
 import Card from '../components/ui/Card';
@@ -49,7 +48,7 @@ export default function Services() {
         </SectionTitle>
         <div className="services-grid">
           {c.services.items.map((item) => (
-            <Reveal as={Card} className="svc-card" key={item.title}>
+            <Card className="svc-card" key={item.title}>
               <div className="svc-icon" aria-hidden="true">
                 {item.icon}
               </div>
@@ -62,10 +61,10 @@ export default function Services() {
                   </span>
                 ))}
               </div>
-            </Reveal>
+            </Card>
           ))}
           {/* Cartão que é um link: mesma classe `card`, mas a tag é <a>. */}
-          <Reveal as="a" href={mailto} className="card svc-card svc-card-custom">
+          <a href={mailto} className="card svc-card svc-card-custom">
             <div>
               <div className="svc-icon" aria-hidden="true">
                 💬
@@ -74,9 +73,9 @@ export default function Services() {
               <p>{c.services.custom.text}</p>
             </div>
             <span className="price-tag">{c.services.custom.cta}</span>
-          </Reveal>
+          </a>
         </div>
-        <Reveal className="design-disclaimer">
+        <div className="design-disclaimer">
           <div className="design-disclaimer-icon" aria-hidden="true">
             🎨
           </div>
@@ -93,7 +92,7 @@ export default function Services() {
               ))}
             </div>
           </div>
-        </Reveal>
+        </div>
       </section>
 
       <SectionDivider label={c.cases.divider} />
@@ -102,7 +101,7 @@ export default function Services() {
           {c.cases.title}
         </SectionTitle>
         {c.cases.items.map((item) => (
-          <Reveal as={Card} className="case-card" key={item.id}>
+          <Card className="case-card" key={item.id}>
             <div className="case-content">
               <div className="case-badge">{item.badge}</div>
               <h3>{item.title}</h3>
@@ -124,18 +123,18 @@ export default function Services() {
                 alt: `${item.alt} ${i + 1}/${item.images.length}`,
               }))}
             />
-          </Reveal>
+          </Card>
         ))}
       </section>
 
       <section id="faq" className="sec faq-section" aria-labelledby="faq-title">
-        <Reveal className="faq-wrap">
+        <div className="faq-wrap">
           <div className="faq-head">
             <span className="lbl">{c.faq.label}</span>
             <h3 id="faq-title">{c.faq.title}</h3>
           </div>
           <Faq items={c.faq.items} />
-        </Reveal>
+        </div>
       </section>
 
       <section className="contact-wrap" id="contato" aria-labelledby="svc-contato-title">

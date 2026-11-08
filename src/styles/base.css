@@ -28,6 +28,7 @@ body {
   *::before,
   *::after {
     animation-duration: 0.001ms !important;
+    animation-delay: 0s !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
@@ -213,48 +214,34 @@ button {
 }
 .stitle {
   font-family: var(--font-mono);
-  font-size: clamp(1.7rem, 4vw, 2.6rem);
+  font-size: var(--fs-h1);
   font-weight: 700;
   margin-bottom: 2.25rem;
   line-height: 1.15;
-  letter-spacing: -0.01em;
-  max-width: 20ch;
+  letter-spacing: 0;
+  max-width: none;
 }
 .stitle em {
   font-style: normal;
   color: var(--accent);
 }
-.ap {
-  opacity: 0;
-  transform: translateY(16px);
-  transition:
-    opacity 0.5s ease,
-    transform 0.5s ease;
-}
-.ap.v {
-  opacity: 1;
-  transform: translateY(0);
-}
 
 /* ---------- Botões ---------- */
 .btn {
-  background: var(--accent);
-  color: #fff;
+  background: var(--warn);
+  color: var(--on-accent);
   padding: 0.7rem 1.7rem;
   border-radius: var(--radius-sm);
   text-decoration: none;
   font-weight: 600;
   font-size: 0.88rem;
-  transition:
-    transform 0.2s,
-    box-shadow 0.2s;
+  transition: filter 0.2s;
   display: inline-flex;
   align-items: center;
   gap: 7px;
 }
 .btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+  filter: brightness(1.12);
 }
 .btn-o {
   border: 1px solid var(--border);
@@ -300,10 +287,6 @@ footer {
 
 /* Conteúdo ainda deve aparecer para quem prefere menos movimento */
 @media (prefers-reduced-motion: reduce) {
-  .ap {
-    opacity: 1;
-    transform: none;
-  }
   html {
     scroll-behavior: auto;
   }

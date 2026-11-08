@@ -302,7 +302,7 @@
 }
 .featured-card h3 {
   font-family: var(--font-mono);
-  font-size: 1.4rem;
+  font-size: var(--fs-h2);
   font-weight: 700;
   margin-bottom: 0.75rem;
   color: var(--text);
@@ -679,7 +679,7 @@
 }
 .ecoshop-title {
   font-family: var(--font-mono);
-  font-size: 1.4rem;
+  font-size: var(--fs-h2);
   font-weight: 700;
   margin-bottom: 0.75rem;
 }
