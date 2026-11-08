@@ -19,7 +19,6 @@ export default function Services() {
   return (
     <SiteShell routeId="servicos">
       <section className="hero">
-        <div className="glow" aria-hidden="true"></div>
         <div>
           <div className="badge">
             <span className="bdot" aria-hidden="true"></span> {c.hero.badge}
@@ -140,7 +139,6 @@ export default function Services() {
       </section>
 
       <section className="contact-wrap" id="contato" aria-labelledby="svc-contato-title">
-        <div className="cbg" aria-hidden="true"></div>
         <div className="cinner">
           <SectionTitle id="svc-contato-title" label={c.contact.label} center>
             {c.contact.title}

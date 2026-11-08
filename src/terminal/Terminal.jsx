@@ -35,7 +35,7 @@ export default function Terminal({ content }) {
         <header className={`term-banner${entry ? ' sr-only' : ''}`}>
           <p className="t-dim">{content.terminal.boot}</p>
           <h1 id="inicio-title" className="term-name">
-            <span className="t-gradient">{content.terminal.name}</span>
+            <span className="t-accent">{content.terminal.name}</span>
           </h1>
           <p className="term-roles">
             {content.terminal.roles.map((role, i) => (

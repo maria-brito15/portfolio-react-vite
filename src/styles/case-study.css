@@ -21,7 +21,7 @@
   text-transform: uppercase;
   letter-spacing: 0.08em;
   font-size: 0.7rem;
-  color: var(--t3);
+  color: var(--dim);
   margin-bottom: 0.9rem;
   font-weight: 600;
 }
@@ -30,11 +30,11 @@
   display: flex;
   flex-direction: column;
   gap: 0.55rem;
-  border-left: 1px solid var(--bdr);
+  border-left: 1px solid var(--border);
   padding-left: 0.9rem;
 }
 .case-toc a {
-  color: var(--t2);
+  color: var(--text-2);
   text-decoration: none;
   line-height: 1.4;
   display: block;
@@ -47,7 +47,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  color: var(--t2);
+  color: var(--text-2);
   text-decoration: none;
   font-size: 0.85rem;
   margin-bottom: 1.6rem;
@@ -63,22 +63,22 @@
   margin-bottom: 1.4rem;
 }
 .case-title {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-mono);
   font-size: clamp(1.9rem, 4vw, 2.7rem);
   font-weight: 800;
   line-height: 1.15;
   margin-bottom: 1rem;
 }
 .case-sub {
-  color: var(--t2);
+  color: var(--text-2);
   font-size: 1.02rem;
   line-height: 1.75;
   margin-bottom: 2.6rem;
   padding-bottom: 2.4rem;
-  border-bottom: 1px solid var(--bdr);
+  border-bottom: 1px solid var(--border);
 }
 .case-body h2 {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-mono);
   font-size: 1.4rem;
   font-weight: 700;
   margin: 3.2rem 0 1.1rem;
@@ -88,14 +88,14 @@
   margin-top: 0;
 }
 .case-body h3 {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-mono);
   font-size: 1.08rem;
   font-weight: 700;
   margin: 1.9rem 0 0.8rem;
   scroll-margin-top: calc(var(--top-h) + var(--space-4));
 }
 .case-body p {
-  color: var(--t2);
+  color: var(--text-2);
   font-size: 0.98rem;
   line-height: 1.85;
   margin-bottom: 1.15rem;
@@ -109,7 +109,7 @@
 }
 .case-body ul,
 .case-body ol.list {
-  color: var(--t2);
+  color: var(--text-2);
   font-size: 0.98rem;
   line-height: 1.85;
   margin: 0 0 1.15rem 1.3rem;
@@ -119,23 +119,22 @@
 }
 .case-body code {
   font-family: 'SFMono-Regular', Consolas, monospace;
-  background: var(--bg3);
+  background: var(--surface-3);
   padding: 2px 6px;
   border-radius: 5px;
   font-size: 0.85em;
   color: var(--accent);
 }
 .case-callout {
-  background: var(--bg2);
+  background: var(--surface-2);
   border: 1px solid rgba(102, 144, 242, 0.25);
   border-left: 3px solid var(--accent);
-  border-radius: var(--r);
+  border-radius: var(--radius-md);
   padding: 1.2rem 1.4rem;
   margin: 1.7rem 0 2rem;
   font-size: 0.94rem;
   line-height: 1.75;
-  color: var(--t2);
-  box-shadow: var(--card-shadow);
+  color: var(--text-2);
 }
 .case-callout strong {
   color: var(--accent);
@@ -143,13 +142,12 @@
 .case-tech {
   background: rgba(163, 116, 242, 0.06);
   border: 1px solid rgba(163, 116, 242, 0.22);
-  border-radius: var(--r);
+  border-radius: var(--radius-md);
   padding: 1rem 1.3rem;
   margin: 0 0 1.6rem;
   font-size: 0.88rem;
   line-height: 1.75;
-  color: var(--t2);
-  box-shadow: var(--card-shadow);
+  color: var(--text-2);
 }
 [data-theme='light'] .case-tech {
   background: rgba(124, 58, 201, 0.05);
@@ -157,10 +155,8 @@
 }
 [data-theme='light'] .case-callout {
   border: 1px solid rgba(63, 99, 201, 0.25);
-  box-shadow: var(--card-shadow);
 }
 [data-theme='light'] .case-example {
-  box-shadow: var(--card-shadow);
 }
 .case-tech-label {
   display: inline-flex;
@@ -169,26 +165,25 @@
   text-transform: uppercase;
   letter-spacing: 0.06em;
   font-size: 0.66rem;
-  color: var(--accent-2);
+  color: var(--accent);
   font-weight: 700;
   margin-bottom: 0.55rem;
 }
 .case-tech code {
-  color: var(--accent-2);
+  color: var(--accent);
 }
 .case-example {
-  background: var(--bg2);
-  border: 1px solid var(--bdr);
-  border-radius: var(--r);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
   padding: 1.3rem 1.5rem;
   margin: 1.6rem 0 2rem;
-  box-shadow: var(--card-shadow);
 }
 .case-example-label {
   text-transform: uppercase;
   letter-spacing: 0.06em;
   font-size: 0.68rem;
-  color: var(--accent-2);
+  color: var(--accent);
   font-weight: 700;
   margin-bottom: 0.7rem;
   display: block;
@@ -216,12 +211,12 @@
 .case-table td {
   text-align: left;
   padding: 0.65rem 0.8rem;
-  border-bottom: 1px solid var(--bdr);
-  color: var(--t2);
+  border-bottom: 1px solid var(--border);
+  color: var(--text-2);
   vertical-align: top;
 }
 .case-table th {
-  color: var(--t3);
+  color: var(--dim);
   font-weight: 600;
   text-transform: uppercase;
   font-size: 0.72rem;
@@ -233,7 +228,7 @@
   gap: 0.8rem;
   margin-top: 3.2rem;
   padding-top: 2.4rem;
-  border-top: 1px solid var(--bdr);
+  border-top: 1px solid var(--border);
 }
 @media (max-width: 720px) {
   .case-shell {
@@ -248,7 +243,7 @@
     position: static;
     margin: 0 0 3rem;
     padding-bottom: 2rem;
-    border-bottom: 1px solid var(--bdr);
+    border-bottom: 1px solid var(--border);
   }
   .case-title {
     word-break: break-word;
@@ -287,7 +282,7 @@
 .case-scope {
   margin: 0 0 2rem;
   padding: 1.25rem 1.5rem;
-  border: 1px solid var(--bdr);
+  border: 1px solid var(--border);
   border-radius: 12px;
 }
 .case-scope h2 {
@@ -300,7 +295,7 @@
 }
 .case-scope dd {
   margin: 0.15rem 0 0;
-  color: var(--t2);
+  color: var(--text-2);
   font-size: 0.9rem;
   line-height: 1.6;
 }

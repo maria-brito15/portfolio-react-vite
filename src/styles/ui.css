@@ -23,10 +23,9 @@
 /* ---------- Card ---------- */
 .card {
   padding: var(--space-4) var(--space-4);
-  border: 1px solid var(--bdr);
-  border-radius: var(--r);
-  background: var(--bg2);
-  box-shadow: var(--card-shadow);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-2);
 }
 @media print {
   .card {
@@ -43,7 +42,7 @@
   line-height: 1.5;
   padding: 1px 9px;
   border-radius: var(--radius-pill);
-  color: var(--accent-2);
+  color: var(--accent);
   background: rgba(163, 116, 242, 0.1);
   border: 1px solid rgba(163, 116, 242, 0.22);
   white-space: nowrap;
@@ -51,7 +50,7 @@
   letter-spacing: 0;
 }
 .chip--live {
-  color: var(--term-ok);
+  color: var(--ok);
   background: transparent;
   border-color: currentColor;
 }
@@ -59,8 +58,8 @@
 /* ---------- DataTable ---------- */
 .data-table-wrap {
   overflow-x: auto;
-  border: 1px solid var(--bdr);
-  border-radius: var(--r);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
 }
 .data-table {
   width: 100%;
@@ -73,7 +72,7 @@
 .data-table td {
   text-align: left;
   padding: 0.65rem 0.9rem;
-  border-bottom: 1px solid var(--bdr);
+  border-bottom: 1px solid var(--border);
   vertical-align: top;
 }
 .data-table th {
@@ -82,8 +81,8 @@
   font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--t3);
-  background: var(--bg2);
+  color: var(--dim);
+  background: var(--surface-2);
 }
 .data-table .col-s {
   width: 6rem;
@@ -103,13 +102,13 @@
 .data-table tfoot td {
   font-family: var(--font-mono);
   font-size: 0.78rem;
-  color: var(--t2);
-  background: var(--bg2);
-  border-top: 1px solid var(--bdr);
+  color: var(--text-2);
+  background: var(--surface-2);
+  border-top: 1px solid var(--border);
   border-bottom: 0;
 }
 .data-table-empty td {
-  color: var(--t3);
+  color: var(--dim);
   font-style: italic;
 }
 
@@ -127,7 +126,7 @@
     grid-template-columns: 1fr auto;
     gap: var(--space-1) var(--space-3);
     padding: var(--space-3) 0.9rem;
-    border-bottom: 1px solid var(--bdr);
+    border-bottom: 1px solid var(--border);
   }
   .data-table--stack tbody tr:last-child {
     border-bottom: 0;

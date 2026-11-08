@@ -14,10 +14,10 @@ button {
 /* ---------- Navegação ---------- */
 .menu-toggle {
   display: none;
-  background: var(--bg2);
-  border: 1px solid var(--bdr);
-  color: var(--t);
-  border-radius: 100px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: var(--radius-sm);
   width: 36px;
   height: 32px;
   cursor: pointer;
@@ -53,7 +53,7 @@ button {
     display: block;
     padding: 0.7rem 0;
     font-size: 0.95rem;
-    border-top: 1px solid var(--bdr);
+    border-top: 1px solid var(--border);
   }
 }
 
@@ -71,14 +71,14 @@ button {
 
 /* ---------- Texto introdutório e botões ---------- */
 .section-intro {
-  color: var(--t2);
+  color: var(--text-2);
   max-width: 62ch;
   margin-bottom: 2.5rem;
   font-size: 0.92rem;
   line-height: 1.7;
 }
 .contact-text {
-  color: var(--t2);
+  color: var(--text-2);
   max-width: 440px;
   margin: 0 auto;
 }
@@ -94,7 +94,7 @@ button {
   display: grid;
   gap: 2.25rem;
   padding-left: 1.75rem;
-  border-left: 1px solid var(--bdr);
+  border-left: 1px solid var(--border);
   margin-left: 6px;
 }
 .timeline-item {
@@ -122,7 +122,7 @@ button {
 .date-note {
   display: block;
   margin-top: 0.15rem;
-  color: var(--t3);
+  color: var(--dim);
   font-size: 0.72rem;
   font-weight: 500;
   letter-spacing: 0;
@@ -148,13 +148,13 @@ button {
   margin-top: 1rem;
 }
 .ecoshop-title {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-mono);
   font-size: 1.4rem;
   font-weight: 700;
   margin-bottom: 0.75rem;
 }
 .ecoshop-desc {
-  color: var(--t2);
+  color: var(--text-2);
   font-size: 0.9rem;
   line-height: 1.7;
   margin-bottom: 1.75rem;
@@ -168,7 +168,7 @@ button {
 }
 .evo-points li {
   font-size: 0.78rem;
-  color: var(--t3);
+  color: var(--dim);
   display: flex;
   gap: 6px;
   align-items: flex-start;
@@ -187,22 +187,6 @@ button {
   overflow: hidden;
   cursor: default;
 }
-.proj-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.25s;
-  background: radial-gradient(
-    circle at var(--mx, 50%) var(--my, 50%),
-    var(--glow-color-2),
-    transparent 60%
-  );
-}
-.proj-card:hover::before {
-  opacity: 1;
-}
 .proj-card > * {
   position: relative;
 }
@@ -210,7 +194,7 @@ button {
 /* Galerias dentro dos cards */
 .project-gallery {
   margin-top: 1.25rem;
-  border: 1px solid var(--bdr);
+  border: 1px solid var(--border);
   border-radius: 10px;
 }
 .project-gallery.cols-1 {
@@ -265,16 +249,16 @@ button {
   margin-top: 0;
 }
 .extra-group-title {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-mono);
   font-size: 0.8rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--t3);
+  color: var(--dim);
   margin-bottom: 0.5rem;
 }
 .extra-card h4 {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-mono);
   font-size: 0.98rem;
   font-weight: 700;
   line-height: 1.3;
@@ -309,14 +293,14 @@ button {
   background: rgba(255, 140, 0, 0.04);
 }
 .svc-card-custom h3 {
-  color: var(--g);
+  color: var(--accent);
 }
 .price-tag {
   align-self: flex-start;
 }
 .design-note {
   font-size: 0.82rem;
-  color: var(--t3);
+  color: var(--dim);
   margin-top: 0.5rem;
   margin-bottom: 0;
 }
@@ -330,7 +314,7 @@ button {
   margin-bottom: 0.5rem;
 }
 .faq-head h3 {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-mono);
   font-size: 1.3rem;
   font-weight: 800;
   margin: 0;
@@ -348,12 +332,12 @@ button {
   display: grid;
   gap: 1rem;
   padding: 1.75rem;
-  background: var(--bg2);
-  border: 1px solid var(--bdr);
-  border-radius: var(--r);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
 }
 .contact-form-title {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-mono);
   font-size: 1.1rem;
 }
 .form-field {
@@ -369,9 +353,9 @@ button {
   width: 100%;
   font: inherit;
   font-size: 1rem;
-  color: var(--t);
+  color: var(--text);
   background: var(--bg);
-  border: 1px solid var(--bdr);
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 0.75rem 0.9rem;
   resize: vertical;
@@ -409,7 +393,7 @@ button {
   color: #30a46c;
 }
 .form-note.failure {
-  color: var(--t2);
+  color: var(--text-2);
 }
 .form-note a {
   color: var(--accent);

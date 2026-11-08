@@ -1,8 +1,9 @@
-/* Tokens de design do site: espaçamento, raios, sombras, tipografia e as cores
-   da janela/terminal. Os componentes novos (Window, CommandBar, SiteShell, ui/)
-   só usam estas variáveis; as cores gerais do site continuam em original.css
-   (--bg, --t, --accent…). Tema escuro é o padrão; `[data-theme='light']`
-   sobrescreve só o que muda. */
+/* Tokens de design: UM sistema só, o do terminal/IDE. Um nome por papel.
+   Cor com significado fixo em todo o site, páginas e terminal:
+     --accent (azul) = links e caminhos · --ok (verde) = ok, ativo, usuário
+     --warn (âmbar)  = comando e ação    · --err (vermelho) = erro
+   Tema escuro é o padrão; `[data-theme='light']` só sobrescreve o que muda.
+   Todos os acentos passam AA (4.5:1) sobre --surface e --surface-2. */
 
 :root {
   /* Espaçamento */
@@ -15,18 +16,22 @@
   --space-7: 3rem;
   --gutter: 1.5rem;
 
-  /* Raios */
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
+  /* Raios: painéis de terminal, cantos discretos */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
   --radius-pill: 100px;
 
-  /* Tipografia */
+  /* Tipografia: uma voz só, JetBrains Mono. Hierarquia por peso e tamanho. */
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --fs-chrome: 0.75rem; /* barra de título, breadcrumb, badges */
+  --fs-body: 0.95rem;
   --fs-mono: 0.95rem; /* terminal e barra de comandos */
   --fs-mono-sm: 0.8rem; /* mesmo, em telas estreitas */
+  --fs-h1: 1.9rem;
+  --fs-h2: 1.1rem;
   --lh-mono: 1.65;
+  --measure: 72ch; /* largura de leitura das páginas de texto */
 
   /* Layout */
   --win-max: 1100px;
@@ -36,32 +41,44 @@
   --cmdbar-h: 2.5rem;
   --top-h: calc(var(--nav-h) + var(--cmdbar-h));
 
-  /* Janela e terminal (escuro) */
-  --term-bg: #0d0f13;
-  --term-bar: #161920;
-  --term-text: #dfe3ea;
-  --term-dim: #7d8492;
-  --term-user: #7fd88f;
-  --term-path: #7ea6ff;
-  --term-err: #ff7b86;
-  --term-ok: #7fd88f;
-  --term-cmd: #e6a15c;
-  --win-shadow: 0 30px 80px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(102, 144, 242, 0.06);
+  /* Cores (escuro) */
+  --bg: #0b0c0f; /* fundo da página */
+  --surface: #0d0f13; /* janela */
+  --surface-2: #161920; /* barra de título e sub-painéis */
+  --surface-3: #1d2029; /* trilhas, realces */
+  --border: rgba(255, 255, 255, 0.1);
+  --text: #dfe3ea;
+  --text-2: #b4bac6;
+  --dim: #8a919f;
+  --accent: #7ea6ff;
+  --ok: #7fd88f;
+  --warn: #e6a15c;
+  --err: #ff7b86;
+  --on-accent: #0d0f13; /* texto sobre fundo --accent */
+  --nav-bg: rgba(11, 12, 15, 0.9);
+  --grid-color: rgba(255, 255, 255, 0.025);
+  --win-shadow: 0 30px 80px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(126, 166, 255, 0.06);
   --dot-close: #ff5f57;
   --dot-min: #febc2e;
   --dot-max: #28c840;
 }
 
 [data-theme='light'] {
-  --term-bg: #ffffff;
-  --term-bar: #eceef2;
-  --term-text: #1d2128;
-  --term-dim: #6b717c;
-  --term-user: #1f8a3a;
-  --term-path: #3f63c9;
-  --term-err: #c4323f;
-  --term-ok: #1f8a3a;
-  --term-cmd: #a5601f;
+  --bg: #f3f4f6;
+  --surface: #ffffff;
+  --surface-2: #eceef2;
+  --surface-3: #e2e5ea;
+  --border: rgba(20, 22, 26, 0.14);
+  --text: #1d2128;
+  --text-2: #3f454f;
+  --dim: #5d636e;
+  --accent: #2f55c4;
+  --ok: #17702f;
+  --warn: #8f5016;
+  --err: #b42332;
+  --on-accent: #ffffff;
+  --nav-bg: rgba(255, 255, 255, 0.92);
+  --grid-color: rgba(20, 22, 26, 0.035);
   --win-shadow: 0 20px 60px rgba(20, 22, 26, 0.12);
 }
 
@@ -69,6 +86,7 @@
   :root {
     --gutter: 0;
     --fs-mono: var(--fs-mono-sm);
+    --fs-h1: 1.6rem;
     --win-min-h: 360px;
     --win-h: 70vh;
   }

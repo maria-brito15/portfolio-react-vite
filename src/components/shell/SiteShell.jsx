@@ -48,11 +48,6 @@ export default function SiteShell({ routeId, missingPath, badge, variant, childr
           id={home ? 'inicio' : undefined}
           aria-labelledby={home ? 'inicio-title' : undefined}
         >
-          {home && (
-            <div className="shell-glow" aria-hidden="true">
-              <div className="glow"></div>
-            </div>
-          )}
           {!home && (
             <div className="shell-nav">
               <button
