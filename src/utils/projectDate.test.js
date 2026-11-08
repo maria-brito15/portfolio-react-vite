@@ -2,7 +2,9 @@ import {
   compareProjectDates,
   findUndeterminedOrder,
   formatProjectDate,
+  parsePeriodStart,
   sortByDate,
+  sortByDateDesc,
 } from './projectDate';
 
 const p = (id, year, month) => ({ id, date: month ? { year, month } : { year } });
@@ -46,5 +48,44 @@ describe('findUndeterminedOrder', () => {
       p('e', 2026, 1),
     ]);
     expect([...ids].sort()).toEqual(['b', 'c']);
+  });
+});
+
+describe('sortByDateDesc', () => {
+  it('ordena por ano e depois por mês, do mais recente ao mais antigo', () => {
+    const sorted = sortByDateDesc([
+      p('a', 2025, 1),
+      p('c', 2026, 1),
+      p('b', 2025, 2),
+      p('d', 2026, 2),
+    ]);
+    expect(sorted.map((x) => x.id)).toEqual(['d', 'c', 'b', 'a']);
+  });
+  it('no mesmo ano, datas sem mês ficam depois das que têm mês', () => {
+    const sorted = sortByDateDesc([p('sem', 2026), p('jan', 2026, 1), p('fev', 2026, 2)]);
+    expect(sorted.map((x) => x.id)).toEqual(['fev', 'jan', 'sem']);
+  });
+  it('mantém a ordem declarada em empates e não altera a entrada', () => {
+    const input = [p('x', 2026), p('y', 2026), p('a', 2025, 1), p('b', 2025, 1)];
+    expect(sortByDateDesc(input).map((i) => i.id)).toEqual(['x', 'y', 'a', 'b']);
+    expect(input.map((i) => i.id)).toEqual(['x', 'y', 'a', 'b']);
+  });
+  it('ano mais novo sem mês vem antes de ano anterior com mês', () => {
+    expect(sortByDateDesc([p('a', 2025, 12), p('b', 2026)]).map((i) => i.id)).toEqual(['b', 'a']);
+  });
+});
+
+describe('parsePeriodStart', () => {
+  it('lê mês e ano de MM/AAAA', () => {
+    expect(parsePeriodStart('02/2026')).toEqual({ year: 2026, month: 2 });
+  });
+  it('não inventa mês para anos, intervalos e semestres', () => {
+    expect(parsePeriodStart('2025–2026')).toEqual({ year: 2025 });
+    expect(parsePeriodStart('2º semestre de 2026 – em andamento')).toEqual({ year: 2026 });
+    expect(parsePeriodStart('2nd half of 2026 – ongoing')).toEqual({ year: 2026 });
+  });
+  it('devolve null sem ano ou com mês inválido tratado como só ano', () => {
+    expect(parsePeriodStart('em andamento')).toBeNull();
+    expect(parsePeriodStart('13/2026')).toEqual({ year: 2026 });
   });
 });

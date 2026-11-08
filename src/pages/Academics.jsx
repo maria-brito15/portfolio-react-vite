@@ -5,8 +5,12 @@ import { projects } from '../data/projects';
 import { experienceGroups } from '../data/experiences';
 import { useLanguage } from '../i18n/LanguageContext';
 import { useDocumentMeta } from '../hooks/useDocumentMeta';
-import { formatProjectDate } from '../utils/projectDate';
-import { summarizeSemester, yearProgress } from '../utils/academics';
+import {
+  activitiesByYear,
+  semestersDesc,
+  summarizeSemester,
+  yearProgress,
+} from '../utils/academics';
 
 const pick = (value, lang) => (typeof value === 'string' ? value : value[lang]);
 
@@ -99,39 +103,6 @@ function programName(id, lang) {
   return academics.programs.find((p) => p.id === id)?.degree[lang] ?? '';
 }
 
-function findExperience(id) {
-  for (const group of experienceGroups) {
-    const item = group.items.find((i) => i.id === id);
-    if (item) return { item, group: group.id };
-  }
-  return null;
-}
-
-function activityRow(entry, lang, c) {
-  if (entry.kind === 'project') {
-    const p = projects.find((x) => x.id === entry.id);
-    if (!p) return null;
-    return {
-      key: p.id,
-      period: formatProjectDate(p.date),
-      title: p.name,
-      detail: p[lang].badge,
-      type: c.kinds.project,
-      to: '/#projetos',
-    };
-  }
-  const found = findExperience(entry.id);
-  if (!found) return null;
-  const { item, group } = found;
-  return {
-    key: item.id,
-    period: item.period[lang],
-    title: item.role[lang],
-    detail: pick(item.org, lang),
-    type: c.kinds[group],
-  };
-}
-
 export default function Academics() {
   const { lang } = useLanguage();
   const c = TEXT[lang];
@@ -215,7 +186,7 @@ export default function Academics() {
       </DocSection>
 
       <DocSection id="por-ano" index={3} title={c.sections.years}>
-        {academics.years.map((y) => (
+        {activitiesByYear(academics, { projects, experienceGroups }, lang).map((y) => (
           <div className="ac-year" key={y.year}>
             <h3 className="doc-group-title">{y.year}</h3>
             <div className="ac-table-wrap">
@@ -228,25 +199,22 @@ export default function Academics() {
                   </tr>
                 </thead>
                 <tbody>
-                  {y.items
-                    .map((entry) => activityRow(entry, lang, c))
-                    .filter(Boolean)
-                    .map((row) => (
-                      <tr key={row.key}>
-                        <td>
-                          {row.to ? (
-                            <Link to={row.to}>{row.title}</Link>
-                          ) : (
-                            <strong>{row.title}</strong>
-                          )}
-                          {row.detail && <span className="doc-muted"> · {row.detail}</span>}
-                        </td>
-                        <td>
-                          <span className="ac-chip">{row.type}</span>
-                        </td>
-                        <td className="doc-date">{row.period}</td>
-                      </tr>
-                    ))}
+                  {y.rows.map((row) => (
+                    <tr key={row.key}>
+                      <td>
+                        {row.to ? (
+                          <Link to={row.to}>{row.title}</Link>
+                        ) : (
+                          <strong>{row.title}</strong>
+                        )}
+                        {row.detail && <span className="doc-muted"> · {row.detail}</span>}
+                      </td>
+                      <td>
+                        <span className="ac-chip">{c.kinds[row.kind]}</span>
+                      </td>
+                      <td className="doc-date">{row.period}</td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
@@ -260,7 +228,7 @@ export default function Academics() {
 
       {showCourses && (
         <DocSection id="disciplinas" index={4} title={c.sections.courses}>
-          {academics.semesters.map((s) => {
+          {semestersDesc(academics.semesters).map((s) => {
             const totals = summarizeSemester(s.courses);
             return (
               <div className="ac-year" key={s.id}>

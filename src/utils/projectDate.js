@@ -23,6 +23,35 @@ export function sortByDate(list) {
   return [...list].sort((a, b) => compareProjectDates(a.date, b.date));
 }
 
+// Ordem inversa (mais recente primeiro) pela mesma regra de `compareProjectDates`,
+// invertida só entre anos e entre meses: no mesmo ano, datas com mês continuam
+// vindo antes das sem mês, e datas sem mês empatam (preservando a ordem declarada).
+export function compareProjectDatesDesc(a, b) {
+  if (a.year !== b.year) return b.year - a.year;
+  if (a.month && b.month) return b.month - a.month;
+  if (a.month) return -1;
+  if (b.month) return 1;
+  return 0;
+}
+
+// Ordem cronológica decrescente pela `date` de cada item. Não altera a entrada.
+export function sortByDateDesc(list) {
+  return [...list].sort((a, b) => compareProjectDatesDesc(a.date, b.date));
+}
+
+// Extrai { year, month? } do início de um texto de período, sem inventar mês:
+// "01/2026" → { year: 2026, month: 1 }; "2025–2026" e "2º semestre de 2026 – em
+// andamento" → só o ano. Devolve null quando não há ano.
+export function parsePeriodStart(period) {
+  const text = String(period ?? '');
+  const full = text.match(/^\s*(\d{1,2})\/(\d{4})/);
+  if (full && Number(full[1]) >= 1 && Number(full[1]) <= 12) {
+    return { year: Number(full[2]), month: Number(full[1]) };
+  }
+  const year = text.match(/\d{4}/);
+  return year ? { year: Number(year[0]) } : null;
+}
+
 // Ids cuja posição relativa não pode ser determinada: sem mês e com ao menos
 // outro projeto no mesmo ano sem mês (com mês, a ordem seria conhecida).
 export function findUndeterminedOrder(list) {
