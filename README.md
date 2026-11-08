@@ -45,7 +45,9 @@ Páginas:
 
 | Rota | Conteúdo |
 | --- | --- |
-| `/` | Início, Sobre mim, Habilidades, Projetos (timeline), Experiências, Contato e rodapé |
+| `/` | Terminal interativo (início), Sobre mim, Habilidades, Projetos (timeline), Experiências, Contato e rodapé |
+| `/curriculo` (ou `/resume`) | Currículo em uma página, com índice numerado e botão de imprimir/salvar em PDF |
+| `/academico` (ou `/academics`) | Trajetória acadêmica: linha do tempo do curso, formação, atividades por ano e (quando preenchidas) disciplinas e notas |
 | `/servicos` | Serviços web oferecidos, cases (BECAS, Ágape Vestir), FAQ e contato |
 | `/estudos-de-caso/whatsapp-dispatcher` | Estudo de caso de arquitetura (PT/EN) |
 
@@ -53,6 +55,9 @@ Páginas:
 
 ## ✨ Funcionalidades principais
 
+- 💻 **Terminal interativo na abertura** (`src/terminal/`): o visitante digita comandos como `ajuda`, `sobre`, `ls`, `cd projetos`, `projetos`, `experiencias`, `curriculo`, `academico`, `contato`, `tema` e `idioma` (nomes em PT ou EN). Tem autocompletar com Tab, histórico com ↑/↓, `Ctrl+L` para limpar, saída redesenhada ao trocar de idioma e histórico mantido durante a visita. Atalhos clicáveis abaixo do terminal deixam tudo acessível no celular.
+- 📄 **Currículo web** (`/curriculo`): versão em página do currículo, com seções numeradas, índice fixo, competências com tempo de uso (contado a partir do primeiro projeto ou curso com cada tecnologia, em `src/data/skillTimeline.js`), experiências em cards numerados com "Mostrar mais", formação e reconhecimentos com contagem (2× finalista) e impressão limpa (o botão abre a janela de impressão; "Salvar como PDF" gera o arquivo).
+- 🎓 **Página Acadêmico** (`/academico`): linha do tempo de 2025 até a previsão de conclusão (2029) com a posição de hoje, formação, números de destaque e atividades por ano. A seção **Disciplinas e notas** por semestre (carga horária, modalidade, nota e média) já vem com 4 semestres como placeholder (01/2025, 02/2025 e 01/2026 em Ciência da Computação; 02/2026 em Engenharia de Software, em andamento). Para preencher, adicione as disciplinas em `courses` dentro de `src/data/academics.js` (formato documentado no próprio arquivo); carga horária e média aparecem sozinhas.
 - 🌍 **Português e inglês** com troca no cabeçalho, preferência salva em `localStorage` e permanência na página/seção atual.
 - 🌗 **Tema claro/escuro**, salvo em `localStorage` e aplicado antes do primeiro desenho (sem "flash").
 - 🕰️ **Timeline de projetos dinâmica**, gerada de `src/data/projects.jsx` e ordenada do mais antigo ao mais recente por data `{ ano, mês? }`. A data aparece como `MM/AAAA` ou só `AAAA`; quando o mês não é conhecido e há outro projeto no mesmo ano, a interface indica que a ordem entre eles é indeterminada.
@@ -216,14 +221,15 @@ Resumo: criar o repositório no GitHub → importar no Netlify (build `npm run b
 │   └── _redirects             # fallback SPA (Netlify)
 ├── src/
 │   ├── main.jsx · App.jsx · router.jsx
-│   ├── pages/                 # Home, Services, CaseStudy, NotFound
+│   ├── pages/                 # Home, Resume, Academics, Services, CaseStudy, NotFound
+│   ├── terminal/              # Terminal.jsx (interface) + commands.jsx (interpretador)
 │   │   └── case-study/        # estudo de caso original em JSX (PT e EN)
-│   ├── sections/portfolio/    # Hero, About, Skills, Projects, Experience, Contact
+│   ├── sections/portfolio/    # About, Skills, Projects, Experience, Contact
 │   ├── components/            # Header, Footer, Reveal, Faq, Lightbox, ImageGallery, ContactForm…
-│   ├── data/                  # profile, portfolio, projects, experiences, services
+│   ├── data/                  # profile, portfolio, projects, experiences, services, resume, academics
 │   ├── i18n/                  # LanguageContext + textos de interface
 │   ├── hooks/ · utils/ · services/
-│   ├── styles/                # original.css (preservado), portfolio.css, case-study.css
+│   ├── styles/                # original.css (preservado), portfolio.css, case-study.css, terminal.css, resume.css
 │   └── test/                  # configuração dos testes (os *.test.* ficam junto do código)
 ├── docs/
 │   ├── sdd/                   # requisitos, análise de lacunas e plano de tarefas
@@ -238,22 +244,26 @@ Resumo: criar o repositório no GitHub → importar no Netlify (build `npm run b
 
 ## 🎥 Demonstração
 
-| Início | Projetos (timeline) |
+| Terminal (início) | Terminal com comandos |
 | :---: | :---: |
+| ![Terminal](docs/screenshots/terminal-desktop.png) | ![Comandos](docs/screenshots/terminal-comandos-desktop.png) |
+| **Currículo** | **Acadêmico** |
+| ![Currículo](docs/screenshots/curriculo-desktop.png) | ![Acadêmico](docs/screenshots/academico-desktop.png) |
+| **Início (versão anterior)** | **Projetos (timeline)** |
 | ![Início](docs/screenshots/home-desktop.png) | ![Projetos](docs/screenshots/projetos-desktop.png) |
 | **Experiências** | **Contato (tema claro)** |
 | ![Experiências](docs/screenshots/experiencias-desktop.png) | ![Contato](docs/screenshots/contato-desktop.png) |
 | **Serviços** | **Estudo de caso** |
 | ![Serviços](docs/screenshots/servicos-desktop.png) | ![Estudo de caso](docs/screenshots/estudo-de-caso-desktop.png) |
 
-Mobile (390 px): ![Projetos no celular](docs/screenshots/projetos-mobile.png)
+Mobile (390 px): ![Projetos no celular](docs/screenshots/projetos-mobile.png) ![Terminal no celular](docs/screenshots/terminal-mobile.png)
 
 ---
 
 ## 🧪 Testes
 
 ```bash
-npm test        # 53 testes: validação, timeline, idioma, tema, navegação, FAQ, lightbox, formulário, serviço de e-mail
+npm test        # 71 testes: terminal, currículo, acadêmico, validação, timeline, idioma, tema, navegação, FAQ, lightbox, formulário, serviço de e-mail
 npm run lint
 npm run build
 ```
@@ -268,6 +278,8 @@ npm run build
 - **Imagem/GIF dos projetos:** só o EcoShop tem capturas. Para ShortURL e File Name Standardizer, salve os arquivos reais em `public/cases/<id>/` (JPEG/PNG/WebP, até 300 KB) e liste os caminhos em `gallery`. Planoriza e WhatsApp Dispatcher não têm imagens; projetos sem galeria não exibem nada (sem placeholder).
 - **Repositórios:** Planoriza e WhatsApp Dispatcher não têm link de repositório e nenhum foi inventado; a interface não exibe aviso nem promessa. Falta confirmar com o professor se o enunciado exige link para esses casos (Q-01).
 - **Tecnologias do Planoriza/WhatsApp Dispatcher:** as do Dispatcher vieram do próprio estudo de caso (BullMQ, Redis, PostgreSQL, Prisma); confirme se quer listar outras.
+- **Disciplinas e notas:** os 4 semestres existem como placeholder e nenhuma nota foi inventada. Preencha `courses` de cada semestre em `src/data/academics.js` com o histórico oficial.
+- **LinkedIn:** o currículo em PDF usa `maria-eduarda-p-brito-a18064358`, enquanto o site usa `maria-eduarda-brito-a18064358` (`src/data/profile.js`). Confirme qual é o correto.
 - **Tradução:** todo o conteúdo existe em PT e EN, sem lacunas conhecidas.
 - **Experiências:** "WebTech" indica início no 2º semestre de 2026, em andamento, sem mês e sem cargo formal. Instituição/atividade foram separadas a partir dos títulos originais.
 - **Repositório GitHub, deploy, EmailJS e Figma:** dependem de contas e ações suas; procedimentos em [docs/DEPLOY.md](docs/DEPLOY.md), na seção de EmailJS acima e em [docs/PROTOTIPOS.md](docs/PROTOTIPOS.md). Os três `ADICIONAR_*` deste README serão trocados quando existirem.

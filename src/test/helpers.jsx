@@ -1,6 +1,7 @@
 import { render } from '@testing-library/react';
 import { RouterProvider } from '../router';
 import { LanguageProvider } from '../i18n/LanguageContext';
+import { ThemeProvider } from '../hooks/useTheme';
 import App from '../App';
 
 export function renderApp(path = '/') {
@@ -8,7 +9,9 @@ export function renderApp(path = '/') {
   return render(
     <RouterProvider>
       <LanguageProvider>
-        <App />
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
       </LanguageProvider>
     </RouterProvider>,
   );

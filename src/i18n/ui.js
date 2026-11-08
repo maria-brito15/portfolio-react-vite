@@ -9,6 +9,8 @@ export const ui = {
       experience: 'Experiências',
       contact: 'Contato',
       services: 'Serviços',
+      resume: 'Currículo',
+      academics: 'Acadêmico',
       portfolio: 'Portfólio',
       cases: 'Cases',
       faq: 'FAQ',
@@ -63,6 +65,7 @@ export const ui = {
       notConfigured:
         'O envio pelo formulário ainda não está ativo neste site. Enquanto isso, escreva diretamente para',
     },
+    doc: { toc: 'Seções desta página' },
     notFound: {
       title: 'Página não encontrada',
       text: 'O endereço acessado não existe neste site.',
@@ -77,6 +80,8 @@ export const ui = {
       experience: 'Experience',
       contact: 'Contact',
       services: 'Services',
+      resume: 'Resume',
+      academics: 'Academics',
       portfolio: 'Portfolio',
       cases: 'Cases',
       faq: 'FAQ',
@@ -130,6 +135,7 @@ export const ui = {
       notConfigured:
         "Sending through this form isn't enabled on this site yet. In the meantime, write directly to",
     },
+    doc: { toc: 'Sections on this page' },
     notFound: {
       title: 'Page not found',
       text: "The address you opened doesn't exist on this site.",

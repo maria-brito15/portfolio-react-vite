@@ -4,7 +4,7 @@ import { useDocumentMeta } from '../hooks/useDocumentMeta';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import SectionDivider from '../components/SectionDivider';
-import Hero from '../sections/portfolio/Hero';
+import Terminal from '../terminal/Terminal';
 import About from '../sections/portfolio/About';
 import Skills from '../sections/portfolio/Skills';
 import Projects from '../sections/portfolio/Projects';
@@ -21,13 +21,15 @@ export default function Home() {
     { to: '/#projetos', label: t.nav.projects },
     { to: '/#experiencias', label: t.nav.experience },
     { to: '/#contato', label: t.nav.contact },
+    { to: '/curriculo', label: t.nav.resume },
+    { to: '/academico', label: t.nav.academics },
     { to: '/servicos', label: t.nav.services },
   ];
   return (
     <>
       <Header links={links} />
       <main>
-        <Hero content={c.hero} />
+        <Terminal content={c.hero} />
         <About content={c.about} />
         <SectionDivider label={c.skills.divider} />
         <Skills content={c.skills} />

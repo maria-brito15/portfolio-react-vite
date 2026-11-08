@@ -2,12 +2,18 @@ import { useRouter } from './router';
 import Home from './pages/Home';
 import Services from './pages/Services';
 import CaseStudy from './pages/CaseStudy';
+import Resume from './pages/Resume';
+import Academics from './pages/Academics';
 import NotFound from './pages/NotFound';
 
 const routes = {
   '/': Home,
   '/servicos': Services,
   '/estudos-de-caso/whatsapp-dispatcher': CaseStudy,
+  '/curriculo': Resume,
+  '/resume': Resume,
+  '/academico': Academics,
+  '/academics': Academics,
 };
 
 export default function App() {

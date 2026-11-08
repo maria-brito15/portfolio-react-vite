@@ -25,6 +25,15 @@ export const portfolio = {
         </>
       ),
       cta: 'Ver Projetos',
+      terminal: {
+        boot: 'Último acesso: hoje · mariab.dev v2 · digite ajuda',
+        name: 'Duda Brito',
+        roles: ['Engenharia de Software · PUC Minas', 'Arquitetura de Software', 'IA & SDD'],
+        hint: 'Digite ajuda e pressione Enter, ou use os atalhos abaixo.',
+        placeholder: 'digite ajuda…',
+        inputLabel: 'Linha de comando do terminal',
+        quickLabel: 'Comandos rápidos',
+      },
       pills: [
         'Software Architecture',
         'System Design',
@@ -167,6 +176,15 @@ export const portfolio = {
         </>
       ),
       cta: 'View Projects',
+      terminal: {
+        boot: 'Last login: today · mariab.dev v2 · type help',
+        name: 'Duda Brito',
+        roles: ['Software Engineering · PUC Minas', 'Software Architecture', 'AI & SDD'],
+        hint: 'Type help and press Enter, or use the shortcuts below.',
+        placeholder: 'type help…',
+        inputLabel: 'Terminal command line',
+        quickLabel: 'Quick commands',
+      },
       pills: [
         'Software Architecture',
         'System Design',
