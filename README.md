@@ -45,17 +45,22 @@ Páginas:
 
 | Rota | Conteúdo |
 | --- | --- |
-| `/` | Terminal interativo (início), Sobre mim, Habilidades, Projetos (timeline), Experiências, Contato e rodapé |
+| `/` | Só o terminal interativo (a home é o terminal): tudo o mais é um comando |
+| `/sobre`, `/habilidades`, `/projetos`, `/experiencias`, `/contato` | Antigas seções da home, agora páginas próprias dentro da Window (projetos = timeline do mais antigo ao mais recente; contato = links + formulário) |
 | `/curriculo` (ou `/resume`) | Currículo em uma página, com índice numerado e botão de imprimir/salvar em PDF |
-| `/academico` (ou `/academics`) | Trajetória acadêmica: linha do tempo do curso, formação, atividades por ano e (quando preenchidas) disciplinas e notas |
+| `/academico` (ou `/academics`) | Trajetória acadêmica: linha do tempo, formação, atividades por ano e disciplinas e notas |
 | `/servicos` | Serviços web oferecidos, cases (BECAS, Ágape Vestir), FAQ e contato |
 | `/estudos-de-caso/whatsapp-dispatcher` | Estudo de caso de arquitetura (PT/EN) |
 
 Todas as páginas usam o mesmo esqueleto (`SiteShell`): **Header** único (Início, Currículo, Acadêmico, Projetos, Serviços, Contato; o item atual leva `aria-current="page"`) → **barra de comandos** fixa → **Window** (a "janelinha" com título `visitante@mariab.dev: ~/rota`) → conteúdo → **Footer**. Fora da home há também **← Voltar** (`history.back()` quando a página anterior é do site; senão vai para `/`) e **breadcrumb** (`~ / academico`). Todos os caminhos, nomes de comando, rótulos de menu e breadcrumbs vêm de uma tabela só: [`src/data/routes.js`](src/data/routes.js).
 
+### Um só estilo: terminal/IDE
+
+Todo o site fala a mesma língua visual, a de um TUI bonito: **JetBrains Mono em tudo** (hierarquia por peso e tamanho, nunca por troca de família), paleta de "syntax" com significado fixo (**azul = links/caminhos, verde = ok/ativo, âmbar = comando/ação, vermelho = erro**), cada superfície numa `Window` e cards/tabelas/chips como sub-painéis (`src/components/ui/`). Não há texto em degradê, glow nem fonte de exibição. Os tokens vivem em `src/styles/tokens.css` (temas claro e escuro, acentos com contraste AA) e um teste (`src/styles/styles.test.js`) impede a volta de Syne/DM Sans/degradês.
+
 ### Duas visualizações: "no terminal" e "página própria"
 
-Todo comando que tem página dedicada (`sobre`, `habilidades`, `projetos`, `experiencias`, `curriculo`, `academico`, `servicos`, `contato`) **mostra primeiro a visão em terminal** e termina com `[ ver no terminal ]  [ abrir página própria ↗ ]`. Só `cd <página>` e o botão "abrir página própria" navegam, passando por um carregamento (`abrindo /academico… [■■■■□□□□] 48%` → `pronto ✓`; `Esc` ou `Ctrl+C` cancelam; com `prefers-reduced-motion` vira `carregando…`). Nas páginas dedicadas, a barra de título da Window tem o mesmo par: `[ ver no terminal ]` leva à home com o comando já executado (`/?cmd=academico`).
+Todo comando que tem página dedicada (`sobre`, `habilidades`, `projetos`, `experiencias`, `curriculo`, `academico`, `servicos`, `contato`) **mostra primeiro a visão em terminal** e termina com `[ ver no terminal ]  [ abrir página própria ↗ ]`. Só `cd <página>` e o botão "abrir página própria" navegam, passando por um carregamento (`abrindo /academico… [■■■■□□□□] 48%` → `pronto ✓`; `Esc` ou `Ctrl+C` cancelam; com `prefers-reduced-motion` vira `carregando…`). Nas páginas dedicadas (inclusive as antigas seções da home), a barra de título da Window tem o mesmo par: `[ ver no terminal ]` leva à home com o comando já executado (`/?cmd=academico`).
 
 | Tecla / comando | O que faz |
 | --- | --- |
@@ -116,7 +121,8 @@ SPA estática, sem back-end. Textos e dados ficam em `src/data`, separados dos c
 ```text
 main.jsx → RouterProvider → LanguageProvider → ThemeProvider → App
 App → TerminalProvider (sessão do terminal) → página escolhida por data/routes.js
-        ├─ Home      → SiteShell(Terminal) + sections/portfolio/*
+        ├─ Home      → SiteShell(Terminal)  (só o terminal)
+        ├─ SectionPage → SiteShell + sections/portfolio/* (sobre, habilidades, projetos, experiências, contato)
         ├─ Resume    → DocPage → SiteShell
         ├─ Academics → DocPage → SiteShell
         ├─ Services  → SiteShell → Faq, ImageGallery, ContactLinks
@@ -132,7 +138,7 @@ Decisões:
 - **Internacionalização sem biblioteca:** `LanguageContext` guarda o idioma (PT/EN) em `localStorage` e em `<html lang>`. Textos de interface ficam em `src/i18n/ui.js`; conteúdo em `src/data/*` com chaves `pt` e `en`. A troca mantém rota e seção.
 - **Tema claro/escuro:** atributo `data-theme` no `<html>`, aplicado por script inline em `index.html` antes do React, para evitar flash.
 - **Organização:** `pages/` (uma por rota) → `sections/portfolio/` (blocos da home) → `components/shell/` (esqueleto compartilhado), `components/ui/` (Card, Chip, DataTable, SectionTitle, ActionLink) e `components/` (Faq, Lightbox, ImageGallery, ContactForm…).
-- **Tokens de design** em `src/styles/tokens.css` (espaçamento, raios, sombras, fontes, cores da janela/terminal nos temas claro e escuro); os componentes novos só usam essas variáveis.
+- **Tokens de design** em `src/styles/tokens.css` (espaçamento, raios, fontes e a paleta única nos temas claro e escuro); os componentes novos só usam essas variáveis.
 - **Uma sessão de terminal:** `useTerminal` (teclas de uma linha de comando) + `TerminalProvider` (histórico, última saída, carregamento/cancelamento) alimentam o terminal da home e a barra de comandos das outras páginas. Dados e regras ficam fora do JSX: `utils/projectDate.js` (datas e ordenação), `utils/validateContact.js` (validação).
 - **Timeline orientada a dados:** datas com precisão variável `{ year, month? }`; nenhum mês é presumido.
 - **Sem `dangerouslySetInnerHTML`:** o HTML original virou JSX e os `addEventListener` do script original viraram componentes (`Reveal`, `Faq`, `Lightbox`, `handleRadialGlow`) com limpeza no desmontar.
@@ -260,7 +266,7 @@ Resumo: criar o repositório no GitHub → importar no Netlify (build `npm run b
 │   ├── data/                  # routes (tabela de rotas), profile, portfolio, projects, experiences, services, resume, academics
 │   ├── i18n/                  # LanguageContext + textos de interface
 │   ├── hooks/ · utils/ · services/
-│   ├── styles/                # tokens.css, ui.css, shell.css, terminal.css, resume.css, original.css (preservado), portfolio.css, case-study.css
+│   ├── styles/                # tokens.css, base.css, ui.css, shell.css, terminal.css, sections.css, services.css, responsive.css, resume.css, case-study.css
 │   └── test/                  # configuração dos testes (os *.test.* ficam junto do código)
 ├── docs/
 │   ├── sdd/                   # requisitos, análise de lacunas e plano de tarefas
@@ -287,15 +293,17 @@ Resumo: criar o repositório no GitHub → importar no Netlify (build `npm run b
 | **Serviços** | **Estudo de caso** |
 | ![Serviços](docs/screenshots/servicos-desktop.png) | ![Estudo de caso](docs/screenshots/estudo-de-caso-desktop.png) |
 
-**Navegação unificada e terminal v2** (1440×900 e 390×844, temas escuro e claro; capturas `docs/screenshots/v2-*.png`):
+**Estilo único terminal/IDE** (1440×900 e 390×844, temas escuro e claro; todas as capturas em `docs/screenshots/estilo-*.png`):
 
-| Início (terminal) | Currículo (claro) |
+| Início (terminal) | Projetos |
 | :---: | :---: |
-| ![Início](docs/screenshots/v2-home-desktop-dark.png) | ![Currículo](docs/screenshots/v2-curriculo-desktop-light.png) |
-| **Acadêmico** | **Serviços** |
-| ![Acadêmico](docs/screenshots/v2-academico-desktop-dark.png) | ![Serviços](docs/screenshots/v2-servicos-desktop-dark.png) |
+| ![Início](docs/screenshots/estilo-home-desktop-dark.png) | ![Projetos](docs/screenshots/estilo-projetos-desktop-dark.png) |
+| **Currículo (claro)** | **Acadêmico** |
+| ![Currículo](docs/screenshots/estilo-curriculo-desktop-light.png) | ![Acadêmico](docs/screenshots/estilo-academico-desktop-dark.png) |
+| **Serviços (claro)** | **Contato** |
+| ![Serviços](docs/screenshots/estilo-servicos-desktop-light.png) | ![Contato](docs/screenshots/estilo-contato-desktop-dark.png) |
 | **Barra de comandos + carregamento** | **Barra em tela cheia (celular)** |
-| ![Carregando](docs/screenshots/v2-carregando-desktop.png) | ![Barra no celular](docs/screenshots/v2-barra-comandos-mobile.png) |
+| ![Carregando](docs/screenshots/estilo-carregando-desktop.png) | ![Barra no celular](docs/screenshots/estilo-barra-comandos-mobile.png) |
 
 Mobile (390 px): ![Projetos no celular](docs/screenshots/projetos-mobile.png) ![Terminal no celular](docs/screenshots/terminal-mobile.png)
 

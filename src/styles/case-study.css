@@ -118,7 +118,7 @@
   margin-bottom: 0.55rem;
 }
 .case-body code {
-  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-family: var(--font-mono);
   background: var(--surface-3);
   padding: 2px 6px;
   border-radius: 5px;
