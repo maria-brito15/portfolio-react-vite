@@ -105,3 +105,53 @@
     max-width: 88vw;
   }
 }
+
+/* Alvos de toque: mínimo de 24×24 px (WCAG 2.2, critério 2.5.8); usamos 28 px
+   para dar folga ao dedo. Vale em telas estreitas e em qualquer tela de toque.
+   Links dentro de texto corrido ficam de fora (isentos do critério). */
+@media (pointer: coarse), (max-width: 720px) {
+  .t-run,
+  .action-link,
+  .xp-more,
+  .sk-all summary,
+  .term-input,
+  .t-ls a,
+  .case-toc a,
+  .doc-entry-head a,
+  .aw-instances a,
+  .case-back {
+    min-height: 1.75rem;
+  }
+  .action-link,
+  .xp-more,
+  .t-ls a,
+  .doc-entry-head a,
+  .aw-instances a,
+  .sk-all summary {
+    display: inline-flex;
+    align-items: center;
+  }
+  .t-ls a,
+  .case-toc a {
+    display: flex;
+    align-items: center;
+  }
+  /* "2" no exemplo da ajuda: botão de um só dígito precisa de largura de toque */
+  .t-howto .t-run {
+    min-width: 1.75rem;
+    justify-content: center;
+  }
+  .t-howto .t-run,
+  .t-sectionnav .t-run {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5ch; /* inline-flex descarta os espaços entre texto e comando */
+  }
+}
+
+/* Texto nunca abaixo de 11 px (rótulos decorativos e números de seção). */
+span.doc-num,
+.case-tech-label,
+.case-example-label {
+  font-size: max(0.7rem, 0.8em);
+}
