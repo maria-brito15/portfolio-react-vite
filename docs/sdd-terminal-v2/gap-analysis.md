@@ -44,7 +44,7 @@ Cruzamento entre [`requirements.md`](requirements.md) e o código do `src.zip` e
 | SH-03 | ✅ | `CommandBar.jsx` + `SiteShell.test.jsx` ("executa comandos fora da home…", "na home, a barra e o terminal compartilham…") |
 | SH-04 | ✅ | `SiteShell.test.jsx` ("só as páginas internas têm Voltar e breadcrumb", "usa history.back()…", "vai para a home quando…") |
 | SH-05 | ✅ | `SiteShell.test.jsx` ("Ctrl+K e / focam a barra", "os atalhos não roubam o foco de campos de formulário") |
-| SH-06 | ✅ | Varredura: nenhuma das 11 rotas tem rolagem horizontal em 390, 768 e 1440 px; botão `>_` em `CommandBar.jsx` |
+| SH-06 | ✅ | Varredura repetida em 09/11/2026 depois de DS e links antigos (Chrome, build de produção): 11 rotas (as 10 de `routes.js` + um 404) × 390, 768 e 1440 px = 33 combinações, nenhuma com rolagem horizontal; botão `>_` em `CommandBar.jsx`. Fluxo `curriculo` → `2` → `proximo` → `cd curriculo` em 1440 e 390 px: seção 2, seção 3 e chega em `/curriculo` |
 | SH-07 | ✅ | `SiteShell.test.jsx` ("as páginas dedicadas têm [ ver no terminal ]…", "/?cmd=servicos…") |
 | SH-08 | ✅ | `data/routes.js`, `data/sections.js`; `routes.test.js` |
 | SH-09 | ✅ | `App.jsx` + `pages/SectionPage.jsx`; aliases `/about`, `/skills`, `/projects`, `/experience` em `routes.js` |
@@ -112,7 +112,7 @@ Sintomas observados no navegador:
 | ID | Estado | Evidência |
 | --- | --- | --- |
 | NF-01 | ✅ | lint limpo · 158/158 testes · build ok |
-| NF-02 | ✅ | Varredura em 3 larguras × 11 rotas sem erro de console |
+| NF-02 | ✅ | Varredura de 09/11/2026: 33 combinações (11 rotas × 390/768/1440 px) e o fluxo `curriculo` → `2` → `proximo` → `cd curriculo` (1440 e 390 px) sem nenhum erro de console nem exceção de página |
 | NF-03 | ✅ | Textos novos em `ui.js` e nos dados; testes de idioma |
 | NF-04 | ✅ | README documenta o índice numerado, o número como atalho, `proximo`/`anterior`, a primeira visita e os erros que reensinam (seção "Descobrir as seções sem saber os comandos") e os links antigos (T-L2); 12 capturas novas `docs/screenshots/terminal-{indice,numero,proximo}-{desktop,mobile}-{dark,light}.png` geradas no Chrome (sem rolagem horizontal, sem erro de console). `docs/sdd/requirements.md` marca D-04, D-10, RF-18, RF-19 e RNF-03 como superados e `docs/sdd/tasks.md` traz a contagem atual (215 testes em 20 arquivos) |
 
