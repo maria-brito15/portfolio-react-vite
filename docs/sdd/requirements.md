@@ -21,13 +21,13 @@ Documento de requisitos do portfólio React + Vite. Cada requisito tem identific
 | D-01 | Manter os cinco projetos: EcoShop, Planoriza, ShortURL, File Name Standardizer, WhatsApp Dispatcher |
 | D-02 | Timeline cronológica, do mais antigo ao mais recente, exibindo **apenas datas**, sem indicadores de status |
 | D-03 | Usar galerias de imagens quando houver imagens |
-| D-04 | Preservar design atual, i18n PT/EN, tema claro/escuro e estrutura geral |
+| D-04 | Preservar design atual, i18n PT/EN, tema claro/escuro e estrutura geral. **Superado em 09/11/2026 por `docs/sdd-terminal-v2/`:** o design foi trocado de propósito por um estilo único (terminal/IDE); i18n PT/EN e tema claro/escuro continuam valendo |
 | D-05 | Recebimento de mensagens via EmailJS, **sem** respostas automáticas |
 | D-06 | Manter a organização atual do README, garantindo os itens obrigatórios do professor |
 | D-07 | Refatorar somente com justificativa técnica registrada em `tasks.md` |
 | D-08 | Não inventar datas, cargos ou funcionalidades; o planejado nunca é apresentado como implementado |
 | D-09 | Wireframes derivados do design atual |
-| D-10 | Sem ferramentas ou frameworks de SDD; apenas estes três documentos |
+| D-10 | Sem ferramentas ou frameworks de SDD; apenas estes três documentos. **Superado em 09/11/2026 por `docs/sdd-terminal-v2/`:** a spec geral e a análise ficam lá, e cada feature tem sua pasta em `docs/specs/`; a skill `spec-driven-development` define o fluxo |
 
 > **Nota de implementação (2026-10-31):** a autora pediu que projetos com ordem cronológica não determinável sejam identificados como tal. A nota "ordem entre os projetos de AAAA indeterminada" na timeline atende esse pedido e é tratada como informação sobre a precisão da data, não como indicador de status (RF-03).
 
@@ -82,7 +82,9 @@ Documento de requisitos do portfólio React + Vite. Cada requisito tem identific
 | RF-16 | Internacionalização PT/EN completa | Todo texto novo ou alterado existe nos dois idiomas; a troca mantém rota e seção, persiste em `localStorage` e atualiza `<html lang>`; não há chave faltante | P0 | AUT |
 | RF-17 | Tema claro/escuro | O botão alterna o tema, persiste a escolha e o tema salvo é aplicado antes da hidratação (sem flash) | P1 | AUT + MAN |
 | RF-18 | Rotas e navegação preservadas | `/`, `/servicos`, `/estudos-de-caso/whatsapp-dispatcher` e 404 funcionam; âncoras `/#secao` rolam até a seção; recarregar qualquer rota na hospedagem não retorna 404 | P0 | AUT + EXT |
+|  | | **Superado em 09/11/2026 por `docs/sdd-terminal-v2/` (SH-10):** a home é só o terminal e as seções viraram páginas próprias; `/#secao` agora redireciona para a página equivalente. Rotas, 404 e recarga seguem valendo | | |
 | RF-19 | Design e estrutura preservados | Nenhuma alteração em tokens de cor, tipografia ou grid fora do estritamente necessário para data e galeria; comparação visual com `docs/screenshots/` em 1440 px e 390 px não mostra regressão | P0 | MAN |
+|  | | **Superado em 09/11/2026 por `docs/sdd-terminal-v2/` (ES-xx):** o design foi refeito de propósito em um estilo único; as capturas `docs/screenshots/estilo-*` o documentam | | |
 
 ## 5. Requisitos não funcionais
 
@@ -91,6 +93,7 @@ Documento de requisitos do portfólio React + Vite. Cada requisito tem identific
 | RNF-01 | Qualidade automatizada | `npm run lint`, `npm test` e `npm run build` terminam com código 0 a cada tarefa concluída; todo comportamento novo tem teste | P0 | AUT |
 | RNF-02 | Acessibilidade | Navegação por teclado em menu, formulário, FAQ e lightbox; contraste AA nos dois temas; Lighthouse Accessibility ≥ 90 na URL publicada | P1 | MAN |
 | RNF-03 | Responsividade | Sem rolagem horizontal em 390, 768 e 1440 px; menu recolhível em telas pequenas | P1 | MAN |
+|  | | **Parcialmente superado em 09/11/2026 por `docs/sdd-terminal-v2/` (SH-xx):** não há mais menu de links (o "menu" é o terminal); a parte "sem rolagem horizontal em 390, 768 e 1440 px" continua valendo | | |
 | RNF-04 | Desempenho | LCP ≤ 2,5 s no mobile (Lighthouse, URL publicada); imagens otimizadas, incluindo a foto de perfil usada como ícone | P1 | MAN |
 | RNF-05 | Segurança e privacidade | Nenhum segredo versionado; `.env` ignorado; só a Public Key do EmailJS no cliente; links externos com `noopener`; sem `dangerouslySetInnerHTML`; restrição de domínio e limite de envios ativados na conta EmailJS | P0 | AUT + EXT |
 | RNF-06 | SEO e compartilhamento | `title` e `description` por página e idioma; `og:image` com URL absoluta da hospedagem; `og:description` e `og:url` presentes; ícone da aba dedicado ou leve | P2 | MAN |

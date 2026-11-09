@@ -10,6 +10,8 @@ Plano incremental derivado de [`gap-analysis.md`](gap-analysis.md) para cumprir 
 
 Verificação: `npm run lint` sem apontamentos · `npm test` 53/53 · `npm run build` concluído. Testes em jsdom; nenhuma verificação em navegador real.
 
+> **Atualização (09/11/2026):** a suíte tem hoje **215 testes em 20 arquivos** (os 53 acima são de 31/10). O site foi refeito depois deste plano; o plano vigente é [`../sdd-terminal-v2/tasks.md`](../sdd-terminal-v2/tasks.md). Requisitos do TP1 superados estão marcados em `requirements.md` (D-04, D-10, RF-18, RF-19, RNF-03).
+
 | Tarefa | Estado | Observação |
 | --- | --- | --- |
 | T-10 | ✅ | `date: { year, month? }` + `utils/projectDate.js` (comparação por tupla, sem sentinela); testes em `projectDate.test.js` e `projects.test.js` |
