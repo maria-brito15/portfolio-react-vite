@@ -6,6 +6,7 @@ import App from '../App';
 
 export function renderApp(path = '/') {
   window.history.replaceState(null, '', path);
+
   return render(
     <RouterProvider>
       <LanguageProvider>

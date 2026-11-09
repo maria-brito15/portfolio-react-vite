@@ -11,6 +11,7 @@ import { useLanguage } from '../../i18n/LanguageContext';
 export default function ViewActions({ view, active = view, terminal, page, className = '' }) {
   const { t } = useLanguage();
   const onTerminal = view === 'terminal';
+
   return (
     <span className={`view-actions ${className}`.trim()} role="group" aria-label={t.win.views}>
       <ActionLink active={active === 'terminal'} {...terminal}>

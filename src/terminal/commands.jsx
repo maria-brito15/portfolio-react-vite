@@ -49,9 +49,11 @@ const pick = (value, lang) =>
 // (`PageIndex`), sempre com o par "ver no terminal / abrir página própria".
 function listSections(route) {
   const hasSections = sectionsOf(route.id).length > 0;
+
   return {
     output: (lang) => {
       const page = lang === 'pt' ? route.name : route.alias;
+
       return (
         <>
           {hasSections ? (
@@ -75,6 +77,7 @@ function runSection(command, args) {
   const route = command.route;
   const section = findSection(route, args[0]);
   const name = command.names[0];
+
   if (!sectionsOf(route).length) {
     return {
       output: (lang) =>
@@ -85,6 +88,7 @@ function runSection(command, args) {
   }
   if (!section || args.length > 1) {
     const bad = section ? args.slice(1).join(' ') : args.join(' ');
+
     // Erro que reensina: diz o que não existe e reimprime o índice da página.
     return {
       output: (lang) => (
@@ -95,6 +99,7 @@ function runSection(command, args) {
       ),
     };
   }
+
   return {
     output: (lang) => (
       <>
@@ -116,6 +121,7 @@ function stepSection(context, direction) {
   const list = sectionsOf(context.routeId);
   const at = context.sectionId ? list.findIndex((s) => s.id === context.sectionId) : -1;
   const target = list[at + direction];
+
   return target ? { section: target } : { edge: direction > 0 ? 'last' : 'first' };
 }
 
@@ -124,11 +130,15 @@ const pageCommand = (routeId) => commands.find((c) => c.route === routeId);
 // `proximo` / `anterior`: abrem, aqui no terminal, a seção vizinha.
 function runStep(direction, ctx) {
   const { context } = ctx;
+
   if (!context) return { output: (lang) => errorLine(ui[lang].term.nav.noContext) };
+
   const step = stepSection(context, direction);
+
   if (step.edge) {
     return { output: (lang) => <p className="t-dim">{ui[lang].term.nav[step.edge]}</p> };
   }
+
   return runSection(pageCommand(context.routeId), [step.section.id]);
 }
 
@@ -203,6 +213,7 @@ const commands = [
     run: () => ({
       output: (lang) => {
         const about = portfolio[lang].about;
+
         return (
           <div>
             <p>
@@ -228,6 +239,7 @@ const commands = [
     desc: L('lista páginas (ou as seções de uma página)', 'list pages (or the sections of a page)'),
     run: (args) => {
       const target = resolveTarget(args);
+
       if (target.error === 'page') {
         return {
           output: (lang) =>
@@ -245,6 +257,7 @@ const commands = [
         };
       }
       if (target.route && !target.section) return listSections(target.route);
+
       return {
         output: (lang) => (
           <ul className="t-ls">
@@ -279,6 +292,7 @@ const commands = [
     ),
     run: (args) => {
       const target = resolveTarget(args);
+
       if (target.home) return { output: () => null, redirect: '/' };
       if (target.error) {
         return {
@@ -290,6 +304,7 @@ const commands = [
             ),
         };
       }
+
       // Só `cd` e "abrir página própria" navegam; passam pelo carregamento.
       return { output: () => null, redirect: targetPath(target.route, target.section) };
     },
@@ -439,7 +454,9 @@ const commands = [
     desc: L('alterna claro/escuro', 'toggle light/dark'),
     run: (args, ctx) => {
       const next = ctx.theme === 'dark' ? 'light' : 'dark';
+
       if (!ctx.replay) ctx.toggleTheme();
+
       return {
         output: (lang) => (
           <p className="t-ok">
@@ -462,6 +479,7 @@ const commands = [
     desc: L('alterna português/inglês', 'switch Portuguese/English'),
     run: (args, ctx) => {
       if (!ctx.replay) ctx.toggleLang();
+
       return {
         output: (lang) => (
           <p className="t-ok">{lang === 'pt' ? 'idioma: português' : 'language: English'}</p>
@@ -506,6 +524,7 @@ const commands = [
     hidden: true,
     run: () => {
       const now = new Date();
+
       return {
         output: (lang) => <p>{now.toLocaleString(lang === 'pt' ? 'pt-BR' : 'en-US')}</p>,
       };
@@ -532,6 +551,7 @@ function allNames(command) {
 
 export function findCommand(name) {
   const key = fold(name);
+
   return commands.find((c) => allNames(c).some((n) => fold(n) === key));
 }
 
@@ -541,17 +561,21 @@ export function parse(input) {
     (m) => m[1] ?? m[2] ?? m[3],
   );
   const [name = '', ...args] = tokens;
+
   return { name, args };
 }
 
 // curriculo/competencias → nome `curriculo` + argumento `competencias`.
 function parseCommand(input) {
   let { name, args } = parse(input);
+
   if (name.includes('/') && !name.startsWith('/')) {
     const [head, ...rest] = name.split('/');
+
     name = head;
     args = [...rest.filter(Boolean), ...args];
   }
+
   return { name, args };
 }
 
@@ -561,32 +585,41 @@ function parseCommand(input) {
 //   { routeId, sectionId | null }  ou  null (nenhum índice aberto)
 export function contextAfter(input, prev = null) {
   const { name, args } = parseCommand(input);
+
   // Número sozinho: seção da última página aberta (número fora do índice → o índice).
   if (/^\d+$/.test(name) && !args.length) {
     return prev
       ? { routeId: prev.routeId, sectionId: findSection(prev.routeId, name)?.id ?? null }
       : prev;
   }
+
   const command = name ? findCommand(name) : undefined;
+
   if (!command) return prev;
+
   const id = command.names[0];
+
   if (id === 'limpar') return null;
   if (id === NEXT.pt || id === PREVIOUS.pt) {
     const step = prev ? stepSection(prev, id === NEXT.pt ? 1 : -1) : {};
+
     return step.section ? { routeId: prev.routeId, sectionId: step.section.id } : prev;
   }
   if (id === 'cd') return resolveTarget(args).home ? null : prev;
   if (id === 'ls') {
     const target = resolveTarget(args);
     const listed = target.route && !target.error && !target.section;
+
     return listed && sectionsOf(target.route.id).length
       ? { routeId: target.route.id, sectionId: null }
       : prev;
   }
   if (command.route && sectionsOf(command.route).length) {
     const section = args.length === 1 ? findSection(command.route, args[0]) : undefined;
+
     return { routeId: command.route, sectionId: section?.id ?? null };
   }
+
   return prev;
 }
 
@@ -596,6 +629,7 @@ export const contextOfHistory = (inputs) =>
 
 export function runCommand(input, ctx) {
   const { name, args } = parseCommand(input);
+
   if (!name) return { output: () => null };
   // `2` sozinho abre a seção 2 da última página aberta.
   if (/^\d+$/.test(name) && !args.length) {
@@ -603,7 +637,9 @@ export function runCommand(input, ctx) {
       ? runSection(pageCommand(ctx.context.routeId), [name])
       : { output: (lang) => errorLine(ui[lang].term.nav.noContext) };
   }
+
   const command = findCommand(name);
+
   if (!command) {
     return {
       output: (lang) => (
@@ -615,12 +651,16 @@ export function runCommand(input, ctx) {
     };
   }
   if (command.route && args.length) return runSection(command, args);
+
   const result = command.run(args, ctx);
+
   if (!command.route || !result.output) return result;
+
   // Todo comando com página dedicada termina com o par "ver no terminal /
   // abrir página própria".
   const body = result.output;
   const hasSections = sectionsOf(command.route).length > 0;
+
   return {
     ...result,
     output: (lang) => (
@@ -640,14 +680,19 @@ const NAV_COMMANDS = ['cd', 'ls', 'open', 'abrir', 'dir'];
 function matching(candidates, prefix, lang) {
   const key = fold(prefix);
   const own = [...new Set(candidates.map((c) => c[lang]))].filter((n) => fold(n).startsWith(key));
+
   if (own.length) return own;
+
   const other = lang === 'pt' ? 'en' : 'pt';
+
   return [...new Set(candidates.map((c) => c[other]))].filter((n) => fold(n).startsWith(key));
 }
 
 const finish = (input, last, options) => {
   const head = input.slice(0, input.length - last.length);
+
   if (options.length === 1) return head + options[0];
+
   return options.length ? options : input;
 };
 
@@ -664,16 +709,20 @@ export function complete(input, lang) {
     const prefix = fold(name);
     // Com um único comando do idioma atual, completa nele; senão lista as opções.
     const own = [...new Set(preferred)].filter((n) => fold(n).startsWith(prefix));
+
     if (own.length === 1) return `${own[0]} `;
+
     const options = [...new Set([...preferred, ...others])].filter((n) =>
       fold(n).startsWith(prefix),
     );
+
     return options.length === 1 ? `${options[0]} ` : options.length ? options : input;
   }
 
   const head = name.split('/')[0];
   const command = findCommand(head);
   const isNav = NAV_COMMANDS.includes(head.toLowerCase());
+
   if (!command || (!isNav && !command.route)) return input;
 
   // Partes já digitadas depois do comando, e o pedaço que está sendo completado.
@@ -699,10 +748,14 @@ export function complete(input, lang) {
       ? directories.find((d) => fold(d.name) === fold(parts[0]) || fold(d.alias) === fold(parts[0]))
       : undefined;
     const routeId = isNav ? route?.id : command.route;
+
     if (!routeId) return input;
+
     const sections = sectionsOf(routeId).map((sec) => ({ pt: sec.name, en: sec.alias }));
+
     return finish(input, tail, matching(sections, tail, lang));
   }
+
   return input;
 }
 

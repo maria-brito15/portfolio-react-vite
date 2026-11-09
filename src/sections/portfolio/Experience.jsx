@@ -6,6 +6,7 @@ const pick = (value, lang) => (typeof value === 'string' ? value : value[lang]);
 
 export default function Experience({ content }) {
   const { lang } = useLanguage();
+
   return (
     <section id="experiencias" className="sec" aria-labelledby="experiencias-title">
       <SectionTitle id="experiencias-title" label={content.label}>

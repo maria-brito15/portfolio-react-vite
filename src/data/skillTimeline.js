@@ -60,8 +60,11 @@ export const skillTimeline = [
 // Tempo aproximado a partir do ano: no próprio ano, "< 1 ano"; depois, "N+ anos".
 export function formatSince(since, lang, today = new Date()) {
   if (!since) return null;
+
   const years = today.getFullYear() - since;
+
   if (years <= 0) return lang === 'pt' ? '< 1 ano' : '< 1 yr';
   if (lang === 'pt') return `${years}+ ${years === 1 ? 'ano' : 'anos'}`;
+
   return `${years}+ ${years === 1 ? 'yr' : 'yrs'}`;
 }

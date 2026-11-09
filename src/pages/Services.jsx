@@ -13,8 +13,11 @@ import { useDocumentMeta } from '../hooks/useDocumentMeta';
 export default function Services() {
   const { lang } = useLanguage();
   const c = services[lang];
+
   useDocumentMeta(c.meta);
+
   const mailto = `mailto:${profile.servicesEmail}`;
+
   return (
     <SiteShell routeId="servicos">
       <section className="hero">

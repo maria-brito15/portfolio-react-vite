@@ -11,6 +11,7 @@ export default function ImageGallery({ images, columns = 3, className = '' }) {
   const [failed, setFailed] = useState(() => new Set());
 
   const available = images.filter((image) => !failed.has(image.src));
+
   if (!available.length) return null;
 
   function handleError(src) {

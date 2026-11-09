@@ -20,14 +20,17 @@ export default function ContactForm() {
 
   function handleChange(event) {
     const { name, value } = event.target;
+
     setValues((v) => ({ ...v, [name]: value }));
     // Depois do primeiro envio, o erro do campo some assim que ele fica válido.
     if (errors[name]) {
       setErrors((current) => {
         const next = { ...current };
         const code = validateContact({ ...values, [name]: value })[name];
+
         if (code) next[name] = code;
         else delete next[name];
+
         return next;
       });
     }
@@ -40,13 +43,17 @@ export default function ContactForm() {
     if (event.currentTarget.elements.website?.value) {
       setValues(EMPTY);
       setStatus('success');
+
       return;
     }
+
     const found = validateContact(values);
+
     setErrors(found);
     if (Object.keys(found).length) {
       setStatus('idle');
       inputs.current[FIELDS.find((f) => found[f])]?.focus();
+
       return;
     }
     sendingRef.current = true;
@@ -61,6 +68,7 @@ export default function ContactForm() {
       setStatus('success');
     } catch (error) {
       const kind = classifySendError(error);
+
       if (kind !== 'not-configured') console.error('Falha no envio pelo EmailJS:', error);
       setStatus(kind);
     } finally {
@@ -73,6 +81,7 @@ export default function ContactForm() {
   function field(name, label, props) {
     const Tag = name === 'message' ? 'textarea' : 'input';
     const errorId = `contact-${name}-error`;
+
     return (
       <div className="form-field">
         <label htmlFor={`contact-${name}`}>{label}</label>

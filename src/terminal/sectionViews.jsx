@@ -27,6 +27,7 @@ const Title = ({ children }) => <p className="t-dim"># {children}</p>;
 function ResumeSection({ id, lang }) {
   const c = resume[lang];
   const t = ui[lang].term;
+
   switch (id) {
     case 'resumo':
       return (
@@ -134,12 +135,14 @@ function ResumeSection({ id, lang }) {
     case 'reconhecimentos': {
       const finalists = finalistProjects(projects);
       const awards = experienceGroups.find((g) => g.id === 'awards')?.items ?? [];
+
       return (
         <div>
           <Title>{c.sections.awards}</Title>
           {awards.map((item) => {
             const instances = item.id === 'finalista' ? finalists : [];
             const times = Math.max(1, instances.length);
+
             return (
               <div key={item.id} className="t-group">
                 <p>
@@ -172,12 +175,14 @@ function ResumeSection({ id, lang }) {
 function AcademicsSection({ id, lang }) {
   const t = ui[lang].term;
   const programName = (pid) => academics.programs.find((p) => p.id === pid)?.degree[lang] ?? '';
+
   switch (id) {
     case 'linha-do-tempo': {
       const first = academics.timeline[0].year;
       const last = academics.timeline.at(-1).year;
       const pct = yearProgress(first, last);
       const filled = Math.round(pct / 5);
+
       return (
         <div>
           <Title>{t.timeline}</Title>
@@ -249,6 +254,7 @@ function AcademicsSection({ id, lang }) {
           <Title>{t.semesters}</Title>
           {semestersDesc(academics.semesters).map((s) => {
             const totals = summarizeSemester(s.courses);
+
             return (
               <div key={s.id} className="t-group">
                 <p>
@@ -291,6 +297,7 @@ function AcademicsSection({ id, lang }) {
 function ServicesSection({ id, lang }) {
   const c = services[lang];
   const t = ui[lang].term;
+
   switch (id) {
     case 'servicos':
       return (
@@ -379,13 +386,17 @@ function ExperienceGroup({ group, lang }) {
 
 function ExperiencesSection({ id, lang }) {
   const group = experienceGroups.find((g) => g.id === id);
+
   return group ? <ExperienceGroup group={group} lang={lang} /> : null;
 }
 
 function ProjectSection({ id, lang }) {
   const p = projects.find((x) => x.id === id);
+
   if (!p) return null;
+
   const copy = p[lang];
+
   return (
     <div>
       <p>
@@ -434,5 +445,6 @@ const BY_ROUTE = {
 // `section` é um item de sectionsOf(routeId) (src/data/sections.js).
 export default function SectionView({ routeId, section, lang }) {
   const View = BY_ROUTE[routeId];
+
   return View ? <View id={section.id} lang={lang} /> : null;
 }

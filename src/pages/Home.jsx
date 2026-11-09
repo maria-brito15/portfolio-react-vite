@@ -9,7 +9,9 @@ import Terminal from '../terminal/Terminal';
 export default function Home() {
   const { lang } = useLanguage();
   const c = portfolio[lang];
+
   useDocumentMeta(c.meta);
+
   return (
     <SiteShell routeId="home" variant="terminal" badge={c.hero.tag}>
       <Terminal content={c.hero} />

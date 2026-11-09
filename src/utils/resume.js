@@ -7,6 +7,7 @@ import { parsePeriodStart } from './projectDate';
 export function experienceStats(experienceGroups) {
   const items = experienceGroups.filter((g) => g.id !== 'awards').flatMap((g) => g.items);
   const years = items.map((item) => parsePeriodStart(item.period.pt)?.year).filter(Boolean);
+
   return { count: items.length, firstYear: Math.min(...years) };
 }
 

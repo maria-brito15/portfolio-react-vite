@@ -35,6 +35,7 @@ export default function CommandBar() {
   // Ao trocar de página ou âncora, fecha painel e tela cheia.
   const where = path + hash + search;
   const [lastWhere, setLastWhere] = useState(where);
+
   if (lastWhere !== where) {
     setLastWhere(where);
     setPanel(false);
@@ -50,15 +51,19 @@ export default function CommandBar() {
   useEffect(() => {
     const onKeyDown = (event) => {
       if (event.defaultPrevented || event.altKey || isFormField(event.target)) return;
+
       const shortcut =
         (event.key.toLowerCase() === 'k' && (event.ctrlKey || event.metaKey)) ||
         (event.key === '/' && !event.ctrlKey && !event.metaKey);
+
       if (!shortcut) return;
       event.preventDefault();
       if (narrow) setOpen(true);
       inputRef.current?.focus();
     };
+
     document.addEventListener('keydown', onKeyDown);
+
     return () => document.removeEventListener('keydown', onKeyDown);
   }, [narrow]);
 
@@ -68,7 +73,9 @@ export default function CommandBar() {
       if (narrow) setOpen(true);
       inputRef.current?.focus();
     };
+
     window.addEventListener(FOCUS_COMMANDS, onFocusRequest);
+
     return () => window.removeEventListener(FOCUS_COMMANDS, onFocusRequest);
   }, [narrow]);
 

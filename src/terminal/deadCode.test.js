@@ -23,6 +23,7 @@ describe('código morto do índice de seções', () => {
 
   it('toda chave term.nav.* (PT e EN) é lida por algum arquivo', () => {
     const keys = Object.keys(ui.pt.term.nav);
+
     expect(Object.keys(ui.en.term.nav).sort()).toEqual([...keys].sort());
     for (const key of keys) expect(reads(key), `term.nav.${key} não é usada`).toBe(true);
   });
@@ -34,11 +35,13 @@ describe('código morto do índice de seções', () => {
   it('toda exportação de pageIndex.jsx é importada por outro arquivo', () => {
     const own = sources.find(({ path }) => path.endsWith('/terminal/pageIndex.jsx'));
     const names = [...own.text.matchAll(/^export (?:const|function) (\w+)/gm)].map((m) => m[1]);
+
     expect(names.length).toBeGreaterThan(0);
     for (const name of names) {
       const used = sources.some(
         ({ path, text }) => path !== own.path && new RegExp(`\\b${name}\\b`).test(text),
       );
+
       expect(used, `${name} é exportada e não usada`).toBe(true);
     }
   });

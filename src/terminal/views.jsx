@@ -14,6 +14,7 @@ import { Ext } from './outputs';
 export function ResumeView({ lang }) {
   const c = resume[lang];
   const t = ui[lang].term;
+
   return (
     <div>
       <p>
@@ -36,6 +37,7 @@ export function AcademicsView({ lang }) {
   const t = ui[lang].term;
   const years = activitiesByYear(academics, { projects, experienceGroups }, lang);
   const programName = (id) => academics.programs.find((p) => p.id === id)?.degree[lang] ?? '';
+
   return (
     <div>
       <ul className="t-table">
@@ -99,6 +101,7 @@ export function AcademicsView({ lang }) {
 export function ServicesView({ lang }) {
   const c = services[lang].services;
   const t = ui[lang].term;
+
   return (
     <div>
       <p className="t-dim"># {t.services}</p>

@@ -15,6 +15,7 @@ const sectionName = (section, lang) => (lang === 'pt' ? section.name : section.a
 // Botão que executa um comando: mouse e toque sem digitar (essencial no celular).
 export function RunCommand({ command, className = '', children }) {
   const session = useTerminalSession();
+
   return (
     <button
       type="button"
@@ -89,6 +90,7 @@ export function SectionNav({ routeId, section }) {
         {label}: {label === t.next ? t.last : t.first}
       </span>
     );
+
   return (
     <p className="t-dim t-sectionnav">
       {item(t.next, next, number + 1)} · {item(t.previous, prev, number - 1)} ·{' '}

@@ -15,6 +15,7 @@ export function compareProjectDates(a, b) {
   if (a.month && b.month) return a.month - b.month;
   if (a.month) return -1;
   if (b.month) return 1;
+
   return 0;
 }
 
@@ -31,6 +32,7 @@ export function compareProjectDatesDesc(a, b) {
   if (a.month && b.month) return b.month - a.month;
   if (a.month) return -1;
   if (b.month) return 1;
+
   return 0;
 }
 
@@ -45,10 +47,13 @@ export function sortByDateDesc(list) {
 export function parsePeriodStart(period) {
   const text = String(period ?? '');
   const full = text.match(/^\s*(\d{1,2})\/(\d{4})/);
+
   if (full && Number(full[1]) >= 1 && Number(full[1]) <= 12) {
     return { year: Number(full[2]), month: Number(full[1]) };
   }
+
   const year = text.match(/\d{4}/);
+
   return year ? { year: Number(year[0]) } : null;
 }
 
@@ -56,6 +61,7 @@ export function parsePeriodStart(period) {
 // outro projeto no mesmo ano sem mês (com mês, a ordem seria conhecida).
 export function findUndeterminedOrder(list) {
   const monthless = list.filter((p) => !p.date.month);
+
   return new Set(
     monthless
       .filter((p) => monthless.some((q) => q !== p && q.date.year === p.date.year))

@@ -16,8 +16,10 @@ export default function Lightbox({ images, index, onIndexChange, onClose }) {
   useEffect(() => {
     const opener = document.activeElement;
     const previousOverflow = document.body.style.overflow;
+
     document.body.style.overflow = 'hidden';
     closeRef.current?.focus();
+
     return () => {
       document.body.style.overflow = previousOverflow;
       if (opener instanceof HTMLElement) opener.focus();
@@ -32,9 +34,12 @@ export default function Lightbox({ images, index, onIndexChange, onClose }) {
       else if (event.key === 'Tab') {
         // Mantém o foco dentro do diálogo.
         const focusable = dialogRef.current?.querySelectorAll('button');
+
         if (!focusable?.length) return;
+
         const first = focusable[0];
         const last = focusable[focusable.length - 1];
+
         if (event.shiftKey && document.activeElement === first) {
           event.preventDefault();
           last.focus();
@@ -45,6 +50,7 @@ export default function Lightbox({ images, index, onIndexChange, onClose }) {
       }
     }
     document.addEventListener('keydown', onKeyDown);
+
     return () => document.removeEventListener('keydown', onKeyDown);
   }, [index, count, onIndexChange, onClose]);
 

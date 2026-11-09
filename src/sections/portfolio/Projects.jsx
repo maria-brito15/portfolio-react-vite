@@ -11,6 +11,7 @@ export default function Projects({ content }) {
   const { t } = useLanguage();
   const ordered = useMemo(() => sortProjectsChronologically(projects), []);
   const undetermined = useMemo(() => findUndeterminedOrder(projects), []);
+
   return (
     <section id="projetos" className="sec" aria-labelledby="projetos-title">
       <SectionTitle id="projetos-title" label={content.label}>

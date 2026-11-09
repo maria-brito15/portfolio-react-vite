@@ -44,6 +44,7 @@ describe('links antigos da home (SH-10)', () => {
   ])('abrir %s leva a %s sem empilhar histórico', (from, to) => {
     const push = vi.spyOn(window.history, 'pushState');
     const replace = vi.spyOn(window.history, 'replaceState');
+
     renderApp(from);
     expect(window.location.pathname).toBe(to);
     expect(window.location.hash).toBe('');
@@ -63,6 +64,7 @@ describe('links antigos da home (SH-10)', () => {
   it('hash desconhecido ou #inicio não redireciona', () => {
     for (const hash of ['#xyz', '#inicio', '#%']) {
       const { unmount } = renderApp(`/${hash}`);
+
       expect(window.location.pathname, hash).toBe('/');
       expect(window.location.hash, hash).toBe(hash);
       unmount();

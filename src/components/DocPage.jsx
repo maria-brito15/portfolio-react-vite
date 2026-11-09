@@ -6,6 +6,7 @@ import { useLanguage } from '../i18n/LanguageContext';
 // índice numerado das seções à esquerda e o corpo do documento à direita.
 export default function DocPage({ routeId, sections, actions, children }) {
   const { t } = useLanguage();
+
   return (
     <SiteShell routeId={routeId}>
       <div className="doc">

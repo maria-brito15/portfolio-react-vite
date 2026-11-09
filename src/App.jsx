@@ -36,6 +36,7 @@ function Page({ id }) {
 export default function App() {
   const { path } = useRouter();
   const route = findPageByPath(path);
+
   return (
     <TerminalProvider>
       <Page id={route?.id} />

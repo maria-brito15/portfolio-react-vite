@@ -12,6 +12,7 @@ describe('terminal da página inicial', () => {
 
   it('mostra o nome como título e responde ao comando ajuda', async () => {
     const user = userEvent.setup();
+
     renderApp('/');
     expect(screen.getByRole('heading', { level: 1, name: 'Duda Brito' })).toBeInTheDocument();
     await user.type(terminalInput(), 'ajuda{Enter}');
@@ -21,6 +22,7 @@ describe('terminal da página inicial', () => {
 
   it('primeira visita: o banner sugere ls/ajuda; com histórico, não', async () => {
     const { unmount } = renderApp('/');
+
     expect(screen.getByText(/Primeira vez\? Digite ls para ver tudo, ou ajuda\./)).toBeInTheDocument();
     unmount();
 
@@ -31,10 +33,13 @@ describe('terminal da página inicial', () => {
 
   it('o placeholder ensina um exemplo nos dois idiomas e some com a saída', async () => {
     const user = userEvent.setup();
+
     renderApp('/');
     expect(terminalInput()).toHaveAttribute('placeholder', 'experimente: curriculo');
     await user.click(screen.getByRole('button', { name: /Switch to English/ }));
+
     const input = () => screen.getByRole('textbox', { name: 'Terminal command line' });
+
     expect(input()).toHaveAttribute('placeholder', 'try: resume');
     expect(
       screen.getByText(/First time here\? Type ls to see everything, or help\./),
@@ -45,6 +50,7 @@ describe('terminal da página inicial', () => {
 
   it('avisa quando o comando não existe', async () => {
     const user = userEvent.setup();
+
     renderApp('/');
     await user.type(terminalInput(), 'xyz{Enter}');
     expect(screen.getByText(/xyz: comando não encontrado/)).toBeInTheDocument();
@@ -52,19 +58,25 @@ describe('terminal da página inicial', () => {
 
   it('lista os projetos com link para o GitHub', async () => {
     const user = userEvent.setup();
+
     renderApp('/');
     await user.type(terminalInput(), 'projetos{Enter}');
+
     const log = document.querySelector('.term-log');
+
     expect(within(log).getByText('EcoShop')).toBeInTheDocument();
     expect(within(log).getAllByRole('link', { name: 'github' }).length).toBeGreaterThan(0);
   });
 
   it('o atalho "curriculo" mostra a visão em terminal, sem navegar', async () => {
     const user = userEvent.setup();
+
     renderApp('/');
     await user.click(screen.getByRole('button', { name: /curriculo/ }));
     expect(window.location.pathname).toBe('/');
+
     const log = document.querySelector('.term-log');
+
     expect(within(log).getByText('Maria Eduarda de Paula Brito')).toBeInTheDocument();
     expect(within(log).getByRole('button', { name: /ver no terminal/ })).toBeInTheDocument();
     expect(within(log).getByRole('button', { name: /abrir página própria/ })).toBeInTheDocument();
@@ -72,8 +84,11 @@ describe('terminal da página inicial', () => {
 
   it('tema e idioma pelo terminal atualizam o resto do site', async () => {
     const user = userEvent.setup();
+
     renderApp('/');
+
     const before = document.documentElement.getAttribute('data-theme');
+
     await user.type(terminalInput(), 'tema{Enter}');
     expect(document.documentElement.getAttribute('data-theme')).not.toBe(before);
     await user.type(terminalInput(), 'idioma{Enter}');
@@ -84,6 +99,7 @@ describe('terminal da página inicial', () => {
 
   it('↑ recupera o comando anterior e limpar zera a tela', async () => {
     const user = userEvent.setup();
+
     renderApp('/');
     await user.type(terminalInput(), 'sobre{Enter}');
     await user.type(terminalInput(), '{ArrowUp}');
@@ -95,6 +111,7 @@ describe('terminal da página inicial', () => {
 
   it('cada comando limpa a tela: fica só a última entrada', async () => {
     const user = userEvent.setup();
+
     renderApp('/');
     await user.type(terminalInput(), 'ajuda{Enter}');
     await user.type(terminalInput(), 'projetos{Enter}');

@@ -130,6 +130,7 @@ export const normalizePath = (path) => path.replace(/(.)\/$/, '$1');
 // Página (rota própria) que atende a um caminho, ou undefined para o 404.
 export function findPageByPath(path) {
   const clean = normalizePath(path);
+
   return routes.find((r) => r.kind === 'page' && (r.path === clean || r.aliases?.includes(clean)));
 }
 
@@ -145,17 +146,20 @@ export function findDirectory(arg) {
   const name = fold(arg)
     .replace(/^\.?\/+|\/+$/g, '')
     .replace(/^~\/?/, '');
+
   return directories.find((d) => d.name === name || d.alias === name);
 }
 
 // Segmentos do breadcrumb e do título da janela: [{ label, to }], sem o "~".
 export function crumbsFor(route, lang) {
   if (!route || route.id === 'home') return [];
+
   const own = {
     label: route.segment ? route.segment[lang] : lang === 'pt' ? route.name : route.alias,
     to: route.path,
   };
   const parent = route.parent ? routeById(route.parent) : null;
+
   return parent
     ? [{ label: lang === 'pt' ? parent.name : parent.alias, to: parent.path }, own]
     : [own];
@@ -164,6 +168,7 @@ export function crumbsFor(route, lang) {
 // Caminho exibido no título da janela: "~/academico", "~/projetos/whatsapp-dispatcher".
 export function windowPath(route, lang) {
   const parts = crumbsFor(route, lang).map((c) => c.label);
+
   return `~${parts.length ? `/${parts.join('/')}` : ''}`;
 }
 
@@ -179,6 +184,7 @@ const LEGACY_PAGES = ['sobre', 'habilidades', 'projetos', 'experiencias', 'conta
 export const legacyHashes = Object.fromEntries(
   LEGACY_PAGES.flatMap((id) => {
     const route = routeById(id);
+
     return [
       [`#${route.name}`, route.path],
       [`#${route.alias}`, route.path],
@@ -189,11 +195,14 @@ export const legacyHashes = Object.fromEntries(
 // Destino de um link antigo, ou undefined quando não é um (outra página, hash novo).
 export function legacyTarget(path, hash) {
   if (normalizePath(path) !== '/' || !hash) return undefined;
+
   let decoded = hash;
+
   try {
     decoded = decodeURIComponent(hash);
   } catch {
     // hash malformado (ex.: "#%"): não é um link antigo
   }
+
   return legacyHashes[fold(decoded)];
 }

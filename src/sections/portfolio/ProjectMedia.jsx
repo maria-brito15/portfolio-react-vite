@@ -5,11 +5,14 @@ import ImageGallery from '../../components/ImageGallery';
 // nem aviso nem placeholder que possa passar por demonstração real.
 export default function ProjectMedia({ project }) {
   const { t } = useLanguage();
+
   if (!project.gallery.length) return null;
+
   const images = project.gallery.map((src, i) => ({
     src,
     alt: t.timeline.screenshot(project.name, i + 1, project.gallery.length),
   }));
+
   return (
     <ImageGallery
       images={images}

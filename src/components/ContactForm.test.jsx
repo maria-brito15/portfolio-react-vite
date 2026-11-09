@@ -10,8 +10,10 @@ let impl;
 const calls = [];
 const send = (...args) => {
   calls.push(args);
+
   return impl(...args);
 };
+
 vi.mock('../services/emailService', () => ({
   EmailNotConfiguredError: class EmailNotConfiguredError extends Error {},
   classifySendError: (e) =>
@@ -42,6 +44,7 @@ describe('formulário de contato', () => {
 
   it('mostra erros acessíveis e não envia quando o formulário é inválido', async () => {
     const user = userEvent.setup();
+
     renderApp('/contato');
     await user.click(screen.getByRole('button', { name: 'Enviar mensagem' }));
     expect(screen.getByText('Informe seu nome.')).toBeInTheDocument();
@@ -52,6 +55,7 @@ describe('formulário de contato', () => {
 
   it('valida o formato do e-mail e limpa o erro ao corrigir', async () => {
     const user = userEvent.setup();
+
     renderApp('/contato');
     await fill(user, { email: 'ana@' });
     await user.click(screen.getByRole('button', { name: 'Enviar mensagem' }));
@@ -63,6 +67,7 @@ describe('formulário de contato', () => {
   it('envia, mostra carregamento, confirma e limpa os campos', async () => {
     const user = userEvent.setup();
     let resolve;
+
     impl = () => new Promise((r) => (resolve = r));
     renderApp('/contato');
     await fill(user);
@@ -70,7 +75,9 @@ describe('formulário de contato', () => {
     expect(calls).toEqual([
       [{ name: 'Ana Souza', email: 'ana@exemplo.com', message: 'Gostei do portfólio!' }],
     ]);
+
     const busy = screen.getByRole('button', { name: 'Enviando…' });
+
     expect(busy).toBeDisabled();
     resolve({ status: 200 });
     expect(await screen.findByText(/Mensagem enviada!/)).toBeInTheDocument();
@@ -80,6 +87,7 @@ describe('formulário de contato', () => {
   it('informa a falha e preserva o que foi digitado', async () => {
     const user = userEvent.setup();
     const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
     impl = () => Promise.reject(new Error('rede'));
     renderApp('/contato');
     await fill(user);
@@ -92,6 +100,7 @@ describe('formulário de contato', () => {
 
   it('avisa que o envio está inativo, sem simular sucesso, e preserva o texto', async () => {
     const user = userEvent.setup();
+
     impl = () =>
       Promise.reject(Object.assign(new EmailNotConfiguredError(), { notConfigured: true }));
     renderApp('/contato');
@@ -106,10 +115,13 @@ describe('formulário de contato', () => {
   it('não envia duas vezes quando o botão é acionado repetidamente durante o envio', async () => {
     const user = userEvent.setup();
     let resolve;
+
     impl = () => new Promise((r) => (resolve = r));
     renderApp('/contato');
     await fill(user);
+
     const form = screen.getByRole('button', { name: 'Enviar mensagem' }).closest('form');
+
     fireEvent.submit(form);
     fireEvent.submit(form);
     fireEvent.submit(form);
@@ -121,6 +133,7 @@ describe('formulário de contato', () => {
   it('mostra mensagens distintas para falta de conexão e limite de envios', async () => {
     const user = userEvent.setup();
     const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
     impl = () => Promise.reject({ status: 0, text: '' });
     renderApp('/contato');
     await fill(user);
@@ -135,7 +148,9 @@ describe('formulário de contato', () => {
 
   it('descarta envio quando o campo-armadilha é preenchido (bot)', () => {
     renderApp('/contato');
+
     const form = screen.getByRole('button', { name: 'Enviar mensagem' }).closest('form');
+
     fireEvent.change(form.elements.website, { target: { value: 'http://spam' } });
     fireEvent.submit(form);
     expect(calls).toHaveLength(0);
@@ -148,13 +163,16 @@ describe('formulário de contato', () => {
     for (const label of ['Nome', 'E-mail', 'Mensagem']) {
       expect(screen.getByLabelText(label)).toHaveAttribute('aria-required', 'true');
     }
+
     const trap = document.querySelector('input[name="website"]');
+
     expect(trap).toHaveAttribute('tabindex', '-1');
     expect(trap.closest('[aria-hidden="true"]')).not.toBeNull();
   });
 
   it('mensagens de erro seguem o idioma escolhido', async () => {
     const user = userEvent.setup();
+
     renderApp('/contato');
     await user.click(screen.getByRole('button', { name: /Switch to English/ }));
     await user.click(screen.getByRole('button', { name: 'Send message' }));

@@ -11,6 +11,7 @@ export function summarizeSemester(courses) {
   const average = graded.length
     ? Math.round((graded.reduce((sum, c) => sum + c.grade, 0) / graded.length) * 10) / 10
     : null;
+
   return { done, total, average };
 }
 
@@ -20,6 +21,7 @@ export function yearProgress(startYear, endYear, today = new Date()) {
   const start = new Date(startYear, 0, 1).getTime();
   const end = new Date(endYear, 11, 31, 23, 59, 59).getTime();
   const ratio = (today.getTime() - start) / (end - start);
+
   return Math.round(Math.min(1, Math.max(0, ratio)) * 100);
 }
 
@@ -31,7 +33,9 @@ const pickText = (value, lang) => (typeof value === 'string' ? value : value[lan
 function activityRow(entry, lang, { projects, experienceGroups }) {
   if (entry.kind === 'project') {
     const p = projects.find((x) => x.id === entry.id);
+
     if (!p) return null;
+
     return {
       key: p.id,
       date: p.date,
@@ -45,7 +49,9 @@ function activityRow(entry, lang, { projects, experienceGroups }) {
   for (const group of experienceGroups) {
     const item = group.items.find((i) => i.id === entry.id);
     const date = item && parsePeriodStart(item.period.pt);
+
     if (!item || !date) continue;
+
     return {
       key: item.id,
       date,
@@ -55,6 +61,7 @@ function activityRow(entry, lang, { projects, experienceGroups }) {
       kind: group.id,
     };
   }
+
   return null;
 }
 

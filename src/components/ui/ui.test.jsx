@@ -11,7 +11,9 @@ describe('componentes compartilhados', () => {
         Formação
       </SectionTitle>,
     );
+
     const heading = screen.getByRole('heading', { level: 2, name: /Formação/ });
+
     expect(heading).toHaveAttribute('id', 'x-title');
     expect(heading).toHaveClass('stitle', 'stitle--md');
     expect(within(heading).getByText('03')).toHaveAttribute('aria-hidden', 'true');
@@ -46,6 +48,7 @@ describe('componentes compartilhados', () => {
         stack
       />,
     );
+
     expect(screen.getByRole('columnheader', { name: 'Qtd' })).toHaveClass('col-s');
     expect(screen.getByRole('cell', { name: '2×' })).toBeInTheDocument();
     expect(screen.getByRole('cell', { name: 'Total: 2' })).toBeInTheDocument();

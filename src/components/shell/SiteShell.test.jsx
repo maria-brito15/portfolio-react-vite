@@ -27,10 +27,12 @@ describe('layout único em todas as páginas', () => {
     expect(document.querySelectorAll('.cmdbar')).toHaveLength(1);
     expect(document.querySelectorAll('.win')).toHaveLength(1);
     expect(document.querySelectorAll('footer')).toHaveLength(1);
+
     // a ordem do esqueleto: Header → barra → Window → Footer
     const order = ['header.site-nav', '.cmdbar', '.win', 'footer'].map((sel) =>
       document.querySelector(sel),
     );
+
     for (let i = 1; i < order.length; i++) {
       expect(
         order[i - 1].compareDocumentPosition(order[i]) & Node.DOCUMENT_POSITION_FOLLOWING,
@@ -42,6 +44,7 @@ describe('layout único em todas as páginas', () => {
     for (const route of ROUTES) {
       const { unmount } = renderApp(route);
       const header = document.querySelector('header.site-nav');
+
       expect(
         within(header)
           .queryAllByRole('link')
@@ -49,9 +52,11 @@ describe('layout único em todas as páginas', () => {
         route,
       ).toEqual(['/']);
       expect(within(header).getByRole('link', { name: /mariab.dev/ })).toBeInTheDocument();
+
       const buttons = within(header)
         .getAllByRole('button')
         .map((b) => b.getAttribute('aria-label'));
+
       expect(buttons, route).toEqual(['Comandos (Ctrl K)', 'Modo claro', 'EN — Switch to English']);
       // sem menu de links nem menu recolhível
       expect(header.querySelector('ul, .nav-links, .menu-toggle')).toBeNull();
@@ -61,6 +66,7 @@ describe('layout único em todas as páginas', () => {
 
   it('o botão >_ do header foca a barra de comandos', async () => {
     const user = userEvent.setup();
+
     renderApp('/academico');
     await user.click(screen.getByRole('button', { name: 'Comandos (Ctrl K)' }));
     expect(barInput()).toHaveFocus();
@@ -70,6 +76,7 @@ describe('layout único em todas as páginas', () => {
     for (const route of ROUTES) {
       const { unmount } = renderApp(route);
       const inner = route !== '/';
+
       expect(!!document.querySelector('.shell-back'), route).toBe(inner);
       expect(!!document.querySelector('.crumbs'), route).toBe(inner);
       unmount();
@@ -78,8 +85,11 @@ describe('layout único em todas as páginas', () => {
 
   it('o breadcrumb usa o vocabulário dos comandos nos dois idiomas', async () => {
     const user = userEvent.setup();
+
     renderApp('/academico');
+
     const crumbs = () => within(document.querySelector('.crumbs')).getAllByRole('listitem');
+
     expect(crumbs().map((li) => li.textContent)).toEqual(['~', 'academico']);
     expect(document.querySelector('.win-title')).toHaveTextContent(
       'visitante@mariab.dev: ~/academico',
@@ -103,6 +113,7 @@ describe('Voltar', () => {
   it('usa history.back() quando a página anterior é do site', async () => {
     const user = userEvent.setup();
     const back = vi.spyOn(window.history, 'back').mockImplementation(() => {});
+
     renderApp('/projetos');
     await user.click(screen.getByRole('link', { name: /Ler o Estudo de Caso/ }));
     expect(window.location.pathname).toBe('/estudos-de-caso/whatsapp-dispatcher');
@@ -114,6 +125,7 @@ describe('Voltar', () => {
   it('vai para a home quando a página foi aberta direto', async () => {
     const user = userEvent.setup();
     const back = vi.spyOn(window.history, 'back').mockImplementation(() => {});
+
     renderApp('/academico');
     await user.click(screen.getByRole('button', { name: 'Voltar à página anterior' }));
     expect(back).not.toHaveBeenCalled();
@@ -125,6 +137,7 @@ describe('Voltar', () => {
 describe('barra de comandos', () => {
   it('Ctrl+K e / focam a barra', async () => {
     const user = userEvent.setup();
+
     renderApp('/academico');
     await user.keyboard('{Control>}k{/Control}');
     expect(barInput()).toHaveFocus();
@@ -136,8 +149,11 @@ describe('barra de comandos', () => {
 
   it('os atalhos não roubam o foco de campos de formulário', async () => {
     const user = userEvent.setup();
+
     renderApp('/');
+
     const terminal = screen.getByRole('textbox', { name: 'Linha de comando do terminal' });
+
     await user.click(terminal);
     await user.keyboard('a/b');
     expect(terminal).toHaveFocus();
@@ -148,9 +164,12 @@ describe('barra de comandos', () => {
 
   it('executa comandos fora da home e mostra a saída num painel', async () => {
     const user = userEvent.setup();
+
     renderApp('/servicos');
     await user.type(barInput(), 'curriculo{Enter}');
+
     const panel = document.querySelector('.cmdbar-panel');
+
     expect(within(panel).getByText('Maria Eduarda de Paula Brito')).toBeInTheDocument();
     expect(window.location.pathname).toBe('/servicos');
     // fora da home, "ver no terminal" leva à home com o comando já executado
@@ -166,12 +185,15 @@ describe('barra de comandos', () => {
 
   it('completa com Tab e lista sugestões', async () => {
     const user = userEvent.setup();
+
     renderApp('/curriculo');
     await user.type(barInput(), 'proj{Tab}');
     expect(barInput()).toHaveValue('projetos ');
     await user.clear(barInput());
     await user.type(barInput(), 'c{Tab}');
+
     const list = screen.getByRole('list', { name: 'Sugestões de comandos' });
+
     expect(within(list).getByRole('button', { name: 'curriculo' })).toBeInTheDocument();
     await user.click(within(list).getByRole('button', { name: 'curriculo' }));
     expect(barInput()).toHaveValue('curriculo ');
@@ -179,6 +201,7 @@ describe('barra de comandos', () => {
 
   it('na home, a barra e o terminal compartilham o histórico e a saída', async () => {
     const user = userEvent.setup();
+
     renderApp('/');
     await user.type(barInput(), 'ajuda{Enter}');
     expect(
@@ -193,8 +216,11 @@ describe('barra de comandos', () => {
 describe('duas visualizações', () => {
   it('as páginas dedicadas têm [ ver no terminal ] e [ página própria ] na barra da janela', async () => {
     const user = userEvent.setup();
+
     renderApp('/academico');
+
     const bar = document.querySelector('.win-bar');
+
     expect(within(bar).getByRole('link', { name: 'ver no terminal' })).toHaveAttribute(
       'href',
       '/?cmd=academico',
@@ -206,7 +232,9 @@ describe('duas visualizações', () => {
     await user.click(within(bar).getByRole('link', { name: 'ver no terminal' }));
     expect(window.location.pathname).toBe('/');
     expect(window.location.search).toBe('');
+
     const log = document.querySelector('.term-log');
+
     expect(
       within(log).getByText('Linha do tempo'.toLowerCase(), { exact: false }),
     ).toBeInTheDocument();
@@ -241,8 +269,11 @@ describe('duas visualizações', () => {
 
   it('toda saída com página dedicada termina com as duas ações', async () => {
     const user = userEvent.setup();
+
     renderApp('/');
+
     const input = screen.getByRole('textbox', { name: 'Linha de comando do terminal' });
+
     for (const cmd of [
       'sobre',
       'habilidades',
@@ -254,7 +285,9 @@ describe('duas visualizações', () => {
       'contato',
     ]) {
       await user.type(input, `${cmd}{Enter}`);
+
       const log = document.querySelector('.term-log');
+
       expect(within(log).getByRole('button', { name: /ver no terminal/ }), cmd).toBeInTheDocument();
       expect(within(log).getByText(/abrir página própria/), cmd).toBeInTheDocument();
     }

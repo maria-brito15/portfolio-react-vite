@@ -7,6 +7,7 @@ const css = readFileSync(join(process.cwd(), 'src/styles/tokens.css'), 'utf8');
 
 function tokens(re) {
   const block = css.match(re)?.[1] ?? '';
+
   return Object.fromEntries(
     [...block.matchAll(/--([\w-]+):\s*(#[0-9a-fA-F]{3,6})\b/g)].map(([, name, hex]) => [name, hex]),
   );
@@ -16,14 +17,18 @@ const light = { ...dark, ...tokens(/\[data-theme='light'\]\s*\{([\s\S]*?)\n\}/) 
 
 const luminance = (hex) => {
   let h = hex.slice(1);
+
   if (h.length === 3) h = [...h].map((c) => c + c).join('');
+
   const [r, g, b] = [0, 2, 4]
     .map((i) => parseInt(h.slice(i, i + 2), 16) / 255)
     .map((c) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4));
+
   return 0.2126 * r + 0.7152 * g + 0.0722 * b;
 };
 const ratio = (a, b) => {
   const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x);
+
   return (hi + 0.05) / (lo + 0.05);
 };
 
@@ -49,6 +54,7 @@ describe('contraste AA dos tokens (ES-05)', () => {
     for (const accent of ACCENTS) {
       for (const surface of SURFACES) {
         const value = ratio(theme[accent], theme[surface]);
+
         expect(value, `--${accent} sobre --${surface}: ${value.toFixed(2)}:1`).toBeGreaterThanOrEqual(4.5);
       }
     }
@@ -58,6 +64,7 @@ describe('contraste AA dos tokens (ES-05)', () => {
     for (const text of TEXTS) {
       for (const surface of SURFACES) {
         const value = ratio(theme[text], theme[surface]);
+
         expect(value, `--${text} sobre --${surface}: ${value.toFixed(2)}:1`).toBeGreaterThanOrEqual(4.5);
       }
     }
@@ -69,6 +76,7 @@ describe('contraste AA dos tokens (ES-05)', () => {
 
   it('a impressão usa os mesmos tokens do tema claro (ES-09)', () => {
     const print = tokens(/@media print\s*\{\s*:root,\s*\[data-theme\]\s*\{([\s\S]*?)\n {2}\}/);
+
     for (const name of [...SURFACES, ...ACCENTS, ...TEXTS, 'on-accent']) {
       expect(print[name], `--${name} na impressão`).toBe(light[name]);
     }

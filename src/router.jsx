@@ -14,11 +14,13 @@ const currentIndex = () => window.history.state?.idx ?? 0;
 // empilhar histórico (o Voltar não volta ao link antigo). Hash desconhecido: nada.
 function redirectLegacy() {
   const target = legacyTarget(window.location.pathname, window.location.hash);
+
   if (target) window.history.replaceState({ idx: currentIndex() }, '', target);
 }
 
 function readLocation() {
   redirectLegacy();
+
   return {
     path: window.location.pathname,
     hash: window.location.hash,
@@ -29,13 +31,17 @@ function readLocation() {
 
 function scrollToHash(hash) {
   let id = hash.slice(1);
+
   try {
     id = decodeURIComponent(id);
   } catch {
     // hash malformado (ex.: "#%"): usa o texto como está e, sem alvo, não rola
   }
+
   const target = id && document.getElementById(id);
+
   if (target) target.scrollIntoView({ behavior: 'smooth' });
+
   return Boolean(target);
 }
 
@@ -44,8 +50,10 @@ export function RouterProvider({ children }) {
 
   useEffect(() => {
     const onChange = () => setLocation(readLocation());
+
     window.addEventListener('popstate', onChange);
     window.addEventListener('hashchange', onChange);
+
     return () => {
       window.removeEventListener('popstate', onChange);
       window.removeEventListener('hashchange', onChange);
@@ -61,6 +69,7 @@ export function RouterProvider({ children }) {
   // `replace` troca a entrada atual em vez de empilhar uma nova.
   const navigate = useCallback((to, { replace = false } = {}) => {
     const url = new URL(to, window.location.href);
+
     if (
       url.pathname === window.location.pathname &&
       url.hash === window.location.hash &&
@@ -68,9 +77,12 @@ export function RouterProvider({ children }) {
     ) {
       if (url.hash) scrollToHash(url.hash);
       else window.scrollTo({ top: 0, behavior: 'smooth' });
+
       return;
     }
+
     const idx = replace ? currentIndex() : currentIndex() + 1;
+
     window.history[replace ? 'replaceState' : 'pushState'](
       { idx },
       '',
@@ -89,6 +101,7 @@ export function RouterProvider({ children }) {
     () => ({ ...location, canGoBack: location.idx > 0, navigate, back }),
     [location, navigate, back],
   );
+
   return <RouterContext.Provider value={value}>{children}</RouterContext.Provider>;
 }
 
@@ -101,7 +114,9 @@ export function Link({ to, onClick, children, ...rest }) {
 
   function handleClick(event) {
     onClick?.(event);
+
     const modified = event.metaKey || event.ctrlKey || event.shiftKey || event.altKey;
+
     if (event.defaultPrevented || event.button !== 0 || modified) return;
     event.preventDefault();
     navigate(to);

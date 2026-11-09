@@ -15,6 +15,7 @@ export default function Faq({ items }) {
       Home: 0,
       End: last,
     }[event.key];
+
     if (target === undefined) return;
     event.preventDefault();
     buttons.current[target]?.focus();
@@ -26,6 +27,7 @@ export default function Faq({ items }) {
         const open = openIndex === i;
         const qId = `${baseId}-q${i}`;
         const aId = `${baseId}-a${i}`;
+
         return (
           <div className="faq-item" key={qId}>
             <h4 className="faq-heading">

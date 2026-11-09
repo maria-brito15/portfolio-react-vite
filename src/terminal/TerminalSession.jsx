@@ -29,6 +29,7 @@ export const prefersReducedMotion = () =>
 function readStored() {
   try {
     const saved = JSON.parse(sessionStorage.getItem(STORAGE_KEY));
+
     return Array.isArray(saved)
       ? saved.filter((s) => typeof s === 'string').slice(-MAX_INPUTS)
       : [];
@@ -51,7 +52,9 @@ let nextId = 0; // ids únicos das entradas, para as chaves e o progresso
 // não rodam e um redirecionamento aparece já concluído, sem animação.
 function buildEntry(id, input, ctx) {
   const result = runCommand(input, ctx);
+
   if (result.clear) return null;
+
   return {
     id,
     input,
@@ -73,6 +76,7 @@ export function TerminalProvider({ children }) {
   const [inputs, setInputs] = useState(readStored);
   const [entry, setEntry] = useState(() => {
     const last = inputs.at(-1);
+
     return last
       ? buildEntry(nextId++, last, {
           lang,
@@ -126,10 +130,13 @@ export function TerminalProvider({ children }) {
       if (prefersReducedMotion()) {
         setRedirectStatus(id, 'loading', { to, reduced: true });
         timerRef.current = setTimeout(() => finish(to, id), REDUCED_MOTION_MS);
+
         return;
       }
       setRedirectStatus(id, 'loading', { to, reduced: false });
+
       let tick = 0;
+
       timerRef.current = setInterval(() => {
         tick += 1;
         setProgress(Math.min(1, tick / LOAD_STEPS));
@@ -141,6 +148,7 @@ export function TerminalProvider({ children }) {
 
   const cancel = useCallback(() => {
     const current = loadingRef.current;
+
     if (!current) return;
     stopTimer();
     loadingRef.current = null;
@@ -152,24 +160,32 @@ export function TerminalProvider({ children }) {
   // Esc ou Ctrl+C cancelam o carregamento de onde estiver o foco.
   useEffect(() => {
     if (!busy) return;
+
     const onKeyDown = (event) => {
       const copy = event.key.toLowerCase() === 'c' && event.ctrlKey;
+
       if (event.key === 'Escape' || (copy && !window.getSelection()?.toString())) {
         event.preventDefault();
         cancel();
       }
     };
+
     document.addEventListener('keydown', onKeyDown);
+
     return () => document.removeEventListener('keydown', onKeyDown);
   }, [busy, cancel]);
 
   const execute = useCallback(
     (raw) => {
       const input = raw.trim();
+
       if (!input || loadingRef.current) return false;
+
       const history = [...inputs, input].slice(-MAX_INPUTS);
+
       setInputs(history);
       store(history);
+
       const id = nextId++;
       const next = buildEntry(id, input, {
         lang,
@@ -180,10 +196,12 @@ export function TerminalProvider({ children }) {
         toggleTheme,
         replay: false,
       });
+
       setContext(contextAfter(input, context));
       setEntry(next);
       if (next?.redirect) {
         const { to } = next.redirect;
+
         // "Ir para a home" estando nela não precisa de carregamento.
         if (to === '/' && normalizePath(path) === '/') {
           setEntry({ ...next, redirect: { ...next.redirect, status: 'done', direct: true } });
@@ -192,6 +210,7 @@ export function TerminalProvider({ children }) {
           startRedirect(to, id);
         }
       }
+
       return true;
     },
     [inputs, context, lang, theme, toggleLang, toggleTheme, startRedirect, navigate, path],
@@ -209,13 +228,16 @@ export function TerminalProvider({ children }) {
   // /?cmd=academico: a home já abre com o comando executado (visão em terminal).
   // Só comandos que têm página dedicada; o parâmetro some da URL em seguida.
   const handled = useRef('');
+
   useEffect(() => {
     if (path !== '/' || !search || handled.current === search) return;
     handled.current = search;
+
     const cmd = new URLSearchParams(search).get('cmd');
     // A URL é um sistema externo: executar o comando é a reação a ela.
     // "curriculo competencias": o 1º termo precisa ser o comando de uma página.
     const first = cmd?.split(/\s+/)[0];
+
     // eslint-disable-next-line react-hooks/set-state-in-effect
     if (first && routes.some((r) => r.command === first) && findCommand(first)) execute(cmd);
     navigate('/', { replace: true });
@@ -225,5 +247,6 @@ export function TerminalProvider({ children }) {
     () => ({ entry, inputs, context, progress, busy, execute, interrupt, openPage, cancel }),
     [entry, inputs, context, progress, busy, execute, interrupt, openPage, cancel],
   );
+
   return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>;
 }

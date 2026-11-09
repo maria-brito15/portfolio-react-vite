@@ -20,7 +20,9 @@ const META = {
 
 export default function CaseStudy() {
   const { lang } = useLanguage();
+
   useDocumentMeta(META[lang]);
+
   return (
     <SiteShell routeId="whatsapp-dispatcher">
       {lang === 'pt' ? <WhatsAppDispatcherPt /> : <WhatsAppDispatcherEn />}

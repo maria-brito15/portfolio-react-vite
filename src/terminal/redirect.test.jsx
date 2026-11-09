@@ -13,6 +13,7 @@ const advance = (ms) =>
 function setup() {
   vi.useFakeTimers();
   globalThis.jest = { advanceTimersByTime: vi.advanceTimersByTime };
+
   return userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
 }
 
@@ -35,6 +36,7 @@ describe('carregamento antes de redirecionar', () => {
 
   it('"curriculo" mostra a visão em terminal e só navega pelo botão "abrir página própria"', async () => {
     const user = setup();
+
     renderApp('/');
     await user.type(terminalInput(), 'curriculo{Enter}');
     await advance(2000);
@@ -58,6 +60,7 @@ describe('carregamento antes de redirecionar', () => {
 
   it('"cd <página>" passa pelo mesmo carregamento', async () => {
     const user = setup();
+
     renderApp('/');
     await user.type(terminalInput(), 'cd academico{Enter}');
     expect(window.location.pathname).toBe('/');
@@ -68,6 +71,7 @@ describe('carregamento antes de redirecionar', () => {
 
   it('"cd ~" na própria home não tem carregamento', async () => {
     const user = setup();
+
     renderApp('/');
     await user.type(terminalInput(), 'cd ~{Enter}');
     expect(log()).not.toHaveTextContent('%');
@@ -76,6 +80,7 @@ describe('carregamento antes de redirecionar', () => {
 
   it('Esc cancela o carregamento e a URL não muda', async () => {
     const user = setup();
+
     renderApp('/');
     await user.type(terminalInput(), 'cd curriculo{Enter}');
     await advance(300);
@@ -90,6 +95,7 @@ describe('carregamento antes de redirecionar', () => {
 
   it('Ctrl+C também cancela', async () => {
     const user = setup();
+
     renderApp('/');
     await user.type(terminalInput(), 'cd servicos{Enter}');
     await advance(200);
@@ -101,7 +107,9 @@ describe('carregamento antes de redirecionar', () => {
 
   it('com prefers-reduced-motion não há barra animada e navega em ~300 ms', async () => {
     mockReducedMotion(true);
+
     const user = setup();
+
     renderApp('/');
     await user.type(terminalInput(), 'cd curriculo{Enter}');
     expect(log()).toHaveTextContent('carregando…');
@@ -116,9 +124,12 @@ describe('carregamento antes de redirecionar', () => {
   it('não navega duas vezes ao clicar de novo durante o carregamento', async () => {
     const user = setup();
     const push = vi.spyOn(window.history, 'pushState');
+
     renderApp('/');
     await user.type(terminalInput(), 'servicos{Enter}');
+
     const open = within(log()).getByRole('button', { name: /abrir página própria/ });
+
     await user.click(open);
     await user.click(open);
     await advance(3000);
@@ -130,6 +141,7 @@ describe('carregamento antes de redirecionar', () => {
     const user = setup();
     const { unmount } = renderApp('/');
     const push = vi.spyOn(window.history, 'pushState');
+
     await user.type(terminalInput(), 'cd curriculo{Enter}');
     await advance(200);
     unmount();
@@ -151,6 +163,7 @@ describe('carregamento antes de redirecionar', () => {
 
   it('links de página dentro das saídas também mostram o carregamento', async () => {
     const user = setup();
+
     renderApp('/');
     await user.type(terminalInput(), 'ls{Enter}');
     await user.click(within(log()).getByRole('link', { name: 'servicos' }));

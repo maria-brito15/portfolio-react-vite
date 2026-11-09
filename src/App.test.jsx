@@ -5,7 +5,9 @@ import { renderApp } from './test/helpers';
 describe('página inicial', () => {
   it('é só o terminal: sem bloco de marketing rolável abaixo da janela', () => {
     renderApp('/');
+
     const ids = [...document.querySelectorAll('main section[id]')].map((s) => s.id);
+
     expect(ids).toEqual(['inicio']);
     expect(document.querySelectorAll('.win')).toHaveLength(1);
     expect(document.querySelector('main').nextElementSibling.tagName).toBe('FOOTER');
@@ -15,6 +17,7 @@ describe('página inicial', () => {
     for (const path of ['/', '/sobre', '/habilidades', '/projetos', '/experiencias', '/contato']) {
       const { unmount } = renderApp(path);
       const ids = [...document.querySelectorAll('[id]')].map((e) => e.id);
+
       expect(new Set(ids).size, path).toBe(ids.length);
       unmount();
     }
@@ -23,10 +26,12 @@ describe('página inicial', () => {
 
   it('lista os projetos na timeline sem repetir nenhum', () => {
     renderApp('/projetos');
+
     const timeline = screen.getByRole('list', { name: /Linha do tempo/ });
     const names = within(timeline)
       .getAllByRole('heading', { level: 3 })
       .map((h) => h.textContent);
+
     expect(names.slice(0, 2)).toEqual(['Planoriza', 'EcoShop']);
     expect(names).toHaveLength(3);
     expect(within(timeline).getByText('ShortURL')).toBeInTheDocument();
@@ -35,6 +40,7 @@ describe('página inicial', () => {
 
   it('troca de idioma, mantém na página e persiste a escolha', async () => {
     const user = userEvent.setup();
+
     renderApp('/sobre');
     expect(screen.getByRole('heading', { name: /Sobre mim/ })).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: /Switch to English/ }));
@@ -46,6 +52,7 @@ describe('página inicial', () => {
 
   it('alterna o tema e persiste no localStorage', async () => {
     const user = userEvent.setup();
+
     renderApp('/');
     await user.click(screen.getByRole('button', { name: 'Modo claro' }));
     expect(document.documentElement.getAttribute('data-theme')).toBe('light');
@@ -55,7 +62,9 @@ describe('página inicial', () => {
 
   it('o header não tem menu de links nem menu recolhível', () => {
     renderApp('/');
+
     const header = document.querySelector('header.site-nav');
+
     expect(
       within(header)
         .queryAllByRole('link')
@@ -68,6 +77,7 @@ describe('página inicial', () => {
 describe('navegação', () => {
   it('abre o estudo de caso e a página de serviços sem recarregar', async () => {
     const user = userEvent.setup();
+
     renderApp('/projetos');
     await user.click(screen.getByRole('link', { name: /Ler o Estudo de Caso/ }));
     expect(window.location.pathname).toBe('/estudos-de-caso/whatsapp-dispatcher');
@@ -85,6 +95,7 @@ describe('navegação', () => {
 
   it('todas as rotas renderizam sem erro nos dois idiomas', { timeout: 90000 }, async () => {
     const user = userEvent.setup();
+
     for (const path of [
       '/',
       '/sobre',
@@ -96,6 +107,7 @@ describe('navegação', () => {
       '/estudos-de-caso/whatsapp-dispatcher',
     ]) {
       const { unmount } = renderApp(path);
+
       expect(screen.getByRole('main')).toBeInTheDocument();
       await user.click(screen.getByRole('button', { name: /Switch to English/ }));
       expect(document.documentElement.lang).toBe('en');
@@ -108,8 +120,11 @@ describe('navegação', () => {
 describe('FAQ', () => {
   it('abre um item por vez e expõe aria-expanded/aria-controls', async () => {
     const user = userEvent.setup();
+
     renderApp('/servicos');
+
     const [first, second] = screen.getAllByRole('button', { name: /\?$/ });
+
     expect(first).toHaveAttribute('aria-expanded', 'false');
     await user.click(first);
     expect(first).toHaveAttribute('aria-expanded', 'true');
@@ -121,8 +136,11 @@ describe('FAQ', () => {
 
   it('navega entre perguntas com as setas do teclado', async () => {
     const user = userEvent.setup();
+
     renderApp('/servicos');
+
     const [first, second] = screen.getAllByRole('button', { name: /\?$/ });
+
     first.focus();
     await user.keyboard('{ArrowDown}');
     expect(second).toHaveFocus();
@@ -132,11 +150,16 @@ describe('FAQ', () => {
 describe('lightbox', () => {
   it('abre, navega pelo teclado, bloqueia a rolagem, fecha com Esc e devolve o foco', async () => {
     const user = userEvent.setup();
+
     renderApp('/servicos');
+
     const thumbs = screen.getAllByRole('button', { name: /Ampliar imagem: BECAS/ });
+
     thumbs[0].focus();
     await user.click(thumbs[0]);
+
     const dialog = screen.getByRole('dialog', { name: 'Galeria de imagens' });
+
     expect(dialog).toBeInTheDocument();
     expect(document.body.style.overflow).toBe('hidden');
     expect(within(dialog).getByText('1 / 4')).toBeInTheDocument();

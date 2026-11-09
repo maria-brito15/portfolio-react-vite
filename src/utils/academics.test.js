@@ -10,6 +10,7 @@ describe('summarizeSemester', () => {
       { hours: 60, grade: 81 },
       { hours: 40, grade: null },
     ]);
+
     expect(result).toEqual({ done: 140, total: 180, average: 85.5 });
   });
 

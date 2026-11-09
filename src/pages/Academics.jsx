@@ -107,6 +107,7 @@ function programName(id, lang) {
 export default function Academics() {
   const { lang } = useLanguage();
   const c = TEXT[lang];
+
   useDocumentMeta(c.meta);
 
   const first = academics.timeline[0].year;
@@ -129,6 +130,7 @@ export default function Academics() {
     { id: 'por-ano', title: c.sections.years },
   ];
   const showCourses = academics.semesters.length > 0;
+
   if (showCourses) sections.push({ id: 'disciplinas', title: c.sections.courses });
 
   const activityColumns = [
@@ -239,6 +241,7 @@ export default function Academics() {
         <DocSection id="disciplinas" index={4} title={c.sections.courses}>
           {semestersDesc(academics.semesters).map((s) => {
             const totals = summarizeSemester(s.courses);
+
             return (
               <div className="ac-year" key={s.id}>
                 <h3 className="doc-group-title">

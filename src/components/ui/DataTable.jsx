@@ -11,6 +11,7 @@ export default function DataTable({
   className = '',
 }) {
   const span = columns.length;
+
   return (
     <div className="data-table-wrap">
       <table

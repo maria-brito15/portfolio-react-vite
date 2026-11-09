@@ -27,6 +27,7 @@ export function ThemeProvider({ children }) {
     () => [theme, () => setTheme((v) => (v === 'dark' ? 'light' : 'dark'))],
     [theme],
   );
+
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }
 

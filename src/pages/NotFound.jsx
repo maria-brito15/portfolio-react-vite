@@ -7,7 +7,9 @@ import Prompt from '../terminal/Prompt';
 export default function NotFound() {
   const { t } = useLanguage();
   const { path } = useRouter();
+
   useDocumentMeta({ title: `${t.notFound.title} | Duda Brito`, description: t.notFound.text });
+
   return (
     <SiteShell missingPath={path}>
       <div className="not-found">

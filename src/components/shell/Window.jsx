@@ -13,6 +13,7 @@ export default function Window({
   const cls = ['win', variant && `win--${variant}`, variant === 'terminal' && 'term', className]
     .filter(Boolean)
     .join(' ');
+
   return (
     <div className={cls} onClick={onClick}>
       <div className="win-bar">

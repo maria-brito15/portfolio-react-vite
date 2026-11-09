@@ -6,8 +6,10 @@ import Card from '../../components/ui/Card';
 
 function RepoLink({ project, className = 'btn' }) {
   const { t } = useLanguage();
+
   // Sem repositório confirmado, nada é exibido: sem link inventado nem promessa.
   if (!project.repo) return null;
+
   return (
     <a href={project.repo} target="_blank" rel="noopener noreferrer" className={className}>
       {t.timeline.github}
@@ -29,6 +31,7 @@ function Stack({ tech }) {
 
 function Featured({ project, copy }) {
   const { t } = useLanguage();
+
   return (
     <Card className="featured-card">
       <div className="proj-header">
@@ -141,6 +144,7 @@ const VARIANTS = { featured: Featured, evolution: Evolution, card: Standard, min
 export default function ProjectCard({ project, orderUndetermined = false }) {
   const { lang, t } = useLanguage();
   const Variant = VARIANTS[project.variant];
+
   return (
     <li className="timeline-item" id={`projeto-${project.id}`}>
       <div className="timeline-date">

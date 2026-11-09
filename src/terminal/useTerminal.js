@@ -25,6 +25,7 @@ export function useTerminal({ onSubmit } = {}) {
 
   function submit(raw = value) {
     const ran = session.execute(raw);
+
     reset();
     if (ran) onSubmit?.(raw.trim());
   }
@@ -32,6 +33,7 @@ export function useTerminal({ onSubmit } = {}) {
   function pick(option) {
     setValue((current) => {
       const hasArgument = /\s/.test(current.trim());
+
       return hasArgument ? current.replace(/\S*$/, option) : `${option} `;
     });
     setSuggestions(null);
@@ -45,7 +47,9 @@ export function useTerminal({ onSubmit } = {}) {
     } else if (event.key === 'Tab') {
       if (!value) return; // Tab sem texto mantém a navegação por teclado
       event.preventDefault();
+
       const result = complete(value, lang);
+
       if (Array.isArray(result)) setSuggestions(result);
       else {
         setValue(result);
@@ -57,8 +61,10 @@ export function useTerminal({ onSubmit } = {}) {
     } else if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
       if (!inputs.length) return;
       event.preventDefault();
+
       const up = event.key === 'ArrowUp';
       let next = cursor ?? inputs.length;
+
       next = up ? Math.max(0, next - 1) : next + 1;
       if (next >= inputs.length) {
         setCursor(null);

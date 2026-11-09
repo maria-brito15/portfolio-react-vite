@@ -33,12 +33,14 @@ export function classifySendError(error) {
   if (error?.status === 0 || (typeof navigator !== 'undefined' && navigator.onLine === false)) {
     return 'network';
   }
+
   return 'error';
 }
 
 // Os nomes dos parâmetros precisam existir no template do EmailJS (ver README).
 export async function sendContactMessage({ name, email, message }) {
   if (!isEmailConfigured()) throw new EmailNotConfiguredError();
+
   return emailjs.send(
     config.serviceId,
     config.templateId,

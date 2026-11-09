@@ -7,6 +7,7 @@ const FORBIDDEN =
 
 function timeline() {
   renderApp('/projetos');
+
   return screen.getByRole('list', { name: /Linha do tempo|Project timeline/ });
 }
 
@@ -14,6 +15,7 @@ describe('timeline de projetos', () => {
   it('mostra Planoriza e EcoShop primeiro, seguidos dos três de 2026', () => {
     const items = [...timeline().querySelectorAll(':scope > .timeline-item')];
     const names = items.map((li) => li.querySelector('h3, .minor-item-name').textContent);
+
     expect(names.slice(0, 2)).toEqual(['Planoriza', 'EcoShop']);
     expect(names).toHaveLength(5);
   });
@@ -21,14 +23,18 @@ describe('timeline de projetos', () => {
   it('exibe só datas MM/AAAA ou AAAA e sinaliza a ordem indeterminada de 2026', () => {
     const tl = timeline();
     const dates = [...tl.querySelectorAll('.timeline-date time')].map((t) => t.textContent);
+
     expect(dates).toEqual(['01/2025', '02/2025', '2026', '2026', '2026']);
+
     const notes = tl.querySelectorAll('.date-note');
+
     expect(notes).toHaveLength(3);
     expect(notes[0]).toHaveTextContent('ordem entre os projetos de 2026 indeterminada');
   });
 
   it('EcoShop mostra v1 · 02/2025 e v2 · 01/2026', () => {
     const tl = within(timeline());
+
     expect(tl.getByText('v1 · 02/2025')).toBeInTheDocument();
     expect(tl.getByText('v2 · 01/2026')).toBeInTheDocument();
   });
@@ -38,6 +44,7 @@ describe('timeline de projetos', () => {
     const tl = timeline();
     const dateTexts = () =>
       [...tl.querySelectorAll('.timeline-date, .evo-tag')].map((e) => e.textContent).join(' ');
+
     expect(dateTexts()).not.toMatch(FORBIDDEN);
     expect(tl.textContent).not.toMatch(/Repositório (privado|a divulgar)/);
     await user.click(screen.getByRole('button', { name: /Switch to English/ }));
@@ -51,19 +58,23 @@ describe('timeline de projetos', () => {
   it('links do GitHub só onde o repositório existe, com rel seguro', () => {
     const tl = timeline();
     const links = within(tl).getAllByRole('link', { name: /GitHub/ });
+
     expect(links.map((a) => a.getAttribute('href')).sort()).toEqual([
       'https://github.com/maria-brito15/ecoshop-nextjs',
       'https://github.com/maria-brito15/file-name-standardizer',
       'https://github.com/maria-brito15/shorturl-express',
     ]);
     for (const a of links) expect(a).toHaveAttribute('rel', 'noopener noreferrer');
+
     const planoriza = within(tl).getByRole('heading', { name: 'Planoriza' }).closest('.proj-card');
+
     expect(within(planoriza).queryByRole('link')).not.toBeInTheDocument();
   });
 
   it('WhatsApp Dispatcher é apresentado como estudo de caso de desafio técnico de estágio', async () => {
     const user = userEvent.setup();
     const tl = within(timeline());
+
     expect(tl.getByText(/Desafio Técnico de Estágio/)).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: /Switch to English/ }));
     expect(tl.getByText(/Internship Technical Challenge/)).toBeInTheDocument();
@@ -73,6 +84,7 @@ describe('timeline de projetos', () => {
     const user = userEvent.setup();
     const tl = timeline();
     const thumbs = within(tl).getAllByRole('button', { name: /Ampliar imagem: EcoShop/ });
+
     expect(thumbs).toHaveLength(3);
     await user.click(thumbs[0]);
     expect(screen.getByRole('dialog')).toBeInTheDocument();
@@ -83,6 +95,7 @@ describe('timeline de projetos', () => {
 
   it('imagem ausente é descartada sem deixar miniatura quebrada', () => {
     const tl = timeline();
+
     fireEvent.error(tl.querySelectorAll('.img-wrap img')[0]);
     expect(tl.querySelectorAll('.img-wrap')).toHaveLength(2);
     for (const img of tl.querySelectorAll('.img-wrap img')) fireEvent.error(img);
@@ -93,7 +106,9 @@ describe('timeline de projetos', () => {
 describe('experiência WebTech na página', () => {
   it('mostra o período e a descrição atualizados', () => {
     renderApp('/experiencias');
+
     const section = document.getElementById('experiencias');
+
     expect(section).toHaveTextContent('2º semestre de 2026 – em andamento');
     expect(section).toHaveTextContent(/workshop e de um laboratório de Spec-Driven Development/);
   });

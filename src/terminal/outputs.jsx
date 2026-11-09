@@ -26,13 +26,17 @@ export const EntryContext = createContext(null);
 export function TermLink({ to, onClick, ...rest }) {
   const session = useTerminalSession();
   const entryId = useContext(EntryContext);
+
   if (!session || entryId == null) return <Link to={to} {...rest} />;
+
   return (
     <Link
       to={to}
       onClick={(event) => {
         onClick?.(event);
+
         const modified = event.metaKey || event.ctrlKey || event.shiftKey || event.altKey;
+
         if (event.defaultPrevented || event.button !== 0 || modified) return;
         event.preventDefault();
         session.openPage(to, entryId);
@@ -73,6 +77,7 @@ const BAR_CELLS = 8;
 
 export const progressBar = (progress) => {
   const filled = Math.round(progress * BAR_CELLS);
+
   return `[${'■'.repeat(filled)}${'□'.repeat(BAR_CELLS - filled)}] ${Math.round(progress * 100)}%`;
 };
 
@@ -81,7 +86,9 @@ export const progressBar = (progress) => {
 // em vez de dezenas de atualizações por segundo.
 export function RedirectLine({ redirect, progress }) {
   const { t } = useLanguage();
+
   if (!redirect || redirect.status === 'idle') return null;
+
   const { to, status, reduced, direct } = redirect;
 
   if (status === 'cancelled') {
@@ -107,6 +114,7 @@ export function RedirectLine({ redirect, progress }) {
     );
   }
   if (direct) return <p className="t-dim">{t.term.going(to)}</p>;
+
   return (
     <p className="t-dim">
       {t.term.opening(to)} <span className="t-ok">{t.term.ready}</span>

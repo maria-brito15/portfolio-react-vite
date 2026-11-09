@@ -8,7 +8,9 @@ import { useTerminalSession } from './sessionContext';
 export default function TerminalOutput() {
   const { lang } = useLanguage();
   const { entry, progress } = useTerminalSession();
+
   if (!entry) return null;
+
   return (
     <EntryContext.Provider value={entry.id}>
       <div className="term-entry">

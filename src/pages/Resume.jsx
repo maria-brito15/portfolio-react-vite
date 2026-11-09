@@ -22,6 +22,7 @@ function ExperienceCard({ index, item, kind, c, lang }) {
   const description = item.description[lang];
   const long = description.length > 160;
   const id = `exp-${item.id}`;
+
   return (
     <Card as="li" className="xp-card">
       <div className="xp-head">
@@ -62,6 +63,7 @@ function ExperienceCard({ index, item, kind, c, lang }) {
 export default function Resume() {
   const { lang } = useLanguage();
   const c = resume[lang];
+
   useDocumentMeta(c.meta);
 
   const groups = experienceGroups.filter((g) => g.id !== 'awards');
@@ -137,6 +139,7 @@ export default function Resume() {
               <ul>
                 {group.items.map((skill) => {
                   const time = formatSince(skill.since, lang);
+
                   return (
                     <li key={skill.name}>
                       <span>{skill.name}</span>
@@ -250,6 +253,7 @@ export default function Resume() {
         <ul className="aw-list">
           {awards.map(({ item, instances }) => {
             const times = Math.max(1, instances.length);
+
             return (
               <Card as="li" className="xp-card aw-card" key={item.id}>
                 <div className="aw-head">

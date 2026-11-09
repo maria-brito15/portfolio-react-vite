@@ -159,6 +159,7 @@ export function sectionsOf(routeId) {
     case 'experiencias':
       return experienceGroups.map((g) => {
         const [name, alias] = EXPERIENCE_GROUPS[g.id] ?? [g.id, g.id];
+
         return {
           id: g.id,
           name,
@@ -175,9 +176,11 @@ export function sectionsOf(routeId) {
 
 export function findSection(routeId, arg) {
   const key = fold(arg);
+
   if (!key) return undefined;
   // Número do índice: `curriculo 2` abre a segunda seção.
   if (/^\d+$/.test(key)) return sectionsOf(routeId)[Number(key) - 1];
+
   return sectionsOf(routeId).find((s) => [s.name, s.alias, s.id].some((n) => fold(n) === key));
 }
 
@@ -185,6 +188,7 @@ export function findSection(routeId, arg) {
 export function neighbors(routeId, sectionId) {
   const list = sectionsOf(routeId);
   const i = list.findIndex((s) => s.id === sectionId);
+
   return { number: i + 1, total: list.length, prev: list[i - 1], next: list[i + 1] };
 }
 
@@ -204,14 +208,20 @@ export function splitTarget(args) {
 //  - ['curriculo','competencias'] → { route, section }
 export function resolveTarget(args) {
   const parts = splitTarget(args);
+
   if (!parts.length || parts[0] === '..') return { home: true };
+
   const route = findDirectory(parts[0]);
+
   if (!route) return { error: 'page', arg: parts[0] };
   if (parts.length === 1) return { route };
   if (parts[1] === '..') return { route: undefined, home: true };
+
   const section = findSection(route.id, parts[1]);
+
   if (!section) return { error: 'section', route, arg: parts[1] };
   if (parts.length > 2) return { error: 'extra', route, section, arg: parts.slice(2).join('/') };
+
   return { route, section };
 }
 

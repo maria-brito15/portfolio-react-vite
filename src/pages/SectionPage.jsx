@@ -23,10 +23,12 @@ export default function SectionPage({ routeId }) {
   const { lang } = useLanguage();
   const c = portfolio[lang];
   const { key, Section } = SECTIONS[routeId];
+
   useDocumentMeta({
     title: `${routeById(routeId).label[lang]} — Duda Brito`,
     description: c.meta.description,
   });
+
   return (
     <SiteShell routeId={routeId}>
       <Section content={c[key]} />

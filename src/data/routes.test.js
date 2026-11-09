@@ -11,11 +11,14 @@ import {
 describe('tabela de rotas', () => {
   it('todos os caminhos e nomes de comando são únicos', () => {
     const paths = new Set();
+
     for (const r of directories) {
       expect(paths.has(r.path), r.path).toBe(false);
       paths.add(r.path);
     }
+
     const names = directories.flatMap((d) => [d.name, d.alias]);
+
     expect(new Set(names).size).toBe(names.length);
   });
 
@@ -39,9 +42,12 @@ describe('tabela de rotas', () => {
 
   it('breadcrumb e título da janela usam o vocabulário do idioma', () => {
     const academics = routeById('academico');
+
     expect(windowPath(academics, 'pt')).toBe('~/academico');
     expect(windowPath(academics, 'en')).toBe('~/academics');
+
     const study = routeById('whatsapp-dispatcher');
+
     expect(crumbsFor(study, 'pt').map((c) => c.label)).toEqual(['projetos', 'whatsapp-dispatcher']);
     expect(crumbsFor(study, 'en').map((c) => c.label)).toEqual(['projects', 'whatsapp-dispatcher']);
     expect(windowPath(routeById('home'), 'pt')).toBe('~');

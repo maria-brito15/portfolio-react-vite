@@ -33,6 +33,7 @@ describe('inventário de comandos', () => {
 
   it('nenhum nome (PT, EN ou apelido) se repete entre comandos', () => {
     const seen = new Map();
+
     for (const c of inventory) {
       for (const name of c.names) {
         expect(seen.has(name), `"${name}" em ${c.id} e ${seen.get(name)}`).toBe(false);
@@ -44,6 +45,7 @@ describe('inventário de comandos', () => {
   it('todo comando de página bate com routes.js (PT e EN)', () => {
     for (const route of routes.filter((r) => r.command && r.name)) {
       const cmd = findCommand(route.name);
+
       expect(cmd, route.name).toBeDefined();
       expect(findCommand(route.alias), route.alias).toBe(cmd);
     }
@@ -51,12 +53,15 @@ describe('inventário de comandos', () => {
 
   it('a ajuda lista só comandos que existem e não esconde nenhum visível', async () => {
     const user = userEvent.setup();
+
     renderApp('/');
     await run(user, 'ajuda');
+
     const listed = [...log().querySelectorAll('.t-help dl:first-of-type dt .t-cmd')].map(
       (el) => el.textContent,
     );
     const visible = inventory.filter((c) => !c.hidden);
+
     expect(listed).toHaveLength(visible.length);
     for (const name of listed) expect(findCommand(name), name).toBeDefined();
     // o esquema de seções é explicado
@@ -67,6 +72,7 @@ describe('inventário de comandos', () => {
 
   it('os atalhos clicáveis são comandos reais nos dois idiomas', async () => {
     const { quickCommands } = await import('./commands');
+
     for (const lang of ['pt', 'en']) {
       for (const cmd of quickCommands[lang])
         expect(findCommand(cmd), `${lang}:${cmd}`).toBeDefined();
@@ -102,6 +108,7 @@ describe('argumentos e combinações', () => {
 
   it('erros são claros e nunca quebram', async () => {
     const user = userEvent.setup();
+
     renderApp('/');
     for (const [line, text] of [
       ['cd xyz', 'cd: xyz: página não encontrada'],
@@ -132,6 +139,7 @@ describe('argumentos e combinações', () => {
       '//',
     ]) {
       const result = runCommand(line, { lang: 'pt', history: [], replay: true });
+
       expect(typeof result.output, JSON.stringify(line)).toBe('function');
     }
   });
@@ -142,14 +150,19 @@ describe('índice das seções (um só renderizador)', () => {
 
   it('curriculo e ls curriculo produzem o mesmo índice [1]…[6] com instrução e dicas', async () => {
     const user = userEvent.setup();
+
     renderApp('/');
     await run(user, 'curriculo');
+
     const first = await waitFor(() => {
       const el = indexOf();
+
       expect(el).toBeTruthy();
+
       return el;
     });
     const html = first.innerHTML;
+
     await run(user, 'ls curriculo');
     await waitFor(() => expect(log()).toHaveTextContent('ls curriculo'));
     expect(indexOf().innerHTML).toBe(html);
@@ -164,6 +177,7 @@ describe('índice das seções (um só renderizador)', () => {
 
   it('o índice aparece em inglês e nas páginas com seções', async () => {
     const user = userEvent.setup();
+
     renderApp('/');
     await user.click(screen.getByRole('button', { name: /Switch to English/ }));
     await run(user, 'resume');
@@ -176,22 +190,31 @@ describe('índice das seções (um só renderizador)', () => {
 
   it('clicar em [2] produz a mesma saída de "curriculo 2" e o botão é alcançável por Tab', async () => {
     const user = userEvent.setup();
+
     renderApp('/');
     await run(user, 'curriculo 2');
     await waitFor(() => expect(log()).toHaveTextContent('Competências técnicas'));
+
     const typed = log().querySelector('.term-entry').textContent;
+
     await run(user, 'curriculo');
+
     const button = await waitFor(() => {
       const b = within(indexOf()).getAllByRole('button')[1];
+
       expect(b).toHaveTextContent('[2]');
+
       return b;
     });
+
     expect(button).not.toBeDisabled();
     expect(button.tabIndex).toBe(0);
     await user.click(button);
     await waitFor(() => expect(log()).toHaveTextContent('Competências técnicas'));
     expect(indexOf()).toBeNull();
+
     const clicked = log().querySelector('.term-entry').textContent;
+
     expect(clicked.replace(/^.*?Competências/s, 'Competências')).toBe(
       typed.replace(/^.*?Competências/s, 'Competências'),
     );
@@ -199,8 +222,11 @@ describe('índice das seções (um só renderizador)', () => {
 
   it('toda seção termina com próxima, anterior e índice; os extremos avisam', async () => {
     const user = userEvent.setup();
+
     renderApp('/');
+
     const nav = () => log().querySelector('.t-sectionnav');
+
     await run(user, 'curriculo 2');
     await waitFor(() => expect(nav()).toBeTruthy());
     expect(nav()).toHaveTextContent('próxima: curriculo 3 (experiencias)');
@@ -220,6 +246,7 @@ describe('índice das seções (um só renderizador)', () => {
 
   it('ls de página sem seções não mostra índice', async () => {
     const user = userEvent.setup();
+
     renderApp('/');
     await run(user, 'ls contato');
     expect(indexOf()).toBeNull();
@@ -230,6 +257,7 @@ describe('índice das seções (um só renderizador)', () => {
 describe('contexto da última página (DS-05, DS-07)', () => {
   it('contextAfter acompanha página, seção, ls, cd ~ e limpar', () => {
     const c1 = contextAfter('curriculo');
+
     expect(c1).toEqual({ routeId: 'curriculo', sectionId: null });
     expect(contextAfter('academico disciplinas', c1)).toEqual({
       routeId: 'academico',
@@ -262,6 +290,7 @@ describe('contexto da última página (DS-05, DS-07)', () => {
 
   function Probe() {
     const s = useTerminalSession();
+
     return (
       <>
         <output data-testid="ctx">{JSON.stringify(s.context)}</output>
@@ -275,6 +304,7 @@ describe('contexto da última página (DS-05, DS-07)', () => {
   }
   const renderProbe = () => {
     window.history.replaceState(null, '', '/');
+
     return render(
       <RouterProvider>
         <LanguageProvider>
@@ -291,6 +321,7 @@ describe('contexto da última página (DS-05, DS-07)', () => {
 
   it('a sessão muda o contexto ao abrir páginas e o zera com limpar e cd ~', async () => {
     const user = userEvent.setup();
+
     renderProbe();
     expect(ctx()).toBeNull();
     await user.click(screen.getByRole('button', { name: 'curriculo' }));
@@ -333,12 +364,15 @@ describe('mesmo padrão em todas as páginas com seções (DS-12)', () => {
     { timeout: 90000 },
     async (routeId, lang) => {
       const user = userEvent.setup();
+
       renderApp('/');
+
       const route = routes.find((r) => r.id === routeId);
       const total = sectionsOf(routeId).length;
       const page = lang === 'pt' ? route.name : route.alias;
       const nav = () => log().querySelector('.t-sectionnav');
       const index = () => log().querySelector('.t-index');
+
       if (lang === 'en')
         await user.click(screen.getByRole('button', { name: /Switch to English/ }));
 
@@ -354,6 +388,7 @@ describe('mesmo padrão em todas as páginas com seções (DS-12)', () => {
       expect(index()).toHaveTextContent(`cd ${page}`);
       expect(index()).toHaveTextContent(`ls ${page}`);
       expect(index()).toHaveTextContent('cd ~');
+
       const html = index().innerHTML;
 
       // ls <página> mostra exatamente o mesmo índice
@@ -370,6 +405,7 @@ describe('mesmo padrão em todas as páginas com seções (DS-12)', () => {
       expect(nav()).toHaveTextContent(
         lang === 'pt' ? 'anterior: esta é a primeira seção' : 'previous: this is the first section',
       );
+
       // conteúdo da entrada sem o eco do comando digitado/clicado
       const prompt = 'visitante@mariab.dev:~' + String.fromCharCode(36);
       const body = (typed) =>
@@ -404,11 +440,14 @@ describe('mesmo padrão em todas as páginas com seções (DS-12)', () => {
 describe('ajuda com exemplo de ponta a ponta (DS-11)', () => {
   it('traz o bloco "como navegar" com os três passos clicáveis, em PT e EN', async () => {
     const user = userEvent.setup();
+
     renderApp('/');
     await run(user, 'ajuda');
     await waitFor(() => expect(log()).toHaveTextContent('como navegar:'));
     expect(log()).toHaveTextContent('veja o índice → abra uma seção pelo número');
+
     const steps = [...log().querySelectorAll('.t-howto button')].map((b) => b.textContent);
+
     expect(steps).toEqual(['curriculo', '2', 'cd curriculo']);
     // os comandos do exemplo existem ("2" é o número do índice, tratado em runCommand)
     expect(findCommand('curriculo')).toBeDefined();
@@ -426,6 +465,7 @@ describe('ajuda com exemplo de ponta a ponta (DS-11)', () => {
 
   it('os passos funcionam na ordem do exemplo: curriculo → 2', async () => {
     const user = userEvent.setup();
+
     renderApp('/');
     await run(user, 'ajuda');
     await waitFor(() => expect(log().querySelector('.t-howto')).toBeTruthy());
@@ -441,6 +481,7 @@ describe('ajuda com exemplo de ponta a ponta (DS-11)', () => {
 describe('erros que reensinam (DS-10)', () => {
   it('curriculo 9 e curriculo xpto mostram o erro e reimprimem o índice', async () => {
     const user = userEvent.setup();
+
     renderApp('/');
     for (const [line, bad] of [
       ['curriculo 9', '9'],
@@ -460,6 +501,7 @@ describe('erros que reensinam (DS-10)', () => {
 
   it('um número fora do índice, depois de abrir a página, também reensina; em inglês', async () => {
     const user = userEvent.setup();
+
     renderApp('/');
     await user.click(screen.getByRole('button', { name: /Switch to English/ }));
     await run(user, 'resume');
@@ -477,6 +519,7 @@ describe('número sozinho e navegação sequencial (DS-05, DS-07)', () => {
 
   it('depois de curriculo, 2 abre a seção 2 e proximo abre a 3', async () => {
     const user = userEvent.setup();
+
     renderApp('/');
     await run(user, 'curriculo');
     await run(user, '2');
@@ -489,6 +532,7 @@ describe('número sozinho e navegação sequencial (DS-05, DS-07)', () => {
 
   it('n e p equivalem a proximo e anterior', async () => {
     const user = userEvent.setup();
+
     renderApp('/');
     await run(user, 'curriculo 3');
     await run(user, 'n');
@@ -501,6 +545,7 @@ describe('número sozinho e navegação sequencial (DS-05, DS-07)', () => {
 
   it('os limites avisam: primeira e última seção', async () => {
     const user = userEvent.setup();
+
     renderApp('/');
     await run(user, 'curriculo 1');
     await run(user, 'anterior');
@@ -512,6 +557,7 @@ describe('número sozinho e navegação sequencial (DS-05, DS-07)', () => {
 
   it('com o índice aberto, proximo abre a primeira seção', async () => {
     const user = userEvent.setup();
+
     renderApp('/');
     await run(user, 'curriculo');
     await run(user, 'proximo');
@@ -521,6 +567,7 @@ describe('número sozinho e navegação sequencial (DS-05, DS-07)', () => {
 
   it('sem contexto, número, proximo e anterior respondem noContext', async () => {
     const user = userEvent.setup();
+
     renderApp('/');
     for (const line of ['2', 'proximo', 'p']) {
       await run(user, line);
@@ -534,6 +581,7 @@ describe('número sozinho e navegação sequencial (DS-05, DS-07)', () => {
 
   it('segue a última página aberta e funciona em inglês', async () => {
     const user = userEvent.setup();
+
     renderApp('/');
     await user.click(screen.getByRole('button', { name: /Switch to English/ }));
     await run(user, 'next');
@@ -550,6 +598,7 @@ describe('número sozinho e navegação sequencial (DS-05, DS-07)', () => {
 
   it('proximo e anterior aparecem na ajuda e no autocompletar', async () => {
     const user = userEvent.setup();
+
     renderApp('/');
     await run(user, 'ajuda');
     await waitFor(() => expect(log()).toHaveTextContent('proximo'));
@@ -562,6 +611,7 @@ describe('número sozinho e navegação sequencial (DS-05, DS-07)', () => {
 describe('ls <página> e <página> <seção>', () => {
   it('ls sem argumento lista as páginas com o número de seções', async () => {
     const user = userEvent.setup();
+
     renderApp('/');
     await run(user, 'ls');
     expect(log()).toHaveTextContent('curriculo');
@@ -570,6 +620,7 @@ describe('ls <página> e <página> <seção>', () => {
 
   it('curriculo competencias imprime o conteúdo da seção, sem navegar', async () => {
     const user = userEvent.setup();
+
     renderApp('/');
     await run(user, 'curriculo competencias');
     expect(window.location.pathname).toBe('/');
@@ -581,6 +632,7 @@ describe('ls <página> e <página> <seção>', () => {
 
   it('funciona com barra, maiúsculas e em inglês', async () => {
     const user = userEvent.setup();
+
     renderApp('/');
     await run(user, 'CURRICULO/Competencias');
     expect(log()).toHaveTextContent('Competências técnicas');
@@ -591,6 +643,7 @@ describe('ls <página> e <página> <seção>', () => {
 
   it('academico disciplinas mostra os semestres como placeholder', async () => {
     const user = userEvent.setup();
+
     renderApp('/');
     await run(user, 'academico disciplinas');
     expect(log()).toHaveTextContent('02/2026');
@@ -599,6 +652,7 @@ describe('ls <página> e <página> <seção>', () => {
 
   it('projetos ecoshop mostra detalhes e versões', async () => {
     const user = userEvent.setup();
+
     renderApp('/');
     await run(user, 'projetos ecoshop');
     expect(log()).toHaveTextContent('EcoShop');
@@ -612,11 +666,14 @@ describe('ls <página> e <página> <seção>', () => {
     { timeout: 90000 },
     async () => {
       const user = userEvent.setup();
+
       renderApp('/');
       for (const route of routes.filter((r) => sectionsOf(r.id).length)) {
         for (const section of sectionsOf(route.id)) {
           await run(user, `${route.name} ${section.name}`);
+
           const entry = log().querySelector('.term-entry');
+
           expect(entry, `${route.name} ${section.name}`).toBeTruthy();
           expect(entry.textContent.length, `${route.name} ${section.name}`).toBeGreaterThan(40);
           expect(entry.textContent).not.toMatch(/não encontrada/);
@@ -635,7 +692,9 @@ describe('cd <página>/<seção>', () => {
   it('abre a página própria na seção certa', async () => {
     vi.useFakeTimers();
     globalThis.jest = { advanceTimersByTime: vi.advanceTimersByTime };
+
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+
     renderApp('/');
     await run(user, 'cd curriculo/competencias');
     expect(log()).toHaveTextContent('abrindo /curriculo#competencias…');
@@ -650,7 +709,9 @@ describe('cd <página>/<seção>', () => {
   it('"abrir página própria" de uma seção leva à âncora', async () => {
     vi.useFakeTimers();
     globalThis.jest = { advanceTimersByTime: vi.advanceTimersByTime };
+
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+
     renderApp('/');
     await run(user, 'academico disciplinas');
     await user.click(within(log()).getByRole('button', { name: /abrir página própria/ }));
@@ -683,6 +744,7 @@ describe('autocompletar', () => {
 
   it('lista as opções quando há mais de uma', () => {
     const sections = complete('cd curriculo/', 'pt');
+
     expect(sections).toEqual(
       expect.arrayContaining([
         'resumo',
