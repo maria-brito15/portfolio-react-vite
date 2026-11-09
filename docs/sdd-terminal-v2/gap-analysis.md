@@ -10,7 +10,7 @@ Cruzamento entre [`requirements.md`](requirements.md) e o código do `src.zip` e
 
 | Grupo | ✅ | ◐ | ❌ | ❔ |
 | --- | --- | --- | --- | --- |
-| Estilo (ES) | 6 | 3 | 0 | 1 |
+| Estilo (ES) | 7 | 2 | 0 | 1 |
 | Shell e navegação (SH) | 10 | 0 | 0 | 0 |
 | Sessão do terminal (TS) | 8 | 0 | 0 | 0 |
 | Comandos e conteúdo (CM) | 5 | 0 | 0 | 0 |
@@ -28,7 +28,7 @@ Cruzamento entre [`requirements.md`](requirements.md) e o código do `src.zip` e
 | ES-02 | ✅ | `styles.test.js` ("não sobra Syne, DM Sans nem degradê"); varredura de `src` e `index.html` sem ocorrência fora do teste |
 | ES-03 | ◐ | Arquivos removidos e testado, mas `src/styles/ui.css:3` ainda cita "cores gerais, de original.css" (comentário obsoleto) |
 | ES-04 | ✅ | `styles.test.js` ("toda variável usada está definida"); `tokens.css` com temas claro e escuro |
-| ES-05 | ◐ | Verificado por cálculo (pior caso contra as 3 superfícies): escuro — texto 12,6, dim 5,1, accent 6,8, ok 9,4, warn 7,5, err 6,5; claro — texto 12,8, dim 4,8, accent 5,2, ok 4,9, warn 5,0, err 5,2; todos ≥ 4,5. **Não há teste automatizado**; o `tokens.css` só afirma AA em comentário |
+| ES-05 | ✅ | Teste `src/styles/contrast.test.js` (8): lê `tokens.css` nos dois temas e exige ≥ 4,5:1 de accent, ok, warn, err, text, text-2 e dim contra surface, surface-2 e surface-3, mais on-accent sobre accent. Verificado por mutação: com `--warn` escuro trocado por `#6b4a22` o teste falha (2,40:1); tokens restaurados |
 | ES-06 | ❔ | Regra declarada no README e nos tokens; não conferi visualmente todas as telas |
 | ES-07 | ✅ | `src/components/shell/SiteShell.test.jsx` (layout das rotas); `App.jsx` envolve todas as páginas |
 | ES-08 | ✅ | `components/ui/` (Card, Chip, DataTable, SectionTitle, ActionLink) importado por Resume, Academics, Services e `sections/portfolio/*`; `ui.test.jsx` |
