@@ -4,7 +4,7 @@ Cada pasta segue o fluxo PRD → especificação → plano → tarefas → verif
 
 | Feature | Requisitos | Estado |
 | --- | --- | --- |
-| [Estilo único (terminal/IDE)](estilo-unico/status.md) | ES-xx | ✅ 9 · ◐ 0 · ❌ 0 · ❔ 1 |
+| [Estilo único (terminal/IDE)](estilo-unico/status.md) | ES-xx | ✅ 9 · ◐ 1 · ❌ 0 · ❔ 0 |
 | [Shell e navegação](shell-navegacao/status.md) | SH-xx | ✅ 10 · ◐ 0 · ❌ 0 · ❔ 0 |
 | [Sessão do terminal](sessao-terminal/status.md) | TS-xx | ✅ 8 · ◐ 0 · ❌ 0 · ❔ 0 |
 | [Comandos e conteúdo no terminal](comandos-terminal/status.md) | CM-xx | ✅ 5 · ◐ 0 · ❌ 0 · ❔ 0 |
