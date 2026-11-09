@@ -12,8 +12,8 @@ Trabalho da disciplina de Desenvolvimento e Integração de Aplicações Web. A 
 
 | Item | Situação |
 | --- | --- |
-| Código, lint, build de produção e testes automatizados | ✅ Funcionando (53 testes, executados em jsdom) |
-| Repositório GitHub | ⏳ Pendente — a pasta ainda não é um repositório Git ([procedimento](docs/DEPLOY.md)) |
+| Código, lint, build de produção e testes automatizados | ✅ Funcionando (215 testes em 20 arquivos, executados em jsdom; verificação em navegador feita à mão no Chrome) |
+| Repositório GitHub | ✅ [maria-brito15/portfolio-react-vite](https://github.com/maria-brito15/portfolio-react-vite) (branch `main`) |
 | Publicação (deploy) | ⏳ Pendente — plataforma recomendada: Netlify ([análise e passos](docs/DEPLOY.md)) |
 | Envio real de e-mail (EmailJS) | ⏳ Pendente — conta e template ainda não criados; só vale como funcional após o recebimento de um e-mail de teste |
 | Protótipos no Figma | ⏳ Pendente — não criados; guia em [docs/PROTOTIPOS.md](docs/PROTOTIPOS.md) |
@@ -29,7 +29,7 @@ Trabalho da disciplina de Desenvolvimento e Integração de Aplicações Web. A 
 ## 🔗 Links úteis
 
 * 🌐 **Site publicado:** `ADICIONAR_URL_DO_DEPLOY` _(pendente — ainda não publicado; ver [docs/DEPLOY.md](docs/DEPLOY.md))_
-* 🗂️ **Repositório:** `ADICIONAR_URL_DO_GITHUB` _(pendente — ainda não criado)_
+* 🗂️ **Repositório:** <https://github.com/maria-brito15/portfolio-react-vite>
 * 🎨 **Protótipos no Figma:** `ADICIONAR_LINK_DO_FIGMA` _(pendente — ainda não criados; ver [docs/PROTOTIPOS.md](docs/PROTOTIPOS.md))_
 * 🕰️ **Portfólio anterior (HTML puro):** <https://mariabdev.netlify.app/>
 * 📖 **Documentação do projeto:** [docs/DEPLOY.md](docs/DEPLOY.md) · [docs/PROTOTIPOS.md](docs/PROTOTIPOS.md) · especificações em [docs/sdd/](docs/sdd/)
@@ -188,7 +188,7 @@ Decisões:
 **Pré-requisitos:** Node.js 20.19+ (`.nvmrc` indica 22) e npm. Git, para clonar.
 
 ```bash
-git clone ADICIONAR_URL_DO_GITHUB   # pendente: o repositório ainda não existe
+git clone https://github.com/maria-brito15/portfolio-react-vite.git
 cd portfolio-react-vite
 npm install
 cp .env.example .env     # Windows PowerShell: Copy-Item .env.example .env
@@ -375,7 +375,7 @@ npm run build
 - **LinkedIn:** o currículo em PDF usa `maria-eduarda-p-brito-a18064358`, enquanto o site usa `maria-eduarda-brito-a18064358` (`src/data/profile.js`). Confirme qual é o correto.
 - **Tradução:** todo o conteúdo existe em PT e EN, sem lacunas conhecidas.
 - **Experiências:** "WebTech" indica início no 2º semestre de 2026, em andamento, sem mês e sem cargo formal. Instituição/atividade foram separadas a partir dos títulos originais.
-- **Repositório GitHub, deploy, EmailJS e Figma:** dependem de contas e ações suas; procedimentos em [docs/DEPLOY.md](docs/DEPLOY.md), na seção de EmailJS acima e em [docs/PROTOTIPOS.md](docs/PROTOTIPOS.md). Os três `ADICIONAR_*` deste README serão trocados quando existirem.
+- **Deploy, EmailJS e Figma:** dependem de contas e ações suas; procedimentos em [docs/DEPLOY.md](docs/DEPLOY.md), na seção de EmailJS acima e em [docs/PROTOTIPOS.md](docs/PROTOTIPOS.md) (esses dois arquivos estão no `.gitignore` e só existem na sua máquina). Os dois `ADICIONAR_*` que restam neste README (site publicado e Figma) serão trocados quando existirem.
 - **Prévia de link:** `og:image` ainda é relativo e faltam `og:description`/`og:url`; ajustar após definir a URL.
 - Ícone da aba usa a foto do perfil; troque por um favicon dedicado se preferir (`index.html`).
 
