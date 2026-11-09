@@ -209,17 +209,7 @@
   text-decoration: underline;
 }
 
-/* Visões em terminal de currículo, acadêmico e serviços. */
-.t-numbered {
-  list-style: none;
-  margin: 0.2rem 0;
-  padding: 0;
-}
-.t-numbered li {
-  display: grid;
-  grid-template-columns: 3ch 28ch 1fr;
-  gap: 1rem;
-}
+/* Visões em terminal de acadêmico e serviços. */
 .t-table.t-table-act li {
   grid-template-columns: 11ch 1fr auto;
 }
@@ -306,8 +296,7 @@
     grid-column: 2;
   }
   .t-table.t-table-act li,
-  .t-table.t-table-svc li,
-  .t-numbered li {
+  .t-table.t-table-svc li {
     grid-template-columns: 11ch 1fr;
   }
 }

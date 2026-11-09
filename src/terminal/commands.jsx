@@ -16,6 +16,7 @@ import { formatProjectDate } from '../utils/projectDate';
 import { ActionLine, Cmd, Ext, TermLink } from './outputs';
 import { AcademicsView, ResumeView, ServicesView } from './views';
 import SectionView from './sectionViews';
+import { PageIndex } from './pageIndex';
 
 const L = (pt, en) => ({ pt, en });
 
@@ -43,39 +44,24 @@ const pick = (value, lang) =>
 // ---------------------------------------------------------------------------
 // Comandos. `names[0]` é o nome em português, `names[1]` o em inglês.
 // ---------------------------------------------------------------------------
-// `ls <página>`: seções internas, cada uma com a linha de comando para lê-la.
+// `ls <página>`: o mesmo índice numerado que o comando da página mostra
+// (`PageIndex`), sempre com o par "ver no terminal / abrir página própria".
 function listSections(route) {
-  const sections = sectionsOf(route.id);
+  const hasSections = sectionsOf(route.id).length > 0;
   return {
     output: (lang) => {
       const page = lang === 'pt' ? route.name : route.alias;
-      if (!sections.length) {
-        return (
-          <>
+      return (
+        <>
+          {hasSections ? (
+            <PageIndex routeId={route.id} />
+          ) : (
             <p className="t-dim">
               {page}:{' '}
               {lang === 'pt' ? 'esta página não tem seções; use' : 'this page has no sections; use'}{' '}
               <Cmd>{page}</Cmd>
             </p>
-            <ActionLine routeId={route.id} />
-          </>
-        );
-      }
-      return (
-        <>
-          <ul className="t-ls t-ls-sections">
-            {sections.map((sec) => (
-              <li key={sec.id}>
-                <Cmd>
-                  {page} {lang === 'pt' ? sec.name : sec.alias}
-                </Cmd>
-                <span className="t-dim">
-                  {sec.label[lang]}
-                  {sec.desc ? ` · ${sec.desc[lang]}` : ''}
-                </span>
-              </li>
-            ))}
-          </ul>
+          )}
           <ActionLine routeId={route.id} />
         </>
       );
@@ -525,11 +511,13 @@ export function runCommand(input, ctx) {
   // Todo comando com página dedicada termina com o par "ver no terminal /
   // abrir página própria".
   const body = result.output;
+  const hasSections = sectionsOf(command.route).length > 0;
   return {
     ...result,
     output: (lang) => (
       <>
         {body(lang)}
+        {hasSections && <PageIndex routeId={command.route} />}
         <ActionLine routeId={command.route} />
       </>
     ),

@@ -8,38 +8,18 @@ import { services } from '../data/services';
 import { profile } from '../data/profile';
 import { ui } from '../i18n/ui';
 import { activitiesByYear, semestersDesc } from '../utils/academics';
-import { experienceStats } from '../utils/resume';
 import { formatProjectDate } from '../utils/projectDate';
 import { Ext } from './outputs';
 
 export function ResumeView({ lang }) {
   const c = resume[lang];
   const t = ui[lang].term;
-  const exp = experienceStats(experienceGroups);
-  const sections = [
-    [c.sections.summary, ''],
-    [c.sections.skills, ''],
-    [c.sections.experience, c.experienceSummary(exp.count, exp.firstYear)],
-    [c.sections.projects, `${c.projects.length}`],
-    [c.sections.education, academics.programs.at(-1).degree[lang]],
-    [c.sections.awards, ''],
-  ];
   return (
     <div>
       <p>
         <span className="t-accent">{c.name}</span>
       </p>
       <p className="t-dim">{c.headline}</p>
-      <p className="t-dim"># {t.sections}</p>
-      <ol className="t-numbered">
-        {sections.map(([title, hint], i) => (
-          <li key={title}>
-            <span className="t-dim">{String(i + 1).padStart(2, '0')}</span>
-            <span>{title}</span>
-            <span className="t-dim t-wrap">{hint}</span>
-          </li>
-        ))}
-      </ol>
       <p className="t-dim"># {t.contacts}</p>
       <p>
         <a href={`mailto:${profile.email}`}>{profile.email}</a>

@@ -7,10 +7,23 @@
 // projeto, um por grupo de experiências), então nada fica de fora.
 import { projects } from './projects';
 import { experienceGroups } from './experiences';
+import { academics } from './academics';
+import { resume } from './resume';
+import { experienceStats, finalistProjects } from '../utils/resume';
+import { formatProjectDate } from '../utils/projectDate';
 import { findDirectory, fold, routeById } from './routes';
 
 const L = (pt, en) => ({ pt, en });
 const S = (id, alias, anchor, label, desc) => ({ id, name: id, alias, anchor, label, desc });
+
+// Descrições do índice calculadas dos dados (nada escrito à mão que possa envelhecer).
+const exp = experienceStats(experienceGroups);
+const finalists = finalistProjects(projects).length;
+const firstProjects = projects
+  .slice(0, 3)
+  .map((p) => p.name)
+  .join(', ');
+const years = `${Math.min(...academics.programs.map((p) => p.start))}–${Math.max(...academics.programs.map((p) => p.end))}`;
 
 const CURRICULO = [
   S(
@@ -32,28 +45,31 @@ const CURRICULO = [
     'experience',
     'experiencias-cv',
     L('Experiências', 'Experience'),
-    L('atividades e extensão', 'activities and outreach'),
+    L(
+      resume.pt.experienceSummary(exp.count, exp.firstYear),
+      resume.en.experienceSummary(exp.count, exp.firstYear),
+    ),
   ),
   S(
     'projetos',
     'projects',
     'projetos-cv',
     L('Projetos em destaque', 'Selected projects'),
-    L('o que foi construído', 'what was built'),
+    L(`${firstProjects}…`, `${firstProjects}…`),
   ),
   S(
     'formacao',
     'education',
     'formacao',
     L('Formação e idiomas', 'Education and languages'),
-    L('cursos e idiomas', 'degrees and languages'),
+    L(`PUC Minas · ${years}`, `PUC Minas · ${years}`),
   ),
   S(
     'reconhecimentos',
     'awards',
     'reconhecimentos',
     L('Reconhecimentos', 'Awards'),
-    L('finalista nos melhores trabalhos', 'finalist in best projects'),
+    L(`${finalists}× finalista`, `${finalists}× finalist`),
   ),
 ];
 
@@ -136,8 +152,8 @@ export function sectionsOf(routeId) {
         anchor: `projeto-${p.id}`,
         label: L(p.name, p.name),
         desc: L(
-          p.pt.badge ?? p.tech.slice(0, 3).join(', '),
-          p.en.badge ?? p.tech.slice(0, 3).join(', '),
+          `${formatProjectDate(p.date)} · ${p.pt.badge ?? p.tech.slice(0, 3).join(', ')}`,
+          `${formatProjectDate(p.date)} · ${p.en.badge ?? p.tech.slice(0, 3).join(', ')}`,
         ),
       }));
     case 'experiencias':
@@ -160,7 +176,16 @@ export function sectionsOf(routeId) {
 export function findSection(routeId, arg) {
   const key = fold(arg);
   if (!key) return undefined;
+  // Número do índice: `curriculo 2` abre a segunda seção.
+  if (/^\d+$/.test(key)) return sectionsOf(routeId)[Number(key) - 1];
   return sectionsOf(routeId).find((s) => [s.name, s.alias, s.id].some((n) => fold(n) === key));
+}
+
+// Posição de uma seção no índice e as vizinhas (anterior/próxima).
+export function neighbors(routeId, sectionId) {
+  const list = sectionsOf(routeId);
+  const i = list.findIndex((s) => s.id === sectionId);
+  return { number: i + 1, total: list.length, prev: list[i - 1], next: list[i + 1] };
 }
 
 // Quebra argumentos de `cd`/`ls`/`open`: aceita `curriculo competencias`,

@@ -1,4 +1,4 @@
-import { act, screen, within } from '@testing-library/react';
+import { act, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderApp } from '../test/helpers';
 import { routes } from '../data/routes';
@@ -124,16 +124,53 @@ describe('argumentos e combinações', () => {
   });
 });
 
-describe('ls <página> e <página> <seção>', () => {
-  it('ls curriculo lista as seções do currículo', async () => {
+describe('índice das seções (um só renderizador)', () => {
+  const indexOf = () => log().querySelector('.t-index');
+
+  it('curriculo e ls curriculo produzem o mesmo índice [1]…[6] com instrução e dicas', async () => {
     const user = userEvent.setup();
     renderApp('/');
+    await run(user, 'curriculo');
+    const first = await waitFor(() => {
+      const el = indexOf();
+      expect(el).toBeTruthy();
+      return el;
+    });
+    const html = first.innerHTML;
     await run(user, 'ls curriculo');
-    const rows = log().querySelectorAll('.t-ls-sections li');
-    expect(rows).toHaveLength(6);
-    expect(log()).toHaveTextContent('curriculo competencias');
-    expect(log()).toHaveTextContent('Competências técnicas');
+    await waitFor(() => expect(log()).toHaveTextContent('ls curriculo'));
+    expect(indexOf().innerHTML).toBe(html);
+    expect(first.querySelectorAll('.t-index-list li')).toHaveLength(6);
+    expect(first).toHaveTextContent('[1]');
+    expect(first).toHaveTextContent('[6]');
+    expect(first).toHaveTextContent('Digite o número ou o nome');
+    for (const hint of ['ver uma seção', 'abrir a página', 'listar de novo', 'início']) {
+      expect(first).toHaveTextContent(hint);
+    }
   });
+
+  it('o índice aparece em inglês e nas páginas com seções', async () => {
+    const user = userEvent.setup();
+    renderApp('/');
+    await user.click(screen.getByRole('button', { name: /Switch to English/ }));
+    await run(user, 'resume');
+    expect(indexOf()).toHaveTextContent('Type the number or the name');
+    for (const page of ['academico', 'servicos', 'projetos', 'experiencias']) {
+      await run(user, page);
+      expect(log().querySelectorAll('.t-index').length, page).toBeGreaterThan(0);
+    }
+  });
+
+  it('ls de página sem seções não mostra índice', async () => {
+    const user = userEvent.setup();
+    renderApp('/');
+    await run(user, 'ls contato');
+    expect(indexOf()).toBeNull();
+    expect(log()).toHaveTextContent('esta página não tem seções');
+  });
+});
+
+describe('ls <página> e <página> <seção>', () => {
 
   it('ls sem argumento lista as páginas com o número de seções', async () => {
     const user = userEvent.setup();
