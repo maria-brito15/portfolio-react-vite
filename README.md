@@ -52,6 +52,8 @@ Páginas:
 | `/servicos` | Serviços web oferecidos, cases (BECAS, Ágape Vestir), FAQ e contato |
 | `/estudos-de-caso/whatsapp-dispatcher` | Estudo de caso de arquitetura (PT/EN) |
 
+**Links antigos.** As seções da home (`/#sobre`, `/#habilidades`, `/#projetos`, `/#experiencias`, `/#contato`, e os nomes em inglês `#about`, `#skills`, `#projects`, `#experience`, `#contact`) viraram as páginas acima. Quem abre um link antigo é levado à página própria equivalente: o roteador troca a entrada do histórico (`replaceState`), então o **Voltar** não reabre o link antigo. Hash desconhecido não redireciona e `/#inicio` continua valendo na home. A tabela está em `legacyHashes`, em [`src/data/routes.js`](src/data/routes.js); o teste é `src/data/legacyHashes.test.jsx`.
+
 Todas as páginas usam o mesmo esqueleto (`SiteShell`): **Header** → **barra de comandos** fixa → **Window** (a "janelinha" com título `visitante@mariab.dev: ~/rota`) → conteúdo → **Footer**. O **Header** tem três zonas e nenhum menu de links: acesso aos comandos (`>_ Ctrl K`) à esquerda, `mariab.dev` centralizado e os dois controles (tema e idioma) à direita; o "menu" do site é o terminal. Fora da home há também **← Voltar** (`history.back()` quando a página anterior é do site; senão vai para `/`) e **breadcrumb** (`~ / academico`). Todos os caminhos, nomes de comando e breadcrumbs vêm de uma tabela só: [`src/data/routes.js`](src/data/routes.js); as seções internas de cada página, de [`src/data/sections.js`](src/data/sections.js).
 
 ### Um só estilo: terminal/IDE
@@ -150,7 +152,7 @@ SiteShell = Header → CommandBar → [Voltar + Breadcrumb] → Window → conte
 
 Decisões:
 
-- **Roteamento próprio** (`src/router.jsx`): poucas rotas e uma 404; evita uma dependência. Usa a History API e trata links com âncora (`/#projetos`), `?cmd=`, botão voltar e recarga; cada entrada do histórico guarda quantas navegações internas a precedem, o que permite ao "Voltar" saber se a página anterior é do site. Em produção exige o fallback `/* → /index.html` da hospedagem.
+- **Roteamento próprio** (`src/router.jsx`): poucas rotas e uma 404; evita uma dependência. Usa a History API e redireciona os links antigos com âncora (`/#projetos` → `/projetos`), trata `?cmd=`, botão voltar e recarga; cada entrada do histórico guarda quantas navegações internas a precedem, o que permite ao "Voltar" saber se a página anterior é do site. Em produção exige o fallback `/* → /index.html` da hospedagem.
 - **Internacionalização sem biblioteca:** `LanguageContext` guarda o idioma (PT/EN) em `localStorage` e em `<html lang>`. Textos de interface ficam em `src/i18n/ui.js`; conteúdo em `src/data/*` com chaves `pt` e `en`. A troca mantém rota e seção.
 - **Tema claro/escuro:** atributo `data-theme` no `<html>`, aplicado por script inline em `index.html` antes do React, para evitar flash.
 - **Organização:** `pages/` (uma por rota) → `sections/portfolio/` (blocos da home) → `components/shell/` (esqueleto compartilhado), `components/ui/` (Card, Chip, DataTable, SectionTitle, ActionLink) e `components/` (Faq, Lightbox, ImageGallery, ContactForm…).

@@ -33,7 +33,7 @@ Ordem importa: cada tarefa aproveita a anterior.
 | ID | Tarefa | Req. | ⛓ | Critério de conclusão |
 | --- | --- | --- | --- | --- |
 | T-L1 ✅ | 💻 Mapear hashes antigos (`#sobre`, `#habilidades`, `#projetos`, `#experiencias`, `#contato`, mais os ids em inglês de `/en`) para a página própria equivalente e redirecionar no cliente (`replaceState`, sem empilhar histórico) | SH-10 | — | Teste: abrir `/#projetos` leva a `/projetos` e o botão Voltar não volta ao link antigo; hash desconhecido não redireciona |
-| T-L2 | 📝 Registrar no README que as seções da home viraram páginas e que os links antigos redirecionam | SH-10, NF-04 | T-L1 | README atualizado |
+| T-L2 ✅ | 📝 Registrar no README que as seções da home viraram páginas e que os links antigos redirecionam | SH-10, NF-04 | T-L1 | README atualizado |
 
 ## Fase A — Acabamento (P1)
 
