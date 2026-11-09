@@ -9,8 +9,8 @@ import { Cmd } from './outputs';
 import { useTerminalSession } from './sessionContext';
 
 // Nome do comando da página e da seção no idioma atual.
-export const pageName = (route, lang) => (lang === 'pt' ? route.name : route.alias);
-export const sectionName = (section, lang) => (lang === 'pt' ? section.name : section.alias);
+const pageName = (route, lang) => (lang === 'pt' ? route.name : route.alias);
+const sectionName = (section, lang) => (lang === 'pt' ? section.name : section.alias);
 
 // Botão que executa um comando: mouse e toque sem digitar (essencial no celular).
 export function RunCommand({ command, className = '', children }) {

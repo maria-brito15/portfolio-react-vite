@@ -106,6 +106,10 @@ function runSection(command, args) {
   };
 }
 
+// Nomes de `proximo`/`anterior` nos dois idiomas, vindos de ui.js.
+const NEXT = { pt: ui.pt.term.nav.nextWord, en: ui.en.term.nav.nextWord };
+const PREVIOUS = { pt: ui.pt.term.nav.previousWord, en: ui.en.term.nav.previousWord };
+
 // Seção vizinha da última página aberta. Com o índice aberto (sem seção), a
 // próxima é a primeira e a anterior já é o começo.
 function stepSection(context, direction) {
@@ -291,13 +295,13 @@ const commands = [
     },
   },
   {
-    names: ['proximo', 'next'],
+    names: [NEXT.pt, NEXT.en],
     aliases: ['n'],
     desc: L('próxima seção da última página aberta', 'next section of the last page opened'),
     run: (args, ctx) => runStep(1, ctx),
   },
   {
-    names: ['anterior', 'previous'],
+    names: [PREVIOUS.pt, PREVIOUS.en],
     aliases: ['p'],
     desc: L('seção anterior da última página aberta', 'previous section of the last page opened'),
     run: (args, ctx) => runStep(-1, ctx),
@@ -567,8 +571,8 @@ export function contextAfter(input, prev = null) {
   if (!command) return prev;
   const id = command.names[0];
   if (id === 'limpar') return null;
-  if (id === 'proximo' || id === 'anterior') {
-    const step = prev ? stepSection(prev, id === 'proximo' ? 1 : -1) : {};
+  if (id === NEXT.pt || id === PREVIOUS.pt) {
+    const step = prev ? stepSection(prev, id === NEXT.pt ? 1 : -1) : {};
     return step.section ? { routeId: prev.routeId, sectionId: step.section.id } : prev;
   }
   if (id === 'cd') return resolveTarget(args).home ? null : prev;

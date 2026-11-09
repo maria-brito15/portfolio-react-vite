@@ -14,7 +14,7 @@ Cruzamento entre [`requirements.md`](requirements.md) e o código do `src.zip` e
 | Shell e navegação (SH) | 9 | 0 | 1 | 0 |
 | Sessão do terminal (TS) | 8 | 0 | 0 | 0 |
 | Comandos e conteúdo (CM) | 5 | 0 | 0 | 0 |
-| **Descoberta (DS)** | **11** | **0** | **1** | **0** |
+| **Descoberta (DS)** | **12** | **0** | **0** | **0** |
 | Dados e ordem (DT) | 4 | 0 | 0 | 0 |
 | Não funcionais (NF) | 3 | 1 | 0 | 0 |
 
@@ -95,7 +95,7 @@ Sintomas observados no navegador:
 | DS-09 | ✅ | O placeholder da linha do terminal vira `term.try` + exemplo (`Terminal.jsx:64`): "experimente: curriculo" / "try: resume"; some quando há saída ou carregamento. Teste `Terminal.test.jsx` › "o placeholder ensina um exemplo nos dois idiomas e some com a saída". A chave `placeholder` de `portfolio.jsx` (sem uso) foi removida |
 | DS-10 | ✅ | `runSection` (`commands.jsx`) responde `<página> <arg inválido>` com `term.nav.notExist(arg)` e reimprime `PageIndex` + `ActionLine`. Testes `sections.test.jsx` › "erros que reensinam (DS-10)": `curriculo 9`, `curriculo xpto`, `projetos xpto`, `curriculo resumo sobra` e, em inglês, `9` depois de `resume` mostram o erro e o índice; nenhum lança exceção |
 | DS-11 | ✅ | A `ajuda` traz `term.nav.howTo`/`howToSteps` e a linha clicável `curriculo` → `2` → `cd curriculo` (`resume` → `2` → `cd resume` em EN), em `commands.jsx` (bloco `.t-howto`). Testes `sections.test.jsx` › "ajuda com exemplo de ponta a ponta (DS-11)": texto e botões nos dois idiomas; clicar `curriculo` e depois `[2]` abre a seção |
-| DS-12 | ❌ | Depende de DS-01 a DS-07; hoje `academico`, `servicos`, `projetos`, `experiencias` seguem o formato do resumo antigo |
+| DS-12 | ✅ | Teste parametrizado `sections.test.jsx` › "mesmo padrão em todas as páginas com seções (DS-12)": `curriculo`, `academico`, `servicos`, `projetos`, `experiencias` × PT/EN (10 casos) — índice `[1]…[n]`, instrução e dicas, `ls <página>` com o mesmo HTML, clique em [1], número sozinho, `proximo`/`p`, erro que reensina. Conferido no Chrome (390 e 1440 px, as cinco páginas + `2`, `proximo`, `curriculo xpto`, `ajuda`): sem rolagem horizontal e sem erro de console. Marco D: `deadCode.test.js` garante que toda chave `term.nav.*`, `firstVisit`, `try` e toda exportação de `pageIndex.jsx` têm uso |
 | (Tab) | ✅ | Tab depois de `curriculo ` lista as seções (`sections.test.jsx`, "autocompletar") |
 
 ## 7. Dados e ordem (DT)

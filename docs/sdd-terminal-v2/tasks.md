@@ -24,7 +24,7 @@ Ordem importa: cada tarefa aproveita a anterior.
 | T-D6 ✅ | 💻 **Erros que reensinam.** `<página> <arg inválido>` mostra `term.nav.notExist(arg)` e reimprime o `PageIndex` da página | DS-10 | T-D1 | Teste: `curriculo 9` e `curriculo xpto` mostram o erro e o índice; não lança exceção |
 | T-D7 ✅ | 💻 **Primeira visita e placeholder.** Mostrar `term.firstVisit` no banner quando não há histórico salvo; mudar o placeholder para `term.try` + exemplo (`experimente: curriculo`) | DS-08, DS-09 | — | Testes: sem `sessionStorage` o banner traz a sugestão; com histórico, não; o placeholder nunca fica vazio nos dois idiomas |
 | T-D8 ✅ | 💻 **`ajuda` com exemplo de ponta a ponta.** Acrescentar o bloco `term.nav.howTo` / `howToSteps` com `curriculo` → `2` → `cd curriculo`, clicável | DS-11 | T-D5 | Teste: `ajuda` contém o bloco nos dois idiomas e os três comandos do exemplo existem |
-| T-D9 | 💻 **Mesmo padrão em todas as páginas.** Conferir `academico`, `servicos`, `projetos` e `experiencias` com T-D1 a T-D8 (inclusive o projeto como seção em `projetos ecoshop`) | DS-12 | T-D1 a T-D8 | Teste parametrizado sobre todas as rotas com seções: índice, clique, número, `proximo`, erro e dicas funcionam; PT e EN |
+| T-D9 ✅ | 💻 **Mesmo padrão em todas as páginas.** Conferir `academico`, `servicos`, `projetos` e `experiencias` com T-D1 a T-D8 (inclusive o projeto como seção em `projetos ecoshop`) | DS-12 | T-D1 a T-D8 | Teste parametrizado sobre todas as rotas com seções: índice, clique, número, `proximo`, erro e dicas funcionam; PT e EN |
 
 **Marco D:** DS-01 a DS-12 atendidos; nenhum trecho de `pageIndex.jsx` nem chave `term.nav.*` fica sem uso (um teste/`eslint` acusa código morto).
 

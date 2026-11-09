@@ -315,6 +315,92 @@ describe('contexto da última página (DS-05, DS-07)', () => {
   });
 });
 
+describe('mesmo padrão em todas as páginas com seções (DS-12)', () => {
+  const pages = routes.filter((r) => sectionsOf(r.id).length);
+  const cases = pages.flatMap((r) => [
+    [r.id, 'pt'],
+    [r.id, 'en'],
+  ]);
+
+  it('há páginas com seções para cobrir', () => {
+    expect(pages.map((r) => r.id)).toEqual(
+      expect.arrayContaining(['curriculo', 'academico', 'servicos', 'projetos', 'experiencias']),
+    );
+  });
+
+  it.each(cases)(
+    '%s (%s): índice, clique, número, proximo, erro e dicas',
+    { timeout: 90000 },
+    async (routeId, lang) => {
+      const user = userEvent.setup();
+      renderApp('/');
+      const route = routes.find((r) => r.id === routeId);
+      const total = sectionsOf(routeId).length;
+      const page = lang === 'pt' ? route.name : route.alias;
+      const nav = () => log().querySelector('.t-sectionnav');
+      const index = () => log().querySelector('.t-index');
+      if (lang === 'en')
+        await user.click(screen.getByRole('button', { name: /Switch to English/ }));
+
+      // índice numerado, instrução e dicas
+      await run(user, page);
+      await waitFor(() => expect(index()).toBeTruthy());
+      expect(index().querySelectorAll('.t-index-list li')).toHaveLength(total);
+      expect(index()).toHaveTextContent('[1]');
+      expect(index()).toHaveTextContent(`[${total}]`);
+      expect(index()).toHaveTextContent(
+        lang === 'pt' ? 'Digite o número ou o nome' : 'Type the number or the name',
+      );
+      expect(index()).toHaveTextContent(`cd ${page}`);
+      expect(index()).toHaveTextContent(`ls ${page}`);
+      expect(index()).toHaveTextContent('cd ~');
+      const html = index().innerHTML;
+
+      // ls <página> mostra exatamente o mesmo índice
+      await run(user, `ls ${page}`);
+      await waitFor(() => expect(index()).toBeTruthy());
+      expect(index().innerHTML).toBe(html);
+
+      // clique em [1] = `<página> 1`
+      await run(user, page);
+      await waitFor(() => expect(index()).toBeTruthy());
+      await user.click(within(index()).getAllByRole('button')[0]);
+      await waitFor(() => expect(nav()).toBeTruthy());
+      expect(index()).toBeNull();
+      expect(nav()).toHaveTextContent(
+        lang === 'pt' ? 'anterior: esta é a primeira seção' : 'previous: this is the first section',
+      );
+      // conteúdo da entrada sem o eco do comando digitado/clicado
+      const prompt = 'visitante@mariab.dev:~' + String.fromCharCode(36);
+      const body = (typed) =>
+        log().querySelector('.term-entry').textContent.replace(prompt + typed, '');
+      const first = body(`${page} 1`);
+
+      // número sozinho e proximo seguem a última página aberta
+      await run(user, page);
+      await run(user, '1');
+      await waitFor(() => expect(nav()).toBeTruthy());
+      expect(body('1')).toBe(first);
+      if (total > 1) {
+        await run(user, lang === 'pt' ? 'proximo' : 'next');
+        await waitFor(() => expect(nav()).toHaveTextContent(`${page} 1`));
+        await run(user, 'p');
+        await waitFor(() =>
+          expect(nav()).toHaveTextContent(
+            lang === 'pt' ? 'esta é a primeira seção' : 'this is the first section',
+          ),
+        );
+      }
+
+      // erro que reensina
+      await run(user, `${page} xpto`);
+      await waitFor(() => expect(log().querySelector('.t-err')).toBeTruthy());
+      expect(log().querySelector('.t-err')).toHaveTextContent('xpto');
+      expect(index().querySelectorAll('.t-index-list li')).toHaveLength(total);
+    },
+  );
+});
+
 describe('ajuda com exemplo de ponta a ponta (DS-11)', () => {
   it('traz o bloco "como navegar" com os três passos clicáveis, em PT e EN', async () => {
     const user = userEvent.setup();
@@ -331,9 +417,11 @@ describe('ajuda com exemplo de ponta a ponta (DS-11)', () => {
     await user.click(screen.getByRole('button', { name: /Switch to English/ }));
     await run(user, 'help');
     await waitFor(() => expect(log()).toHaveTextContent('how to navigate:'));
-    expect(
-      [...log().querySelectorAll('.t-howto button')].map((b) => b.textContent),
-    ).toEqual(['resume', '2', 'cd resume']);
+    expect([...log().querySelectorAll('.t-howto button')].map((b) => b.textContent)).toEqual([
+      'resume',
+      '2',
+      'cd resume',
+    ]);
   });
 
   it('os passos funcionam na ordem do exemplo: curriculo → 2', async () => {
@@ -341,7 +429,9 @@ describe('ajuda com exemplo de ponta a ponta (DS-11)', () => {
     renderApp('/');
     await run(user, 'ajuda');
     await waitFor(() => expect(log().querySelector('.t-howto')).toBeTruthy());
-    await user.click(within(log().querySelector('.t-howto')).getByRole('button', { name: 'curriculo' }));
+    await user.click(
+      within(log().querySelector('.t-howto')).getByRole('button', { name: 'curriculo' }),
+    );
     await waitFor(() => expect(log().querySelector('.t-index')).toBeTruthy());
     await user.click(within(log().querySelector('.t-index')).getAllByRole('button')[1]);
     await waitFor(() => expect(log()).toHaveTextContent('Competências técnicas'));
@@ -470,7 +560,6 @@ describe('número sozinho e navegação sequencial (DS-05, DS-07)', () => {
 });
 
 describe('ls <página> e <página> <seção>', () => {
-
   it('ls sem argumento lista as páginas com o número de seções', async () => {
     const user = userEvent.setup();
     renderApp('/');
