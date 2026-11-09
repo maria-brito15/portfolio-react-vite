@@ -13,8 +13,8 @@ Legenda: ✅ atendido · ◐ parcial · ❌ não feito · ❔ não verificado. F
 | DS-07 | ✅ | Comandos `proximo`/`next` (apelido `n`) e `anterior`/`previous` (`p`) em `commands.jsx` (`runStep`), na `ajuda` e no autocompletar. Testes: após `curriculo`, `2` e `proximo` abrem 2 e 3; `n`/`p` equivalem; `anterior` na seção 1 → "esta é a primeira seção"; `proximo` na última → "esta é a última seção"; com o índice aberto, `proximo` abre a primeira; sem contexto → `noContext`; PT e EN; teste de inventário sem nomes repetidos |
 | DS-08 | ❌ | `ui.js` tem `term.firstVisit`, sem uso; o banner mostra só "digite ajuda" |
 | DS-09 | ◐ | O placeholder existe ("digite um comando · ajuda") mas sem exemplo; `ui.js` tem `term.try` ("experimente:") sem uso |
-| DS-10 | ◐ | `curriculo 9` → `curriculo: "9": seção não encontrada. Tente ls curriculo` (erro claro, mas **não reimprime o índice**); texto pronto em `ui.js` (`term.nav.notExist`) sem uso |
+| DS-10 | ✅ | `runSection` (`commands.jsx`) responde `<página> <arg inválido>` com `term.nav.notExist(arg)` e reimprime `PageIndex` + `ActionLine`. Testes `sections.test.jsx` › "erros que reensinam (DS-10)": `curriculo 9`, `curriculo xpto`, `projetos xpto`, `curriculo resumo sobra` e, em inglês, `9` depois de `resume` mostram o erro e o índice; nenhum lança exceção |
 | DS-11 | ◐ | `ajuda` ganhou o bloco "seções dentro das páginas" com `ls <página>`, `<página> <seção>`, `cd <página>/<seção>`, mas não o exemplo `curriculo` → `2` → `cd curriculo`; `term.nav.howTo`/`howToSteps` sem uso |
 | DS-12 | ❌ | Depende de DS-01 a DS-07; hoje `academico`, `servicos`, `projetos`, `experiencias` seguem o formato do resumo antigo |
 
-Resumo: ✅ 7 · ◐ 3 · ❌ 2 · ❔ 0
+Resumo: ✅ 8 · ◐ 2 · ❌ 2 · ❔ 0

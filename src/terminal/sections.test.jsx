@@ -107,7 +107,7 @@ describe('argumentos e combinações', () => {
       ['cd xyz', 'cd: xyz: página não encontrada'],
       ['cd curriculo/xyz', 'cd: xyz: seção não encontrada'],
       ['ls xyz', 'ls: xyz: página não encontrada'],
-      ['curriculo xyz', '"xyz": seção não encontrada'],
+      ['curriculo xyz', 'seção "xyz" não existe; as seções são:'],
       ['sobre algo', 'esta página não tem seções'],
       ['', null],
     ]) {
@@ -312,6 +312,40 @@ describe('contexto da última página (DS-05, DS-07)', () => {
     renderProbe();
     expect(ctx()).toEqual({ routeId: 'academico', sectionId: 'disciplinas' });
     expect(window.location.pathname).toBe('/');
+  });
+});
+
+describe('erros que reensinam (DS-10)', () => {
+  it('curriculo 9 e curriculo xpto mostram o erro e reimprimem o índice', async () => {
+    const user = userEvent.setup();
+    renderApp('/');
+    for (const [line, bad] of [
+      ['curriculo 9', '9'],
+      ['curriculo xpto', 'xpto'],
+      ['projetos xpto', 'xpto'],
+      ['curriculo resumo sobra', 'sobra'],
+    ]) {
+      await run(user, line);
+      await waitFor(() => expect(log().querySelector('.t-err')).toBeTruthy());
+      expect(log().querySelector('.t-err'), line).toHaveTextContent(
+        `seção "${bad}" não existe; as seções são:`,
+      );
+      expect(log().querySelector('.t-index .t-index-list li'), line).toBeTruthy();
+      expect(log()).toHaveTextContent('Digite o número ou o nome');
+    }
+  });
+
+  it('um número fora do índice, depois de abrir a página, também reensina; em inglês', async () => {
+    const user = userEvent.setup();
+    renderApp('/');
+    await user.click(screen.getByRole('button', { name: /Switch to English/ }));
+    await run(user, 'resume');
+    await run(user, '9');
+    await waitFor(() => expect(log().querySelector('.t-err')).toBeTruthy());
+    expect(log().querySelector('.t-err')).toHaveTextContent(
+      'section "9" does not exist; the sections are:',
+    );
+    expect(log().querySelectorAll('.t-index-list li')).toHaveLength(6);
   });
 });
 

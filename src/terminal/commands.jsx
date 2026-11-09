@@ -85,11 +85,14 @@ function runSection(command, args) {
   }
   if (!section || args.length > 1) {
     const bad = section ? args.slice(1).join(' ') : args.join(' ');
+    // Erro que reensina: diz o que não existe e reimprime o índice da página.
     return {
-      output: (lang) =>
-        errorLine(
-          `${lang === 'pt' ? name : command.names[1]}: "${bad}": ${lang === 'pt' ? 'seção não encontrada. Tente ls ' : 'section not found. Try ls '}${lang === 'pt' ? name : command.names[1]}`,
-        ),
+      output: (lang) => (
+        <>
+          <PageIndex routeId={route} error={ui[lang].term.nav.notExist(bad)} />
+          <ActionLine routeId={route} />
+        </>
+      ),
     };
   }
   return {
