@@ -16,7 +16,7 @@ Cruzamento entre [`requirements.md`](requirements.md) e o código do `src.zip` e
 | Comandos e conteúdo (CM) | 5 | 0 | 0 | 0 |
 | **Descoberta (DS)** | **12** | **0** | **0** | **0** |
 | Dados e ordem (DT) | 4 | 0 | 0 | 0 |
-| Não funcionais (NF) | 3 | 1 | 0 | 0 |
+| Não funcionais (NF) | 4 | 0 | 0 | 0 |
 
 **Conclusão principal.** O redesenho de estilo, o header, a barra de comandos, a sessão do terminal, a gramática `<página> <seção>` e o conteúdo completo no terminal estão prontos e testados. **O que o limite de uso interrompeu é a camada de descoberta (DS):** o componente do índice numerado (`src/terminal/pageIndex.jsx`: `PageIndex`, `SectionNav`, `RunCommand`) e os textos em `src/i18n/ui.js` (`term.nav.*`, `firstVisit`, `try`) foram escritos, mas **nenhum arquivo os importa**. Hoje o terminal imprime o conteúdo certo, só não ensina o caminho.
 
@@ -114,7 +114,7 @@ Sintomas observados no navegador:
 | NF-01 | ✅ | lint limpo · 158/158 testes · build ok |
 | NF-02 | ✅ | Varredura em 3 larguras × 11 rotas sem erro de console |
 | NF-03 | ✅ | Textos novos em `ui.js` e nos dados; testes de idioma |
-| NF-04 | ◐ | README descreve o terminal, o header e as seções, mas ainda não menciona índice numerado, número como atalho nem `proximo`/`anterior` (não existem ainda); `docs/sdd/` (TP1) não marca os itens superados (spec §1, D-04/RF-19/RF-18/RNF-03) |
+| NF-04 | ✅ | README documenta o índice numerado, o número como atalho, `proximo`/`anterior`, a primeira visita e os erros que reensinam (seção "Descobrir as seções sem saber os comandos") e os links antigos (T-L2); 12 capturas novas `docs/screenshots/terminal-{indice,numero,proximo}-{desktop,mobile}-{dark,light}.png` geradas no Chrome (sem rolagem horizontal, sem erro de console). `docs/sdd/requirements.md` marca D-04, D-10, RF-18, RF-19 e RNF-03 como superados e `docs/sdd/tasks.md` traz a contagem atual (215 testes em 20 arquivos) |
 
 ## 9. Outros achados
 

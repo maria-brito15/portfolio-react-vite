@@ -44,7 +44,7 @@ Ordem importa: cada tarefa aproveita a anterior.
 | T-A3 ✅ | 🔎 Imprimir `/curriculo` em PDF (Chromium, `page.pdf`) e conferir: sem header, barra de comandos e moldura; sem cortes; competências e experiências abertas | ES-09 | — | PDF anexado ao PR e registrado no gap-analysis |
 | T-A4 ✅ | 🔎 Revisar as capturas de `docs/screenshots/estilo-*` (43 imagens) e conferir azul/verde/âmbar/vermelho nas duas telas, nos dois temas | ES-06 | — | Estado de ES-06 vira ✅ ou lista os desvios |
 | T-A5 ✅ | 📝 Marcar em `docs/sdd/requirements.md` (TP1) os itens superados (D-04, RF-18, RF-19, RNF-03, D-10) com uma nota "superado por `sdd-terminal-v2/`" e atualizar a contagem de testes em `docs/sdd/tasks.md` | NF-04 | — | Notas presentes; nenhum requisito do TP1 contradiz o site sem aviso |
-| T-A6 | 📝 README: documentar índice numerado, número como atalho, `proximo`/`anterior` e a primeira visita; regerar capturas (`curriculo`, `2`, `proximo`) em 1440×900 e 390×844, claro e escuro | NF-04 | T-D9 | README e `docs/screenshots` atualizados |
+| T-A6 ✅ | 📝 README: documentar índice numerado, número como atalho, `proximo`/`anterior` e a primeira visita; regerar capturas (`curriculo`, `2`, `proximo`) em 1440×900 e 390×844, claro e escuro | NF-04 | T-D9 | README e `docs/screenshots` atualizados |
 | T-A7 | 🔎 Rodar a varredura de 11 rotas × 390/768/1440 (rolagem horizontal e console) e o fluxo `curriculo` → `2` → `proximo` → `cd curriculo` | SH-06, NF-02 | T-D9 | Sem rolagem horizontal e sem erro de console |
 
 ## Ordem sugerida

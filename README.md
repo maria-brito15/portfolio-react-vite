@@ -83,12 +83,30 @@ Seções por página: **currículo** (6), **acadêmico** (`linha-do-tempo`, `for
 | Tecla / comando | O que faz |
 | --- | --- |
 | `ajuda`, `ls`, `cd <seção>` | lista comandos, seções/páginas e navega (âncoras da home não têm carregamento) |
+| `2`, `proximo` (`n`), `anterior` (`p`) | abre a seção pelo número e anda para a vizinha, na última página aberta |
 | `curriculo`, `academico`, `servicos` | visão em terminal da página, com as duas ações |
 | `tema`, `idioma`, `historico`, `limpar` | tema claro/escuro, PT/EN, comandos digitados, volta ao banner |
 | Tab · ↑/↓ · Ctrl+L · Ctrl+C | completar (com lista de sugestões), histórico, limpar, interromper |
 | Ctrl+K ou / | foca a barra de comandos (exceto dentro de campos de formulário); em tela estreita ela vira o botão `>_`, que abre a barra em tela cheia |
 
 Cada comando limpa a tela: ficam visíveis só o último comando e sua saída (o histórico de ↑/↓ e `historico` continua inteiro). A barra de comandos e o terminal da home compartilham a mesma sessão (`src/terminal/TerminalSession.jsx`).
+
+### Descobrir as seções sem saber os comandos
+
+Quem nunca usou o terminal não precisa decorar nada: a própria saída ensina o próximo passo.
+
+- **Primeira visita:** sem histórico na sessão, o banner diz "Primeira vez? Digite ls para ver tudo, ou ajuda." e o campo sugere `experimente: curriculo` (`try: resume` em inglês).
+- **Índice numerado:** `curriculo` (e `academico`, `servicos`, `projetos`, `experiencias`) mostra `[1] resumo … [6] reconhecimentos`, cada linha com nome e descrição, e as dicas `→ ver uma seção · abrir a página · listar de novo · início`. `ls curriculo` mostra exatamente o mesmo índice (um só componente, `src/terminal/pageIndex.jsx`). Cada linha é um botão: clicar em `[2]` equivale a `curriculo 2`.
+- **Número como atalho:** depois de abrir um índice, `2` abre a seção 2 dessa página; `curriculo 2` e `curriculo competencias` fazem o mesmo. Sem índice aberto, `2` responde "nenhum índice aberto. Digite curriculo (ou ls) para começar." O contexto some com `limpar` e com `cd ~`.
+- **Próxima e anterior:** `proximo` (`n`, `next`) e `anterior` (`p`, `previous`) andam pelas seções da última página aberta; nos extremos avisam "esta é a primeira/última seção". Todo fim de seção traz os três atalhos clicáveis (próxima · anterior · índice).
+- **Erros que reensinam:** `curriculo 9` ou `curriculo xpto` dizem que a seção não existe e mostram o índice de novo.
+- **`ajuda`** traz o exemplo de ponta a ponta, clicável: `curriculo` → `2` → `cd curriculo`.
+
+| `curriculo` | `2` | `proximo` |
+| :---: | :---: | :---: |
+| ![curriculo](docs/screenshots/terminal-indice-desktop-light.png) | ![2](docs/screenshots/terminal-numero-desktop-dark.png) | ![proximo](docs/screenshots/terminal-proximo-mobile-dark.png) |
+
+As 12 capturas (`terminal-indice-*`, `terminal-numero-*`, `terminal-proximo-*`, em 1440×900 e 390×844, claro e escuro) estão em `docs/screenshots/`.
 
 ---
 
