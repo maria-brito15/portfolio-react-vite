@@ -1,9 +1,22 @@
-import { act, screen, waitFor, within } from '@testing-library/react';
+import { act, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderApp } from '../test/helpers';
+import { RouterProvider } from '../router';
+import { LanguageProvider } from '../i18n/LanguageContext';
+import { ThemeProvider } from '../hooks/useTheme';
+import { TerminalProvider } from './TerminalSession';
 import { routes } from '../data/routes';
 import { resolveTarget, sectionsOf } from '../data/sections';
-import { commandInventory, complete, findCommand, parse, runCommand } from './commands';
+import {
+  commandInventory,
+  complete,
+  contextAfter,
+  contextOfHistory,
+  findCommand,
+  parse,
+  runCommand,
+} from './commands';
+import { useTerminalSession } from './sessionContext';
 
 const terminalInput = () =>
   screen.getByRole('textbox', { name: /Linha de comando do terminal|terminal command line/i });
@@ -211,6 +224,94 @@ describe('índice das seções (um só renderizador)', () => {
     await run(user, 'ls contato');
     expect(indexOf()).toBeNull();
     expect(log()).toHaveTextContent('esta página não tem seções');
+  });
+});
+
+describe('contexto da última página (DS-05, DS-07)', () => {
+  it('contextAfter acompanha página, seção, ls, cd ~ e limpar', () => {
+    const c1 = contextAfter('curriculo');
+    expect(c1).toEqual({ routeId: 'curriculo', sectionId: null });
+    expect(contextAfter('academico disciplinas', c1)).toEqual({
+      routeId: 'academico',
+      sectionId: 'disciplinas',
+    });
+    expect(contextAfter('curriculo/competencias', null)).toEqual({
+      routeId: 'curriculo',
+      sectionId: 'competencias',
+    });
+    expect(contextAfter('ls servicos', c1)).toEqual({ routeId: 'servicos', sectionId: null });
+    // argumento inválido mostra o índice da página: o contexto vira a página
+    expect(contextAfter('curriculo 9', null)).toEqual({ routeId: 'curriculo', sectionId: null });
+    // o que não abre índice não mexe no contexto
+    for (const line of ['tema', 'ajuda', 'sobre', 'ls', 'ls xyz', 'cd curriculo', 'xpto', ''])
+      expect(contextAfter(line, c1), line).toBe(c1);
+    // limpar e cd ~ zeram
+    expect(contextAfter('limpar', c1)).toBeNull();
+    expect(contextAfter('cls', c1)).toBeNull();
+    expect(contextAfter('cd ~', c1)).toBeNull();
+  });
+
+  it('o replay reconstrói o contexto do histórico sem efeitos', () => {
+    expect(contextOfHistory(['curriculo', 'tema', 'academico', 'curriculo 2'])).toEqual({
+      routeId: 'curriculo',
+      sectionId: 'competencias',
+    });
+    expect(contextOfHistory(['curriculo', 'limpar'])).toBeNull();
+    expect(contextOfHistory([])).toBeNull();
+  });
+
+  function Probe() {
+    const s = useTerminalSession();
+    return (
+      <>
+        <output data-testid="ctx">{JSON.stringify(s.context)}</output>
+        {['curriculo', 'academico', 'limpar', 'cd ~'].map((c) => (
+          <button key={c} onClick={() => s.execute(c)}>
+            {c}
+          </button>
+        ))}
+      </>
+    );
+  }
+  const renderProbe = () => {
+    window.history.replaceState(null, '', '/');
+    return render(
+      <RouterProvider>
+        <LanguageProvider>
+          <ThemeProvider>
+            <TerminalProvider>
+              <Probe />
+            </TerminalProvider>
+          </ThemeProvider>
+        </LanguageProvider>
+      </RouterProvider>,
+    );
+  };
+  const ctx = () => JSON.parse(screen.getByTestId('ctx').textContent);
+
+  it('a sessão muda o contexto ao abrir páginas e o zera com limpar e cd ~', async () => {
+    const user = userEvent.setup();
+    renderProbe();
+    expect(ctx()).toBeNull();
+    await user.click(screen.getByRole('button', { name: 'curriculo' }));
+    expect(ctx()).toEqual({ routeId: 'curriculo', sectionId: null });
+    await user.click(screen.getByRole('button', { name: 'academico' }));
+    expect(ctx()).toEqual({ routeId: 'academico', sectionId: null });
+    await user.click(screen.getByRole('button', { name: 'limpar' }));
+    expect(ctx()).toBeNull();
+    await user.click(screen.getByRole('button', { name: 'academico' }));
+    await user.click(screen.getByRole('button', { name: 'cd ~' }));
+    expect(ctx()).toBeNull();
+  });
+
+  it('a sessão restaurada do sessionStorage já nasce com o contexto', () => {
+    sessionStorage.setItem(
+      'portfolio-terminal',
+      JSON.stringify(['curriculo', 'tema', 'academico disciplinas']),
+    );
+    renderProbe();
+    expect(ctx()).toEqual({ routeId: 'academico', sectionId: 'disciplinas' });
+    expect(window.location.pathname).toBe('/');
   });
 });
 

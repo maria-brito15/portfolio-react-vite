@@ -3,7 +3,7 @@ import { useRouter } from '../router';
 import { useLanguage } from '../i18n/LanguageContext';
 import { useTheme } from '../hooks/useTheme';
 import { normalizePath, routes } from '../data/routes';
-import { findCommand, runCommand } from './commands';
+import { contextAfter, contextOfHistory, findCommand, runCommand } from './commands';
 import { SessionContext } from './sessionContext';
 
 // Sessão única do terminal, compartilhada pelo terminal da página inicial e
@@ -85,6 +85,9 @@ export function TerminalProvider({ children }) {
       : null;
   });
   const [progress, setProgress] = useState(0);
+  // Última página com índice aberta (alimenta `2`, `proximo`, `anterior`).
+  // Restaurada do histórico sem rodar efeitos.
+  const [context, setContext] = useState(() => contextOfHistory(inputs));
 
   // Carregamento em andamento (um só por vez) e o timer que o move.
   const loadingRef = useRef(null);
@@ -172,10 +175,12 @@ export function TerminalProvider({ children }) {
         lang,
         theme,
         history,
+        context,
         toggleLang,
         toggleTheme,
         replay: false,
       });
+      setContext(contextAfter(input, context));
       setEntry(next);
       if (next?.redirect) {
         const { to } = next.redirect;
@@ -189,7 +194,7 @@ export function TerminalProvider({ children }) {
       }
       return true;
     },
-    [inputs, lang, theme, toggleLang, toggleTheme, startRedirect, navigate, path],
+    [inputs, context, lang, theme, toggleLang, toggleTheme, startRedirect, navigate, path],
   );
 
   // Ctrl+C digitando: mostra o texto com ^C, como um shell.
@@ -217,8 +222,8 @@ export function TerminalProvider({ children }) {
   }, [path, search, execute, navigate]);
 
   const value = useMemo(
-    () => ({ entry, inputs, progress, busy, execute, interrupt, openPage, cancel }),
-    [entry, inputs, progress, busy, execute, interrupt, openPage, cancel],
+    () => ({ entry, inputs, context, progress, busy, execute, interrupt, openPage, cancel }),
+    [entry, inputs, context, progress, busy, execute, interrupt, openPage, cancel],
   );
   return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>;
 }

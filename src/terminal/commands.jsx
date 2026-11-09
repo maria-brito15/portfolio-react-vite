@@ -486,15 +486,48 @@ export function parse(input) {
   return { name, args };
 }
 
-export function runCommand(input, ctx) {
+// curriculo/competencias → nome `curriculo` + argumento `competencias`.
+function parseCommand(input) {
   let { name, args } = parse(input);
-  if (!name) return { output: () => null };
-  // curriculo/competencias → curriculo competencias
   if (name.includes('/') && !name.startsWith('/')) {
     const [head, ...rest] = name.split('/');
     name = head;
     args = [...rest.filter(Boolean), ...args];
   }
+  return { name, args };
+}
+
+// Contexto da navegação: a última página com índice (e a seção) aberta aqui.
+// É o que dá sentido a `2`, `proximo` e `anterior` sozinhos. Função pura: o
+// replay do histórico a reaplica sem rodar efeito nenhum.
+//   { routeId, sectionId | null }  ou  null (nenhum índice aberto)
+export function contextAfter(input, prev = null) {
+  const { name, args } = parseCommand(input);
+  const command = name ? findCommand(name) : undefined;
+  if (!command) return prev;
+  const id = command.names[0];
+  if (id === 'limpar') return null;
+  if (id === 'cd') return resolveTarget(args).home ? null : prev;
+  if (id === 'ls') {
+    const target = resolveTarget(args);
+    const listed = target.route && !target.error && !target.section;
+    return listed && sectionsOf(target.route.id).length
+      ? { routeId: target.route.id, sectionId: null }
+      : prev;
+  }
+  if (command.route && sectionsOf(command.route).length) {
+    const section = args.length === 1 ? findSection(command.route, args[0]) : undefined;
+    return { routeId: command.route, sectionId: section?.id ?? null };
+  }
+  return prev;
+}
+
+// Reconstrói o contexto de um histórico inteiro (sessão restaurada).
+export const contextOfHistory = (inputs) => inputs.reduce((ctx, input) => contextAfter(input, ctx), null);
+
+export function runCommand(input, ctx) {
+  const { name, args } = parseCommand(input);
+  if (!name) return { output: () => null };
   const command = findCommand(name);
   if (!command) {
     return {
