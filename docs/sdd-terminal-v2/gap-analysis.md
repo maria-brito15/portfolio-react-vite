@@ -11,7 +11,7 @@ Cruzamento entre [`requirements.md`](requirements.md) e o código do `src.zip` e
 | Grupo | ✅ | ◐ | ❌ | ❔ |
 | --- | --- | --- | --- | --- |
 | Estilo (ES) | 6 | 3 | 0 | 1 |
-| Shell e navegação (SH) | 9 | 0 | 1 | 0 |
+| Shell e navegação (SH) | 10 | 0 | 0 | 0 |
 | Sessão do terminal (TS) | 8 | 0 | 0 | 0 |
 | Comandos e conteúdo (CM) | 5 | 0 | 0 | 0 |
 | **Descoberta (DS)** | **12** | **0** | **0** | **0** |
@@ -48,7 +48,7 @@ Cruzamento entre [`requirements.md`](requirements.md) e o código do `src.zip` e
 | SH-07 | ✅ | `SiteShell.test.jsx` ("as páginas dedicadas têm [ ver no terminal ]…", "/?cmd=servicos…") |
 | SH-08 | ✅ | `data/routes.js`, `data/sections.js`; `routes.test.js` |
 | SH-09 | ✅ | `App.jsx` + `pages/SectionPage.jsx`; aliases `/about`, `/skills`, `/projects`, `/experience` em `routes.js` |
-| SH-10 | ❌ | Não há tratamento de `/#sobre`, `/#projetos` etc.: o roteador só rola até o id e, como a home é só o terminal, o link antigo cai na home sem destino. Afeta links já publicados (LinkedIn, currículo, README) |
+| SH-10 | ✅ | Tabela `legacyHashes`/`legacyTarget` em `routes.js` e `redirectLegacy` em `router.jsx` (`replaceState`, também no `hashchange`). Testes `src/data/legacyHashes.test.jsx` (11): `/#sobre`, `#habilidades`, `#projetos`, `#experiencias`, `#contato` e `#projects` levam à página própria sem `pushState`; `#xyz`, `#inicio` e `#%` não redirecionam e não lançam. Conferido no Chrome: `/#projetos` → `/projetos` e o Voltar vai para a página anterior (não reabre o link antigo). Corrigido junto: `scrollToHash` lançava `URIError` com hash malformado |
 
 ## 4. Sessão do terminal (TS)
 

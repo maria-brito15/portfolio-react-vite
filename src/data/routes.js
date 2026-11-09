@@ -170,3 +170,30 @@ export function windowPath(route, lang) {
 // URL da home que já executa o comando da página (visão em terminal).
 export const terminalUrl = (route, command = route.command) =>
   `/?cmd=${encodeURIComponent(command)}`;
+
+// Âncoras da home antiga (`/#projetos`…) → página própria equivalente (SH-10).
+// A home virou só o terminal; links publicados antes disso (LinkedIn, currículo,
+// README) são redirecionados no cliente. `#inicio` continua valendo na home.
+// Hash fora da tabela é ignorado.
+const LEGACY_PAGES = ['sobre', 'habilidades', 'projetos', 'experiencias', 'contato'];
+export const legacyHashes = Object.fromEntries(
+  LEGACY_PAGES.flatMap((id) => {
+    const route = routeById(id);
+    return [
+      [`#${route.name}`, route.path],
+      [`#${route.alias}`, route.path],
+    ];
+  }),
+);
+
+// Destino de um link antigo, ou undefined quando não é um (outra página, hash novo).
+export function legacyTarget(path, hash) {
+  if (normalizePath(path) !== '/' || !hash) return undefined;
+  let decoded = hash;
+  try {
+    decoded = decodeURIComponent(hash);
+  } catch {
+    // hash malformado (ex.: "#%"): não é um link antigo
+  }
+  return legacyHashes[fold(decoded)];
+}

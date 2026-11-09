@@ -4,11 +4,21 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 // uma biblioteca de rotas completa não se justifica. Cada entrada do histórico
 // guarda `{ idx }` (quantas navegações internas existem antes dela): com
 // `idx > 0` a página anterior é do próprio site e "Voltar" pode usar history.back().
+import { legacyTarget } from './data/routes';
+
 const RouterContext = createContext(null);
 
 const currentIndex = () => window.history.state?.idx ?? 0;
 
+// Link antigo (`/#projetos`): troca a entrada atual pela página própria, sem
+// empilhar histórico (o Voltar não volta ao link antigo). Hash desconhecido: nada.
+function redirectLegacy() {
+  const target = legacyTarget(window.location.pathname, window.location.hash);
+  if (target) window.history.replaceState({ idx: currentIndex() }, '', target);
+}
+
 function readLocation() {
+  redirectLegacy();
   return {
     path: window.location.pathname,
     hash: window.location.hash,
@@ -18,7 +28,12 @@ function readLocation() {
 }
 
 function scrollToHash(hash) {
-  const id = decodeURIComponent(hash.slice(1));
+  let id = hash.slice(1);
+  try {
+    id = decodeURIComponent(id);
+  } catch {
+    // hash malformado (ex.: "#%"): usa o texto como está e, sem alvo, não rola
+  }
   const target = id && document.getElementById(id);
   if (target) target.scrollIntoView({ behavior: 'smooth' });
   return Boolean(target);
@@ -28,9 +43,13 @@ export function RouterProvider({ children }) {
   const [location, setLocation] = useState(readLocation);
 
   useEffect(() => {
-    const onPopState = () => setLocation(readLocation());
-    window.addEventListener('popstate', onPopState);
-    return () => window.removeEventListener('popstate', onPopState);
+    const onChange = () => setLocation(readLocation());
+    window.addEventListener('popstate', onChange);
+    window.addEventListener('hashchange', onChange);
+    return () => {
+      window.removeEventListener('popstate', onChange);
+      window.removeEventListener('hashchange', onChange);
+    };
   }, []);
 
   // Depois de cada troca de rota: rola até a âncora, se houver, ou volta ao topo.
