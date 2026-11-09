@@ -161,6 +161,29 @@ describe('índice das seções (um só renderizador)', () => {
     }
   });
 
+  it('clicar em [2] produz a mesma saída de "curriculo 2" e o botão é alcançável por Tab', async () => {
+    const user = userEvent.setup();
+    renderApp('/');
+    await run(user, 'curriculo 2');
+    await waitFor(() => expect(log()).toHaveTextContent('Competências técnicas'));
+    const typed = log().querySelector('.term-entry').textContent;
+    await run(user, 'curriculo');
+    const button = await waitFor(() => {
+      const b = within(indexOf()).getAllByRole('button')[1];
+      expect(b).toHaveTextContent('[2]');
+      return b;
+    });
+    expect(button).not.toBeDisabled();
+    expect(button.tabIndex).toBe(0);
+    await user.click(button);
+    await waitFor(() => expect(log()).toHaveTextContent('Competências técnicas'));
+    expect(indexOf()).toBeNull();
+    const clicked = log().querySelector('.term-entry').textContent;
+    expect(clicked.replace(/^.*?Competências/s, 'Competências')).toBe(
+      typed.replace(/^.*?Competências/s, 'Competências'),
+    );
+  });
+
   it('ls de página sem seções não mostra índice', async () => {
     const user = userEvent.setup();
     renderApp('/');
