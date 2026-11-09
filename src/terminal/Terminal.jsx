@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useLanguage } from '../i18n/LanguageContext';
+import { ui } from '../i18n/ui';
 import { useTerminalSession } from './sessionContext';
 import { quickCommands } from './commands';
 import CommandInput from './CommandInput';
@@ -10,7 +11,12 @@ import TerminalOutput from './TerminalOutput';
 // e os atalhos clicáveis. O estado vive na sessão compartilhada.
 export default function Terminal({ content }) {
   const { lang } = useLanguage();
-  const { entry, execute, busy } = useTerminalSession();
+  const { entry, inputs, execute, busy } = useTerminalSession();
+  const term = ui[lang].term;
+  // Primeira visita: ainda não há nenhum comando no histórico da sessão.
+  const firstVisit = inputs.length === 0;
+  // Placeholder que ensina: "experimente: curriculo" (a página com mais conteúdo).
+  const example = lang === 'pt' ? 'curriculo' : 'resume';
   const inputRef = useRef(null);
   const screenRef = useRef(null);
   const entryId = entry?.id;
@@ -46,7 +52,7 @@ export default function Terminal({ content }) {
             ))}
           </p>
           <p className="term-sub">{content.sub}</p>
-          <p className="t-dim">{content.terminal.hint}</p>
+          <p className="t-dim">{firstVisit ? term.firstVisit : content.terminal.hint}</p>
         </header>
 
         <div className="term-log" aria-live="polite">
@@ -55,7 +61,7 @@ export default function Terminal({ content }) {
 
         <CommandInput
           label={content.terminal.inputLabel}
-          placeholder={entry || busy ? '' : content.terminal.placeholder}
+          placeholder={entry || busy ? '' : `${term.try} ${example}`}
           inputRef={inputRef}
         />
       </div>

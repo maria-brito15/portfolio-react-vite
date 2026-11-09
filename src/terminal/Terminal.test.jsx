@@ -19,6 +19,30 @@ describe('terminal da página inicial', () => {
     expect(terminalInput()).toHaveValue('');
   });
 
+  it('primeira visita: o banner sugere ls/ajuda; com histórico, não', async () => {
+    const { unmount } = renderApp('/');
+    expect(screen.getByText(/Primeira vez\? Digite ls para ver tudo, ou ajuda\./)).toBeInTheDocument();
+    unmount();
+
+    sessionStorage.setItem('portfolio-terminal', JSON.stringify(['ajuda']));
+    renderApp('/');
+    expect(screen.queryByText(/Primeira vez\?/)).not.toBeInTheDocument();
+  });
+
+  it('o placeholder ensina um exemplo nos dois idiomas e some com a saída', async () => {
+    const user = userEvent.setup();
+    renderApp('/');
+    expect(terminalInput()).toHaveAttribute('placeholder', 'experimente: curriculo');
+    await user.click(screen.getByRole('button', { name: /Switch to English/ }));
+    const input = () => screen.getByRole('textbox', { name: 'Terminal command line' });
+    expect(input()).toHaveAttribute('placeholder', 'try: resume');
+    expect(
+      screen.getByText(/First time here\? Type ls to see everything, or help\./),
+    ).toBeInTheDocument();
+    await user.type(input(), 'help{Enter}');
+    expect(input()).toHaveAttribute('placeholder', '');
+  });
+
   it('avisa quando o comando não existe', async () => {
     const user = userEvent.setup();
     renderApp('/');

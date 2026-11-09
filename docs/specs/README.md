@@ -8,7 +8,7 @@ Cada pasta segue o fluxo PRD → especificação → plano → tarefas → verif
 | [Shell e navegação](shell-navegacao/status.md) | SH-xx | ✅ 9 · ◐ 0 · ❌ 1 · ❔ 0 |
 | [Sessão do terminal](sessao-terminal/status.md) | TS-xx | ✅ 8 · ◐ 0 · ❌ 0 · ❔ 0 |
 | [Comandos e conteúdo no terminal](comandos-terminal/status.md) | CM-xx | ✅ 5 · ◐ 0 · ❌ 0 · ❔ 0 |
-| [Descoberta das seções pelo terminal](descoberta-secoes/status.md) | DS-xx | ✅ 8 · ◐ 2 · ❌ 2 · ❔ 0 |
+| [Descoberta das seções pelo terminal](descoberta-secoes/status.md) | DS-xx | ✅ 10 · ◐ 1 · ❌ 1 · ❔ 0 |
 | [Dados, ordem e competências](dados-e-ordem/status.md) | DT-xx | ✅ 4 · ◐ 0 · ❌ 0 · ❔ 0 |
 | [Qualidade e requisitos não funcionais](qualidade-nao-funcionais/status.md) | NF-xx | ✅ 3 · ◐ 1 · ❌ 0 · ❔ 0 |
 
