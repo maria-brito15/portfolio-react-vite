@@ -315,6 +315,39 @@ describe('contexto da última página (DS-05, DS-07)', () => {
   });
 });
 
+describe('ajuda com exemplo de ponta a ponta (DS-11)', () => {
+  it('traz o bloco "como navegar" com os três passos clicáveis, em PT e EN', async () => {
+    const user = userEvent.setup();
+    renderApp('/');
+    await run(user, 'ajuda');
+    await waitFor(() => expect(log()).toHaveTextContent('como navegar:'));
+    expect(log()).toHaveTextContent('veja o índice → abra uma seção pelo número');
+    const steps = [...log().querySelectorAll('.t-howto button')].map((b) => b.textContent);
+    expect(steps).toEqual(['curriculo', '2', 'cd curriculo']);
+    // os comandos do exemplo existem ("2" é o número do índice, tratado em runCommand)
+    expect(findCommand('curriculo')).toBeDefined();
+    expect(findCommand('cd')).toBeDefined();
+
+    await user.click(screen.getByRole('button', { name: /Switch to English/ }));
+    await run(user, 'help');
+    await waitFor(() => expect(log()).toHaveTextContent('how to navigate:'));
+    expect(
+      [...log().querySelectorAll('.t-howto button')].map((b) => b.textContent),
+    ).toEqual(['resume', '2', 'cd resume']);
+  });
+
+  it('os passos funcionam na ordem do exemplo: curriculo → 2', async () => {
+    const user = userEvent.setup();
+    renderApp('/');
+    await run(user, 'ajuda');
+    await waitFor(() => expect(log().querySelector('.t-howto')).toBeTruthy());
+    await user.click(within(log().querySelector('.t-howto')).getByRole('button', { name: 'curriculo' }));
+    await waitFor(() => expect(log().querySelector('.t-index')).toBeTruthy());
+    await user.click(within(log().querySelector('.t-index')).getAllByRole('button')[1]);
+    await waitFor(() => expect(log()).toHaveTextContent('Competências técnicas'));
+  });
+});
+
 describe('erros que reensinam (DS-10)', () => {
   it('curriculo 9 e curriculo xpto mostram o erro e reimprimem o índice', async () => {
     const user = userEvent.setup();

@@ -14,7 +14,7 @@ Legenda: ✅ atendido · ◐ parcial · ❌ não feito · ❔ não verificado. F
 | DS-08 | ✅ | Sem comando no histórico da sessão, o banner mostra `term.firstVisit` no lugar da dica (`Terminal.jsx:17,55`). Teste `Terminal.test.jsx` › "primeira visita: o banner sugere ls/ajuda; com histórico, não"; EN conferido em "o placeholder ensina um exemplo nos dois idiomas e some com a saída" |
 | DS-09 | ✅ | O placeholder da linha do terminal vira `term.try` + exemplo (`Terminal.jsx:64`): "experimente: curriculo" / "try: resume"; some quando há saída ou carregamento. Teste `Terminal.test.jsx` › "o placeholder ensina um exemplo nos dois idiomas e some com a saída". A chave `placeholder` de `portfolio.jsx` (sem uso) foi removida |
 | DS-10 | ✅ | `runSection` (`commands.jsx`) responde `<página> <arg inválido>` com `term.nav.notExist(arg)` e reimprime `PageIndex` + `ActionLine`. Testes `sections.test.jsx` › "erros que reensinam (DS-10)": `curriculo 9`, `curriculo xpto`, `projetos xpto`, `curriculo resumo sobra` e, em inglês, `9` depois de `resume` mostram o erro e o índice; nenhum lança exceção |
-| DS-11 | ◐ | `ajuda` ganhou o bloco "seções dentro das páginas" com `ls <página>`, `<página> <seção>`, `cd <página>/<seção>`, mas não o exemplo `curriculo` → `2` → `cd curriculo`; `term.nav.howTo`/`howToSteps` sem uso |
+| DS-11 | ✅ | A `ajuda` traz `term.nav.howTo`/`howToSteps` e a linha clicável `curriculo` → `2` → `cd curriculo` (`resume` → `2` → `cd resume` em EN), em `commands.jsx` (bloco `.t-howto`). Testes `sections.test.jsx` › "ajuda com exemplo de ponta a ponta (DS-11)": texto e botões nos dois idiomas; clicar `curriculo` e depois `[2]` abre a seção |
 | DS-12 | ❌ | Depende de DS-01 a DS-07; hoje `academico`, `servicos`, `projetos`, `experiencias` seguem o formato do resumo antigo |
 
-Resumo: ✅ 10 · ◐ 1 · ❌ 1 · ❔ 0
+Resumo: ✅ 11 · ◐ 0 · ❌ 1 · ❔ 0

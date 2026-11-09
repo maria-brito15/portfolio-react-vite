@@ -17,7 +17,7 @@ import { ui } from '../i18n/ui';
 import { ActionLine, Cmd, Ext, TermLink } from './outputs';
 import { AcademicsView, ResumeView, ServicesView } from './views';
 import SectionView from './sectionViews';
-import { PageIndex, SectionNav } from './pageIndex';
+import { PageIndex, RunCommand, SectionNav } from './pageIndex';
 
 const L = (pt, en) => ({ pt, en });
 
@@ -166,6 +166,22 @@ const commands = [
               </div>
             ))}
           </dl>
+          <p className="t-dim">
+            {ui[lang].term.nav.howTo} {ui[lang].term.nav.howToSteps}
+          </p>
+          <p className="t-howto">
+            {(lang === 'pt'
+              ? ['curriculo', '2', 'cd curriculo']
+              : ['resume', '2', 'cd resume']
+            ).map((step, i) => (
+              <span key={step}>
+                {i > 0 && <span className="t-dim"> → </span>}
+                <RunCommand command={step}>
+                  <Cmd>{step}</Cmd>
+                </RunCommand>
+              </span>
+            ))}
+          </p>
           <p className="t-dim">
             {lang === 'pt'
               ? 'Dica: Tab completa (inclusive seções), ↑ ↓ navegam no histórico, Ctrl+L limpa a tela, Ctrl+K foca a barra.'
