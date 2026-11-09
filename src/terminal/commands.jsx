@@ -13,6 +13,7 @@ import { portfolio } from '../data/portfolio';
 import { directories, fold } from '../data/routes';
 import { findSection, resolveTarget, sectionsOf, splitTarget, targetPath } from '../data/sections';
 import { formatProjectDate } from '../utils/projectDate';
+import { ui } from '../i18n/ui';
 import { ActionLine, Cmd, Ext, TermLink } from './outputs';
 import { AcademicsView, ResumeView, ServicesView } from './views';
 import SectionView from './sectionViews';
@@ -100,6 +101,28 @@ function runSection(command, args) {
       </>
     ),
   };
+}
+
+// Seção vizinha da última página aberta. Com o índice aberto (sem seção), a
+// próxima é a primeira e a anterior já é o começo.
+function stepSection(context, direction) {
+  const list = sectionsOf(context.routeId);
+  const at = context.sectionId ? list.findIndex((s) => s.id === context.sectionId) : -1;
+  const target = list[at + direction];
+  return target ? { section: target } : { edge: direction > 0 ? 'last' : 'first' };
+}
+
+const pageCommand = (routeId) => commands.find((c) => c.route === routeId);
+
+// `proximo` / `anterior`: abrem, aqui no terminal, a seção vizinha.
+function runStep(direction, ctx) {
+  const { context } = ctx;
+  if (!context) return { output: (lang) => errorLine(ui[lang].term.nav.noContext) };
+  const step = stepSection(context, direction);
+  if (step.edge) {
+    return { output: (lang) => <p className="t-dim">{ui[lang].term.nav[step.edge]}</p> };
+  }
+  return runSection(pageCommand(context.routeId), [step.section.id]);
 }
 
 const commands = [
@@ -247,6 +270,18 @@ const commands = [
       // Só `cd` e "abrir página própria" navegam; passam pelo carregamento.
       return { output: () => null, redirect: targetPath(target.route, target.section) };
     },
+  },
+  {
+    names: ['proximo', 'next'],
+    aliases: ['n'],
+    desc: L('próxima seção da última página aberta', 'next section of the last page opened'),
+    run: (args, ctx) => runStep(1, ctx),
+  },
+  {
+    names: ['anterior', 'previous'],
+    aliases: ['p'],
+    desc: L('seção anterior da última página aberta', 'previous section of the last page opened'),
+    run: (args, ctx) => runStep(-1, ctx),
   },
   {
     names: ['projetos', 'projects'],
@@ -503,10 +538,20 @@ function parseCommand(input) {
 //   { routeId, sectionId | null }  ou  null (nenhum índice aberto)
 export function contextAfter(input, prev = null) {
   const { name, args } = parseCommand(input);
+  // Número sozinho: seção da última página aberta (número fora do índice → o índice).
+  if (/^\d+$/.test(name) && !args.length) {
+    return prev
+      ? { routeId: prev.routeId, sectionId: findSection(prev.routeId, name)?.id ?? null }
+      : prev;
+  }
   const command = name ? findCommand(name) : undefined;
   if (!command) return prev;
   const id = command.names[0];
   if (id === 'limpar') return null;
+  if (id === 'proximo' || id === 'anterior') {
+    const step = prev ? stepSection(prev, id === 'proximo' ? 1 : -1) : {};
+    return step.section ? { routeId: prev.routeId, sectionId: step.section.id } : prev;
+  }
   if (id === 'cd') return resolveTarget(args).home ? null : prev;
   if (id === 'ls') {
     const target = resolveTarget(args);
@@ -523,11 +568,18 @@ export function contextAfter(input, prev = null) {
 }
 
 // Reconstrói o contexto de um histórico inteiro (sessão restaurada).
-export const contextOfHistory = (inputs) => inputs.reduce((ctx, input) => contextAfter(input, ctx), null);
+export const contextOfHistory = (inputs) =>
+  inputs.reduce((ctx, input) => contextAfter(input, ctx), null);
 
 export function runCommand(input, ctx) {
   const { name, args } = parseCommand(input);
   if (!name) return { output: () => null };
+  // `2` sozinho abre a seção 2 da última página aberta.
+  if (/^\d+$/.test(name) && !args.length) {
+    return ctx.context
+      ? runSection(pageCommand(ctx.context.routeId), [name])
+      : { output: (lang) => errorLine(ui[lang].term.nav.noContext) };
+  }
   const command = findCommand(name);
   if (!command) {
     return {

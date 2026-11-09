@@ -315,6 +315,93 @@ describe('contexto da última página (DS-05, DS-07)', () => {
   });
 });
 
+describe('número sozinho e navegação sequencial (DS-05, DS-07)', () => {
+  const nav = () => log().querySelector('.t-sectionnav');
+
+  it('depois de curriculo, 2 abre a seção 2 e proximo abre a 3', async () => {
+    const user = userEvent.setup();
+    renderApp('/');
+    await run(user, 'curriculo');
+    await run(user, '2');
+    await waitFor(() => expect(log()).toHaveTextContent('Competências técnicas'));
+    expect(nav()).toHaveTextContent('próxima: curriculo 3 (experiencias)');
+    await run(user, 'proximo');
+    await waitFor(() => expect(nav()).toHaveTextContent('anterior: curriculo 2 (competencias)'));
+    expect(nav()).toHaveTextContent('próxima: curriculo 4 (projetos)');
+  });
+
+  it('n e p equivalem a proximo e anterior', async () => {
+    const user = userEvent.setup();
+    renderApp('/');
+    await run(user, 'curriculo 3');
+    await run(user, 'n');
+    await waitFor(() => expect(nav()).toHaveTextContent('anterior: curriculo 3 (experiencias)'));
+    await run(user, 'p');
+    await waitFor(() => expect(nav()).toHaveTextContent('próxima: curriculo 4 (projetos)'));
+    await run(user, 'anterior');
+    await waitFor(() => expect(nav()).toHaveTextContent('próxima: curriculo 3 (experiencias)'));
+  });
+
+  it('os limites avisam: primeira e última seção', async () => {
+    const user = userEvent.setup();
+    renderApp('/');
+    await run(user, 'curriculo 1');
+    await run(user, 'anterior');
+    await waitFor(() => expect(log()).toHaveTextContent('esta é a primeira seção'));
+    await run(user, 'curriculo 6');
+    await run(user, 'proximo');
+    await waitFor(() => expect(log()).toHaveTextContent('esta é a última seção'));
+  });
+
+  it('com o índice aberto, proximo abre a primeira seção', async () => {
+    const user = userEvent.setup();
+    renderApp('/');
+    await run(user, 'curriculo');
+    await run(user, 'proximo');
+    await waitFor(() => expect(nav()).toHaveTextContent('anterior: esta é a primeira seção'));
+    expect(nav()).toHaveTextContent('próxima: curriculo 2 (competencias)');
+  });
+
+  it('sem contexto, número, proximo e anterior respondem noContext', async () => {
+    const user = userEvent.setup();
+    renderApp('/');
+    for (const line of ['2', 'proximo', 'p']) {
+      await run(user, line);
+      await waitFor(() => expect(log()).toHaveTextContent('nenhum índice aberto'));
+    }
+    await run(user, 'curriculo');
+    await run(user, 'limpar');
+    await run(user, '2');
+    await waitFor(() => expect(log()).toHaveTextContent('nenhum índice aberto'));
+  });
+
+  it('segue a última página aberta e funciona em inglês', async () => {
+    const user = userEvent.setup();
+    renderApp('/');
+    await user.click(screen.getByRole('button', { name: /Switch to English/ }));
+    await run(user, 'next');
+    await waitFor(() => expect(log()).toHaveTextContent('no index open'));
+    await run(user, 'resume');
+    await run(user, 'academics');
+    await run(user, '2');
+    await waitFor(() => expect(nav()).toHaveTextContent('academics 3'));
+    await run(user, 'previous');
+    await waitFor(() => expect(nav()).toHaveTextContent('next: academics 2'));
+    await run(user, '1');
+    await waitFor(() => expect(nav()).toHaveTextContent('previous: this is the first section'));
+  });
+
+  it('proximo e anterior aparecem na ajuda e no autocompletar', async () => {
+    const user = userEvent.setup();
+    renderApp('/');
+    await run(user, 'ajuda');
+    await waitFor(() => expect(log()).toHaveTextContent('proximo'));
+    expect(log()).toHaveTextContent('anterior');
+    expect(complete('prox', 'pt')).toBe('proximo ');
+    expect(complete('prev', 'en')).toBe('previous ');
+  });
+});
+
 describe('ls <página> e <página> <seção>', () => {
 
   it('ls sem argumento lista as páginas com o número de seções', async () => {
