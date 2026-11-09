@@ -381,6 +381,7 @@
   footer,
   .grid-bg,
   .doc-toc,
+  .doc-actions,
   .no-print {
     display: none !important;
   }

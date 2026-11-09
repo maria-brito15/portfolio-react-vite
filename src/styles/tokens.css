@@ -91,3 +91,24 @@
     --win-h: 70vh;
   }
 }
+
+/* Impressão: papel é branco, então sempre os tokens do tema claro (o tema escuro
+   imprimiria texto cinza-claro sobre branco). Os valores repetem os do tema claro
+   acima; um teste confere que não divergem. */
+@media print {
+  :root,
+  [data-theme] {
+    --surface: #ffffff;
+    --surface-2: #eceef2;
+    --surface-3: #e2e5ea;
+    --border: rgba(20, 22, 26, 0.14);
+    --text: #1d2128;
+    --text-2: #3f454f;
+    --dim: #5d636e;
+    --accent: #2f55c4;
+    --ok: #17702f;
+    --warn: #8f5016;
+    --err: #b42332;
+    --on-accent: #ffffff;
+  }
+}

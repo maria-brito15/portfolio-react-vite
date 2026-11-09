@@ -12,7 +12,7 @@ Legenda: ✅ atendido · ◐ parcial · ❌ não feito · ❔ não verificado. F
 | ES-06 | ❔ | Regra declarada no README e nos tokens; não conferi visualmente todas as telas |
 | ES-07 | ✅ | `src/components/shell/SiteShell.test.jsx` (layout das rotas); `App.jsx` envolve todas as páginas |
 | ES-08 | ✅ | `components/ui/` (Card, Chip, DataTable, SectionTitle, ActionLink) importado por Resume, Academics, Services e `sections/portfolio/*`; `ui.test.jsx` |
-| ES-09 | ◐ | Há `@media print` em `resume.css`, `shell.css` e `ui.css`; **não há teste nem captura de PDF** nesta análise (MAN pendente) |
+| ES-09 | ✅ | Conferido no Chrome em modo de impressão (A4, `/curriculo`): sem header, barra de comandos, moldura, rodapé nem botão de imprimir; competências e experiências abertas; ~3 páginas A4. Dois desvios achados e corrigidos: o botão "Imprimir" saía no papel (`.doc-actions` agora oculto, `resume.css`) e no tema escuro o texto saía cinza-claro sobre branco (`tokens.css` usa os tokens claros em `@media print`; teste `contrast.test.js` › "a impressão usa os mesmos tokens do tema claro"). PDF em `docs/screenshots/curriculo-impressao.pdf`. **Limite:** as quebras de página foram vistas na renderização em modo de impressão, não rasterizando o PDF (sem `pdftoppm` aqui) |
 | ES-10 | ✅ | `Reveal` não existe mais; só restam `@keyframes term-blink` e `term-type`; `TerminalSession.jsx:27` respeita `prefers-reduced-motion` |
 
-Resumo: ✅ 8 · ◐ 1 · ❌ 0 · ❔ 1
+Resumo: ✅ 9 · ◐ 0 · ❌ 0 · ❔ 1

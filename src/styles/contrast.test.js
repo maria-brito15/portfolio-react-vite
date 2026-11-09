@@ -67,6 +67,13 @@ describe('contraste AA dos tokens (ES-05)', () => {
     expect(ratio(theme['on-accent'], theme.accent)).toBeGreaterThanOrEqual(4.5);
   });
 
+  it('a impressão usa os mesmos tokens do tema claro (ES-09)', () => {
+    const print = tokens(/@media print\s*\{\s*:root,\s*\[data-theme\]\s*\{([\s\S]*?)\n {2}\}/);
+    for (const name of [...SURFACES, ...ACCENTS, ...TEXTS, 'on-accent']) {
+      expect(print[name], `--${name} na impressão`).toBe(light[name]);
+    }
+  });
+
   it('o cálculo detecta um acento fraco (guarda do próprio teste)', () => {
     expect(ratio('#555555', dark.surface)).toBeLessThan(4.5);
     expect(ratio('#ffffff', '#000000')).toBeCloseTo(21, 0);
