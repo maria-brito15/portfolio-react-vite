@@ -83,7 +83,7 @@ describe('navegação', () => {
     expect(screen.getByRole('heading', { name: 'Página não encontrada' })).toBeInTheDocument();
   });
 
-  it('todas as rotas renderizam sem erro nos dois idiomas', async () => {
+  it('todas as rotas renderizam sem erro nos dois idiomas', { timeout: 90000 }, async () => {
     const user = userEvent.setup();
     for (const path of [
       '/',

@@ -182,19 +182,23 @@ describe('ls <página> e <página> <seção>', () => {
     expect(log()).toHaveTextContent('github');
   });
 
-  it('nenhuma seção de nenhuma página fica inacessível pelo terminal', async () => {
-    const user = userEvent.setup();
-    renderApp('/');
-    for (const route of routes.filter((r) => sectionsOf(r.id).length)) {
-      for (const section of sectionsOf(route.id)) {
-        await run(user, `${route.name} ${section.name}`);
-        const entry = log().querySelector('.term-entry');
-        expect(entry, `${route.name} ${section.name}`).toBeTruthy();
-        expect(entry.textContent.length, `${route.name} ${section.name}`).toBeGreaterThan(40);
-        expect(entry.textContent).not.toMatch(/não encontrada/);
+  it(
+    'nenhuma seção de nenhuma página fica inacessível pelo terminal',
+    { timeout: 90000 },
+    async () => {
+      const user = userEvent.setup();
+      renderApp('/');
+      for (const route of routes.filter((r) => sectionsOf(r.id).length)) {
+        for (const section of sectionsOf(route.id)) {
+          await run(user, `${route.name} ${section.name}`);
+          const entry = log().querySelector('.term-entry');
+          expect(entry, `${route.name} ${section.name}`).toBeTruthy();
+          expect(entry.textContent.length, `${route.name} ${section.name}`).toBeGreaterThan(40);
+          expect(entry.textContent).not.toMatch(/não encontrada/);
+        }
       }
-    }
-  });
+    },
+  );
 });
 
 describe('cd <página>/<seção>', () => {

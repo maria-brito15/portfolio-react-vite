@@ -309,6 +309,14 @@ Resumo: criar o repositório no GitHub → importar no Netlify (build `npm run b
 | **Serviços** | **Estudo de caso** |
 | ![Serviços](docs/screenshots/servicos-desktop.png) | ![Estudo de caso](docs/screenshots/estudo-de-caso-desktop.png) |
 
+**Header enxuto e terminal como acesso completo** (`docs/screenshots/terminal-*.png`, 1440 e 390, claro e escuro):
+
+| Header novo | `ls curriculo` |
+| :---: | :---: |
+| ![Header](docs/screenshots/terminal-header-desktop-dark.png) | ![ls curriculo](docs/screenshots/terminal-ls-curriculo-desktop-dark.png) |
+| **`curriculo competencias`** | **`academico disciplinas` (celular, claro)** |
+| ![curriculo competencias](docs/screenshots/terminal-curriculo-competencias-desktop-dark.png) | ![academico disciplinas](docs/screenshots/terminal-academico-disciplinas-mobile-light.png) |
+
 **Estilo único terminal/IDE** (1440×900 e 390×844, temas escuro e claro; todas as capturas em `docs/screenshots/estilo-*.png`):
 
 | Início (terminal) | Projetos |
