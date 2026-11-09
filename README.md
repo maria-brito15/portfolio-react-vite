@@ -52,7 +52,7 @@ Páginas:
 | `/servicos` | Serviços web oferecidos, cases (BECAS, Ágape Vestir), FAQ e contato |
 | `/estudos-de-caso/whatsapp-dispatcher` | Estudo de caso de arquitetura (PT/EN) |
 
-Todas as páginas usam o mesmo esqueleto (`SiteShell`): **Header** único (Início, Currículo, Acadêmico, Projetos, Serviços, Contato; o item atual leva `aria-current="page"`) → **barra de comandos** fixa → **Window** (a "janelinha" com título `visitante@mariab.dev: ~/rota`) → conteúdo → **Footer**. Fora da home há também **← Voltar** (`history.back()` quando a página anterior é do site; senão vai para `/`) e **breadcrumb** (`~ / academico`). Todos os caminhos, nomes de comando, rótulos de menu e breadcrumbs vêm de uma tabela só: [`src/data/routes.js`](src/data/routes.js).
+Todas as páginas usam o mesmo esqueleto (`SiteShell`): **Header** → **barra de comandos** fixa → **Window** (a "janelinha" com título `visitante@mariab.dev: ~/rota`) → conteúdo → **Footer**. O **Header** tem três zonas e nenhum menu de links: acesso aos comandos (`>_ Ctrl K`) à esquerda, `mariab.dev` centralizado e os dois controles (tema e idioma) à direita; o "menu" do site é o terminal. Fora da home há também **← Voltar** (`history.back()` quando a página anterior é do site; senão vai para `/`) e **breadcrumb** (`~ / academico`). Todos os caminhos, nomes de comando e breadcrumbs vêm de uma tabela só: [`src/data/routes.js`](src/data/routes.js); as seções internas de cada página, de [`src/data/sections.js`](src/data/sections.js).
 
 ### Um só estilo: terminal/IDE
 
@@ -61,6 +61,22 @@ Todo o site fala a mesma língua visual, a de um TUI bonito: **JetBrains Mono em
 ### Duas visualizações: "no terminal" e "página própria"
 
 Todo comando que tem página dedicada (`sobre`, `habilidades`, `projetos`, `experiencias`, `curriculo`, `academico`, `servicos`, `contato`) **mostra primeiro a visão em terminal** e termina com `[ ver no terminal ]  [ abrir página própria ↗ ]`. Só `cd <página>` e o botão "abrir página própria" navegam, passando por um carregamento (`abrindo /academico… [■■■■□□□□] 48%` → `pronto ✓`; `Esc` ou `Ctrl+C` cancelam; com `prefers-reduced-motion` vira `carregando…`). Nas páginas dedicadas (inclusive as antigas seções da home), a barra de título da Window tem o mesmo par: `[ ver no terminal ]` leva à home com o comando já executado (`/?cmd=academico`).
+
+### Todo o conteúdo pelo terminal
+
+Qualquer página e qualquer seção dentro dela podem ser lidas por completo no terminal, com o mesmo conteúdo da página própria (lido de `src/data/*`, em PT e EN):
+
+| Comando | O que faz |
+| --- | --- |
+| `ls` | lista as páginas (com o número de seções de cada uma) |
+| `ls curriculo` | lista as seções: `resumo`, `competencias`, `experiencias`, `projetos`, `formacao`, `reconhecimentos` |
+| `curriculo competencias` (ou `curriculo/competencias`) | imprime a seção no terminal, sem navegar, com `[ ver no terminal ] [ abrir página própria ↗ ]` |
+| `cd curriculo/competencias` (ou `open curriculo competencias`) | abre a página própria já na seção (com o carregamento) |
+| `academico disciplinas` | semestres e disciplinas em colunas (com os placeholders atuais) |
+| `projetos ecoshop` | detalhes de um projeto (cada projeto é uma seção, por `id`) |
+| `experiencias cursos` | um grupo de experiências (`academicas`, `cursos`, `reconhecimentos`) |
+
+Seções por página: **currículo** (6), **acadêmico** (`linha-do-tempo`, `formacao`, `atividades`, `disciplinas`), **serviços** (`servicos`, `cases`, `faq`, `contato`), **projetos** (um por projeto) e **experiências** (um por grupo). Aceita maiúsculas, acentos, `~`, `./`, barra final e aspas; argumento desconhecido gera um erro claro (`cd: xyz: página não encontrada. Tente ls`). O Tab completa comando, página e, depois de `/` ou de um espaço, a seção.
 
 | Tecla / comando | O que faz |
 | --- | --- |

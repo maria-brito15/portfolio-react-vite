@@ -167,3 +167,12 @@
 .case-body p {
   max-width: var(--measure);
 }
+
+/* Seção aberta por `cd <página>/<seção>`: realce discreto do alvo da âncora. */
+.doc-sec:target,
+.timeline-item:target,
+.extra-group:target,
+.sec:target {
+  outline: 1px dashed var(--accent);
+  outline-offset: 6px;
+}

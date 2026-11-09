@@ -363,3 +363,38 @@
 .term-entry > :nth-child(n + 5) {
   animation-delay: 0.32s;
 }
+
+/* Seções lidas no terminal: marcadores, notas e `ls <página>`. */
+.t-bullets {
+  list-style: none;
+  margin: 0.2rem 0 0.4rem;
+  padding: 0;
+}
+.t-bullets li {
+  padding-left: 2ch;
+  text-indent: -2ch;
+}
+.t-bullets li::before {
+  content: '- ';
+  color: var(--dim);
+}
+.t-warn {
+  color: var(--warn);
+}
+.t-ls.t-ls-sections li {
+  grid-template-columns: 26ch 1fr;
+}
+.t-table.t-table-grades li {
+  grid-template-columns: 1fr 6ch 12ch 6ch;
+}
+.term-entry p {
+  max-width: var(--measure);
+}
+@media (max-width: 720px) {
+  .t-ls.t-ls-sections li {
+    grid-template-columns: 1fr;
+  }
+  .t-table.t-table-grades li {
+    grid-template-columns: 1fr 6ch;
+  }
+}

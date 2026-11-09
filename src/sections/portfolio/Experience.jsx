@@ -12,7 +12,7 @@ export default function Experience({ content }) {
         {content.title}
       </SectionTitle>
       {experienceGroups.map((group) => (
-        <div className="extra-group" key={group.id}>
+        <div className="extra-group" id={`exp-${group.id}`} key={group.id}>
           <h3 className="extra-group-title">{group.title[lang]}</h3>
           <div className="extra-grid">
             {group.items.map((item) => (

@@ -209,8 +209,10 @@ export function TerminalProvider({ children }) {
     handled.current = search;
     const cmd = new URLSearchParams(search).get('cmd');
     // A URL é um sistema externo: executar o comando é a reação a ela.
+    // "curriculo competencias": o 1º termo precisa ser o comando de uma página.
+    const first = cmd?.split(/\s+/)[0];
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (cmd && routes.some((r) => r.command === cmd) && findCommand(cmd)) execute(cmd);
+    if (first && routes.some((r) => r.command === first) && findCommand(first)) execute(cmd);
     navigate('/', { replace: true });
   }, [path, search, execute, navigate]);
 

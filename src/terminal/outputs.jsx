@@ -5,6 +5,7 @@ import { createContext, useContext } from 'react';
 import { Link, useRouter } from '../router';
 import { useLanguage } from '../i18n/LanguageContext';
 import { normalizePath, routeById, terminalUrl } from '../data/routes';
+import { sectionCommand, targetPath } from '../data/sections';
 import ViewActions from '../components/shell/ViewActions';
 import { useTerminalSession } from './sessionContext';
 
@@ -44,7 +45,7 @@ export function TermLink({ to, onClick, ...rest }) {
 // `[ ver no terminal ]  [ abrir página própria ↗ ]` no fim da saída de um
 // comando que tem página dedicada. Na home, "ver no terminal" é a visão atual;
 // em outra página ele leva à home com o comando já executado (/?cmd=…).
-export function ActionLine({ routeId }) {
+export function ActionLine({ routeId, section }) {
   const route = routeById(routeId);
   const { path } = useRouter();
   const session = useTerminalSession();
@@ -53,8 +54,8 @@ export function ActionLine({ routeId }) {
 
   const terminal = onHome
     ? { onClick: () => document.getElementById('inicio')?.scrollIntoView({ behavior: 'smooth' }) }
-    : { to: terminalUrl(route) };
-  const page = { onClick: () => session.openPage(route.path, entryId) };
+    : { to: terminalUrl(route, sectionCommand(route, section)) };
+  const page = { onClick: () => session.openPage(targetPath(route, section), entryId) };
 
   return (
     <p className="t-actions">

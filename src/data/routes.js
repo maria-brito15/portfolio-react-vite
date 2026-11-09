@@ -133,10 +133,16 @@ export function findPageByPath(path) {
   return routes.find((r) => r.kind === 'page' && (r.path === clean || r.aliases?.includes(clean)));
 }
 
-// Diretório pelo nome em PT ou EN; aceita `./x`, `~/x`, `/x` e barra final.
+// Remove acentos e caixa ("Currículo" vale como "curriculo").
+export const fold = (text) =>
+  String(text ?? '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase();
+
+// Diretório pelo nome em PT ou EN; aceita `./x`, `~/x`, `/x`, barra final e acentos.
 export function findDirectory(arg) {
-  const name = (arg ?? '')
-    .toLowerCase()
+  const name = fold(arg)
     .replace(/^\.?\/+|\/+$/g, '')
     .replace(/^~\/?/, '');
   return directories.find((d) => d.name === name || d.alias === name);
@@ -162,4 +168,5 @@ export function windowPath(route, lang) {
 }
 
 // URL da home que já executa o comando da página (visão em terminal).
-export const terminalUrl = (route) => `/?cmd=${route.command}`;
+export const terminalUrl = (route, command = route.command) =>
+  `/?cmd=${encodeURIComponent(command)}`;

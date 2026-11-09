@@ -142,7 +142,7 @@ export default function ProjectCard({ project, orderUndetermined = false }) {
   const { lang, t } = useLanguage();
   const Variant = VARIANTS[project.variant];
   return (
-    <li className="timeline-item">
+    <li className="timeline-item" id={`projeto-${project.id}`}>
       <div className="timeline-date">
         <time dateTime={toDateTime(project.date)}>{formatProjectDate(project.date)}</time>
         {orderUndetermined && (
