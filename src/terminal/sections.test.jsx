@@ -184,6 +184,27 @@ describe('índice das seções (um só renderizador)', () => {
     );
   });
 
+  it('toda seção termina com próxima, anterior e índice; os extremos avisam', async () => {
+    const user = userEvent.setup();
+    renderApp('/');
+    const nav = () => log().querySelector('.t-sectionnav');
+    await run(user, 'curriculo 2');
+    await waitFor(() => expect(nav()).toBeTruthy());
+    expect(nav()).toHaveTextContent('próxima: curriculo 3 (experiencias)');
+    expect(nav()).toHaveTextContent('anterior: curriculo 1 (resumo)');
+    expect(nav()).toHaveTextContent('índice: curriculo');
+    expect(within(nav()).getAllByRole('button')).toHaveLength(3);
+
+    await run(user, 'curriculo 1');
+    await waitFor(() => expect(nav()).toHaveTextContent('anterior: esta é a primeira seção'));
+    await run(user, 'curriculo 6');
+    await waitFor(() => expect(nav()).toHaveTextContent('próxima: esta é a última seção'));
+
+    // clicar em "anterior" na última seção abre a quinta
+    await user.click(within(nav()).getByRole('button', { name: /anterior/ }));
+    await waitFor(() => expect(nav()).toHaveTextContent('próxima: curriculo 6 (reconhecimentos)'));
+  });
+
   it('ls de página sem seções não mostra índice', async () => {
     const user = userEvent.setup();
     renderApp('/');

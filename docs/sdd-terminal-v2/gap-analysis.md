@@ -14,7 +14,7 @@ Cruzamento entre [`requirements.md`](requirements.md) e o código do `src.zip` e
 | Shell e navegação (SH) | 9 | 0 | 1 | 0 |
 | Sessão do terminal (TS) | 8 | 0 | 0 | 0 |
 | Comandos e conteúdo (CM) | 5 | 0 | 0 | 0 |
-| **Descoberta (DS)** | **4** | **3** | **5** | **0** |
+| **Descoberta (DS)** | **5** | **3** | **4** | **0** |
 | Dados e ordem (DT) | 4 | 0 | 0 | 0 |
 | Não funcionais (NF) | 3 | 1 | 0 | 0 |
 
@@ -89,7 +89,7 @@ Sintomas observados no navegador:
 | DS-03 | ✅ | `listSections` (`commands.jsx:49`) só escolhe `PageIndex`; o comando da página usa o mesmo componente (`commands.jsx:520`); a lista "# seções" de `views.jsx` foi removida. O teste compara o HTML do índice de `curriculo` e de `ls curriculo` (igual) |
 | DS-04 | ✅ | Cada linha `[n]` é um `RunCommand` (`pageIndex.jsx:53`), desabilitado com `session.busy`; estilo em `terminal.css` (`.t-run`, `.t-index-list`). Teste `sections.test.jsx` › "clicar em [2] produz a mesma saída de \"curriculo 2\" e o botão é alcançável por Tab". Conferido no Chrome: 390×844 e 1440×900 sem rolagem horizontal e sem erro de console |
 | DS-05 | ❌ | Não há tratamento de número sozinho nem contexto de "última página aberta" (`TerminalSession` não guarda a página do último índice); executado: `2` → comando não encontrado. Mensagem pronta em `ui.js` (`term.nav.noContext`) e sem uso |
-| DS-06 | ❌ | `SectionNav` (`pageIndex.jsx:75`) existe e não é renderizado ao fim das seções (`sectionViews.jsx` não o importa) |
+| DS-06 | ✅ | `SectionNav` é renderizado ao fim de toda seção em `runSection` (`commands.jsx:98`). Teste `sections.test.jsx` › "toda seção termina com próxima, anterior e índice; os extremos avisam": `curriculo 2` → próxima 3 (experiencias), anterior 1 (resumo), índice; `curriculo 1` → "esta é a primeira seção"; `curriculo 6` → "esta é a última seção"; o clique em "anterior" abre a seção 5 |
 | DS-07 | ❌ | Não existem os comandos `proximo`/`anterior`/`n`/`p` em `commands.jsx`; `ui.js` já tem `nextWord`/`previousWord` sem uso; executado: `proximo` e `n` → comando não encontrado |
 | DS-08 | ❌ | `ui.js` tem `term.firstVisit`, sem uso; o banner mostra só "digite ajuda" |
 | DS-09 | ◐ | O placeholder existe ("digite um comando · ajuda") mas sem exemplo; `ui.js` tem `term.try` ("experimente:") sem uso |

@@ -16,7 +16,7 @@ import { formatProjectDate } from '../utils/projectDate';
 import { ActionLine, Cmd, Ext, TermLink } from './outputs';
 import { AcademicsView, ResumeView, ServicesView } from './views';
 import SectionView from './sectionViews';
-import { PageIndex } from './pageIndex';
+import { PageIndex, SectionNav } from './pageIndex';
 
 const L = (pt, en) => ({ pt, en });
 
@@ -95,6 +95,7 @@ function runSection(command, args) {
     output: (lang) => (
       <>
         <SectionView routeId={route} section={section} lang={lang} />
+        <SectionNav routeId={route} section={section} />
         <ActionLine routeId={route} section={section} />
       </>
     ),
