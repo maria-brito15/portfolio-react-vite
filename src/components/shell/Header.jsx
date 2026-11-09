@@ -1,54 +1,35 @@
-import { useEffect, useId, useState } from 'react';
-import { Link, useRouter } from '../../router';
+import { Link } from '../../router';
 import { useLanguage } from '../../i18n/LanguageContext';
 import { useTheme } from '../../hooks/useTheme';
-import { activeMenuId, menu } from '../../data/routes';
+import { focusCommands } from './commandBarEvents';
 
-// Barra de navegação única do site: os mesmos links em todas as páginas,
-// vindos da tabela de rotas (src/data/routes.js). O item da página atual leva
-// aria-current="page". Em telas pequenas os links ficam num menu recolhível.
+// Header em três zonas: acesso a comandos (esquerda), logo centralizado e os
+// dois controles (tema e idioma, direita). Não há menu de links: o "menu" do
+// site é o terminal (barra de comandos logo abaixo, `Ctrl K`).
 export default function Header() {
-  const { lang, t, toggleLang } = useLanguage();
+  const { t, toggleLang } = useLanguage();
   const [theme, toggleTheme] = useTheme();
-  const { path, hash } = useRouter();
-  const [menuOpen, setMenuOpen] = useState(false);
-  const menuId = useId();
-  const activeId = activeMenuId(path);
-
-  // Fecha o menu ao trocar de rota ou âncora.
-  const [lastLocation, setLastLocation] = useState(path + hash);
-  if (lastLocation !== path + hash) {
-    setLastLocation(path + hash);
-    setMenuOpen(false);
-  }
-
-  useEffect(() => {
-    if (!menuOpen) return;
-    const onKeyDown = (event) => event.key === 'Escape' && setMenuOpen(false);
-    document.addEventListener('keydown', onKeyDown);
-    return () => document.removeEventListener('keydown', onKeyDown);
-  }, [menuOpen]);
-
   const dark = theme === 'dark';
 
   return (
-    <nav className="site-nav" aria-label={t.nav.main}>
+    <header className="site-nav">
+      <div className="nav-left">
+        <button
+          type="button"
+          className="header-cmd"
+          aria-label={t.cmdbar.headerButton}
+          title={t.cmdbar.shortcut}
+          onClick={focusCommands}
+        >
+          <span className="header-cmd-prompt" aria-hidden="true">
+            &gt;_
+          </span>
+          <kbd aria-hidden="true">Ctrl K</kbd>
+        </button>
+      </div>
       <Link to="/" className="logo" aria-label={t.nav.home}>
         mariab.dev
       </Link>
-      <ul id={menuId} className={`nav-links${menuOpen ? ' open' : ''}`}>
-        {menu.map((item) => (
-          <li key={item.id}>
-            <Link
-              to={item.path}
-              aria-current={item.id === activeId ? 'page' : undefined}
-              onClick={() => setMenuOpen(false)}
-            >
-              {item.label[lang]}
-            </Link>
-          </li>
-        ))}
-      </ul>
       <div className="nav-right">
         <button
           type="button"
@@ -68,17 +49,7 @@ export default function Header() {
           <span aria-hidden="true">🌍</span>
           <span>{t.language.label}</span>
         </button>
-        <button
-          type="button"
-          className="menu-toggle"
-          aria-expanded={menuOpen}
-          aria-controls={menuId}
-          aria-label={menuOpen ? t.nav.closeMenu : t.nav.openMenu}
-          onClick={() => setMenuOpen((v) => !v)}
-        >
-          <span aria-hidden="true">{menuOpen ? '✕' : '☰'}</span>
-        </button>
       </div>
-    </nav>
+    </header>
   );
 }

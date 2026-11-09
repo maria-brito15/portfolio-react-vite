@@ -1,35 +1,14 @@
 import {
-  activeMenuId,
   crumbsFor,
   directories,
   findDirectory,
   findPageByPath,
-  menu,
   routeById,
   terminalUrl,
   windowPath,
 } from './routes';
 
 describe('tabela de rotas', () => {
-  it('o menu é único e na ordem pedida', () => {
-    expect(menu.map((r) => r.label.pt)).toEqual([
-      'Início',
-      'Currículo',
-      'Acadêmico',
-      'Projetos',
-      'Serviços',
-      'Contato',
-    ]);
-    expect(menu.map((r) => r.label.en)).toEqual([
-      'Home',
-      'Resume',
-      'Academics',
-      'Projects',
-      'Services',
-      'Contact',
-    ]);
-  });
-
   it('todos os caminhos e nomes de comando são únicos', () => {
     const paths = new Set();
     for (const r of directories) {
@@ -56,16 +35,6 @@ describe('tabela de rotas', () => {
     expect(findDirectory('~/projetos/')?.id).toBe('projetos');
     expect(findDirectory('./contact')?.id).toBe('contato');
     expect(findDirectory('inexistente')).toBeUndefined();
-  });
-
-  it('o item ativo do menu acompanha caminho e âncora', () => {
-    expect(activeMenuId('/')).toBe('home');
-    expect(activeMenuId('/projetos')).toBe('projetos');
-    expect(activeMenuId('/contact')).toBe('contato');
-    expect(activeMenuId('/sobre')).toBeUndefined();
-    expect(activeMenuId('/academics')).toBe('academico');
-    // a página-filha marca a mãe
-    expect(activeMenuId('/estudos-de-caso/whatsapp-dispatcher')).toBe('projetos');
   });
 
   it('breadcrumb e título da janela usam o vocabulário do idioma', () => {

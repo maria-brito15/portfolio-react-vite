@@ -53,16 +53,15 @@ describe('página inicial', () => {
     expect(screen.getByRole('button', { name: 'Modo escuro' })).toBeInTheDocument();
   });
 
-  it('o menu móvel abre e fecha com aria-expanded', async () => {
-    const user = userEvent.setup();
+  it('o header não tem menu de links nem menu recolhível', () => {
     renderApp('/');
-    const toggle = screen.getByRole('button', { name: 'Abrir menu' });
-    expect(toggle).toHaveAttribute('aria-expanded', 'false');
-    await user.click(toggle);
-    expect(screen.getByRole('button', { name: 'Fechar menu' })).toHaveAttribute(
-      'aria-expanded',
-      'true',
-    );
+    const header = document.querySelector('header.site-nav');
+    expect(
+      within(header)
+        .queryAllByRole('link')
+        .map((a) => a.getAttribute('href')),
+    ).toEqual(['/']);
+    expect(within(header).queryByRole('button', { name: /menu/i })).toBeNull();
   });
 });
 

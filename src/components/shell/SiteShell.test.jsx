@@ -1,7 +1,6 @@
 import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderApp } from '../../test/helpers';
-import { menu } from '../../data/routes';
 
 const ROUTES = [
   '/',
@@ -16,25 +15,20 @@ const ROUTES = [
   '/estudos-de-caso/whatsapp-dispatcher',
   '/pagina-que-nao-existe',
 ];
-const MENU_HREFS = ['/', '/curriculo', '/academico', '/projetos', '/servicos', '/contato'];
 
 const barInput = () => screen.getByRole('textbox', { name: 'Barra de comandos do site' });
-const menuHrefs = () =>
-  within(document.querySelector('.site-nav'))
-    .getAllByRole('listitem')
-    .map((li) => within(li).getByRole('link').getAttribute('href'));
 
 beforeEach(() => sessionStorage.clear());
 
 describe('layout único em todas as páginas', () => {
   it.each(ROUTES)('%s tem um Header, uma barra de comandos, uma Window e um Footer', (route) => {
     renderApp(route);
-    expect(document.querySelectorAll('nav.site-nav')).toHaveLength(1);
+    expect(document.querySelectorAll('header.site-nav')).toHaveLength(1);
     expect(document.querySelectorAll('.cmdbar')).toHaveLength(1);
     expect(document.querySelectorAll('.win')).toHaveLength(1);
     expect(document.querySelectorAll('footer')).toHaveLength(1);
     // a ordem do esqueleto: Header → barra → Window → Footer
-    const order = ['nav.site-nav', '.cmdbar', '.win', 'footer'].map((sel) =>
+    const order = ['header.site-nav', '.cmdbar', '.win', 'footer'].map((sel) =>
       document.querySelector(sel),
     );
     for (let i = 1; i < order.length; i++) {
@@ -44,13 +38,32 @@ describe('layout único em todas as páginas', () => {
     }
   });
 
-  it('o menu é o mesmo em todas as rotas e vem da tabela de rotas', () => {
+  it('o header é o mesmo em todas as rotas: acesso a comandos, logo e dois controles', () => {
     for (const route of ROUTES) {
       const { unmount } = renderApp(route);
-      expect(menuHrefs(), route).toEqual(MENU_HREFS);
+      const header = document.querySelector('header.site-nav');
+      expect(
+        within(header)
+          .queryAllByRole('link')
+          .map((a) => a.getAttribute('href')),
+        route,
+      ).toEqual(['/']);
+      expect(within(header).getByRole('link', { name: /mariab.dev/ })).toBeInTheDocument();
+      const buttons = within(header)
+        .getAllByRole('button')
+        .map((b) => b.getAttribute('aria-label'));
+      expect(buttons, route).toEqual(['Comandos (Ctrl K)', 'Modo claro', 'EN — Switch to English']);
+      // sem menu de links nem menu recolhível
+      expect(header.querySelector('ul, .nav-links, .menu-toggle')).toBeNull();
       unmount();
     }
-    expect(menu.map((r) => r.path)).toEqual(MENU_HREFS);
+  });
+
+  it('o botão >_ do header foca a barra de comandos', async () => {
+    const user = userEvent.setup();
+    renderApp('/academico');
+    await user.click(screen.getByRole('button', { name: 'Comandos (Ctrl K)' }));
+    expect(barInput()).toHaveFocus();
   });
 
   it('só as páginas internas têm "Voltar" e breadcrumb', () => {
@@ -86,39 +99,13 @@ describe('layout único em todas as páginas', () => {
   });
 });
 
-describe('item ativo do menu', () => {
-  const current = () =>
-    within(document.querySelector('.site-nav'))
-      .queryAllByRole('link')
-      .filter((a) => a.getAttribute('aria-current') === 'page')
-      .map((a) => a.textContent);
-
-  it.each([
-    ['/', ['Início']],
-    ['/curriculo', ['Currículo']],
-    ['/resume', ['Currículo']],
-    ['/academico', ['Acadêmico']],
-    ['/servicos', ['Serviços']],
-    ['/projetos', ['Projetos']],
-    ['/projects', ['Projetos']],
-    ['/contato', ['Contato']],
-    ['/sobre', []],
-    ['/estudos-de-caso/whatsapp-dispatcher', ['Projetos']],
-  ])('%s marca %j', (route, expected) => {
-    renderApp(route);
-    expect(current()).toEqual(expected);
-  });
-});
-
 describe('Voltar', () => {
   it('usa history.back() quando a página anterior é do site', async () => {
     const user = userEvent.setup();
     const back = vi.spyOn(window.history, 'back').mockImplementation(() => {});
-    renderApp('/');
-    await user.click(
-      within(document.querySelector('.site-nav')).getByRole('link', { name: 'Acadêmico' }),
-    );
-    expect(window.location.pathname).toBe('/academico');
+    renderApp('/projetos');
+    await user.click(screen.getByRole('link', { name: /Ler o Estudo de Caso/ }));
+    expect(window.location.pathname).toBe('/estudos-de-caso/whatsapp-dispatcher');
     await user.click(screen.getByRole('button', { name: 'Voltar à página anterior' }));
     expect(back).toHaveBeenCalledTimes(1);
     back.mockRestore();

@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { useRouter } from '../../router';
+import { FOCUS_COMMANDS } from './commandBarEvents';
 import { useLanguage } from '../../i18n/LanguageContext';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { normalizePath } from '../../data/routes';
@@ -59,6 +60,16 @@ export default function CommandBar() {
     };
     document.addEventListener('keydown', onKeyDown);
     return () => document.removeEventListener('keydown', onKeyDown);
+  }, [narrow]);
+
+  // O botão `>_` do Header pede o foco por evento.
+  useEffect(() => {
+    const onFocusRequest = () => {
+      if (narrow) setOpen(true);
+      inputRef.current?.focus();
+    };
+    window.addEventListener(FOCUS_COMMANDS, onFocusRequest);
+    return () => window.removeEventListener(FOCUS_COMMANDS, onFocusRequest);
   }, [narrow]);
 
   function afterSubmit() {

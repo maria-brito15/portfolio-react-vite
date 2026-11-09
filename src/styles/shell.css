@@ -10,17 +10,86 @@
   right: 0;
   z-index: 100;
 }
-.site-top .site-nav {
-  position: static;
-  min-height: var(--nav-h);
-  box-sizing: border-box;
-}
 html {
   scroll-padding-top: calc(var(--top-h) + var(--space-4));
 }
 
-.nav-links a[aria-current='page'] {
+/* ---------- Header: acesso a comandos · logo centralizado · tema e idioma ---------- */
+.site-nav {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: var(--space-4);
+  min-height: var(--nav-h);
+  box-sizing: border-box;
+  padding: 0 var(--space-6);
+  background: var(--nav-bg);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-left {
+  justify-self: start;
+}
+.nav-right {
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.logo {
+  font-family: var(--font-mono);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text);
+  text-decoration: none;
+  letter-spacing: -0.01em;
+}
+.header-cmd,
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 5px 12px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-2);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    color 0.2s;
+}
+.header-cmd:hover,
+.theme-toggle:hover {
+  border-color: var(--accent);
   color: var(--accent);
+}
+.header-cmd-prompt {
+  color: var(--warn);
+}
+.header-cmd kbd {
+  font: inherit;
+  font-size: 0.68rem;
+  color: var(--dim);
+}
+@media (max-width: 720px) {
+  .site-nav {
+    padding: 0 var(--space-3);
+    gap: var(--space-2);
+  }
+  .header-cmd kbd,
+  .theme-toggle span:last-child {
+    display: none;
+  }
+  .theme-toggle.lang-toggle span:last-child {
+    display: inline;
+  }
+  .logo {
+    font-size: 1rem;
+  }
 }
 
 /* ---------- Corpo ---------- */

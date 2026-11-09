@@ -1,4 +1,4 @@
-// Tabela única de rotas e seções do site. Alimenta o menu do Header, o
+// Tabela única de rotas e seções do site. Alimenta o
 // breadcrumb, o título da Window, os comandos `cd`/`ls`, o autocompletar do
 // terminal e o "abrir página própria": nenhum outro arquivo repete caminhos.
 //
@@ -120,12 +120,7 @@ export const routes = [
   },
 ];
 
-// Itens do menu do Header, iguais em todas as páginas.
-export const menuIds = ['home', 'curriculo', 'academico', 'projetos', 'servicos', 'contato'];
-
 export const routeById = (id) => routes.find((r) => r.id === id);
-
-export const menu = menuIds.map(routeById);
 
 // Seções e páginas que aparecem em `ls`, `cd` e no autocompletar.
 export const directories = routes.filter((r) => r.name && !r.hidden);
@@ -145,14 +140,6 @@ export function findDirectory(arg) {
     .replace(/^\.?\/+|\/+$/g, '')
     .replace(/^~\/?/, '');
   return directories.find((d) => d.name === name || d.alias === name);
-}
-
-// Item do menu marcado como página atual (a página-filha marca a mãe:
-// o estudo de caso marca "Projetos"). `findPageByPath` resolve /resume etc.
-export function activeMenuId(path) {
-  const page = findPageByPath(path);
-  const id = page?.parent ?? page?.id;
-  return menu.some((r) => r.id === id) ? id : undefined;
 }
 
 // Segmentos do breadcrumb e do título da janela: [{ label, to }], sem o "~".
