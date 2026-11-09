@@ -9,6 +9,12 @@ const sheets = readdirSync(dir)
 const indexHtml = readFileSync(join(process.cwd(), 'index.html'), 'utf8');
 
 describe('pele única', () => {
+  it('nenhum CSS cita folhas que não existem mais', () => {
+    for (const [name, css] of sheets) {
+      expect(css, name).not.toMatch(/original\.css|portfolio\.css/);
+    }
+  });
+
   it('não sobra Syne, DM Sans nem degradê de texto', () => {
     for (const [name, css] of [...sheets, ['index.html', indexHtml]]) {
       expect(css, name).not.toMatch(/Syne|DM[ +]Sans|grad-text|grad-warm|background-clip/i);

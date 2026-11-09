@@ -1,7 +1,6 @@
 /* Componentes compartilhados (src/components/ui): título de seção, cartão,
    chip e tabela. Uma implementação só, usada por Home, Currículo, Acadêmico e
-   Serviços. Valores vêm de tokens.css; cores gerais, de original.css.
-   É carregado ANTES de original.css: as classes de cada seção (.svc-card,
+   Serviços. Valores vêm de tokens.css; as classes de cada seção (.svc-card,
    .featured-card…) só ajustam o que é específico delas. */
 
 /* ---------- SectionTitle ---------- */
