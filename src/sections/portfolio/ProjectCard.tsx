@@ -3,7 +3,7 @@ import type { Project, ProjectText } from '../../data/projects';
 import type { ProjectDate } from '../../types';
 import { Link } from '../../router';
 import { useLanguage } from '../../i18n/LanguageContext';
-import { formatProjectDate } from '../../utils/projectDate';
+import { formatProjectDate, projectPeriod } from '../../utils/projectDate';
 import ProjectMedia from './ProjectMedia';
 import Card from '../../components/ui/Card';
 
@@ -167,7 +167,7 @@ export default function ProjectCard({
   return (
     <li className="timeline-item" id={`projeto-${project.id}`}>
       <div className="timeline-date">
-        <time dateTime={toDateTime(project.date)}>{formatProjectDate(project.date)}</time>
+        <time dateTime={toDateTime(project.date)}>{projectPeriod(project, lang)}</time>
         {orderUndetermined && (
           <span className="date-note">{t.timeline.orderUndetermined(project.date.year)}</span>
         )}

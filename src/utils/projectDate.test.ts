@@ -3,6 +3,7 @@ import {
   findUndeterminedOrder,
   formatProjectDate,
   parsePeriodStart,
+  projectPeriod,
   sortByDate,
   sortByDateDesc,
 } from './projectDate';
@@ -17,6 +18,26 @@ describe('formatProjectDate', () => {
     expect(formatProjectDate({ year: 2025, month: 1 })).toBe('01/2025');
     expect(formatProjectDate({ year: 2026, month: 11 })).toBe('11/2026');
     expect(formatProjectDate({ year: 2026 })).toBe('2026');
+  });
+});
+
+describe('projectPeriod', () => {
+  it('sem dateLabel, usa o MM/AAAA padrão', () => {
+    const project = { date: { year: 2026, month: 2 } };
+
+    expect(projectPeriod(project, 'pt')).toBe('02/2026');
+    expect(projectPeriod(project, 'en')).toBe('02/2026');
+  });
+
+  it('com dateLabel, usa o texto confirmado no idioma certo; a data em si não muda', () => {
+    const project = {
+      date: { year: 2026, month: 10 },
+      dateLabel: { pt: 'out/2026', en: 'oct/2026' },
+    };
+
+    expect(projectPeriod(project, 'pt')).toBe('out/2026');
+    expect(projectPeriod(project, 'en')).toBe('oct/2026');
+    expect(project.date).toEqual({ year: 2026, month: 10 });
   });
 });
 

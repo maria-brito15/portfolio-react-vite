@@ -8,8 +8,12 @@ import { projects } from '../data/projects';
 import { services } from '../data/services';
 import { profile } from '../data/profile';
 import { ui } from '../i18n/ui';
-import { activitiesByYear, semestersDesc } from '../utils/academics';
-import { formatProjectDate } from '../utils/projectDate';
+import {
+  activitiesByYear,
+  semestersDesc,
+  summarizeSemester,
+  terseActivityPeriod,
+} from '../utils/academics';
 import { Ext } from './outputs';
 
 export function ResumeView({ lang }: { lang: Lang }) {
@@ -72,7 +76,7 @@ export function AcademicsView({ lang }: { lang: Lang }) {
           <ul className="t-table t-table-act">
             {y.rows.map((row) => (
               <li key={row.key}>
-                <span className="t-dim">{formatProjectDate(row.date)}</span>
+                <span className="t-dim">{terseActivityPeriod(row)}</span>
                 <span className="t-wrap">
                   {row.title}
                   {row.detail && <span className="t-dim"> · {row.detail}</span>}
@@ -86,15 +90,23 @@ export function AcademicsView({ lang }: { lang: Lang }) {
 
       <p className="t-dim"># {t.semesters}</p>
       <ul className="t-table t-table-act">
-        {semestersDesc(academics.semesters).map((s) => (
-          <li key={s.id}>
-            <span className="t-dim">{s.label[lang]}</span>
-            <span className="t-wrap">{programName(s.program)}</span>
-            <span className="t-dim">
-              {s.inProgress ? t.inProgress : s.courses.length ? s.courses.length : t.noCourses}
-            </span>
-          </li>
-        ))}
+        {semestersDesc(academics.semesters).map((s) => {
+          const { average } = summarizeSemester(s.courses);
+
+          return (
+            <li key={s.id}>
+              <span className="t-dim">{s.label[lang]}</span>
+              <span className="t-wrap">{programName(s.program)}</span>
+              <span className="t-dim">
+                {s.inProgress
+                  ? t.inProgress
+                  : s.courses.length
+                    ? `${t.courseCount(s.courses.length)} · ${t.average}: ${average ?? '—'}`
+                    : t.noCourses}
+              </span>
+            </li>
+          );
+        })}
       </ul>
     </div>
   );

@@ -21,7 +21,7 @@ import {
   targetPath,
   type Section,
 } from '../data/sections';
-import { formatProjectDate } from '../utils/projectDate';
+import { projectPeriod } from '../utils/projectDate';
 import { ui } from '../i18n/ui';
 import { ActionLine, Cmd, Ext, TermLink } from './outputs';
 import { AcademicsView, ResumeView, ServicesView } from './views';
@@ -376,7 +376,7 @@ const commands: Command[] = [
           <ul className="t-table">
             {projects.map((p) => (
               <li key={p.id}>
-                <span className="t-dim">{formatProjectDate(p.date)}</span>
+                <span className="t-dim">{projectPeriod(p, lang)}</span>
                 <span className="t-accent">{p.name}</span>
                 <span className="t-dim t-wrap">{p.tech.join(', ')}</span>
                 <span>
@@ -548,6 +548,11 @@ const commands: Command[] = [
     }),
   },
   {
+    names: ['inicio', 'home'],
+    desc: L('volta à tela inicial do terminal', 'back to the terminal home screen'),
+    run: () => ({ clear: true, output: () => null }),
+  },
+  {
     names: ['limpar', 'clear'],
     aliases: ['cls'],
     desc: L('limpa a tela', 'clear the screen'),
@@ -644,7 +649,7 @@ export function contextAfter(input: string, prev: NavContext | null = null): Nav
 
   const id = command.names[0];
 
-  if (id === 'limpar') return null;
+  if (id === 'limpar' || id === 'inicio') return null;
   if (id === NEXT.pt || id === PREVIOUS.pt) {
     const step = prev ? stepSection(prev, id === NEXT.pt ? 1 : -1) : undefined;
 
@@ -807,8 +812,8 @@ export function complete(input: string, lang: Lang): string | string[] {
 
 // Atalhos clicáveis abaixo do terminal (essenciais no celular).
 export const quickCommands = {
-  pt: ['ajuda', 'ls', 'sobre', 'projetos', 'curriculo', 'academico', 'contato'],
-  en: ['help', 'ls', 'whoami', 'projects', 'resume', 'academics', 'contact'],
+  pt: ['inicio', 'ajuda', 'ls', 'sobre', 'projetos', 'curriculo', 'academico', 'contato'],
+  en: ['home', 'help', 'ls', 'whoami', 'projects', 'resume', 'academics', 'contact'],
 };
 
 // Inventário para testes e documentação: todos os comandos e seus nomes.

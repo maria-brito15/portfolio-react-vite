@@ -2,7 +2,7 @@ import type { Academics, Course, Semester } from '../data/academics';
 import type { ExperienceGroup } from '../data/experiences';
 import type { Project } from '../data/projects';
 import type { Lang, Localized, ProjectDate } from '../types';
-import { formatProjectDate, parsePeriodStart, sortByDateDesc } from './projectDate';
+import { formatProjectDate, parsePeriodStart, projectPeriod, sortByDateDesc } from './projectDate';
 
 // Cálculos da página Acadêmico.
 
@@ -19,6 +19,17 @@ export function summarizeSemester(courses: Pick<Course, 'hours' | 'grade'>[]) {
     : null;
 
   return { done, total, average };
+}
+
+// Carga horária e modalidade são opcionais (ver regras-de-dados.md): enquanto a
+// Duda não informa, ficam ausentes em toda disciplina. Mostrar a coluna cheia de
+// "—" só atrapalha a leitura, então cada tabela de semestre a esconde até que
+// pelo menos uma disciplina DAQUELE semestre tenha o dado.
+export function courseColumnsVisible(courses: Pick<Course, 'hours' | 'modality'>[]) {
+  return {
+    hours: courses.some((c) => typeof c.hours === 'number'),
+    modality: courses.some((c) => Boolean(c.modality)),
+  };
 }
 
 // Posição de `today` entre o início do primeiro ano e o fim do último, em %.
@@ -47,6 +58,13 @@ export interface ActivityRow {
   to?: string;
 }
 
+// Período para colunas estreitas (atividades por ano, no terminal): texto livre
+// e longo (ex. "2º semestre de 2026 – em andamento") não cabe nelas, então vira
+// só a data; `row.period` completo continua disponível para a página própria.
+export function terseActivityPeriod(row: Pick<ActivityRow, 'date' | 'period'>) {
+  return row.period.length > 10 ? formatProjectDate(row.date) : row.period;
+}
+
 export interface ActivitySources {
   projects: Project[];
   experienceGroups: ExperienceGroup[];
@@ -65,7 +83,7 @@ function activityRow(
     return {
       key: p.id,
       date: p.date,
-      period: formatProjectDate(p.date),
+      period: projectPeriod(p, lang),
       title: p.name,
       detail: p[lang].badge,
       kind: 'project',

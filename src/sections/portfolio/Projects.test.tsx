@@ -22,16 +22,22 @@ describe('timeline de projetos', () => {
     expect(names).toHaveLength(6);
   });
 
-  it('exibe só datas MM/AAAA ou AAAA e sinaliza a ordem indeterminada de 2026', () => {
+  it('exibe MM/AAAA, AAAA ou o rótulo confirmado (Portfólio: mês por extenso) e sinaliza a ordem indeterminada de 2026', async () => {
+    const user = userEvent.setup();
     const tl = timeline();
-    const dates = [...tl.querySelectorAll('.timeline-date time')].map((t) => t.textContent);
+    const dates = () => [...tl.querySelectorAll('.timeline-date time')].map((t) => t.textContent);
 
-    expect(dates).toEqual(['01/2025', '02/2025', '10/2026', '2026', '2026', '2026']);
+    expect(dates()).toEqual(['01/2025', '02/2025', 'out/2026', '2026', '2026', '2026']);
 
     const notes = tl.querySelectorAll('.date-note');
 
     expect(notes).toHaveLength(3);
     expect(notes[0]).toHaveTextContent('ordem entre os projetos de 2026 indeterminada');
+
+    // o rótulo do Portfólio é por idioma ("out/2026" / "oct/2026"); a data em
+    // si ({ year: 2026, month: 10 }) não muda, só a exibição.
+    await user.click(screen.getByRole('button', { name: /Switch to English/ }));
+    expect(dates()[2]).toBe('oct/2026');
   });
 
   it('EcoShop mostra v1 · 02/2025 e v2 · 01/2026', () => {

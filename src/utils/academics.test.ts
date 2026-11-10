@@ -1,4 +1,10 @@
-import { activitiesByYear, semestersDesc, summarizeSemester, yearProgress } from './academics';
+import {
+  activitiesByYear,
+  semestersDesc,
+  summarizeSemester,
+  terseActivityPeriod,
+  yearProgress,
+} from './academics';
 import { academics } from '../data/academics';
 import { projects } from '../data/projects';
 import { experienceGroups } from '../data/experiences';
@@ -53,6 +59,25 @@ describe('activitiesByYear', () => {
   });
   it('cada item fica no ano em que a data diz que ele pertence', () => {
     for (const y of years) for (const r of y.rows) expect(r.date.year).toBe(y.year);
+  });
+});
+
+describe('terseActivityPeriod', () => {
+  it('período curto (data ou rótulo por extenso) passa direto', () => {
+    expect(terseActivityPeriod({ date: { year: 2026, month: 2 }, period: '02/2026' })).toBe(
+      '02/2026',
+    );
+    expect(terseActivityPeriod({ date: { year: 2026, month: 10 }, period: 'out/2026' })).toBe(
+      'out/2026',
+    );
+  });
+  it('período longo (texto livre, ex. "em andamento") vira só a data: não cabe nas colunas estreitas do terminal', () => {
+    const row = {
+      date: { year: 2026 },
+      period: '2º semestre de 2026 – em andamento',
+    };
+
+    expect(terseActivityPeriod(row)).toBe('2026');
   });
 });
 

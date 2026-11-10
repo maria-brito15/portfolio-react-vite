@@ -107,6 +107,12 @@ describe('acadêmico', () => {
     expect(within(grades).queryByText('Arquitetura de Computadores I')).toBeNull();
     expect(within(grades).getAllByText('Bacharelado em Ciência da Computação')).toHaveLength(3);
     expect(within(grades).getByText('em andamento')).toBeInTheDocument();
+    // carga horária e modalidade ainda não foram informadas: as colunas ficam
+    // escondidas (nada de "—" repetido); só disciplina e nota aparecem.
+    expect(within(grades).queryByText('C.H.')).toBeNull();
+    expect(within(grades).queryByText('Modalidade')).toBeNull();
+    expect(within(grades).getAllByText('Nota').length).toBeGreaterThan(0);
+    expect(within(grades).getByText('92')).toBeInTheDocument();
   });
 });
 

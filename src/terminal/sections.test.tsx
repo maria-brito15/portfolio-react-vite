@@ -654,13 +654,27 @@ describe('ls <página> e <página> <seção>', () => {
     expect(log()).toHaveTextContent('Technical skills');
   });
 
-  it('academico disciplinas mostra os semestres como placeholder', async () => {
+  it('academico disciplinas mostra as disciplinas aprovadas e o semestre atual como placeholder', async () => {
     const user = userEvent.setup();
 
     renderApp('/');
     await run(user, 'academico disciplinas');
     expect(log()).toHaveTextContent('02/2026');
     expect(log()).toHaveTextContent('sem disciplinas lançadas');
+    expect(log()).toHaveTextContent('92');
+    // sem carga horária nem modalidade informadas, a tabela fica compacta
+    // (disciplina + nota), sem colunas de "—" à toa, nos três semestres com notas.
+    expect(log().querySelectorAll('.t-table-grades--compact')).toHaveLength(3);
+  });
+
+  it('academico (resumo) mostra a contagem de disciplinas e a média por semestre, não um número solto', async () => {
+    const user = userEvent.setup();
+
+    renderApp('/');
+    await run(user, 'academico');
+    expect(log()).toHaveTextContent('7 disciplinas');
+    expect(log()).toHaveTextContent('média: 82');
+    expect(log()).toHaveTextContent('em andamento');
   });
 
   it('projetos ecoshop mostra detalhes e versões', async () => {

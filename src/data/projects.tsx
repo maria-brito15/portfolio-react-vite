@@ -9,7 +9,7 @@
 // File Name Standardizer e WhatsApp Dispatcher; capturas de ShortURL e
 // File Name Standardizer (Planoriza e WhatsApp Dispatcher não têm imagens).
 import type { ReactNode } from 'react';
-import type { ProjectDate } from '../types';
+import type { Localized, ProjectDate } from '../types';
 import { sortByDate } from '../utils/projectDate';
 
 export interface ProjectVersion {
@@ -32,6 +32,9 @@ export interface Project {
   name: string;
   icon?: string;
   date: ProjectDate;
+  // Rótulo de exibição opcional (ex.: `{ pt: 'out/2026', en: 'oct/2026' }`), quando o
+  // mês por extenso é mais claro que MM/AAAA; `date` continua a fonte da ordenação.
+  dateLabel?: Localized;
   tech: string[];
   repo: string | null;
   caseStudy?: string;
@@ -149,6 +152,7 @@ export const projects: Project[] = [
     name: 'Portfólio',
     icon: '🖥️',
     date: { year: 2026, month: 10 },
+    dateLabel: { pt: 'out/2026', en: 'oct/2026' },
     tech: ['React 19', 'Vite', 'TypeScript', 'Vitest', 'Spec-Driven Development'],
     repo: 'https://github.com/maria-brito15/portfolio-react-vite',
     gallery: [],

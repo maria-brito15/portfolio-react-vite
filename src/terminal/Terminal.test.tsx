@@ -20,6 +20,23 @@ describe('terminal da página inicial', () => {
     expect(terminalInput()).toHaveValue('');
   });
 
+  it('o botão "inicio" ao lado de "ajuda" volta à tela inicial (banner, sem saída)', async () => {
+    const user = userEvent.setup();
+
+    renderApp('/');
+
+    const quick = screen.getByRole('group', { name: /atalhos|comandos/i });
+    const buttons = within(quick).getAllByRole('button');
+
+    expect(buttons[0]).toHaveTextContent('inicio');
+    expect(buttons[1]).toHaveTextContent('ajuda');
+    await user.click(buttons[1]);
+    expect(screen.getByText(/Comandos disponíveis/)).toBeInTheDocument();
+    await user.click(buttons[0]);
+    expect(screen.queryByText(/Comandos disponíveis/)).toBeNull();
+    expect(document.querySelector('.term-banner')).not.toHaveClass('sr-only');
+  });
+
   it('primeira visita: o banner sugere ls/ajuda; com histórico, não', async () => {
     const { unmount } = renderApp('/');
 

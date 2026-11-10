@@ -2,10 +2,20 @@
 // `month` (1–12) só existe quando foi confirmado; nunca se preenche um valor
 // presumido, e não há sentinela numérica (Infinity, 0, 9999) na comparação.
 
-import type { Dated, ProjectDate } from '../types';
+import type { Dated, Lang, Localized, ProjectDate } from '../types';
 
 export function formatProjectDate({ year, month }: ProjectDate) {
   return month ? `${String(month).padStart(2, '0')}/${year}` : String(year);
+}
+
+// Rótulo de exibição de um projeto: o texto confirmado em `dateLabel` (quando a
+// autora prefere o mês por extenso, ex. "out/2026"/"oct/2026"), senão o MM/AAAA
+// padrão. `date` continua sendo a fonte da ordenação; `dateLabel` é só exibição.
+export function projectPeriod(
+  { date, dateLabel }: Dated & { dateLabel?: Localized },
+  lang: Lang,
+) {
+  return dateLabel?.[lang] ?? formatProjectDate(date);
 }
 
 // Compara por ano; no mesmo ano, datas com mês vêm antes das sem mês, e entre

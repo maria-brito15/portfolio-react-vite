@@ -13,6 +13,7 @@ import { useLanguage } from '../i18n/LanguageContext';
 import { useDocumentMeta } from '../hooks/useDocumentMeta';
 import {
   activitiesByYear,
+  courseColumnsVisible,
   semestersDesc,
   summarizeSemester,
   yearProgress,
@@ -159,28 +160,43 @@ export default function Academics() {
     },
     { key: 'period', label: c.cols.period, size: 'm', className: 'doc-date' },
   ];
-  const courseColumns: Column<Course>[] = [
-    { key: 'name', label: c.courseCols.name, render: (course) => pick(course.name, lang) },
-    {
-      key: 'hours',
-      label: c.courseCols.hours,
-      size: 's',
-      render: (course) => (course.hours ? '' + course.hours : '—'),
-    },
-    {
-      key: 'modality',
-      label: c.courseCols.modality,
-      render: (course) =>
-        (course.modality && (c.modality as Record<string, string>)[course.modality]) || '—',
-    },
-    {
-      key: 'grade',
-      label: c.courseCols.grade,
-      size: 's',
-      className: 'ac-grade',
-      render: (course) => course.grade ?? '—',
-    },
-  ];
+  // Carga horária e modalidade só aparecem quando ao menos uma disciplina do
+  // semestre as tiver preenchidas (ver utils/academics.ts).
+  const buildCourseColumns = (courses: Course[]): Column<Course>[] => {
+    const visible = courseColumnsVisible(courses);
+
+    return [
+      { key: 'name', label: c.courseCols.name, render: (course) => pick(course.name, lang) },
+      ...(visible.hours
+        ? [
+            {
+              key: 'hours',
+              label: c.courseCols.hours,
+              size: 's' as const,
+              render: (course: Course) => (course.hours ? '' + course.hours : '—'),
+            },
+          ]
+        : []),
+      ...(visible.modality
+        ? [
+            {
+              key: 'modality',
+              label: c.courseCols.modality,
+              render: (course: Course) =>
+                (course.modality && (c.modality as Record<string, string>)[course.modality]) ||
+                '—',
+            },
+          ]
+        : []),
+      {
+        key: 'grade',
+        label: c.courseCols.grade,
+        size: 's',
+        className: 'ac-grade',
+        render: (course) => course.grade ?? '—',
+      },
+    ];
+  };
 
   return (
     <DocPage routeId="academico" sections={sections}>
@@ -263,7 +279,7 @@ export default function Academics() {
                   {s.inProgress && <Chip tone="live">{c.inProgress}</Chip>}
                 </h3>
                 <DataTable
-                  columns={courseColumns}
+                  columns={buildCourseColumns(s.courses)}
                   rows={s.courses}
                   rowKey={(course) => pick(course.name, 'pt')}
                   empty={c.emptySemester}

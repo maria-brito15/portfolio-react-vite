@@ -15,12 +15,14 @@ import { skillTimeline, formatSince } from '../data/skillTimeline';
 import { ui } from '../i18n/ui';
 import {
   activitiesByYear,
+  courseColumnsVisible,
   semestersDesc,
   summarizeSemester,
+  terseActivityPeriod,
   yearProgress,
 } from '../utils/academics';
 import { finalistProjects } from '../utils/resume';
-import { formatProjectDate } from '../utils/projectDate';
+import { formatProjectDate, projectPeriod } from '../utils/projectDate';
 import { Ext, TermLink } from './outputs';
 
 type ViewProps = { id: string; lang: Lang };
@@ -162,7 +164,7 @@ function ResumeSection({ id, lang }: ViewProps) {
                 <ul className="t-bullets">
                   {instances.map((p) => (
                     <li key={p.id}>
-                      {p.name} <span className="t-dim">{formatProjectDate(p.date)}</span>
+                      {p.name} <span className="t-dim">{projectPeriod(p, lang)}</span>
                     </li>
                   ))}
                 </ul>
@@ -242,7 +244,7 @@ function AcademicsSection({ id, lang }: ViewProps) {
               <ul className="t-table t-table-act">
                 {y.rows.map((row) => (
                   <li key={row.key}>
-                    <span className="t-dim">{formatProjectDate(row.date)}</span>
+                    <span className="t-dim">{terseActivityPeriod(row)}</span>
                     <span className="t-wrap">
                       {row.title}
                       {row.detail && <span className="t-dim"> · {row.detail}</span>}
@@ -261,6 +263,8 @@ function AcademicsSection({ id, lang }: ViewProps) {
           <Title>{t.semesters}</Title>
           {semestersDesc(academics.semesters).map((s) => {
             const totals = summarizeSemester(s.courses);
+            const visible = courseColumnsVisible(s.courses);
+            const compact = !visible.hours && !visible.modality;
 
             return (
               <div key={s.id} className="t-group">
@@ -273,16 +277,24 @@ function AcademicsSection({ id, lang }: ViewProps) {
                   <p className="t-dim">{t.noCourses}</p>
                 ) : (
                   <>
-                    <ul className="t-table t-table-grades">
+                    <ul
+                      className={`t-table t-table-grades${compact ? ' t-table-grades--compact' : ''}`}
+                    >
                       {s.courses.map((course) => (
                         <li key={pick(course.name, 'pt')}>
                           <span className="t-wrap">{pick(course.name, lang)}</span>
-                          <span className="t-dim">{course.hours ? `${course.hours}h` : '—'}</span>
-                          <span className="t-dim">
-                            {(course.modality &&
-                              (t.modality as Record<string, string>)[course.modality]) ||
-                              '—'}
-                          </span>
+                          {visible.hours && (
+                            <span className="t-dim">
+                              {course.hours ? `${course.hours}h` : '—'}
+                            </span>
+                          )}
+                          {visible.modality && (
+                            <span className="t-dim">
+                              {(course.modality &&
+                                (t.modality as Record<string, string>)[course.modality]) ||
+                                '—'}
+                            </span>
+                          )}
                           <span>{course.grade ?? '—'}</span>
                         </li>
                       ))}
@@ -410,7 +422,7 @@ function ProjectSection({ id, lang }: ViewProps) {
   return (
     <div>
       <p>
-        <span className="t-dim">{formatProjectDate(p.date)} </span>
+        <span className="t-dim">{projectPeriod(p, lang)} </span>
         <span className="t-accent">{p.name}</span>
         {copy.badge && <span className="t-ok"> · {copy.badge}</span>}
       </p>

@@ -10,7 +10,7 @@ import { experienceGroups } from './experiences';
 import { academics } from './academics';
 import { resume } from './resume';
 import { experienceStats, finalistProjects } from '../utils/resume';
-import { formatProjectDate } from '../utils/projectDate';
+import { projectPeriod } from '../utils/projectDate';
 import type { Localized } from '../types';
 import { findDirectory, fold, routeById, type Route } from './routes';
 
@@ -168,8 +168,8 @@ export function sectionsOf(routeId: string | undefined): Section[] {
         anchor: `projeto-${p.id}`,
         label: L(p.name, p.name),
         desc: L(
-          `${formatProjectDate(p.date)} · ${p.pt.badge ?? p.tech.slice(0, 3).join(', ')}`,
-          `${formatProjectDate(p.date)} · ${p.en.badge ?? p.tech.slice(0, 3).join(', ')}`,
+          `${projectPeriod(p, 'pt')} · ${p.pt.badge ?? p.tech.slice(0, 3).join(', ')}`,
+          `${projectPeriod(p, 'en')} · ${p.en.badge ?? p.tech.slice(0, 3).join(', ')}`,
         ),
       }));
     case 'experiencias':

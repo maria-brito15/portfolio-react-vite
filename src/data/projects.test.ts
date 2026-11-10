@@ -2,7 +2,7 @@ import { projects, sortProjectsChronologically } from './projects';
 import { experienceGroups } from './experiences';
 
 describe('dados dos projetos', () => {
-  it('ordena do mais antigo ao mais recente: Planoriza, EcoShop, Portfólio (10/2026), depois os de 2026 sem mês', () => {
+  it('ordena do mais antigo ao mais recente: Planoriza, EcoShop, Portfólio (out/2026), depois os de 2026 sem mês', () => {
     const ids = sortProjectsChronologically(projects).map((p) => p.id);
 
     expect(ids.slice(0, 3)).toEqual(['planoriza', 'ecoshop', 'portfolio']);
