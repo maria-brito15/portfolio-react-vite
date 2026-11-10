@@ -15,6 +15,6 @@ Arquivos: [requirements.md](requirements.md) · [design.md](design.md) · [statu
 | SH-05 | Atalhos de teclado | `Ctrl+K` e `/` focam a barra, exceto dentro de campos de formulário; `Esc` fecha painel, tela cheia ou desfoca | P0 | AUT |
 | SH-06 | Mobile | A barra vira o botão `>_` que a abre em tela cheia; sem rolagem horizontal em 390, 768 e 1440 px em nenhuma rota | P0 | AUT + MAN |
 | SH-07 | Par de ações em toda página dedicada | A barra de título da Window mostra `[ ver no terminal ]  [ página própria ]`; o primeiro leva à home com o comando já executado (`/?cmd=…`) | P0 | AUT |
-| SH-08 | Tabela única de rotas | Caminhos, nomes de comando (PT/EN), breadcrumb, `ls`, `cd` e autocompletar vêm de `src/data/routes.js`; seções internas, de `src/data/sections.js` | P0 | AUT |
+| SH-08 | Tabela única de rotas | Caminhos, nomes de comando (PT/EN), breadcrumb, `ls`, `cd` e autocompletar vêm de `src/data/routes.ts`; seções internas, de `src/data/sections.ts` | P0 | AUT |
 | SH-09 | Seções antigas da home como páginas próprias | `/sobre`, `/habilidades`, `/projetos`, `/experiencias`, `/contato` existem, com aliases em inglês | P0 | AUT |
 | SH-10 | Links antigos não levam a lugar nenhum | Um link antigo `/#sobre`, `/#projetos`… abre a página própria equivalente (redirecionamento no cliente) em vez de cair na home sem rolar | P1 | AUT |

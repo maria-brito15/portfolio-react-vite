@@ -34,9 +34,13 @@
   --measure: 72ch; /* largura de leitura das páginas de texto */
 
   /* Layout */
-  --win-max: 1100px;
-  --win-min-h: 520px;
-  --win-h: 75vh;
+  /* A janela cresce com a tela: largura de 1100px até 1480px (78% da largura em
+     telas largas); a altura do terminal ocupa o que sobra da viewport depois do
+     cabeçalho, da barra da janela e dos atalhos (--win-chrome), entre o mínimo e o teto. */
+  --win-max: clamp(1100px, 78vw, 1480px);
+  --win-chrome: 16.5rem;
+  --win-min-h: 320px;
+  --win-cap-h: 920px;
   --nav-h: 3.9rem;
   --cmdbar-h: 2.5rem;
   --top-h: calc(var(--nav-h) + var(--cmdbar-h));
@@ -87,8 +91,16 @@
     --gutter: 0;
     --fs-mono: var(--fs-mono-sm);
     --fs-h1: 1.6rem;
-    --win-min-h: 360px;
-    --win-h: 70vh;
+    --win-chrome: 12rem;
+    --win-min-h: 280px;
+  }
+}
+
+/* Telas baixas (celular deitado, janelas pequenas): o terminal usa quase toda a altura. */
+@media (max-height: 520px) {
+  :root {
+    --win-chrome: 8rem;
+    --win-min-h: 200px;
   }
 }
 

@@ -37,7 +37,7 @@ Depois, reinicie a sessão e digite `/` para ver as skills listadas.
 | Script                                        | Para quê                                                          | Saída                                                     |
 | --------------------------------------------- | ----------------------------------------------------------------- | --------------------------------------------------------- |
 | `terminal-design-system/scripts/contrast.mjs` | contraste AA dos tokens, tema escuro e claro                      | exit 1 se reprovar                                        |
-| `content-integrity/scripts/check-i18n.mjs`    | paridade PT/EN de `ui.js` (chaves e tipos)                        | exit 1 se divergir                                        |
+| `content-integrity/scripts/check-i18n.mjs`    | paridade PT/EN de `ui.ts` (chaves e tipos)                        | exit 1 se divergir                                        |
 | `sdd-spec-sync/scripts/gap-summary.mjs`       | tabela-resumo ✅◐❌❔ da gap-analysis                             | exit 1 se faltar marca                                    |
 | `verify-site/scripts/sweep.mjs`               | Syne/degradê/CSS legado, `var()` indefinida, `.only`, SDD ausente | exit 1 se violar; rotas escritas à mão saem só como aviso |
 
@@ -56,5 +56,5 @@ resumo da spec bate com a gap-analysis (35 ✅, 9 ◐, 8 ❌, 1 ❔) e a varredu
 As skills de engenharia valem para qualquer feature nova. Para uma feature, comece com `/spec-driven-development`.
 
 1. `/sdd-spec-sync` para ver o estado da spec.
-2. Peça: "faça a tarefa T-D1" (liga `pageIndex.jsx` ao comando `curriculo`): `terminal-command` e `verify-site` entram sozinhas.
+2. Peça: "faça a tarefa T-D1" (liga `pageIndex.tsx` ao comando `curriculo`): `terminal-command` e `verify-site` entram sozinhas.
 3. No fim da sessão: `/checkpoint salvar`.

@@ -17,7 +17,7 @@ effort: high
 # site-page-section
 
 Regra central: **uma página ou seção existe em UM lugar e todo o resto lê dali.**
-Rota em `src/data/routes.js`, seção em `src/data/sections.js`, conteúdo em `src/data/*`.
+Rota em `src/data/routes.ts`, seção em `src/data/sections.ts`, conteúdo em `src/data/*`.
 
 ## Mapa de leitura
 
@@ -29,7 +29,7 @@ Rota em `src/data/routes.js`, seção em `src/data/sections.js`, conteúdo em `s
 
 ## Invariantes
 
-1. Navegação, breadcrumb, `ls`, `cd`, autocompletar e o par `[ ver no terminal ] [ abrir página própria ↗ ]` derivam de `routes.js`. Nunca escreva `'/curriculo'` à mão em componente (o `sweep.mjs` avisa).
+1. Navegação, breadcrumb, `ls`, `cd`, autocompletar e o par `[ ver no terminal ] [ abrir página própria ↗ ]` derivam de `routes.ts`. Nunca escreva `'/curriculo'` à mão em componente (o `sweep.mjs` avisa).
 2. Toda página tem as duas visões: **terminal** (resumo + índice numerado) e **página própria** (dentro de `Window`, no `SiteShell`).
 3. Toda seção alcançável por URL **e** por comando (`<página> <n|nome>`).
 4. Conteúdo vem de `src/data/*` nos dois idiomas; página nova não duplica texto que o terminal já mostra.
@@ -39,10 +39,10 @@ Rota em `src/data/routes.js`, seção em `src/data/sections.js`, conteúdo em `s
 
 ## Passos
 
-1. Ler `routes.js`, `sections.js`, a página mais parecida em `src/pages/` e o `references/` indicado.
+1. Ler `routes.ts`, `sections.ts`, a página mais parecida em `src/pages/` e o `references/` indicado.
 2. Registrar rota/seção (id, nomes PT/EN, apelidos, descrição).
-3. Criar a página (ou a seção) e a visão em terminal (`views.jsx`/`sectionViews.jsx`).
-4. Ligar comando: se a página é nova, entrada em `commands.jsx` com `route` (skill `terminal-command`).
-5. Textos PT/EN em `ui.js`; `node .claude/skills/content-integrity/scripts/check-i18n.mjs`.
+3. Criar a página (ou a seção) e a visão em terminal (`views.tsx`/`sectionViews.tsx`).
+4. Ligar comando: se a página é nova, entrada em `commands.tsx` com `route` (skill `terminal-command`).
+5. Textos PT/EN em `ui.ts`; `node .claude/skills/content-integrity/scripts/check-i18n.mjs`.
 6. Testes, depois `verify-site`.
 7. Atualizar `docs/sdd-terminal-v2/` (skill `sdd-spec-sync`) e a seção de rotas do README.

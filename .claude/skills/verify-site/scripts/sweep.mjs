@@ -19,7 +19,7 @@ const warnings = [];
 const add = (rule, p, detail) => problems.push(`[${rule}] ${relative(root, p)}${detail ? ': ' + detail : ''}`);
 
 const css = files.filter((f) => f.endsWith('.css'));
-const code = files.filter((f) => /\.(jsx?|css)$/.test(f) && !/\.test\./.test(f));
+const code = files.filter((f) => /\.(tsx?|css)$/.test(f) && !/\.test\./.test(f));
 
 // 1. um só estilo visual
 for (const f of code) {
@@ -38,15 +38,15 @@ for (const f of css)
     if (!defined.has(v)) add('var-css', f, `${v} usada e não definida`);
 
 // 3. caminhos escritos à mão fora da tabela de rotas
-const routeFile = join(src, 'data', 'routes.js');
-for (const f of files.filter((x) => /\.jsx?$/.test(x) && !/\.test\./.test(x) && x !== routeFile)) {
+const routeFile = join(src, 'data', 'routes.ts');
+for (const f of files.filter((x) => /\.tsx?$/.test(x) && !/\.test\./.test(x) && x !== routeFile)) {
   const t = read(f);
   for (const m of t.matchAll(/['"`]\/(curriculo|academico|servicos|projetos|experiencias|contato)\b/g))
-    warnings.push(`[rota-fixa] ${relative(root, f)}: ${m[0].slice(1)}"`.replace(/"$/, '') + ' escrito à mão (prefira routes.js)');
+    warnings.push(`[rota-fixa] ${relative(root, f)}: ${m[0].slice(1)}"`.replace(/"$/, '') + ' escrito à mão (prefira routes.ts)');
 }
 
 // 4. arquivo de teste solto / .only esquecido
-for (const f of files.filter((x) => /\.test\.jsx?$/.test(x)))
+for (const f of files.filter((x) => /\.test\.tsx?$/.test(x)))
   if (/\b(it|test|describe)\.only\(/.test(read(f))) add('teste', f, '.only esquecido');
 
 // 5. SDD presente

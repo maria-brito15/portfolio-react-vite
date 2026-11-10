@@ -58,7 +58,7 @@ Continuam valendo sem alteração: RF-01 a RF-05 (timeline de projetos), RF-07, 
 | SH-05 | Atalhos de teclado | `Ctrl+K` e `/` focam a barra, exceto dentro de campos de formulário; `Esc` fecha painel, tela cheia ou desfoca | P0 | AUT |
 | SH-06 | Mobile | A barra vira o botão `>_` que a abre em tela cheia; sem rolagem horizontal em 390, 768 e 1440 px em nenhuma rota | P0 | AUT + MAN |
 | SH-07 | Par de ações em toda página dedicada | A barra de título da Window mostra `[ ver no terminal ]  [ página própria ]`; o primeiro leva à home com o comando já executado (`/?cmd=…`) | P0 | AUT |
-| SH-08 | Tabela única de rotas | Caminhos, nomes de comando (PT/EN), breadcrumb, `ls`, `cd` e autocompletar vêm de `src/data/routes.js`; seções internas, de `src/data/sections.js` | P0 | AUT |
+| SH-08 | Tabela única de rotas | Caminhos, nomes de comando (PT/EN), breadcrumb, `ls`, `cd` e autocompletar vêm de `src/data/routes.ts`; seções internas, de `src/data/sections.ts` | P0 | AUT |
 | SH-09 | Seções antigas da home como páginas próprias | `/sobre`, `/habilidades`, `/projetos`, `/experiencias`, `/contato` existem, com aliases em inglês | P0 | AUT |
 | SH-10 | Links antigos não levam a lugar nenhum | Um link antigo `/#sobre`, `/#projetos`… abre a página própria equivalente (redirecionamento no cliente) em vez de cair na home sem rolar | P1 | AUT |
 
@@ -85,7 +85,7 @@ Continuam valendo sem alteração: RF-01 a RF-05 (timeline de projetos), RF-07, 
 | CM-04 | Todo o conteúdo é legível no terminal | Para toda rota com seções, cada seção imprime seu conteúdo completo, lido de `src/data/*`, sem texto duplicado nem inventado | P0 | AUT |
 | CM-05 | Erros nunca quebram | Argumento desconhecido devolve erro claro e amigável; nunca tela em branco nem exceção | P0 | AUT |
 
-Seções por página (definidas em `src/data/sections.js`): **curriculo** — resumo, competencias, experiencias, projetos, formacao, reconhecimentos; **academico** — linha-do-tempo, formacao, atividades, disciplinas; **servicos** — servicos, cases, faq, contato; **projetos** — um por projeto; **experiencias** — um por grupo.
+Seções por página (definidas em `src/data/sections.ts`): **curriculo** — resumo, competencias, experiencias, projetos, formacao, reconhecimentos; **academico** — linha-do-tempo, formacao, atividades, disciplinas; **servicos** — servicos, cases, faq, contato; **projetos** — um por projeto; **experiencias** — um por grupo.
 
 ## 7. Requisitos de descoberta (DS)
 
@@ -104,7 +104,7 @@ Regra de ouro (V-05): quem digita `curriculo` pela primeira vez entende, só de 
 | DS-09 | Placeholder com exemplo | O campo nunca fica vazio e propõe um exemplo concreto (`experimente: curriculo`) | P1 | AUT |
 | DS-10 | Erros que reensinam | `curriculo 9` e `curriculo xpto` respondem com o erro (`seção "9" não existe; as seções são:`) **e** reimprimem o índice | P0 | AUT |
 | DS-11 | `ajuda` com exemplo de ponta a ponta | Além da lista, um bloco "como navegar" com `curriculo` → `2` → `cd curriculo` | P1 | AUT |
-| DS-12 | Mesmo padrão em todas as páginas com seções | `academico`, `servicos`, `projetos` e `experiencias` usam o mesmo índice, atalho por número, vizinhos e dicas, com rótulos de `src/i18n/ui.js` em PT e EN | P0 | AUT |
+| DS-12 | Mesmo padrão em todas as páginas com seções | `academico`, `servicos`, `projetos` e `experiencias` usam o mesmo índice, atalho por número, vizinhos e dicas, com rótulos de `src/i18n/ui.ts` em PT e EN | P0 | AUT |
 
 ## 8. Requisitos de dados e ordem (DT)
 
@@ -121,5 +121,5 @@ Regra de ouro (V-05): quem digita `curriculo` pela primeira vez entende, só de 
 | --- | --- | --- | --- | --- |
 | NF-01 | Qualidade automatizada | `npm run lint`, `npm test` e `npm run build` com código 0 | P0 | AUT |
 | NF-02 | Sem erro de console | Nenhuma rota emite erro no console em 390, 768 e 1440 px | P1 | MAN |
-| NF-03 | PT/EN completos | Todo texto novo existe nos dois idiomas, em `src/i18n/ui.js` ou nos dados | P0 | AUT |
+| NF-03 | PT/EN completos | Todo texto novo existe nos dois idiomas, em `src/i18n/ui.ts` ou nos dados | P0 | AUT |
 | NF-04 | Documentação coerente | README descreve os comandos e a navegação reais; `docs/sdd/` marca o que foi superado (§1) | P1 | MAN |

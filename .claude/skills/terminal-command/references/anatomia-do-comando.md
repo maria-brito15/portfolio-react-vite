@@ -1,4 +1,4 @@
-# Anatomia de um comando (`src/terminal/commands.jsx`)
+# Anatomia de um comando (`src/terminal/commands.tsx`)
 
 ## Forma de uma entrada
 
@@ -6,7 +6,7 @@
 {
   names: ['curriculo', 'resume'],      // [português, inglês]; o primeiro aparece na ajuda em PT
   aliases: ['cv'],                     // opcional; também valem sem acento e sem caixa
-  route: 'curriculo',                  // só para comando de página: id em routes.js
+  route: 'curriculo',                  // só para comando de página: id em routes.ts
   usage: L('[seção]', '[section]'),    // opcional: argumento mostrado na ajuda
   desc: L('resumo do currículo', 'resume summary'),   // obrigatório, PT e EN
   hidden: false,                       // true = fora da ajuda e do autocompletar (brincadeiras)

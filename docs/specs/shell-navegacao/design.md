@@ -5,10 +5,10 @@ Descreve como a feature foi construída, a partir do código existente. Não é 
 ## Arquivos envolvidos
 
 - `src/components/shell/*`
-- `src/data/routes.js`
-- `src/data/sections.js`
-- `src/router.jsx`
-- `src/pages/SectionPage.jsx`
+- `src/data/routes.ts`
+- `src/data/sections.ts`
+- `src/router.tsx`
+- `src/pages/SectionPage.tsx`
 
 ## Decisões observadas no código
 - Ver `docs/sdd-terminal-v2/requirements.md` §2 (V-01 a V-08), que valem para todas as features.

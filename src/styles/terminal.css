@@ -24,7 +24,9 @@
 
 .term-screen {
   padding: var(--space-5) var(--space-5) var(--space-4);
-  height: max(var(--win-h), var(--win-min-h));
+  height: clamp(var(--win-min-h), calc(100vh - var(--win-chrome)), var(--win-cap-h));
+  /* dvh acompanha a barra de endereço dos celulares; vh fica de reserva. */
+  height: clamp(var(--win-min-h), calc(100dvh - var(--win-chrome)), var(--win-cap-h));
   overflow-y: auto;
   overscroll-behavior: contain;
 }

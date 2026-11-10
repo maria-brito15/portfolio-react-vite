@@ -21,9 +21,9 @@ Goal: make a design choice explicit, compare it with real alternatives, and reco
 6. **Check the consequences** against the code: which files, which tests, which specs change.
 
 ## Project specifics for this portfolio
-- The route table in `src/data/routes.js` and the sections table in `src/data/sections.js` are the single sources of truth. A design that duplicates a path elsewhere is rejected.
+- The route table in `src/data/routes.ts` and the sections table in `src/data/sections.ts` are the single sources of truth. A design that duplicates a path elsewhere is rejected.
 - The terminal and the pages share one session and one set of views. Prefer extending views over adding a second rendering path.
-- Content lives in `src/data/*` and `src/i18n/ui.js`; visual rules live in `src/styles/tokens.css`.
+- Content lives in `src/data/*` and `src/i18n/ui.ts`; visual rules live in `src/styles/tokens.css`.
 
 ## Avoid
 - Choosing a framework or library without a stated constraint it satisfies.

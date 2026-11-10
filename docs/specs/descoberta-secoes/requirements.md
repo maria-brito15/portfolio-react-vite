@@ -20,4 +20,4 @@ Regra de ouro (V-05): quem digita `curriculo` pela primeira vez entende, só de 
 | DS-09 | Placeholder com exemplo | O campo nunca fica vazio e propõe um exemplo concreto (`experimente: curriculo`) | P1 | AUT |
 | DS-10 | Erros que reensinam | `curriculo 9` e `curriculo xpto` respondem com o erro (`seção "9" não existe; as seções são:`) **e** reimprimem o índice | P0 | AUT |
 | DS-11 | `ajuda` com exemplo de ponta a ponta | Além da lista, um bloco "como navegar" com `curriculo` → `2` → `cd curriculo` | P1 | AUT |
-| DS-12 | Mesmo padrão em todas as páginas com seções | `academico`, `servicos`, `projetos` e `experiencias` usam o mesmo índice, atalho por número, vizinhos e dicas, com rótulos de `src/i18n/ui.js` em PT e EN | P0 | AUT |
+| DS-12 | Mesmo padrão em todas as páginas com seções | `academico`, `servicos`, `projetos` e `experiencias` usam o mesmo índice, atalho por número, vizinhos e dicas, com rótulos de `src/i18n/ui.ts` em PT e EN | P0 | AUT |

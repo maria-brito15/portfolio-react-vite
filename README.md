@@ -52,9 +52,9 @@ Páginas:
 | `/servicos` | Serviços web oferecidos, cases (BECAS, Ágape Vestir), FAQ e contato |
 | `/estudos-de-caso/whatsapp-dispatcher` | Estudo de caso de arquitetura (PT/EN) |
 
-**Links antigos.** As seções da home (`/#sobre`, `/#habilidades`, `/#projetos`, `/#experiencias`, `/#contato`, e os nomes em inglês `#about`, `#skills`, `#projects`, `#experience`, `#contact`) viraram as páginas acima. Quem abre um link antigo é levado à página própria equivalente: o roteador troca a entrada do histórico (`replaceState`), então o **Voltar** não reabre o link antigo. Hash desconhecido não redireciona e `/#inicio` continua valendo na home. A tabela está em `legacyHashes`, em [`src/data/routes.js`](src/data/routes.js); o teste é `src/data/legacyHashes.test.jsx`.
+**Links antigos.** As seções da home (`/#sobre`, `/#habilidades`, `/#projetos`, `/#experiencias`, `/#contato`, e os nomes em inglês `#about`, `#skills`, `#projects`, `#experience`, `#contact`) viraram as páginas acima. Quem abre um link antigo é levado à página própria equivalente: o roteador troca a entrada do histórico (`replaceState`), então o **Voltar** não reabre o link antigo. Hash desconhecido não redireciona e `/#inicio` continua valendo na home. A tabela está em `legacyHashes`, em [`src/data/routes.ts`](src/data/routes.ts); o teste é `src/data/legacyHashes.test.jsx`.
 
-Todas as páginas usam o mesmo esqueleto (`SiteShell`): **Header** → **barra de comandos** fixa → **Window** (a "janelinha" com título `visitante@mariab.dev: ~/rota`) → conteúdo → **Footer**. O **Header** tem três zonas e nenhum menu de links: acesso aos comandos (`>_ Ctrl K`) à esquerda, `mariab.dev` centralizado e os dois controles (tema e idioma) à direita; o "menu" do site é o terminal. Fora da home há também **← Voltar** (`history.back()` quando a página anterior é do site; senão vai para `/`) e **breadcrumb** (`~ / academico`). Todos os caminhos, nomes de comando e breadcrumbs vêm de uma tabela só: [`src/data/routes.js`](src/data/routes.js); as seções internas de cada página, de [`src/data/sections.js`](src/data/sections.js).
+Todas as páginas usam o mesmo esqueleto (`SiteShell`): **Header** → **barra de comandos** fixa → **Window** (a "janelinha" com título `visitante@mariab.dev: ~/rota`) → conteúdo → **Footer**. O **Header** tem três zonas e nenhum menu de links: acesso aos comandos (`>_ Ctrl K`) à esquerda, `mariab.dev` centralizado e os dois controles (tema e idioma) à direita; o "menu" do site é o terminal. Fora da home há também **← Voltar** (`history.back()` quando a página anterior é do site; senão vai para `/`) e **breadcrumb** (`~ / academico`). Todos os caminhos, nomes de comando e breadcrumbs vêm de uma tabela só: [`src/data/routes.ts`](src/data/routes.ts); as seções internas de cada página, de [`src/data/sections.ts`](src/data/sections.ts).
 
 ### Um só estilo: terminal/IDE
 
@@ -89,14 +89,14 @@ Seções por página: **currículo** (6), **acadêmico** (`linha-do-tempo`, `for
 | Tab · ↑/↓ · Ctrl+L · Ctrl+C | completar (com lista de sugestões), histórico, limpar, interromper |
 | Ctrl+K ou / | foca a barra de comandos (exceto dentro de campos de formulário); em tela estreita ela vira o botão `>_`, que abre a barra em tela cheia |
 
-Cada comando limpa a tela: ficam visíveis só o último comando e sua saída (o histórico de ↑/↓ e `historico` continua inteiro). A barra de comandos e o terminal da home compartilham a mesma sessão (`src/terminal/TerminalSession.jsx`).
+Cada comando limpa a tela: ficam visíveis só o último comando e sua saída (o histórico de ↑/↓ e `historico` continua inteiro). A barra de comandos e o terminal da home compartilham a mesma sessão (`src/terminal/TerminalSession.tsx`).
 
 ### Descobrir as seções sem saber os comandos
 
 Quem nunca usou o terminal não precisa decorar nada: a própria saída ensina o próximo passo.
 
 - **Primeira visita:** sem histórico na sessão, o banner diz "Primeira vez? Digite ls para ver tudo, ou ajuda." e o campo sugere `experimente: curriculo` (`try: resume` em inglês).
-- **Índice numerado:** `curriculo` (e `academico`, `servicos`, `projetos`, `experiencias`) mostra `[1] resumo … [6] reconhecimentos`, cada linha com nome e descrição, e as dicas `→ ver uma seção · abrir a página · listar de novo · início`. `ls curriculo` mostra exatamente o mesmo índice (um só componente, `src/terminal/pageIndex.jsx`). Cada linha é um botão: clicar em `[2]` equivale a `curriculo 2`.
+- **Índice numerado:** `curriculo` (e `academico`, `servicos`, `projetos`, `experiencias`) mostra `[1] resumo … [6] reconhecimentos`, cada linha com nome e descrição, e as dicas `→ ver uma seção · abrir a página · listar de novo · início`. `ls curriculo` mostra exatamente o mesmo índice (um só componente, `src/terminal/pageIndex.tsx`). Cada linha é um botão: clicar em `[2]` equivale a `curriculo 2`.
 - **Número como atalho:** depois de abrir um índice, `2` abre a seção 2 dessa página; `curriculo 2` e `curriculo competencias` fazem o mesmo. Sem índice aberto, `2` responde "nenhum índice aberto. Digite curriculo (ou ls) para começar." O contexto some com `limpar` e com `cd ~`.
 - **Próxima e anterior:** `proximo` (`n`, `next`) e `anterior` (`p`, `previous`) andam pelas seções da última página aberta; nos extremos avisam "esta é a primeira/última seção". Todo fim de seção traz os três atalhos clicáveis (próxima · anterior · índice).
 - **Erros que reensinam:** `curriculo 9` ou `curriculo xpto` dizem que a seção não existe e mostram o índice de novo.
@@ -113,11 +113,11 @@ As 12 capturas (`terminal-indice-*`, `terminal-numero-*`, `terminal-proximo-*`, 
 ## ✨ Funcionalidades principais
 
 - 💻 **Terminal interativo na abertura** (`src/terminal/`): o visitante digita comandos como `ajuda`, `sobre`, `ls`, `cd projetos`, `projetos`, `experiencias`, `curriculo`, `academico`, `contato`, `tema` e `idioma` (nomes em PT ou EN). Tem autocompletar com Tab, histórico com ↑/↓, `Ctrl+L` para limpar, saída redesenhada ao trocar de idioma, uma entrada por vez na tela e histórico mantido durante a visita. Atalhos clicáveis abaixo do terminal deixam tudo acessível no celular.
-- 📄 **Currículo web** (`/curriculo`): versão em página do currículo, com seções numeradas, índice fixo, competências com tempo de uso (contado a partir do primeiro projeto ou curso com cada tecnologia, em `src/data/skillTimeline.js`), experiências em cards numerados com "Mostrar mais", formação e reconhecimentos com contagem (2× finalista) e impressão limpa (o botão abre a janela de impressão; "Salvar como PDF" gera o arquivo).
-- 🎓 **Página Acadêmico** (`/academico`): linha do tempo de 2025 até a previsão de conclusão (2029) com a posição de hoje, formação, números de destaque e atividades por ano (anos e itens do mais recente ao mais antigo, ordenação calculada por `sortByDateDesc` em `src/utils/projectDate.js`). A seção **Disciplinas e notas** por semestre (carga horária, modalidade, nota e média) já vem com 4 semestres como placeholder, listados do mais recente ao mais antigo (01/2025, 02/2025 e 01/2026 em Ciência da Computação; 02/2026 em Engenharia de Software, em andamento). Para preencher, adicione as disciplinas em `courses` dentro de `src/data/academics.js` (formato documentado no próprio arquivo); carga horária e média aparecem sozinhas.
+- 📄 **Currículo web** (`/curriculo`): versão em página do currículo, com seções numeradas, índice fixo, competências com tempo de uso (contado a partir do primeiro projeto ou curso com cada tecnologia, em `src/data/skillTimeline.ts`), experiências em cards numerados com "Mostrar mais", formação e reconhecimentos com contagem (2× finalista) e impressão limpa (o botão abre a janela de impressão; "Salvar como PDF" gera o arquivo).
+- 🎓 **Página Acadêmico** (`/academico`): linha do tempo de 2025 até a previsão de conclusão (2029) com a posição de hoje, formação, números de destaque e atividades por ano (anos e itens do mais recente ao mais antigo, ordenação calculada por `sortByDateDesc` em `src/utils/projectDate.ts`). A seção **Disciplinas e notas** por semestre (carga horária, modalidade, nota e média) já vem com 4 semestres como placeholder, listados do mais recente ao mais antigo (01/2025, 02/2025 e 01/2026 em Ciência da Computação; 02/2026 em Engenharia de Software, em andamento). Para preencher, adicione as disciplinas em `courses` dentro de `src/data/academics.ts` (formato documentado no próprio arquivo); carga horária e média aparecem sozinhas.
 - 🌍 **Português e inglês** com troca no cabeçalho, preferência salva em `localStorage` e permanência na página/seção atual.
 - 🌗 **Tema claro/escuro**, salvo em `localStorage` e aplicado antes do primeiro desenho (sem "flash").
-- 🕰️ **Timeline de projetos dinâmica**, gerada de `src/data/projects.jsx` e ordenada do mais antigo ao mais recente por data `{ ano, mês? }`. A data aparece como `MM/AAAA` ou só `AAAA`; quando o mês não é conhecido e há outro projeto no mesmo ano, a interface indica que a ordem entre eles é indeterminada.
+- 🕰️ **Timeline de projetos dinâmica**, gerada de `src/data/projects.tsx` e ordenada do mais antigo ao mais recente por data `{ ano, mês? }`. A data aparece como `MM/AAAA` ou só `AAAA`; quando o mês não é conhecido e há outro projeto no mesmo ano, a interface indica que a ordem entre eles é indeterminada.
 - 🧠 **Apresentações originais preservadas:** WhatsApp Dispatcher como estudo de caso, evolução v1 → v2 do EcoShop, contexto de produto do Planoriza e projetos menores.
 - 🧑‍🎓 **Experiências unificadas** (acadêmicas/extensão, cursos e competições, reconhecimentos) — sem seção duplicada.
 - ✉️ **Formulário de contato** (nome, e-mail, mensagem) com validação, mensagens de erro acessíveis e traduzidas, estado de carregamento, bloqueio de envio duplicado, proteções básicas contra bots e integração com **EmailJS** (envio real ainda não comprovado; ver [Configurar o envio](#️-configurar-o-envio-de-e-mail-emailjs)).
@@ -138,7 +138,7 @@ As 12 capturas (`terminal-indice-*`, `terminal-numero-*`, `terminal-proximo-*`, 
 | Build / dev server | Vite ^6.3 + `@vitejs/plugin-react` ^4.7 |
 | Linguagem | JavaScript (JSX), módulos ES |
 | Estilo | CSS puro (folha original preservada + complementos) |
-| Roteamento | Implementação mínima própria sobre a History API (`src/router.jsx`) |
+| Roteamento | Implementação mínima própria sobre a History API (`src/router.tsx`) |
 | Estado | `useState` + Context API (idioma) — sem biblioteca de estado |
 | E-mail | `@emailjs/browser` ^4.4 (versão instalada: 4.4.1) |
 
@@ -155,8 +155,8 @@ As 12 capturas (`terminal-indice-*`, `terminal-numero-*`, `terminal-proximo-*`, 
 SPA estática, sem back-end. Textos e dados ficam em `src/data`, separados dos componentes; páginas montam seções; seções usam componentes reutilizáveis.
 
 ```text
-main.jsx → RouterProvider → LanguageProvider → ThemeProvider → App
-App → TerminalProvider (sessão do terminal) → página escolhida por data/routes.js
+main.tsx → RouterProvider → LanguageProvider → ThemeProvider → App
+App → TerminalProvider (sessão do terminal) → página escolhida por data/routes.ts
         ├─ Home      → SiteShell(Terminal)  (só o terminal)
         ├─ SectionPage → SiteShell + sections/portfolio/* (sobre, habilidades, projetos, experiências, contato)
         ├─ Resume    → DocPage → SiteShell
@@ -170,15 +170,15 @@ SiteShell = Header → CommandBar → [Voltar + Breadcrumb] → Window → conte
 
 Decisões:
 
-- **Roteamento próprio** (`src/router.jsx`): poucas rotas e uma 404; evita uma dependência. Usa a History API e redireciona os links antigos com âncora (`/#projetos` → `/projetos`), trata `?cmd=`, botão voltar e recarga; cada entrada do histórico guarda quantas navegações internas a precedem, o que permite ao "Voltar" saber se a página anterior é do site. Em produção exige o fallback `/* → /index.html` da hospedagem.
-- **Internacionalização sem biblioteca:** `LanguageContext` guarda o idioma (PT/EN) em `localStorage` e em `<html lang>`. Textos de interface ficam em `src/i18n/ui.js`; conteúdo em `src/data/*` com chaves `pt` e `en`. A troca mantém rota e seção.
+- **Roteamento próprio** (`src/router.tsx`): poucas rotas e uma 404; evita uma dependência. Usa a History API e redireciona os links antigos com âncora (`/#projetos` → `/projetos`), trata `?cmd=`, botão voltar e recarga; cada entrada do histórico guarda quantas navegações internas a precedem, o que permite ao "Voltar" saber se a página anterior é do site. Em produção exige o fallback `/* → /index.html` da hospedagem.
+- **Internacionalização sem biblioteca:** `LanguageContext` guarda o idioma (PT/EN) em `localStorage` e em `<html lang>`. Textos de interface ficam em `src/i18n/ui.ts`; conteúdo em `src/data/*` com chaves `pt` e `en`. A troca mantém rota e seção.
 - **Tema claro/escuro:** atributo `data-theme` no `<html>`, aplicado por script inline em `index.html` antes do React, para evitar flash.
 - **Organização:** `pages/` (uma por rota) → `sections/portfolio/` (blocos da home) → `components/shell/` (esqueleto compartilhado), `components/ui/` (Card, Chip, DataTable, SectionTitle, ActionLink) e `components/` (Faq, Lightbox, ImageGallery, ContactForm…).
 - **Tokens de design** em `src/styles/tokens.css` (espaçamento, raios, fontes e a paleta única nos temas claro e escuro); os componentes novos só usam essas variáveis.
-- **Uma sessão de terminal:** `useTerminal` (teclas de uma linha de comando) + `TerminalProvider` (histórico, última saída, carregamento/cancelamento) alimentam o terminal da home e a barra de comandos das outras páginas. Dados e regras ficam fora do JSX: `utils/projectDate.js` (datas e ordenação), `utils/validateContact.js` (validação).
+- **Uma sessão de terminal:** `useTerminal` (teclas de uma linha de comando) + `TerminalProvider` (histórico, última saída, carregamento/cancelamento) alimentam o terminal da home e a barra de comandos das outras páginas. Dados e regras ficam fora do JSX: `utils/projectDate.ts` (datas e ordenação), `utils/validateContact.ts` (validação).
 - **Timeline orientada a dados:** datas com precisão variável `{ year, month? }`; nenhum mês é presumido.
 - **Sem `dangerouslySetInnerHTML`:** o HTML original virou JSX e os `addEventListener` do script original viraram componentes (`Reveal`, `Faq`, `Lightbox`, `handleRadialGlow`) com limpeza no desmontar.
-- **EmailJS isolado** em `src/services/emailService.js`; o formulário só conhece `sendContactMessage` e `classifySendError`. Chamada única por envio, sem resposta automática e sem armazenamento. Trade-off: as chaves do EmailJS ficam no JavaScript do navegador (são públicas por desenho), então a proteção real está nas restrições da conta (domínio e limite de envios).
+- **EmailJS isolado** em `src/services/emailService.ts`; o formulário só conhece `sendContactMessage` e `classifySendError`. Chamada única por envio, sem resposta automática e sem armazenamento. Trade-off: as chaves do EmailJS ficam no JavaScript do navegador (são públicas por desenho), então a proteção real está nas restrições da conta (domínio e limite de envios).
 - O HTML/CSS/JS originais continuam em `docs/site-original/` para consulta.
 
 ---
@@ -285,15 +285,15 @@ Resumo: criar o repositório no GitHub → importar no Netlify (build `npm run b
 │   ├── cases/                 # capturas: EcoShop, BECAS, Ágape
 │   └── _redirects             # fallback SPA (Netlify)
 ├── src/
-│   ├── main.jsx · App.jsx · router.jsx
+│   ├── main.tsx · App.tsx · router.tsx
 │   ├── pages/                 # Home, Resume, Academics, Services, CaseStudy, NotFound
 │   │   └── case-study/        # estudo de caso original em JSX (PT e EN)
 │   ├── terminal/              # sessão e interface do terminal
-│   │   ├── TerminalSession.jsx  # provedor: histórico, última saída, carregamento, ?cmd=
-│   │   ├── useTerminal.js       # hook: teclas de uma linha de comando
+│   │   ├── TerminalSession.tsx  # provedor: histórico, última saída, carregamento, ?cmd=
+│   │   ├── useTerminal.ts       # hook: teclas de uma linha de comando
 │   │   ├── CommandInput.jsx · Terminal.jsx · TerminalOutput.jsx · Prompt.jsx
-│   │   ├── commands.jsx         # interpretador e comandos
-│   │   └── outputs.jsx · views.jsx  # saídas (ações, progresso) e visões em terminal
+│   │   ├── commands.tsx         # interpretador e comandos
+│   │   └── outputs.tsx · views.tsx  # saídas (ações, progresso) e visões em terminal
 │   ├── sections/portfolio/    # About, Skills, Projects, Experience, Contact
 │   ├── components/
 │   │   ├── shell/             # SiteShell, Header, CommandBar, Window, Breadcrumb, ViewActions, Footer
@@ -367,12 +367,12 @@ npm run build
 
 ## 📌 Pendências
 
-- **Datas dos projetos:** confirmadas Planoriza (01/2025), EcoShop v1 (02/2025) e v2 (01/2026). ShortURL, File Name Standardizer e WhatsApp Dispatcher têm só o ano (2026) e aparecem com a ordem entre eles marcada como indeterminada. Ao saber o mês, acrescente `month` em `date` no `src/data/projects.jsx`; a ordem se corrige sozinha.
+- **Datas dos projetos:** confirmadas Planoriza (01/2025), EcoShop v1 (02/2025) e v2 (01/2026). ShortURL, File Name Standardizer e WhatsApp Dispatcher têm só o ano (2026) e aparecem com a ordem entre eles marcada como indeterminada. Ao saber o mês, acrescente `month` em `date` no `src/data/projects.tsx`; a ordem se corrige sozinha.
 - **Imagem/GIF dos projetos:** só o EcoShop tem capturas. Para ShortURL e File Name Standardizer, salve os arquivos reais em `public/cases/<id>/` (JPEG/PNG/WebP, até 300 KB) e liste os caminhos em `gallery`. Planoriza e WhatsApp Dispatcher não têm imagens; projetos sem galeria não exibem nada (sem placeholder).
 - **Repositórios:** Planoriza e WhatsApp Dispatcher não têm link de repositório e nenhum foi inventado; a interface não exibe aviso nem promessa. Falta confirmar com o professor se o enunciado exige link para esses casos (Q-01).
 - **Tecnologias do Planoriza/WhatsApp Dispatcher:** as do Dispatcher vieram do próprio estudo de caso (BullMQ, Redis, PostgreSQL, Prisma); confirme se quer listar outras.
-- **Disciplinas e notas:** os 4 semestres existem como placeholder e nenhuma nota foi inventada. Preencha `courses` de cada semestre em `src/data/academics.js` com o histórico oficial.
-- **LinkedIn:** o currículo em PDF usa `maria-eduarda-p-brito-a18064358`, enquanto o site usa `maria-eduarda-brito-a18064358` (`src/data/profile.js`). Confirme qual é o correto.
+- **Disciplinas e notas:** os 4 semestres existem como placeholder e nenhuma nota foi inventada. Preencha `courses` de cada semestre em `src/data/academics.ts` com o histórico oficial.
+- **LinkedIn:** o currículo em PDF usa `maria-eduarda-p-brito-a18064358`, enquanto o site usa `maria-eduarda-brito-a18064358` (`src/data/profile.ts`). Confirme qual é o correto.
 - **Tradução:** todo o conteúdo existe em PT e EN, sem lacunas conhecidas.
 - **Experiências:** "WebTech" indica início no 2º semestre de 2026, em andamento, sem mês e sem cargo formal. Instituição/atividade foram separadas a partir dos títulos originais.
 - **Deploy, EmailJS e Figma:** dependem de contas e ações suas; procedimentos em [docs/DEPLOY.md](docs/DEPLOY.md), na seção de EmailJS acima e em [docs/PROTOTIPOS.md](docs/PROTOTIPOS.md) (esses dois arquivos estão no `.gitignore` e só existem na sua máquina). Os dois `ADICIONAR_*` que restam neste README (site publicado e Figma) serão trocados quando existirem.

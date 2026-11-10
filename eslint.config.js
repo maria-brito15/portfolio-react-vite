@@ -3,6 +3,7 @@ import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import globals from 'globals';
 import stylistic from '@stylistic/eslint-plugin';
+import tseslint from 'typescript-eslint';
 
 export default [
   {
@@ -18,6 +19,7 @@ export default [
   },
 
   js.configs.recommended,
+  ...tseslint.configs.recommended,
 
   {
     files: ['**/*.mjs'],
@@ -29,7 +31,7 @@ export default [
   },
 
   {
-    files: ['**/*.{js,jsx}'],
+    files: ['**/*.{js,jsx,ts,tsx}'],
     languageOptions: {
       ecmaVersion: 2023,
       sourceType: 'module',

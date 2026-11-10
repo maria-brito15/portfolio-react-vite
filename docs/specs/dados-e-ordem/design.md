@@ -4,11 +4,11 @@ Descreve como a feature foi construída, a partir do código existente. Não é 
 
 ## Arquivos envolvidos
 
-- `src/data/academics.js`
-- `src/data/experiences.js`
-- `src/data/projects.jsx`
-- `src/data/skillTimeline.js`
-- `src/utils/academics.js`
+- `src/data/academics.ts`
+- `src/data/experiences.ts`
+- `src/data/projects.tsx`
+- `src/data/skillTimeline.ts`
+- `src/utils/academics.ts`
 
 ## Decisões observadas no código
 - Ver `docs/sdd-terminal-v2/requirements.md` §2 (V-01 a V-08), que valem para todas as features.

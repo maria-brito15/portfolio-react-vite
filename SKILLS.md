@@ -26,6 +26,6 @@ Onze skills em `.claude/skills/`. Cada uma aparece sozinha quando o pedido combi
 ## Scripts
 
 - `node .claude/skills/terminal-design-system/scripts/contrast.mjs`: contraste AA nos dois temas.
-- `node .claude/skills/content-integrity/scripts/check-i18n.mjs`: paridade PT/EN de `ui.js`.
+- `node .claude/skills/content-integrity/scripts/check-i18n.mjs`: paridade PT/EN de `ui.ts`.
 - `node .claude/skills/sdd-spec-sync/scripts/gap-summary.mjs`: resumo de status da spec.
 - `node .claude/skills/verify-site/scripts/sweep.mjs`: regras mecânicas do projeto.

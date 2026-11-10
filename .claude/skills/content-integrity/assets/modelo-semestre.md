@@ -1,4 +1,4 @@
-# Modelo de semestre (`src/data/academics.js`)
+# Modelo de semestre (`src/data/academics.ts`)
 
 ```js
 {
@@ -13,7 +13,7 @@
 }
 ```
 
-Carga horária e média do semestre são calculadas por `src/utils/academics.js`; não escreva à mão.
-Semestres existentes (placeholders, `courses: []`): `2025-1`, `2025-2`, `2026-1` (programa `cc`)
+Carga horária e média do semestre são calculadas por `src/utils/academics.ts`; não escreva à mão.
+Semestres preenchidos com as disciplinas aprovadas: `2025-1`, `2025-2`, `2026-1` (programa `cc`; sem `hours`/`modality`, que são opcionais)
 e `2026-2` (programa `es`, `inProgress: true`).
 Pergunte à pessoa antes de preencher qualquer `grade`, `hours` ou nome de disciplina.

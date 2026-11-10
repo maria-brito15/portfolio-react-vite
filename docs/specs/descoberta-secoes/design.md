@@ -4,9 +4,9 @@ Descreve como a feature foi construída, a partir do código existente. Não é 
 
 ## Arquivos envolvidos
 
-- `src/terminal/pageIndex.jsx (escrito, ainda não importado)`
-- `src/i18n/ui.js (blocos term.nav, firstVisit, try)`
-- `src/data/sections.js`
+- `src/terminal/pageIndex.tsx (escrito, ainda não importado)`
+- `src/i18n/ui.ts (blocos term.nav, firstVisit, try)`
+- `src/data/sections.ts`
 
 ## Decisões observadas no código
 - Ver `docs/sdd-terminal-v2/requirements.md` §2 (V-01 a V-08), que valem para todas as features.

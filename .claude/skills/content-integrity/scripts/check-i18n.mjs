@@ -1,10 +1,10 @@
 #!/usr/bin/env node
-// Compara as chaves de ui.pt e ui.en (src/i18n/ui.js) e lista o que falta de cada lado.
+// Compara as chaves de ui.pt e ui.en (src/i18n/ui.ts) e lista o que falta de cada lado.
 // Uso: node check-i18n.mjs [caminho/ui.js]   → sai com 1 se houver divergência.
 import { pathToFileURL } from 'node:url';
 import { resolve } from 'node:path';
 
-const file = resolve(process.argv[2] || 'src/i18n/ui.js');
+const file = resolve(process.argv[2] || 'src/i18n/ui.ts');
 const { ui } = await import(pathToFileURL(file).href);
 
 const flat = (o, p = '') =>

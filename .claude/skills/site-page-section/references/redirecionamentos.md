@@ -4,7 +4,7 @@ Links antigos do tipo `/#sobre`, `/#habilidades`, `/#projetos`, `/#experiencias`
 existem em currículos, LinkedIn e e-mails. Não podem cair na home vazia.
 
 Regras:
-1. Tabela única `legacyHashes` (em `routes.js` ou módulo ao lado): `{ '#sobre': { page: 'curriculo', section: 'resumo' }, … }`.
+1. Tabela única `legacyHashes` (em `routes.ts` ou módulo ao lado): `{ '#sobre': { page: 'curriculo', section: 'resumo' }, … }`.
 2. Ao montar a home, se `location.hash` está na tabela: `history.replaceState` para a URL nova e, se couber, executar o comando equivalente **sem** carregamento teatral.
 3. Hash desconhecido: ignorar (nunca erro).
 4. Teste: para cada entrada, `renderApp('/#sobre')` termina em `/curriculo` com a seção certa; hash inválido continua na home.

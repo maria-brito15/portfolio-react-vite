@@ -12,7 +12,7 @@ Nenhum comando pode existir só para quem leu o código.
 2. **Linha de dicas** — ver uma seção (`curriculo 2` ou `curriculo competencias`), abrir a página
    (`cd curriculo`), listar de novo (`ls curriculo`), início (`cd ~`), ajuda.
 3. **Itens clicáveis** — cada linha `[n]` executa `<página> n` (componente `RunCommand` em
-   `src/terminal/pageIndex.jsx`); essencial no celular.
+   `src/terminal/pageIndex.tsx`); essencial no celular.
 4. **Número como atalho** — `curriculo 2`; e, logo após o índice, só `2` abre a seção da
    última página aberta (a sessão guarda esse contexto). Sem contexto: mensagem
    `term.nav.noContext`.
@@ -28,10 +28,10 @@ Nenhum comando pode existir só para quem leu o código.
 
 ## Onde estão as peças
 
-- Componentes: `src/terminal/pageIndex.jsx` (`PageIndex`, `SectionNav`, `RunCommand`)
-- Seções por página: `src/data/sections.js` (`sectionsOf`, `findSection`, `neighbors`)
-- Textos PT/EN: `src/i18n/ui.js` → `term.nav.*`, `term.firstVisit`, `term.try`
-- Visão de cada seção: `src/terminal/sectionViews.jsx`
+- Componentes: `src/terminal/pageIndex.tsx` (`PageIndex`, `SectionNav`, `RunCommand`)
+- Seções por página: `src/data/sections.ts` (`sectionsOf`, `findSection`, `neighbors`)
+- Textos PT/EN: `src/i18n/ui.ts` → `term.nav.*`, `term.firstVisit`, `term.try`
+- Visão de cada seção: `src/terminal/sectionViews.tsx`
 
-Antes de criar texto novo, procure a chave em `ui.js`: várias já existem. Código e texto
+Antes de criar texto novo, procure a chave em `ui.ts`: várias já existem. Código e texto
 sem uso são lacuna, não sobra para apagar (ver `docs/sdd-terminal-v2/gap-analysis.md`, DS-01 a DS-12).

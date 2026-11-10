@@ -10,5 +10,5 @@ Arquivos: [requirements.md](requirements.md) · [design.md](design.md) · [statu
 | --- | --- | --- | --- | --- |
 | NF-01 | Qualidade automatizada | `npm run lint`, `npm test` e `npm run build` com código 0 | P0 | AUT |
 | NF-02 | Sem erro de console | Nenhuma rota emite erro no console em 390, 768 e 1440 px | P1 | MAN |
-| NF-03 | PT/EN completos | Todo texto novo existe nos dois idiomas, em `src/i18n/ui.js` ou nos dados | P0 | AUT |
+| NF-03 | PT/EN completos | Todo texto novo existe nos dois idiomas, em `src/i18n/ui.ts` ou nos dados | P0 | AUT |
 | NF-04 | Documentação coerente | README descreve os comandos e a navegação reais; `docs/sdd/` marca o que foi superado (§1) | P1 | MAN |

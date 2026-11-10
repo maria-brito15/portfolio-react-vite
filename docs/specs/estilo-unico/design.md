@@ -8,9 +8,9 @@ Descreve como a feature foi construída, a partir do código existente. Não é 
 - `src/styles/ui.css`
 - `src/styles/shell.css`
 - `src/styles/terminal.css`
-- `src/styles/styles.test.js`
+- `src/styles/styles.test.ts`
 - `src/components/ui/*`
-- `src/components/shell/Window.jsx`
+- `src/components/shell/Window.tsx`
 - `index.html`
 
 ## Decisões observadas no código

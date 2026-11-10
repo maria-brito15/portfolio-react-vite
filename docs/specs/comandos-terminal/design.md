@@ -4,11 +4,11 @@ Descreve como a feature foi construída, a partir do código existente. Não é 
 
 ## Arquivos envolvidos
 
-- `src/terminal/commands.jsx`
-- `src/terminal/views.jsx`
-- `src/terminal/sectionViews.jsx`
-- `src/terminal/outputs.jsx`
-- `src/terminal/sections.test.jsx`
+- `src/terminal/commands.tsx`
+- `src/terminal/views.tsx`
+- `src/terminal/sectionViews.tsx`
+- `src/terminal/outputs.tsx`
+- `src/terminal/sections.test.tsx`
 
 ## Decisões observadas no código
 - Ver `docs/sdd-terminal-v2/requirements.md` §2 (V-01 a V-08), que valem para todas as features.

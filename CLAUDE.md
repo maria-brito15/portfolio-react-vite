@@ -1,12 +1,12 @@
 # Portfólio da Duda — regras para o Claude Code
 
-React 19 + Vite 6, JavaScript, roteador próprio, Vitest. Terminal na home; páginas dedicadas como janelas.
+React 19 + Vite 6, TypeScript (strict), roteador próprio, Vitest. Terminal na home; páginas dedicadas como janelas.
 Specs por feature em `docs/specs/` (índice em `docs/specs/README.md`); spec geral e análise em `docs/sdd-terminal-v2/`.
 
 ## Sempre
 
-- Uma rota/seção existe só em `src/data/routes.js` / `sections.js`; o resto lê dali.
-- Texto de interface nos dois idiomas (`src/i18n/ui.js`); saída do terminal é função de idioma.
+- Uma rota/seção existe só em `src/data/routes.ts` / `sections.ts`; o resto lê dali.
+- Texto de interface nos dois idiomas (`src/i18n/ui.ts`); saída do terminal é função de idioma.
 - Um só estilo visual: mono único, tokens de `tokens.css`, sem degradê. Nada de dado inventado.
 - Feature nova: PRD → especificação → plano → tarefas → código (skill `spec-driven-development`). Não codifique antes da especificação aprovada.
 - Terminou? Rode `/verify-site`. Mudou comportamento? Atualize `docs/specs/<feature>/status.md` (`/sdd-spec-sync`).
@@ -20,4 +20,4 @@ Lista completa em `SKILLS.md`. Resumo:
 
 ## Comandos
 
-`npm run dev` · `npm run lint` · `npm test` · `npm run build`
+`npm run dev` · `npm run typecheck` · `npm run lint` · `npm test` · `npm run build`

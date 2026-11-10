@@ -16,12 +16,12 @@ DT dados · NF não funcionais.
 
 ## Formato de linha na gap-analysis
 
-`| DS-03 | ◐ | Índice existe em pageIndex.jsx mas não é usado por commands.jsx (falta T-D1) |`
+`| DS-03 | ◐ | Índice existe em pageIndex.tsx mas não é usado por commands.tsx (falta T-D1) |`
 
 A linha começa com o ID e contém **exatamente uma** marca de status (o script depende disso).
 
 ## Ordem sugerida das tarefas abertas
 
-T-D1 (ligar `pageIndex.jsx`) → T-D2/D3 (índice e SectionNav clicáveis) → T-D4 (contexto da última página) →
+T-D1 (ligar `pageIndex.tsx`) → T-D2/D3 (índice e SectionNav clicáveis) → T-D4 (contexto da última página) →
 T-D5 (número e vizinhos) → T-D6 (erros que reensinam) → T-D7 (primeira visita) → T-D8 (`ajuda`) → T-D9 (demais
 páginas) → T-L1/L2 (hash legado) → T-A1…A7 (acabamento).
