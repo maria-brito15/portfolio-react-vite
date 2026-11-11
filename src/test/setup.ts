@@ -27,6 +27,12 @@ afterEach(() => {
   window.history.replaceState(null, '', '/');
 });
 
+// Nenhum teste vai à rede: o GitHub responde como indisponível, salvo mock próprio.
+beforeEach(() => {
+  sessionStorage.clear();
+  vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('offline')));
+});
+
 // jsdom não implementa estas APIs.
 window.scrollTo = () => {};
 Element.prototype.scrollIntoView = () => {};

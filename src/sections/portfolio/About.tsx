@@ -1,4 +1,5 @@
 import SectionTitle from '../../components/ui/SectionTitle';
+import GithubStats from '../../components/GithubStats';
 import { profile } from '../../data/profile';
 
 import type { PortfolioContent } from '../../data/portfolio';
@@ -62,6 +63,7 @@ export default function About({ content }: { content: PortfolioContent['about'] 
           </div>
         </div>
       </div>
+      <GithubStats />
     </section>
   );
 }

@@ -13,6 +13,8 @@ export default [
       'node_modules',
       'coverage',
       'playwright-report',
+      'test-results',
+      'e2e/shots',
       '.next',
       'next-env.d.ts',
     ],

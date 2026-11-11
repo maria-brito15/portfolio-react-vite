@@ -1,6 +1,6 @@
 # Especificações por feature
 
-Cada pasta segue o fluxo PRD → especificação → plano → tarefas → verificação, em arquivos separados. Dez features cobrem o site atual.
+Cada pasta segue o fluxo PRD → especificação → plano → tarefas → verificação, em arquivos separados. Onze features cobrem o site atual.
 
 | Feature | Requisitos | Estado |
 | --- | --- | --- |
@@ -14,5 +14,6 @@ Cada pasta segue o fluxo PRD → especificação → plano → tarefas → verif
 | [Aviso de visualização em celular](aviso-mobile/status.md) | MB-xx | ✅ 9 · ◐ 0 · ❌ 0 · ❔ 0 |
 | [SEO e descoberta em buscadores](seo/status.md) | SE-xx | ✅ 10 · ◐ 2 · ❌ 0 · ❔ 0 |
 | [Experiência interativa e originalidade](experiencia-interativa/status.md) | PE/TB/JG/JA/CE-xx | ✅ 40 · ◐ 2 · ❌ 1 · ❔ 0 |
+| [GitHub em números](github-stats/status.md) | GH-xx | ✅ 5 · ◐ 0 · ❌ 0 · ❔ 0 |
 
 Spec geral e análise de lacunas originais: `docs/sdd-terminal-v2/`. Estilo de escrita: skill `technical-writing`. Fluxo: skill `spec-driven-development`.

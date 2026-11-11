@@ -19,5 +19,6 @@ export default defineConfig(({ command }) => ({
     css: false,
     // As páginas renderizam o site inteiro (jsdom); em máquinas lentas 5 s não bastam.
     testTimeout: 20000,
+    exclude: ['node_modules', 'dist', 'e2e'],
   },
 }));

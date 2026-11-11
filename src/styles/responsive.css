@@ -58,10 +58,6 @@
     grid-template-columns: 1fr;
     gap: 0.3rem;
   }
-  .stats-row {
-    gap: 1.2rem 1.8rem;
-    margin-bottom: 1.75rem;
-  }
   .proj-grid {
     grid-template-columns: 1fr;
     gap: 0.9rem;

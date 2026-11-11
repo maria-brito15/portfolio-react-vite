@@ -8,3 +8,6 @@ coverage
 # Documentação local de deploy e protótipos — não enviar para GitHub
 docs/DEPLOY.md
 docs/PROTOTIPOS.md
+test-results
+playwright-report
+e2e/shots
