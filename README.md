@@ -87,7 +87,9 @@ Seções por página: **currículo** (6), **acadêmico** (`linha-do-tempo`, `for
 | `curriculo`, `academico`, `servicos` | visão em terminal da página, com as duas ações |
 | `tema`, `idioma`, `historico`, `limpar` | tema claro/escuro, PT/EN, comandos digitados, volta ao banner |
 | Tab · ↑/↓ · Ctrl+L · Ctrl+C | completar (com lista de sugestões), histórico, limpar, interromper |
-| Ctrl+K ou / | foca a barra de comandos (exceto dentro de campos de formulário); em tela estreita ela vira o botão `>_`, que abre a barra em tela cheia |
+| Ctrl+K | abre a paleta de comandos (páginas e comandos, com busca) |
+| / | foca a barra de comandos (exceto dentro de campos de formulário); em tela estreita ela vira o botão `>_`, que abre a barra em tela cheia |
+| ? | mostra a lista de atalhos de teclado |
 
 Cada comando limpa a tela: ficam visíveis só o último comando e sua saída (o histórico de ↑/↓ e `historico` continua inteiro). A barra de comandos e o terminal da home compartilham a mesma sessão (`src/terminal/TerminalSession.tsx`).
 
