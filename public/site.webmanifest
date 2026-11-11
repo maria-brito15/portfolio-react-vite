@@ -1,0 +1,14 @@
+{
+  "name": "Duda Brito | Portfólio de Engenharia de Software",
+  "short_name": "Duda Brito",
+  "description": "Portfólio de Duda Brito, estudante de Engenharia de Software na PUC Minas.",
+  "lang": "pt-BR",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#0b0c0f",
+  "theme_color": "#0b0c0f",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
+  ]
+}
