@@ -1,13 +1,11 @@
+import { Suspense } from 'react';
 import { useRouter } from './router';
 import { findPageByPath } from './data/routes';
 import { TerminalProvider } from './terminal/TerminalSession';
 import Home from './pages/Home';
-import Services from './pages/Services';
-import CaseStudy from './pages/CaseStudy';
-import Resume from './pages/Resume';
-import Academics from './pages/Academics';
-import SectionPage from './pages/SectionPage';
 import NotFound from './pages/NotFound';
+import { Academics, CaseStudy, Resume, SectionPage, Services } from './pages/lazyPages';
+
 import MobileNoticeModal from './components/MobileNoticeModal';
 
 // Rota (src/data/routes.ts) → página.
@@ -40,7 +38,9 @@ export default function App() {
 
   return (
     <TerminalProvider>
-      <Page id={route?.id} />
+      <Suspense fallback={null}>
+        <Page id={route?.id} />
+      </Suspense>
       <MobileNoticeModal />
     </TerminalProvider>
   );
