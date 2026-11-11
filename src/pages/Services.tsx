@@ -14,7 +14,7 @@ export default function Services() {
   const { lang } = useLanguage();
   const c = services[lang];
 
-  useDocumentMeta(c.meta);
+  useDocumentMeta('servicos');
 
   const mailto = `mailto:${profile.servicesEmail}`;
 

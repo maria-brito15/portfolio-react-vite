@@ -3,11 +3,6 @@
 // para unir as antigas "Atividades extracurriculares" à seção exigida.
 export const portfolio = {
   pt: {
-    meta: {
-      title: 'Portfólio — Duda Brito | Engenharia de Software & Arquitetura',
-      description:
-        'Portfólio de Duda Brito – estudante de Engenharia de Software na interseção entre Software Architecture, System Design, Product Engineering e IA. Projetos reais e forma de pensar sobre sistemas.',
-    },
     hero: {
       tag: 'Engenharia de Software · PUC Minas',
       title: (
@@ -152,11 +147,6 @@ export const portfolio = {
     },
   },
   en: {
-    meta: {
-      title: 'Portfolio — Duda Brito | Software Engineering & Architecture',
-      description:
-        "Duda Brito's portfolio – Software Engineering student at the intersection of Software Architecture, System Design, Product Engineering and AI. Real projects and a way of thinking about systems.",
-    },
     hero: {
       tag: 'Software Engineering · PUC Minas',
       title: (

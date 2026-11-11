@@ -3,20 +3,21 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Duda Brito | Engenharia de Software & Arquitetura</title>
-    <meta
-      name="description"
-      content="Portfólio de Duda Brito – estudante de Engenharia de Software na interseção entre Software Architecture, System Design, Product Engineering e IA."
-    />
-    <meta property="og:title" content="Duda Brito — Engenharia de Software & Arquitetura" />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="/assets/og-image.png" />
-    <link rel="icon" type="image/png" href="/assets/portfolio.jpeg" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <meta name="theme-color" content="#0b0c0f" />
+    <meta name="author" content="Maria Eduarda de Paula Brito" />
+    <!-- Título, descrição, canonical, Open Graph, Twitter e JSON-LD: scripts/seoPlugin.ts
+         escreve este bloco por rota a partir de src/data/seo.ts. -->
+    <!-- seo:head -->
+    <!-- /seo:head -->
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
     <link
-      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
+      rel="preload"
+      href="/fonts/jetbrains-mono-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
     />
     <script>
       // Aplica o tema salvo antes do primeiro desenho, evitando o flash do tema errado.
@@ -30,6 +31,7 @@
   </head>
   <body>
     <div id="root"></div>
+    <!-- seo:body --><!-- /seo:body -->
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

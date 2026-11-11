@@ -8,7 +8,7 @@ export default function NotFound() {
   const { t } = useLanguage();
   const { path } = useRouter();
 
-  useDocumentMeta({ title: `${t.notFound.title} | Duda Brito`, description: t.notFound.text });
+  useDocumentMeta('notFound');
 
   return (
     <SiteShell missingPath={path}>

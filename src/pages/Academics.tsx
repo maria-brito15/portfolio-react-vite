@@ -24,11 +24,6 @@ const pick = (value: string | Localized, lang: Lang) =>
 
 const TEXT = {
   pt: {
-    meta: {
-      title: 'Acadêmico — Duda Brito | Engenharia de Software',
-      description:
-        'Trajetória acadêmica de Maria Eduarda Brito na PUC Minas: formação, projetos finalistas, monitoria, extensão e competições.',
-    },
     title: 'Trajetória acadêmica',
     intro:
       'Formação na PUC Minas, de Ciência da Computação a Engenharia de Software, com os projetos, monitorias e atividades de cada ano.',
@@ -66,11 +61,6 @@ const TEXT = {
     resume: 'Ver o currículo →',
   },
   en: {
-    meta: {
-      title: 'Academics — Duda Brito | Software Engineering',
-      description:
-        "Maria Eduarda Brito's academic record at PUC Minas: degrees, finalist projects, teaching assistantship, outreach and competitions.",
-    },
     title: 'Academic record',
     intro:
       'Studies at PUC Minas, from Computer Science to Software Engineering, with the projects, TA work and activities of each year.',
@@ -116,7 +106,7 @@ export default function Academics() {
   const { lang } = useLanguage();
   const c = TEXT[lang];
 
-  useDocumentMeta(c.meta);
+  useDocumentMeta('academico');
 
   const first = academics.timeline[0].year;
   const last = (academics.timeline.at(-1) as { year: number }).year;

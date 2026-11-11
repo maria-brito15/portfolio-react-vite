@@ -1,7 +1,6 @@
 import { useLanguage } from '../i18n/LanguageContext';
 import type { ReactNode } from 'react';
 import { portfolio, type PortfolioContent } from '../data/portfolio';
-import { routeById } from '../data/routes';
 import { useDocumentMeta } from '../hooks/useDocumentMeta';
 import SiteShell from '../components/shell/SiteShell';
 import About from '../sections/portfolio/About';
@@ -25,10 +24,7 @@ export default function SectionPage({ routeId }: { routeId: string }) {
   const c = portfolio[lang];
   const render = SECTIONS[routeId];
 
-  useDocumentMeta({
-    title: `${routeById(routeId)?.label[lang]} — Duda Brito`,
-    description: c.meta.description,
-  });
+  useDocumentMeta(routeId);
 
   return <SiteShell routeId={routeId}>{render(c)}</SiteShell>;
 }

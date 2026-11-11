@@ -10,9 +10,38 @@
   # o build ao encontrá-los em dist/.
   SECRETS_SCAN_OMIT_KEYS = "VITE_EMAILJS_SERVICE_ID,VITE_EMAILJS_TEMPLATE_ID,VITE_EMAILJS_PUBLIC_KEY"
 
-# Fallback da SPA: qualquer rota vai para index.html (arquivos estáticos
-# existentes, como /assets/*, continuam sendo servidos normalmente).
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+# Sem regra "/* -> /index.html 200": o build grava um HTML por rota (sobre.html,
+# projetos.html…) e a Netlify serve dist/404.html, com status 404 de verdade,
+# para qualquer endereço que não exista (antes, tudo respondia 200 = soft 404).
+
+# Cabeçalhos de segurança em todas as páginas.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-Frame-Options = "DENY"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+# JS e CSS do build levam hash no nome: cache de um ano, sem revalidar.
+[[headers]]
+  for = "/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Fonte hospedada no site: não muda sem trocar o nome do arquivo.
+[[headers]]
+  for = "/fonts/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Imagens fixas (sem hash): uma semana, depois revalidam.
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+[[headers]]
+  for = "/cases/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"

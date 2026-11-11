@@ -81,7 +81,7 @@ export default function Resume() {
   const { lang } = useLanguage();
   const c = resume[lang];
 
-  useDocumentMeta(c.meta);
+  useDocumentMeta('curriculo');
 
   const groups = experienceGroups.filter((g) => g.id !== 'awards');
   const experiences = groups.flatMap((g) => g.items.map((item) => ({ item, kind: g.title[lang] })));

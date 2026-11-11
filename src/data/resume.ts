@@ -5,11 +5,6 @@
 // duas versões das mesmas informações.
 export const resume = {
   pt: {
-    meta: {
-      title: 'Currículo — Duda Brito | Engenharia de Software',
-      description:
-        'Currículo de Maria Eduarda Brito, estudante de Engenharia de Software na PUC Minas: competências, projetos, formação e experiências.',
-    },
     name: 'Maria Eduarda de Paula Brito',
     headline: 'Estágio em Engenharia de Software · Desenvolvimento e Testes de Software',
     location: 'Estudante de Engenharia de Software — PUC Minas · Belo Horizonte, MG',
@@ -101,11 +96,6 @@ export const resume = {
     academicsLink: 'Ver a trajetória acadêmica completa →',
   },
   en: {
-    meta: {
-      title: 'Resume — Duda Brito | Software Engineering',
-      description:
-        'Resume of Maria Eduarda Brito, Software Engineering student at PUC Minas: skills, projects, education and experience.',
-    },
     name: 'Maria Eduarda de Paula Brito',
     headline: 'Software Engineer Intern · Software Development and Testing',
     location: 'Software Engineering student at PUC Minas · Belo Horizonte, MG, Brazil',

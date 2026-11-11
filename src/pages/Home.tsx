@@ -10,7 +10,7 @@ export default function Home() {
   const { lang } = useLanguage();
   const c = portfolio[lang];
 
-  useDocumentMeta(c.meta);
+  useDocumentMeta('home');
 
   return (
     <SiteShell routeId="home" variant="terminal" badge={c.hero.tag}>

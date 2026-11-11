@@ -268,11 +268,15 @@ Se algo falhar: erro 400 costuma ser ID errado ou variável do template diferent
 
 ## 🚀 Deploy
 
-O projeto gera arquivos estáticos em `dist/` (`npm run build`). Como o site tem rotas (`/servicos`), a hospedagem precisa devolver `index.html` para qualquer caminho: já configurado em `netlify.toml` e `public/_redirects` (Netlify) e em `vercel.json` (Vercel).
+O projeto gera arquivos estáticos em `dist/` (`npm run build`). O build grava um HTML por rota (`dist/servicos.html`, `dist/projetos.html`…) e um `404.html`; a hospedagem serve cada arquivo e responde 404 de verdade a endereços inexistentes (`netlify.toml` na Netlify, `cleanUrls` em `vercel.json` na Vercel). Não há mais regra `/* → /index.html`.
 
 **Plataforma recomendada: Netlify.** Plano gratuito, atende à SPA sem ajustes e você já tem um site ali (`mariabdev.netlify.app`), que pode ser religado ao novo repositório mantendo a URL, ou substituído por um site novo para não sobrescrever a versão antiga. A comparação com Vercel e Render e os riscos de reaproveitar o site estão em [docs/DEPLOY.md](docs/DEPLOY.md).
 
 Resumo: criar o repositório no GitHub → importar no Netlify (build `npm run build`, publicação `dist`) → cadastrar `VITE_EMAILJS_*` **antes** do deploy → publicar → validar com o checklist de [docs/DEPLOY.md](docs/DEPLOY.md#5-checklist-de-validação-da-publicação). **Nada disso foi executado ainda.**
+
+### 🔎 SEO
+
+`src/data/seo.ts` é a fonte única de título, descrição, canonical, Open Graph, Twitter Card e JSON-LD (Person, WebSite, ProfilePage, BreadcrumbList, projetos). `scripts/seoPlugin.ts` escreve esses dados no HTML de cada rota, além de `sitemap.xml` e `robots.txt`, no build; `useDocumentMeta` os mantém em dia no navegador. Domínio novo: troque `SITE_URL` em `seo.ts`. Especificação: [docs/specs/seo](docs/specs/seo/requirements.md).
 
 ---
 

@@ -77,11 +77,6 @@ const agapeImages = ['/cases/agape/1.jpg', '/cases/agape/2.jpg', '/cases/agape/3
 
 export const services = {
   pt: {
-    meta: {
-      title: 'Serviços — Duda Brito | Sites & Sistemas sob medida',
-      description:
-        'Sites institucionais, e-commerce e sistemas sob medida — do design ao deploy. Serviços de desenvolvimento web de Duda Brito.',
-    },
     hero: {
       badge: 'DISPONÍVEL PARA NOVOS PROJETOS',
       title: (
@@ -237,11 +232,6 @@ export const services = {
     footer: 'Feito com 💙 por Duda Brito · Belo Horizonte, MG · 2026',
   },
   en: {
-    meta: {
-      title: 'Services — Duda Brito | Websites & Systems tailored for you',
-      description:
-        'Institutional websites, e-commerce and custom systems — from design to deploy. Web development services by Duda Brito.',
-    },
     hero: {
       badge: 'OPEN FOR NEW PROJECTS',
       title: (
