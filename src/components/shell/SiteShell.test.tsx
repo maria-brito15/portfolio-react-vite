@@ -64,12 +64,19 @@ describe('layout único em todas as páginas', () => {
     }
   });
 
-  it('o botão >_ do header foca a barra de comandos', async () => {
+  it('o botão >_ do header abre a paleta de comandos, como Ctrl+K', async () => {
     const user = userEvent.setup();
 
     renderApp('/academico');
     await user.click(screen.getByRole('button', { name: 'Comandos (Ctrl K)' }));
-    expect(barInput()).toHaveFocus();
+
+    const dialog = await screen.findByRole('dialog', { name: 'Paleta de comandos' });
+
+    expect(within(dialog).getByRole('combobox')).toHaveFocus();
+    // Esc fecha e devolve o foco ao botão
+    await user.keyboard('{Escape}');
+    expect(screen.queryByRole('dialog')).toBeNull();
+    expect(screen.getByRole('button', { name: 'Comandos (Ctrl K)' })).toHaveFocus();
   });
 
   it('só as páginas internas têm "Voltar" e breadcrumb', () => {

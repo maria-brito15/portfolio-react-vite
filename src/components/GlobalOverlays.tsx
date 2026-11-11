@@ -3,6 +3,7 @@
 // exceção é Ctrl+K na linha de comando do próprio terminal (é onde a pessoa
 // está quase sempre).
 import { lazy, Suspense, useEffect, useState } from 'react';
+import { OPEN_PALETTE } from './shell/commandBarEvents';
 
 const CommandPalette = lazy(() => import('./CommandPalette'));
 const ShortcutsHelp = lazy(() => import('./ShortcutsHelp'));
@@ -37,9 +38,16 @@ export default function GlobalOverlays() {
       }
     };
 
-    document.addEventListener('keydown', onKeyDown);
+    // O botão `>_` do Header faz o mesmo que Ctrl+K (só abre; fechar é com Esc ou Ctrl+K).
+    const onOpenRequest = () => setOpen('palette');
 
-    return () => document.removeEventListener('keydown', onKeyDown);
+    document.addEventListener('keydown', onKeyDown);
+    window.addEventListener(OPEN_PALETTE, onOpenRequest);
+
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      window.removeEventListener(OPEN_PALETTE, onOpenRequest);
+    };
   }, []);
 
   if (!open) return null;

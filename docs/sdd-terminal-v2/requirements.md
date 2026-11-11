@@ -15,6 +15,7 @@ Estes requisitos **substituem** os itens abaixo do TP1, que descrevem o site ant
 | D-04 e RF-19 ("preservar design atual") | Superados: o design mudou de propósito (ES-01 a ES-10) |
 | RF-18 (âncoras `/#secao` na home) e a estrutura "home com seções" | Superados: a home é só o terminal; as seções viraram páginas próprias (SH-09, SH-10) |
 | RNF-03 ("menu recolhível em telas pequenas") | Superado: não há mais menu de links (SH-01) |
+| SH-05 (`Ctrl+K` foca a barra) | Superado em 11/11/2026: `Ctrl+K` e o botão `>_` do header abrem a paleta de comandos; `/` continua focando a barra; `?` lista os atalhos. Vale `docs/specs/shell-navegacao/` e `docs/specs/experiencia-interativa/` (JA-06, JA-08) |
 | D-10 ("sem ferramentas de SDD, só 3 documentos") | Esta pasta é uma segunda spec, no mesmo formato, sem ferramenta nova |
 
 Continuam valendo sem alteração: RF-01 a RF-05 (timeline de projetos), RF-07, RF-08, RF-10 a RF-17, RNF-05, RNF-08.

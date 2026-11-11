@@ -1,11 +1,11 @@
 import { Link } from '../../router';
 import { useLanguage } from '../../i18n/LanguageContext';
 import { useTheme } from '../../hooks/useTheme';
-import { focusCommands } from './commandBarEvents';
+import { openPalette } from './commandBarEvents';
 
 // Header em três zonas: acesso a comandos (esquerda), logo centralizado e os
 // dois controles (tema e idioma, direita). Não há menu de links: o "menu" do
-// site é o terminal (barra de comandos logo abaixo, `Ctrl K`).
+// site é o terminal. O botão da esquerda abre a paleta de comandos, como `Ctrl K`.
 export default function Header() {
   const { t, toggleLang } = useLanguage();
   const [theme, toggleTheme] = useTheme();
@@ -19,7 +19,7 @@ export default function Header() {
           className="header-cmd"
           aria-label={t.cmdbar.headerButton}
           title={t.cmdbar.shortcut}
-          onClick={focusCommands}
+          onClick={openPalette}
         >
           <span className="header-cmd-prompt" aria-hidden="true">
             &gt;_

@@ -1,11 +1,11 @@
 // O botão `>_` do Header, a paleta de comandos e a barra de comandos conversam
 // por estes eventos:
-// - FOCUS_COMMANDS: quem quer abrir os comandos dispara, a CommandBar foca (e,
-//   em tela estreita, abre em tela cheia);
+// - OPEN_PALETTE: o botão do Header pede à GlobalOverlays que abra a paleta
+//   (o mesmo que Ctrl+K);
 // - SHOW_OUTPUT: depois de rodar um comando de fora da barra (a paleta), pede
 //   à CommandBar que mostre a saída (painel fora da home, terminal na home).
-export const FOCUS_COMMANDS = 'portfolio:focus-commands';
+export const OPEN_PALETTE = 'portfolio:open-palette';
 export const SHOW_OUTPUT = 'portfolio:show-output';
 
-export const focusCommands = () => window.dispatchEvent(new Event(FOCUS_COMMANDS));
+export const openPalette = () => window.dispatchEvent(new Event(OPEN_PALETTE));
 export const showCommandOutput = () => window.dispatchEvent(new Event(SHOW_OUTPUT));
