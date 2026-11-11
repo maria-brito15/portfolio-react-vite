@@ -8,6 +8,7 @@ import Resume from './pages/Resume';
 import Academics from './pages/Academics';
 import SectionPage from './pages/SectionPage';
 import NotFound from './pages/NotFound';
+import MobileNoticeModal from './components/MobileNoticeModal';
 
 // Rota (src/data/routes.ts) → página.
 function Page({ id }: { id?: string }) {
@@ -40,6 +41,7 @@ export default function App() {
   return (
     <TerminalProvider>
       <Page id={route?.id} />
+      <MobileNoticeModal />
     </TerminalProvider>
   );
 }

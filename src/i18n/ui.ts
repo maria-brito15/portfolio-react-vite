@@ -33,6 +33,11 @@ export const ui = {
       prev: 'Imagem anterior',
       next: 'Próxima imagem',
     },
+    mobileNotice: {
+      title: 'Feito para computador',
+      body: 'Este portfólio foi desenhado para telas de computador. Ele funciona no celular, mas a melhor experiência é acessando de um desktop.',
+      dismiss: 'Entendi',
+    },
     form: {
       title: 'Ou mande uma mensagem por aqui',
       name: 'Nome',
@@ -178,6 +183,11 @@ export const ui = {
       close: 'Close',
       prev: 'Previous image',
       next: 'Next image',
+    },
+    mobileNotice: {
+      title: 'Built for desktop',
+      body: "This portfolio was designed for computer screens. It works on mobile, but you'll get the best experience on a desktop.",
+      dismiss: 'Got it',
     },
     form: {
       title: 'Or send a message here',

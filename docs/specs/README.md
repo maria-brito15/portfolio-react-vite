@@ -11,5 +11,6 @@ Cada pasta segue o fluxo PRD → especificação → plano → tarefas → verif
 | [Descoberta das seções pelo terminal](descoberta-secoes/status.md) | DS-xx | ✅ 12 · ◐ 0 · ❌ 0 · ❔ 0 |
 | [Dados, ordem e competências](dados-e-ordem/status.md) | DT-xx | ✅ 4 · ◐ 0 · ❌ 0 · ❔ 0 |
 | [Qualidade e requisitos não funcionais](qualidade-nao-funcionais/status.md) | NF-xx | ✅ 4 · ◐ 0 · ❌ 0 · ❔ 0 |
+| [Aviso de visualização em celular](aviso-mobile/status.md) | MB-xx | ✅ 8 · ◐ 0 · ❌ 0 · ❔ 0 |
 
 Spec geral e análise de lacunas originais: `docs/sdd-terminal-v2/`. Estilo de escrita: skill `technical-writing`. Fluxo: skill `spec-driven-development`.
