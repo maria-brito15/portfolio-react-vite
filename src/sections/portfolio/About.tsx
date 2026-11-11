@@ -6,7 +6,7 @@ import type { PortfolioContent } from '../../data/portfolio';
 export default function About({ content }: { content: PortfolioContent['about'] }) {
   return (
     <section id="sobre" className="sec" aria-labelledby="sobre-title">
-      <SectionTitle id="sobre-title" label={content.label}>
+      <SectionTitle as="h1" id="sobre-title" label={content.label}>
         {content.title}
       </SectionTitle>
       <div className="about-grid">

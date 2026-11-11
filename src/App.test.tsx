@@ -29,7 +29,7 @@ describe('página inicial', () => {
 
     const timeline = screen.getByRole('list', { name: /Linha do tempo/ });
     const names = within(timeline)
-      .getAllByRole('heading', { level: 3 })
+      .getAllByRole('heading', { level: 2 })
       .map((h) => h.textContent);
 
     expect(names.slice(0, 3)).toEqual(['Planoriza', 'EcoShop', 'Portfólio']);

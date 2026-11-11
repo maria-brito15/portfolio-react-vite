@@ -15,7 +15,7 @@ describe('timeline de projetos', () => {
   it('mostra Planoriza e EcoShop primeiro, seguidos do Portfólio e dos três de 2026 sem mês', () => {
     const items = [...timeline().querySelectorAll(':scope > .timeline-item')];
     const names = items.map(
-      (li) => li.querySelector<HTMLElement>('h3, .minor-item-name')!.textContent,
+      (li) => li.querySelector<HTMLElement>('h2, .minor-item-name')!.textContent,
     );
 
     expect(names.slice(0, 3)).toEqual(['Planoriza', 'EcoShop', 'Portfólio']);

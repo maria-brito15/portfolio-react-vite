@@ -16,7 +16,7 @@ export default function Projects({ content }: { content: PortfolioContent['proje
 
   return (
     <section id="projetos" className="sec" aria-labelledby="projetos-title">
-      <SectionTitle id="projetos-title" label={content.label}>
+      <SectionTitle as="h1" id="projetos-title" label={content.label}>
         {content.title}
       </SectionTitle>
       <p className="section-intro">{content.intro}</p>

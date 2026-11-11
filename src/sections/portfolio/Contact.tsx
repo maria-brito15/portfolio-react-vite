@@ -9,7 +9,7 @@ export default function Contact({ content }: { content: PortfolioContent['contac
   return (
     <section className="contact-wrap" id="contato" aria-labelledby="contato-title">
       <div className="cinner">
-        <SectionTitle id="contato-title" label={content.label} center>
+        <SectionTitle as="h1" id="contato-title" label={content.label} center>
           {content.title}
         </SectionTitle>
         <p className="contact-text">{content.text}</p>

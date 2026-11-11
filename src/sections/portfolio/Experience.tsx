@@ -13,12 +13,12 @@ export default function Experience({ content }: { content: PortfolioContent['exp
 
   return (
     <section id="experiencias" className="sec" aria-labelledby="experiencias-title">
-      <SectionTitle id="experiencias-title" label={content.label}>
+      <SectionTitle as="h1" id="experiencias-title" label={content.label}>
         {content.title}
       </SectionTitle>
       {experienceGroups.map((group) => (
         <div className="extra-group" id={`exp-${group.id}`} key={group.id}>
-          <h3 className="extra-group-title">{group.title[lang]}</h3>
+          <h2 className="extra-group-title">{group.title[lang]}</h2>
           <div className="extra-grid">
             {group.items.map((item) => (
               <div className="extra-card" key={item.id}>
@@ -26,7 +26,7 @@ export default function Experience({ content }: { content: PortfolioContent['exp
                   {item.period[lang]}
                 </span>
                 <div>
-                  <h4>{item.role[lang]}</h4>
+                  <h3>{item.role[lang]}</h3>
                   <p className="extra-org">{pick(item.org, lang)}</p>
                   <p>{item.description[lang]}</p>
                 </div>

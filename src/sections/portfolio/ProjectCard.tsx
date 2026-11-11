@@ -48,7 +48,7 @@ function Featured({ project, copy }: VariantProps) {
         </div>
         <span className="proj-bdg case">{copy.badge}</span>
       </div>
-      <h3>{project.name}</h3>
+      <h2>{project.name}</h2>
       <p>{copy.description}</p>
       <Stack tech={project.tech} />
       <div className="project-actions">
@@ -72,7 +72,7 @@ function Evolution({ project, copy }: VariantProps) {
           </div>
           <span className="proj-bdg award">{copy.badge}</span>
         </div>
-        <h3 className="ecoshop-title">{project.name}</h3>
+        <h2 className="ecoshop-title">{project.name}</h2>
         <p className="ecoshop-desc">{copy.description}</p>
         <div className="evo-grid">
           {(copy.versions ?? []).map((version, i) => (
@@ -116,7 +116,7 @@ function Standard({ project, copy }: VariantProps) {
         </div>
         <span className="proj-bdg award">{copy.badge}</span>
       </div>
-      <h3>{project.name}</h3>
+      <h2>{project.name}</h2>
       <p>{copy.description}</p>
       <Stack tech={project.tech} />
       <ProjectMedia project={project} />

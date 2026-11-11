@@ -127,9 +127,9 @@ export default function ContactForm() {
       noValidate
       aria-labelledby="contact-form-title"
     >
-      <h3 id="contact-form-title" className="contact-form-title">
+      <h2 id="contact-form-title" className="contact-form-title">
         {t.form.title}
-      </h3>
+      </h2>
       {field('name', t.form.name, {
         type: 'text',
         autoComplete: 'name',
