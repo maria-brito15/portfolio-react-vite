@@ -5,6 +5,14 @@ import { useMediaQuery } from '../hooks/useMediaQuery';
 
 const STORAGE_KEY = 'portfolio-mobile-notice-dismissed';
 
+// Robôs de busca e de pré-visualização de link nunca guardam a marca de "já visto" e
+// rodam em tela estreita: o aviso em tela cheia seria um intersticial intrusivo para o
+// Google no índice mobile-first. O conteúdo do site é o mesmo; só o aviso não é montado.
+const CRAWLER =
+  /googlebot|bingbot|duckduckbot|yandex|baiduspider|slurp|applebot|facebookexternalhit|linkedinbot|twitterbot|whatsapp|discordbot|slackbot/i;
+
+const isCrawler = () => typeof navigator !== 'undefined' && CRAWLER.test(navigator.userAgent);
+
 function readDismissed(): boolean {
   try {
     return localStorage.getItem(STORAGE_KEY) === '1';
@@ -29,7 +37,7 @@ export default function MobileNoticeModal() {
   const isNarrow = useMediaQuery('(max-width: 640px)');
   const [dismissed, setDismissed] = useState(readDismissed);
   const closeRef = useRef<HTMLButtonElement>(null);
-  const open = isNarrow && !dismissed;
+  const open = isNarrow && !dismissed && !isCrawler();
 
   useEffect(() => {
     if (!open) return;

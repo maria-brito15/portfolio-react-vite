@@ -26,6 +26,19 @@ describe('aviso de visualização em celular', () => {
     expect(dialog()).toBeInTheDocument();
   });
 
+  it('não aparece para robôs de busca, que seriam penalizados por intersticial', () => {
+    const ua = vi
+      .spyOn(navigator, 'userAgent', 'get')
+      .mockReturnValue(
+        'Mozilla/5.0 (Linux; Android 6.0.1) Mobile Safari/537.36 (compatible; Googlebot/2.1)',
+      );
+
+    mockNarrowScreen(true);
+    renderApp('/');
+    expect(dialog()).toBeNull();
+    ua.mockRestore();
+  });
+
   it('nunca é montado em desktop (MB-02)', () => {
     mockNarrowScreen(false);
     renderApp('/');
