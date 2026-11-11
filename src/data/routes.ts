@@ -10,6 +10,8 @@
 // - `parent`: id da rota-mãe no breadcrumb.
 
 import type { Lang, Localized } from '../types';
+import { now } from './now';
+import { uses } from './uses';
 
 const L = (pt: string, en: string): Localized => ({ pt, en });
 
@@ -26,6 +28,9 @@ export interface Route {
   parent?: string;
   segment?: Localized;
   hidden?: boolean;
+  // Página em construção (sem conteúdo): existe e abre, mas não entra no
+  // sitemap nem no índice dos buscadores.
+  draft?: boolean;
 }
 
 export interface Crumb {
@@ -128,6 +133,32 @@ export const routes: Route[] = [
     command: 'servicos',
     label: L('Serviços', 'Services'),
     desc: L('sites e landing pages', 'websites and landing pages'),
+  },
+  {
+    // Em construção (sem conteúdo em data/now.ts): fora do sitemap e do índice.
+    id: 'agora',
+    kind: 'page',
+    path: '/agora',
+    aliases: ['/now'],
+    name: 'agora',
+    alias: 'now',
+    command: 'agora',
+    label: L('Agora', 'Now'),
+    desc: L('no que estou focada agora', 'what I am focused on now'),
+    draft: now.items.length === 0,
+  },
+  {
+    // Em construção (sem conteúdo em data/uses.ts): fora do sitemap e do índice.
+    id: 'setup',
+    kind: 'page',
+    path: '/setup',
+    aliases: ['/uses'],
+    name: 'setup',
+    alias: 'uses',
+    command: 'setup',
+    label: L('Setup', 'Setup'),
+    desc: L('ferramentas do dia a dia', 'everyday tools'),
+    draft: uses.groups.length === 0,
   },
   {
     // Fora do `ls`: é uma página dentro de "projetos".

@@ -1,7 +1,11 @@
 import * as matchers from '@testing-library/jest-dom/matchers';
-import { cleanup } from '@testing-library/react';
+import { cleanup, configure } from '@testing-library/react';
 
 expect.extend(matchers);
+
+// Diálogos e jogos carregam por import() sob demanda; com a máquina ocupada o
+// padrão de 1 s das consultas assíncronas (findBy, waitFor) não basta.
+configure({ asyncUtilTimeout: 5000 });
 
 // Páginas carregadas sob demanda no app (React.lazy) entram direto nos testes.
 vi.mock('../pages/lazyPages', async () => ({
@@ -11,6 +15,9 @@ vi.mock('../pages/lazyPages', async () => ({
   Academics: (await import('../pages/Academics')).default,
   SectionPage: (await import('../pages/SectionPage')).default,
 }));
+
+// O boot da primeira visita fica desligado nos testes (quem o testa limpa a marca).
+beforeEach(() => localStorage.setItem('portfolio-booted', '1'));
 
 afterEach(() => {
   cleanup();

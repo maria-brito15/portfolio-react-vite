@@ -53,7 +53,7 @@ function headBlock(routeId: string) {
 function bodyBlock(routeId: string) {
   const { title, description } = metaFor(routeId, 'pt');
   const links = routes
-    .filter((r) => r.id !== 'home' && !r.hidden)
+    .filter((r) => r.id !== 'home' && !r.hidden && !r.draft)
     .map((r) => `<li><a href="${r.path}">${escapeHtml(r.label.pt)}</a></li>`)
     .join('');
 
@@ -98,7 +98,10 @@ export function seoPlugin(): Plugin {
 
       write('404.html', withRoute(template, NOT_FOUND_ID));
 
-      const urls = routes.map((r) => `  <url><loc>${absoluteUrl(r.path)}</loc></url>`);
+      // Páginas em construção não entram no sitemap (o HTML delas sai com noindex).
+      const urls = routes
+        .filter((r) => !r.draft)
+        .map((r) => `  <url><loc>${absoluteUrl(r.path)}</loc></url>`);
 
       write(
         'sitemap.xml',

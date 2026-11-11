@@ -2,16 +2,13 @@ import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useLanguage } from '../i18n/LanguageContext';
 import { useMediaQuery } from '../hooks/useMediaQuery';
+import { isCrawler } from '../utils/env';
 
 const STORAGE_KEY = 'portfolio-mobile-notice-dismissed';
 
-// Robôs de busca e de pré-visualização de link nunca guardam a marca de "já visto" e
-// rodam em tela estreita: o aviso em tela cheia seria um intersticial intrusivo para o
-// Google no índice mobile-first. O conteúdo do site é o mesmo; só o aviso não é montado.
-const CRAWLER =
-  /googlebot|bingbot|duckduckbot|yandex|baiduspider|slurp|applebot|facebookexternalhit|linkedinbot|twitterbot|whatsapp|discordbot|slackbot/i;
-
-const isCrawler = () => typeof navigator !== 'undefined' && CRAWLER.test(navigator.userAgent);
+// Robôs de busca rodam em tela estreita e nunca guardam a marca de "já visto": o aviso em
+// tela cheia seria um intersticial intrusivo para o Google no índice mobile-first. O
+// conteúdo do site é o mesmo; só o aviso não é montado (`isCrawler`, em utils/env.ts).
 
 function readDismissed(): boolean {
   try {

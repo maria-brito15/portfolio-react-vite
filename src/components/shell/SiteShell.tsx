@@ -8,6 +8,7 @@ import Window from './Window';
 import Breadcrumb from './Breadcrumb';
 import ViewActions from './ViewActions';
 import Footer from './Footer';
+import Taskbar from './Taskbar';
 
 // Esqueleto único de todas as páginas:
 //   Header → barra de comandos → [voltar + breadcrumb] → Window → conteúdo → Footer
@@ -32,7 +33,7 @@ export default function SiteShell({
   children,
 }: SiteShellProps) {
   const { lang, t } = useLanguage();
-  const { back } = useRouter();
+  const { back, navigate } = useRouter();
   const route = routeId ? routeById(routeId) : undefined;
   const home = routeId === 'home';
 
@@ -75,12 +76,21 @@ export default function SiteShell({
               <Breadcrumb crumbs={crumbs} />
             </div>
           )}
-          <Window title={title} badge={badge} actions={actions} variant={variant}>
+          <Window
+            id={routeId ?? 'notfound'}
+            title={title}
+            badge={badge}
+            actions={actions}
+            variant={variant}
+            // Fechar uma página volta à home; fechar o terminal da home recolhe a janela.
+            onClose={home ? undefined : () => navigate('/')}
+          >
             {children}
           </Window>
         </section>
       </main>
       <Footer />
+      <Taskbar />
     </>
   );
 }

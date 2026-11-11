@@ -4,7 +4,8 @@ export type Lang = 'pt' | 'en';
 
 export type Localized<T = string> = Record<Lang, T>;
 
-export type Theme = 'light' | 'dark';
+// Ids dos temas: a lista com nomes e esquema fica em `data/themes.ts`.
+export type Theme = 'light' | 'dark' | 'dracula' | 'solarized' | 'amber';
 
 // `month` (1–12) só existe quando foi confirmado; nunca se preenche um valor presumido.
 export interface ProjectDate {

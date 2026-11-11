@@ -109,6 +109,64 @@
   --win-shadow: 0 20px 60px rgba(20, 22, 26, 0.12);
 }
 
+/* Temas extras (`tema <nome>` no terminal): todos escuros, sem degradê, só
+   cores sólidas. Cada acento passa AA (4,5:1) sobre as três superfícies;
+   `contrast.test.ts` confere. */
+[data-theme='dracula'] {
+  --bg: #1e1f29;
+  --surface: #282a36;
+  --surface-2: #343746;
+  --surface-3: #3e4254;
+  --border: rgba(248, 248, 242, 0.12);
+  --text: #f8f8f2;
+  --text-2: #d6d8e0;
+  --dim: #aab2d5;
+  --accent: #cdb0ff;
+  --ok: #50fa7b;
+  --warn: #ffb86c;
+  --err: #ff9494;
+  --on-accent: #282a36;
+  --nav-bg: rgba(30, 31, 41, 0.92);
+  --grid-color: rgba(248, 248, 242, 0.03);
+}
+
+[data-theme='solarized'] {
+  --bg: #00212b;
+  --surface: #002b36;
+  --surface-2: #073642;
+  --surface-3: #0d4452;
+  --border: rgba(238, 232, 213, 0.14);
+  --text: #eee8d5;
+  --text-2: #cdd0c4;
+  --dim: #9fb0b0;
+  --accent: #5fb4f0;
+  --ok: #a6bd2e;
+  --warn: #e6a63a;
+  --err: #ff8a85;
+  --on-accent: #002b36;
+  --nav-bg: rgba(0, 33, 43, 0.92);
+  --grid-color: rgba(238, 232, 213, 0.03);
+}
+
+/* Âmbar: monitor de fósforo (CRT). */
+[data-theme='amber'] {
+  --bg: #0a0700;
+  --surface: #100b02;
+  --surface-2: #1a1204;
+  --surface-3: #251a07;
+  --border: rgba(255, 194, 51, 0.18);
+  --text: #ffc233;
+  --text-2: #e8a90f;
+  --dim: #bf8a1a;
+  --accent: #ffd966;
+  --ok: #a6e05a;
+  --warn: #ff9d2e;
+  --err: #ff7352;
+  --on-accent: #100b02;
+  --nav-bg: rgba(10, 7, 0, 0.92);
+  --grid-color: rgba(255, 194, 51, 0.04);
+}
+
 @media (max-width: 720px) {
   :root {
     --gutter: 0;

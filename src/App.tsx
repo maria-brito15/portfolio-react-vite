@@ -7,6 +7,9 @@ import NotFound from './pages/NotFound';
 import { Academics, CaseStudy, Resume, SectionPage, Services } from './pages/lazyPages';
 
 import MobileNoticeModal from './components/MobileNoticeModal';
+import GlobalOverlays from './components/GlobalOverlays';
+import { Now, Uses } from './pages/InfoPages';
+import { WindowProvider } from './components/shell/windowManager';
 
 // Rota (src/data/routes.ts) → página.
 function Page({ id }: { id?: string }) {
@@ -25,6 +28,10 @@ function Page({ id }: { id?: string }) {
       return <Academics />;
     case 'servicos':
       return <Services />;
+    case 'agora':
+      return <Now />;
+    case 'setup':
+      return <Uses />;
     case 'whatsapp-dispatcher':
       return <CaseStudy />;
     default:
@@ -37,11 +44,14 @@ export default function App() {
   const route = findPageByPath(path);
 
   return (
-    <TerminalProvider>
-      <Suspense fallback={null}>
-        <Page id={route?.id} />
-      </Suspense>
-      <MobileNoticeModal />
-    </TerminalProvider>
+    <WindowProvider>
+      <TerminalProvider>
+        <Suspense fallback={null}>
+          <Page id={route?.id} />
+        </Suspense>
+        <MobileNoticeModal />
+        <GlobalOverlays />
+      </TerminalProvider>
+    </WindowProvider>
   );
 }

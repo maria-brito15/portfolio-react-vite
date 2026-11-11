@@ -22,11 +22,14 @@ import {
   type Section,
 } from '../data/sections';
 import { projectPeriod } from '../utils/projectDate';
+import { findTheme, themes } from '../data/themes';
+import { shortcutLine, shortcuts } from '../data/shortcuts';
 import { ui } from '../i18n/ui';
 import { ActionLine, Cmd, Ext, TermLink } from './outputs';
 import { AcademicsView, ResumeView, ServicesView } from './views';
 import SectionView from './sectionViews';
 import { PageIndex, RunCommand, SectionNav } from './pageIndex';
+import { HIRE, extraCommands, hireResult } from './extras';
 
 const L = (pt: string, en: string): Localized => ({ pt, en });
 
@@ -44,6 +47,7 @@ export interface CommandContext {
   context?: NavContext | null;
   toggleLang: () => void;
   toggleTheme: () => void;
+  setTheme: (theme: Theme) => void;
   replay: boolean;
 }
 
@@ -53,7 +57,7 @@ export interface CommandResult {
   redirect?: string;
 }
 
-interface Command {
+export interface Command {
   names: [string, string];
   aliases?: string[];
   route?: string;
@@ -187,6 +191,81 @@ function runStep(direction: number, ctx: CommandContext): CommandResult {
   return runSection(pageCommand(context.routeId), [step.section.id]);
 }
 
+const themeName = (id: Theme, lang: Lang) => themes.find((t) => t.id === id)?.names[lang] ?? id;
+
+// Lista de temas: cada nome é um botão que roda `tema <nome>`; o atual vem marcado.
+function ThemeList({ current, lang, error }: { current: Theme; lang: Lang; error?: string }) {
+  return (
+    <div>
+      {error && <p className="t-err">{error}</p>}
+      <p className="t-dim">{lang === 'pt' ? 'temas disponíveis:' : 'available themes:'}</p>
+      <ul className="t-index-list">
+        {themes.map((theme) => (
+          <li key={theme.id}>
+            <RunCommand command={`${lang === 'pt' ? 'tema' : 'theme'} ${theme.names[lang]}`}>
+              <span className="t-ok">{theme.id === current ? '●' : '○'}</span>
+              <span className="t-accent">{theme.names[lang]}</span>
+              <span className="t-dim">
+                {theme.id === current ? (lang === 'pt' ? 'atual' : 'current') : ''}
+              </span>
+            </RunCommand>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+// `tema` alterna claro/escuro; `tema <nome>` escolhe; `tema ls` lista. Nome
+// desconhecido não quebra: diz o que não existe e reimprime a lista.
+function runTheme(args: string[], ctx: CommandContext): CommandResult {
+  if (!args.length) {
+    const next = ctx.theme === 'dark' ? 'light' : 'dark';
+
+    if (!ctx.replay) ctx.toggleTheme();
+
+    return {
+      output: (lang) => (
+        <p className="t-ok">
+          {lang === 'pt' ? 'tema: ' : 'theme: '}
+          {themeName(next, lang)}
+        </p>
+      ),
+    };
+  }
+
+  if (args.length === 1 && ['ls', 'lista', 'list'].includes(fold(args[0]))) {
+    return { output: (lang) => <ThemeList current={ctx.theme} lang={lang} /> };
+  }
+
+  const theme = args.length === 1 ? findTheme(args[0]) : undefined;
+
+  if (!theme) {
+    return {
+      output: (lang) => (
+        <ThemeList
+          current={ctx.theme}
+          lang={lang}
+          error={`${lang === 'pt' ? 'tema' : 'theme'}: ${args.join(' ')}: ${
+            lang === 'pt' ? 'tema não encontrado' : 'theme not found'
+          }`}
+        />
+      ),
+    };
+  }
+
+  if (!ctx.replay) ctx.setTheme(theme.id);
+
+  return {
+    output: (lang) => (
+      <p className="t-ok">
+        {lang === 'pt' ? 'tema: ' : 'theme: '}
+        {theme.names[lang]}
+      </p>
+    ),
+  };
+}
+
 const commands: Command[] = [
   {
     names: ['ajuda', 'help'],
@@ -242,9 +321,12 @@ const commands: Command[] = [
             ))}
           </p>
           <p className="t-dim">
-            {lang === 'pt'
-              ? 'Dica: Tab completa (inclusive seções), ↑ ↓ navegam no histórico, Ctrl+L limpa a tela, Ctrl+K foca a barra.'
-              : 'Tip: Tab completes (sections too), ↑ ↓ browse history, Ctrl+L clears the screen, Ctrl+K focuses the bar.'}
+            {lang === 'pt' ? 'Dica: ' : 'Tip: '}
+            {shortcuts
+              .slice(0, 6)
+              .map((s) => shortcutLine(s, lang))
+              .join(', ')}
+            .
           </p>
         </div>
       ),
@@ -496,27 +578,12 @@ const commands: Command[] = [
   },
   {
     names: ['tema', 'theme'],
-    desc: L('alterna claro/escuro', 'toggle light/dark'),
-    run: (args, ctx) => {
-      const next = ctx.theme === 'dark' ? 'light' : 'dark';
-
-      if (!ctx.replay) ctx.toggleTheme();
-
-      return {
-        output: (lang) => (
-          <p className="t-ok">
-            {lang === 'pt' ? 'tema: ' : 'theme: '}
-            {next === 'dark'
-              ? lang === 'pt'
-                ? 'escuro'
-                : 'dark'
-              : lang === 'pt'
-                ? 'claro'
-                : 'light'}
-          </p>
-        ),
-      };
-    },
+    usage: L('[nome | ls]', '[name | ls]'),
+    desc: L(
+      'alterna claro/escuro, ou escolhe um tema (tema ls lista)',
+      'toggle light/dark, or pick a theme (theme ls lists them)',
+    ),
+    run: runTheme,
   },
   {
     names: ['idioma', 'lang'],
@@ -536,14 +603,21 @@ const commands: Command[] = [
     names: ['historico', 'history'],
     desc: L('comandos já digitados', 'commands typed so far'),
     run: (args, ctx) => ({
-      output: () => (
-        <ol className="t-history">
-          {ctx.history.map((h, i) => (
-            <li key={i}>
-              <span className="t-dim">{String(i + 1).padStart(3, ' ')}</span> {h}
-            </li>
-          ))}
-        </ol>
+      output: (lang) => (
+        <>
+          <ol className="t-history">
+            {ctx.history.map((h, i) => (
+              <li key={i}>
+                <span className="t-dim">{String(i + 1).padStart(3, ' ')}</span> {h}
+              </li>
+            ))}
+          </ol>
+          <p className="t-dim">
+            {lang === 'pt'
+              ? `${ctx.history.length} ${ctx.history.length === 1 ? 'comando' : 'comandos'} até agora. O histórico não mente.`
+              : `${ctx.history.length} ${ctx.history.length === 1 ? 'command' : 'commands'} so far. History never lies.`}
+          </p>
+        </>
       ),
     }),
   },
@@ -558,6 +632,24 @@ const commands: Command[] = [
     desc: L('limpa a tela', 'clear the screen'),
     run: () => ({ clear: true, output: () => null }),
   },
+  {
+    names: ['atalhos', 'shortcuts'],
+    aliases: ['keys'],
+    desc: L('atalhos de teclado', 'keyboard shortcuts'),
+    run: () => ({
+      output: (lang) => (
+        <dl className="t-kv t-shortcuts">
+          {shortcuts.map((s) => (
+            <div key={s.keys}>
+              <dt>{s.keys}</dt>
+              <dd>{s.desc[lang]}</dd>
+            </div>
+          ))}
+        </dl>
+      ),
+    }),
+  },
+  ...extraCommands,
   // Comandos "de shell" que não aparecem na ajuda.
   {
     names: ['pwd', 'pwd'],
@@ -583,15 +675,18 @@ const commands: Command[] = [
   {
     names: ['sudo', 'sudo'],
     hidden: true,
-    run: () => ({
-      output: (lang) => (
-        <p className="t-err">
-          {lang === 'pt'
-            ? 'visitante não está no arquivo sudoers. Este incidente será reportado. 🙂'
-            : 'visitante is not in the sudoers file. This incident will be reported. 🙂'}
-        </p>
-      ),
-    }),
+    run: (args) =>
+      args.length === 1 && HIRE.includes(fold(args[0]))
+        ? hireResult()
+        : {
+            output: (lang) => (
+              <p className="t-err">
+                {lang === 'pt'
+                  ? 'visitante não está no arquivo sudoers. Este incidente será reportado. 🙂'
+                  : 'visitante is not in the sudoers file. This incident will be reported. 🙂'}
+              </p>
+            ),
+          },
   },
 ];
 
@@ -823,4 +918,6 @@ export const commandInventory = () =>
     names: allNames(c),
     hidden: Boolean(c.hidden),
     route: c.route ?? null,
+    desc: c.desc ?? null,
+    usage: c.usage ?? null,
   }));

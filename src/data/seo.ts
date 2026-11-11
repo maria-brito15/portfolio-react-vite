@@ -139,6 +139,30 @@ export const pageMeta: Record<string, Localized<PageMeta>> = {
         'Institutional websites, e-commerce and custom systems, from design to deploy. Web development services by Duda Brito.',
     },
   ),
+  agora: M(
+    {
+      title: 'Agora | Duda Brito',
+      description:
+        'Página "agora" de Duda Brito, estudante de Engenharia de Software: no que ela está focada neste momento.',
+    },
+    {
+      title: 'Now | Duda Brito',
+      description:
+        'The "now" page of Duda Brito, a Software Engineering student: what she is focused on at the moment.',
+    },
+  ),
+  setup: M(
+    {
+      title: 'Setup | Duda Brito',
+      description:
+        'As ferramentas e o setup que Duda Brito, estudante de Engenharia de Software, usa no dia a dia.',
+    },
+    {
+      title: 'Setup | Duda Brito',
+      description:
+        'The tools and setup that Duda Brito, a Software Engineering student, uses every day.',
+    },
+  ),
   'whatsapp-dispatcher': M(
     {
       title: 'WhatsApp Dispatcher: Estudo de Caso de Arquitetura | Duda Brito',
@@ -186,8 +210,9 @@ export function headTags(routeId: string, lang: Lang): { title: string; tags: He
     lang === 'pt'
       ? 'Duda Brito, estudante de Engenharia de Software na PUC Minas'
       : 'Duda Brito, Software Engineering student at PUC Minas';
+  // O 404 e as páginas em construção (`draft`, sem conteúdo) ficam fora do índice.
   const robots =
-    routeId === NOT_FOUND_ID
+    routeId === NOT_FOUND_ID || route?.draft
       ? 'noindex, follow'
       : 'index, follow, max-image-preview:large, max-snippet:-1';
   const m = (attr: 'name' | 'property', key: string, content: string): HeadTag => ({

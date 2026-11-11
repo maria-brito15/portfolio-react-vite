@@ -13,6 +13,9 @@ import './styles/responsive.css';
 import './styles/terminal.css';
 import './styles/shell.css';
 import './styles/resume.css';
+import { announceInConsole } from './utils/consoleMessage';
+
+announceInConsole();
 
 createRoot(document.getElementById('root') as HTMLElement).render(
   <StrictMode>

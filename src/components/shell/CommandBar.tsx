@@ -6,7 +6,7 @@ import {
   type KeyboardEvent as ReactKeyboardEvent,
 } from 'react';
 import { useRouter } from '../../router';
-import { FOCUS_COMMANDS } from './commandBarEvents';
+import { FOCUS_COMMANDS, SHOW_OUTPUT } from './commandBarEvents';
 import { useLanguage } from '../../i18n/LanguageContext';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { normalizePath } from '../../data/routes';
@@ -53,16 +53,12 @@ export default function CommandBar() {
     if (overlay) inputRef.current?.focus();
   }, [overlay]);
 
-  // Ctrl+K (ou /) foca a barra, exceto dentro de campos de formulário.
+  // `/` foca a barra, exceto dentro de campos de formulário. (Ctrl+K abre a
+  // paleta de comandos: ver GlobalOverlays.)
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.defaultPrevented || event.altKey || isFormField(event.target)) return;
-
-      const shortcut =
-        (event.key.toLowerCase() === 'k' && (event.ctrlKey || event.metaKey)) ||
-        (event.key === '/' && !event.ctrlKey && !event.metaKey);
-
-      if (!shortcut) return;
+      if (event.key !== '/' || event.ctrlKey || event.metaKey) return;
       event.preventDefault();
       if (narrow) setOpen(true);
       inputRef.current?.focus();
@@ -89,6 +85,18 @@ export default function CommandBar() {
     if (!onHome || narrow) setPanel(true);
     else document.getElementById('inicio')?.scrollIntoView({ behavior: 'smooth' });
   }
+
+  // A paleta de comandos roda o comando na sessão e pede para mostrar a saída.
+  useEffect(() => {
+    const onShowOutput = () => {
+      if (!onHome || narrow) setPanel(true);
+      else document.getElementById('inicio')?.scrollIntoView({ behavior: 'smooth' });
+    };
+
+    window.addEventListener(SHOW_OUTPUT, onShowOutput);
+
+    return () => window.removeEventListener(SHOW_OUTPUT, onShowOutput);
+  }, [onHome, narrow]);
 
   function onKeyDown(event: ReactKeyboardEvent) {
     if (event.key !== 'Escape') return;

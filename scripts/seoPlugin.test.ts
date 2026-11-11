@@ -20,8 +20,12 @@ describe('plugin de SEO estático', () => {
     expect(html).toContain('application/ld+json');
     expect(html).toContain('<noscript>');
 
-    for (const r of routes.filter((r) => r.id !== 'home' && !r.hidden))
+    for (const r of routes.filter((r) => r.id !== 'home' && !r.hidden && !r.draft))
       expect(html, r.path).toContain(`<a href="${r.path}">`);
+
+    // páginas em construção não são anunciadas
+    for (const r of routes.filter((r) => r.draft))
+      expect(html, r.path).not.toContain(`href="${r.path}"`);
   });
 
   it('não deixa o título nem a descrição fecharem a tag por engano', () => {

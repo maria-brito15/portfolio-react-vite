@@ -145,6 +145,7 @@ describe('argumentos e combinações', () => {
         replay: true,
         toggleLang: () => {},
         toggleTheme: () => {},
+        setTheme: () => {},
       });
 
       expect(typeof result.output, JSON.stringify(line)).toBe('function');

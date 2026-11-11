@@ -1,11 +1,13 @@
-import { useEffect, useRef, type MouseEvent } from 'react';
+import { useCallback, useEffect, useRef, useState, type MouseEvent } from 'react';
 import type { PortfolioContent } from '../data/portfolio';
 import { useLanguage } from '../i18n/LanguageContext';
 import { ui } from '../i18n/ui';
 import { useTerminalSession } from './sessionContext';
 import { quickCommands } from './commands';
+import { prefersReducedMotion } from '../utils/env';
 import CommandInput from './CommandInput';
 import TerminalOutput from './TerminalOutput';
+import BootSequence, { markBooted, shouldBoot } from './extras/Boot';
 
 // Conteúdo da janela do terminal da página inicial (a Window é do SiteShell):
 // banner, a última entrada (cada comando limpa a anterior), a linha de comando
@@ -21,6 +23,19 @@ export default function Terminal({ content }: { content: PortfolioContent['hero'
   const inputRef = useRef<HTMLInputElement>(null);
   const screenRef = useRef<HTMLDivElement>(null);
   const entryId = entry?.id;
+  // Boot só na primeira visita ao site (flag salva) e com a tela ainda vazia.
+  const [booting, setBooting] = useState(() => inputs.length === 0 && shouldBoot());
+  const endBoot = useCallback(() => setBooting(false), []);
+
+  // Primeira saída encerra o boot de vez (um `limpar` depois não o traz de volta).
+  if (booting && entry) setBooting(false);
+
+  const showBoot = booting && !entry;
+
+  // A marca é gravada ao começar: recarregar no meio do boot não o repete.
+  useEffect(() => {
+    if (booting) markBooted();
+  }, [booting]);
 
   // Cada comando novo começa no topo da tela (o banner volta com `limpar`).
   useEffect(() => {
@@ -38,6 +53,7 @@ export default function Terminal({ content }: { content: PortfolioContent['hero'
   return (
     <>
       <div className="term-screen" ref={screenRef} onClick={focusInput}>
+        {showBoot && <BootSequence lang={lang} instant={prefersReducedMotion()} onDone={endBoot} />}
         {/* O banner some da tela quando há uma saída, mas o título continua na página. */}
         <header className={`term-banner${entry ? ' sr-only' : ''}`}>
           <p className="t-dim">{content.terminal.boot}</p>

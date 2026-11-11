@@ -439,3 +439,153 @@
     grid-template-columns: 1fr 6ch;
   }
 }
+
+/* Comandos de personalidade (neofetch, cowsay, matrix) */
+.t-ascii {
+  margin: 0.35rem 0;
+  font: inherit;
+  line-height: 1.25;
+  white-space: pre;
+  overflow-x: auto;
+}
+.t-neofetch {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--space-2) var(--space-5);
+  margin: 0.35rem 0;
+}
+.t-neofetch .t-ascii {
+  margin: 0;
+  flex: none;
+}
+.t-neofetch-info {
+  flex: 1 1 22rem;
+}
+.t-neofetch-info p {
+  margin: 0;
+}
+.t-neofetch .t-kv {
+  margin: var(--space-2) 0 0;
+}
+.t-neofetch .t-kv > div {
+  grid-template-columns: 12ch 1fr;
+}
+.t-matrix canvas {
+  display: block;
+  width: 100%;
+  height: 10rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+}
+
+/* Boot da primeira visita */
+.t-boot {
+  margin: 0 0 var(--space-3);
+}
+.t-boot p {
+  margin: 0;
+}
+
+/* 404: sugestões de páginas parecidas */
+.not-found-suggest ul {
+  list-style: none;
+  margin: 0.2rem 0 var(--space-3);
+  padding: 0;
+}
+.not-found-suggest li + li {
+  margin-top: var(--space-1);
+}
+
+/* Campo minado: só tokens; o número sempre aparece como dígito (a cor é reforço). */
+.ms {
+  --ms-cell: 1.9rem;
+  margin: 0.35rem 0;
+}
+.ms-bar,
+.ms-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-4);
+  margin: 0 0 var(--space-2);
+}
+.ms-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  padding-bottom: var(--space-1);
+}
+.ms-grid {
+  display: grid;
+  gap: 2px;
+  width: max-content;
+}
+.ms-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--ms-cell);
+  height: var(--ms-cell);
+  padding: 0;
+  font: inherit;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--text);
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  cursor: pointer;
+}
+.ms-cell:hover:not(.is-open) {
+  border-color: var(--accent);
+}
+.ms-cell:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+  z-index: 1;
+}
+.ms-cell.is-open {
+  background: var(--surface);
+  cursor: default;
+}
+.ms-cell.is-flag {
+  color: var(--warn);
+}
+.ms-cell.is-mine {
+  color: var(--on-accent);
+  background: var(--err);
+}
+.ms-cell.is-exploded {
+  outline: 2px solid var(--text);
+}
+.ms-n1,
+.ms-n5 {
+  color: var(--accent);
+}
+.ms-n2,
+.ms-n6 {
+  color: var(--ok);
+}
+.ms-n3,
+.ms-n7 {
+  color: var(--err);
+}
+.ms-n4,
+.ms-n8 {
+  color: var(--warn);
+}
+.ms-status {
+  margin: var(--space-2) 0 0;
+}
+.not-found-suggest a {
+  color: var(--accent);
+  text-underline-offset: 3px;
+}
+.not-found-suggest a:hover {
+  text-decoration-thickness: 2px;
+}
+.not-found-suggest a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}

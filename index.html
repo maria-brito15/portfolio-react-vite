@@ -23,7 +23,8 @@
       // Aplica o tema salvo antes do primeiro desenho, evitando o flash do tema errado.
       try {
         var theme = localStorage.getItem('portfolio-theme');
-        if (theme === 'light' || theme === 'dark')
+        // Mesmos ids de src/data/themes.ts (um teste confere).
+        if (['dark', 'light', 'dracula', 'solarized', 'amber'].indexOf(theme) !== -1)
           document.documentElement.setAttribute('data-theme', theme);
         if (localStorage.getItem('portfolio-lang') === 'en') document.documentElement.lang = 'en';
       } catch (e) {}

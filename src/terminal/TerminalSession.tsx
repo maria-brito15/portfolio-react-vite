@@ -3,6 +3,7 @@ import { useRouter } from '../router';
 import { useLanguage } from '../i18n/LanguageContext';
 import { useTheme } from '../hooks/useTheme';
 import { normalizePath, routes } from '../data/routes';
+import { prefersReducedMotion } from '../utils/env';
 import {
   contextAfter,
   contextOfHistory,
@@ -33,10 +34,6 @@ export const LOAD_STEPS = 16;
 const LOAD_TICK_MS = 50;
 const LOAD_DONE_TICKS = LOAD_STEPS + 2;
 const REDUCED_MOTION_MS = 300;
-
-export const prefersReducedMotion = () =>
-  typeof window.matchMedia === 'function' &&
-  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 function readStored(): string[] {
   try {
@@ -82,7 +79,7 @@ function buildEntry(id: number, input: string, ctx: CommandContext): Entry | nul
 
 export function TerminalProvider({ children }: { children: ReactNode }) {
   const { lang, toggleLang } = useLanguage();
-  const [theme, toggleTheme] = useTheme();
+  const [theme, toggleTheme, setTheme] = useTheme();
   const { path, search, navigate } = useRouter();
 
   const [inputs, setInputs] = useState<string[]>(readStored);
@@ -96,6 +93,7 @@ export function TerminalProvider({ children }: { children: ReactNode }) {
           history: inputs,
           toggleLang,
           toggleTheme,
+          setTheme,
           replay: true,
         })
       : null;
@@ -211,6 +209,7 @@ export function TerminalProvider({ children }: { children: ReactNode }) {
         context,
         toggleLang,
         toggleTheme,
+        setTheme,
         replay: false,
       });
 
@@ -230,7 +229,18 @@ export function TerminalProvider({ children }: { children: ReactNode }) {
 
       return true;
     },
-    [inputs, context, lang, theme, toggleLang, toggleTheme, startRedirect, navigate, path],
+    [
+      inputs,
+      context,
+      lang,
+      theme,
+      toggleLang,
+      toggleTheme,
+      setTheme,
+      startRedirect,
+      navigate,
+      path,
+    ],
   );
 
   // Ctrl+C digitando: mostra o texto com ^C, como um shell.

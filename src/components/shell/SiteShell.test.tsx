@@ -136,16 +136,16 @@ describe('Voltar', () => {
 });
 
 describe('barra de comandos', () => {
-  it('Ctrl+K e / focam a barra', async () => {
+  it('/ foca a barra e Ctrl+K abre a paleta de comandos', async () => {
     const user = userEvent.setup();
 
     renderApp('/academico');
-    await user.keyboard('{Control>}k{/Control}');
-    expect(barInput()).toHaveFocus();
-    barInput().blur();
     await user.keyboard('/');
     expect(barInput()).toHaveFocus();
     expect(barInput()).toHaveValue('');
+    barInput().blur();
+    await user.keyboard('{Control>}k{/Control}');
+    expect(await screen.findByRole('dialog', { name: 'Paleta de comandos' })).toBeInTheDocument();
   });
 
   it('os atalhos não roubam o foco de campos de formulário', async () => {
@@ -159,8 +159,12 @@ describe('barra de comandos', () => {
     await user.keyboard('a/b');
     expect(terminal).toHaveFocus();
     expect(terminal).toHaveValue('a/b');
+    // Ctrl+K na linha de comando abre a paleta; ao fechar, o foco volta e o texto fica.
     await user.keyboard('{Control>}k{/Control}');
+    expect(await screen.findByRole('dialog')).toBeInTheDocument();
+    await user.keyboard('{Escape}');
     expect(terminal).toHaveFocus();
+    expect(terminal).toHaveValue('a/b');
   });
 
   it('executa comandos fora da home e mostra a saída num painel', async () => {

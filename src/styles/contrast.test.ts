@@ -35,9 +35,18 @@ const ratio = (a: string, b: string) => {
 const SURFACES = ['surface', 'surface-2', 'surface-3'];
 const ACCENTS = ['accent', 'ok', 'warn', 'err'];
 const TEXTS = ['text', 'text-2', 'dim'];
+// Temas extras (TB-04): só sobrescrevem tokens sobre o escuro; cada um precisa
+// de bloco próprio em tokens.css, com contraste AA.
+const extra = (id: string) => ({
+  ...dark,
+  ...tokens(new RegExp(`\\[data-theme='${id}'\\]\\s*\\{([\\s\\S]*?)\\n\\}`)),
+});
 const themes: [string, Record<string, string>][] = [
   ['escuro', dark],
   ['claro', light],
+  ['dracula', extra('dracula')],
+  ['solarized', extra('solarized')],
+  ['amber', extra('amber')],
 ];
 
 describe('contraste AA dos tokens (ES-05)', () => {
@@ -48,6 +57,17 @@ describe('contraste AA dos tokens (ES-05)', () => {
       }
     }
     expect(dark.accent).not.toBe(light.accent);
+  });
+
+  it('cada tema extra tem bloco próprio e muda as superfícies e o acento', () => {
+    for (const [name, theme] of themes.slice(2)) {
+      expect(theme.surface, name).not.toBe(dark.surface);
+      expect(theme.accent, name).not.toBe(dark.accent);
+    }
+  });
+
+  it('nenhum tema usa degradê (ES-xx)', () => {
+    expect(css).not.toMatch(/gradient\(/);
   });
 
   it.each(themes)(
