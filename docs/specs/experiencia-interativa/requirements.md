@@ -1,6 +1,6 @@
 # Experiência interativa e originalidade — requisitos
 
-Grupos **PE** (personalidade), **TB** (temas e boot), **JG** (jogo), **JA** (janelas e atalhos), **CE** (conteúdo e acabamento). Decorre de [prd.md](prd.md). Estado: **aprovada em 11/11/2026 e implementada**; evidência em [status.md](status.md). Pendentes: texto da Duda para `fortune`, `/agora`, `/setup` e novos estudos de caso (CE-06 a CE-08, PE-07).
+Grupos **PE** (personalidade), **TB** (temas e boot), **JG** (jogo), **JA** (janelas e atalhos), **CE** (conteúdo e acabamento). Decorre de [prd.md](prd.md). Estado: **aprovada em 11/11/2026 e implementada**; evidência em [status.md](status.md). `/agora` já tem conteúdo. Pendentes: texto da Duda para `fortune`, `/setup` e novos estudos de caso (PE-07, CE-07, CE-08).
 
 Arquivos: [prd.md](prd.md) · [design.md](design.md) · [tasks.md](tasks.md) · status.md (criado na primeira tarefa entregue)
 

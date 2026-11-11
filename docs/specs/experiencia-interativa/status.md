@@ -1,6 +1,6 @@
 # Status — Experiência interativa e originalidade
 
-Legenda: ✅ atendido · ◐ parcial · ❌ não feito · ❔ não verificado. Verificado em 11/11/2026: `npm run lint` (0 erros), `npm test` (34 arquivos, 393 testes), `npm run build`, varredura do `verify-site` e capturas no Chrome (1440×900 e 390×844, cinco temas, sem rolagem horizontal e sem erro nem aviso no console).
+Legenda: ✅ atendido · ◐ parcial · ❌ não feito · ❔ não verificado. Verificado em 11/11/2026: `npm run lint` (0 erros), `npm test` (34 arquivos, 395 testes), `npm run build`, varredura do `verify-site` e capturas no Chrome (1440×900 e 390×844, cinco temas, sem rolagem horizontal e sem erro nem aviso no console).
 
 ## A. Comandos de personalidade
 
@@ -66,8 +66,8 @@ Legenda: ✅ atendido · ◐ parcial · ❌ não feito · ❔ não verificado. V
 | CE-03 | ✅ | `phase3.test.tsx` ("404 temático"); captura `404-desk` (link com `--accent` após correção) |
 | CE-04 | ✅ | Já atendido pela feature `seo` (`public/assets/og-image.png`, 1200×630, nome e cargo reais); nenhuma mudança necessária |
 | CE-05 | ✅ | `phase3.test.tsx` ("mensagem no console") |
-| CE-06 | ◐ | `pages/InfoPages.test.tsx`: rota, comando, apelido `/now`, aviso "em construção", fora do sitemap. **Falta o conteúdo da Duda** (`src/data/now.ts` vazio) |
+| CE-06 | ✅ | `pages/InfoPages.test.tsx` ("/agora com conteúdo": foco, data, indexável, PT/EN, terminal). Conteúdo informado pela Duda em 11/11/2026 (`src/data/now.ts`); inglês traduzido do português |
 | CE-07 | ◐ | Idem para `/setup` (`src/data/uses.ts` vazio) |
 | CE-08 | ❌ | Não iniciado: depende de texto novo da Duda. Decisão: o estudo atual (~130 KB de texto longo) não é migrado, para não perder conteúdo |
 
-Resumo: ✅ 39 · ◐ 3 · ❌ 1 · ❔ 0 (de 43)
+Resumo: ✅ 40 · ◐ 2 · ❌ 1 · ❔ 0 (de 43)

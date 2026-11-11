@@ -1,7 +1,7 @@
-// Página /agora: no que a Duda está focada neste momento. EM CONSTRUÇÃO: o
-// conteúdo é dela e começa vazio de propósito (nada de texto inventado). Enquanto
-// `items` estiver vazio, a página e o comando mostram o aviso e a rota fica fora
-// do sitemap e do índice dos buscadores (`draft` em routes.ts).
+// Página /agora: no que a Duda está focada neste momento. O conteúdo é dela
+// (informado em 11/11/2026); texto em inglês traduzido a partir do português.
+// Enquanto `items` estiver vazio, a página e o comando mostram o aviso "em
+// construção" e a rota fica fora do sitemap e do índice (`draft` em routes.ts).
 import type { Localized } from '../types';
 
 export interface NowItem {
@@ -15,4 +15,15 @@ export interface NowContent {
   items: NowItem[];
 }
 
-export const now: NowContent = { updated: null, items: [] };
+export const now: NowContent = {
+  updated: '2026-11-11',
+  items: [
+    {
+      label: { pt: 'Foco', en: 'Focus' },
+      text: {
+        pt: 'Specification-Driven Development (SDD), desenvolvimento agêntico e IA.',
+        en: 'Specification-Driven Development (SDD), agentic development and AI.',
+      },
+    },
+  ],
+};

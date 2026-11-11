@@ -93,7 +93,8 @@ describe('tags do <head>', () => {
   it('páginas em construção têm metadados, mas não entram no sitemap', () => {
     const drafts = routes.filter((r) => r.draft);
 
-    expect(drafts.map((r) => r.id).sort()).toEqual(['agora', 'setup']);
+    // só as páginas sem conteúdo (hoje /setup; /agora já tem texto da Duda)
+    expect(drafts.map((r) => r.id)).toEqual(['setup']);
     for (const r of drafts) {
       expect(metaFor(r.id, 'pt').title, r.id).not.toBe(metaFor(NOT_FOUND_ID, 'pt').title);
       expect(metaFor(r.id, 'en').description.length, r.id).toBeGreaterThan(20);

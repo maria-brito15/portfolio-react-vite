@@ -22,8 +22,10 @@ describe('rotas /agora e /setup (CE-06, CE-07)', () => {
     expect(directories.map((d) => d.name)).toEqual(expect.arrayContaining(['agora', 'setup']));
   });
 
-  it('o conteúdo começa vazio: nenhum texto inventado', () => {
-    expect(now).toEqual({ updated: null, items: [] });
+  it('/agora tem só o que a Duda informou; /setup segue vazio (nada inventado)', () => {
+    expect(now.updated).toBe('2026-11-11');
+    expect(now.items).toHaveLength(1);
+    expect(now.items[0].text.pt).toContain('Specification-Driven Development');
     expect(uses).toEqual({ updated: null, groups: [] });
   });
 
@@ -41,15 +43,12 @@ describe('rotas /agora e /setup (CE-06, CE-07)', () => {
   });
 });
 
-describe('páginas em construção', () => {
-  it.each([
-    ['/agora', 'Agora'],
-    ['/setup', 'Setup'],
-  ])('%s mostra título, aviso de construção e a janela de sempre', (path, title) => {
-    renderApp(path);
-    expect(screen.getByRole('heading', { level: 1, name: title })).toBeInTheDocument();
+describe('/setup em construção', () => {
+  it('mostra título, aviso de construção, a janela de sempre e noindex', () => {
+    renderApp('/setup');
+    expect(screen.getByRole('heading', { level: 1, name: 'Setup' })).toBeInTheDocument();
     expect(screen.getByText('Em construção.')).toBeInTheDocument();
-    expect(document.querySelector('.win-title')).toHaveTextContent(`~/${path.slice(1)}`);
+    expect(document.querySelector('.win-title')).toHaveTextContent('~/setup');
     expect(document.title).toContain('Duda Brito');
     expect(document.querySelector('meta[name="robots"]')).toHaveAttribute(
       'content',
@@ -57,12 +56,12 @@ describe('páginas em construção', () => {
     );
   });
 
-  it('o aviso troca de idioma e o apelido em inglês abre a mesma página', async () => {
+  it('o apelido em inglês abre a mesma página e o aviso troca de idioma', async () => {
     const user = userEvent.setup();
 
-    renderApp('/now');
+    renderApp('/uses');
     await user.click(screen.getByRole('button', { name: /Switch to English/ }));
-    expect(screen.getByRole('heading', { level: 1, name: 'Now' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 1, name: 'Setup' })).toBeInTheDocument();
     expect(screen.getByText('Under construction.')).toBeInTheDocument();
   });
 
@@ -70,13 +69,47 @@ describe('páginas em construção', () => {
     const user = userEvent.setup();
 
     renderApp('/');
-    await user.type(input(), 'agora{Enter}');
+    await user.type(input(), 'setup{Enter}');
     expect(within(log()).getByText('Em construção.')).toBeInTheDocument();
     expect(within(log()).getByRole('button', { name: /abrir página própria/ })).toBeInTheDocument();
-    await user.type(input(), 'uses{Enter}');
-    expect(within(log()).getByText('Em construção.')).toBeInTheDocument();
+  });
+});
+
+describe('/agora com conteúdo (CE-06)', () => {
+  it('mostra o foco informado, a data e é indexável (sem aviso, sem noindex)', () => {
+    renderApp('/agora');
+    expect(screen.getByRole('heading', { level: 1, name: 'Agora' })).toBeInTheDocument();
+    expect(screen.getByText('Foco')).toBeInTheDocument();
+    expect(screen.getByText(/Specification-Driven Development \(SDD\)/)).toBeInTheDocument();
+    expect(screen.getByText(/atualizado em 2026-11-11/)).toBeInTheDocument();
+    expect(screen.queryByText('Em construção.')).toBeNull();
+    expect(document.querySelector('meta[name="robots"]')).toHaveAttribute(
+      'content',
+      expect.stringContaining('index, follow'),
+    );
   });
 
+  it('troca de idioma e o apelido /now abre a mesma página', async () => {
+    const user = userEvent.setup();
+
+    renderApp('/now');
+    await user.click(screen.getByRole('button', { name: /Switch to English/ }));
+    expect(screen.getByRole('heading', { level: 1, name: 'Now' })).toBeInTheDocument();
+    expect(screen.getByText('Focus')).toBeInTheDocument();
+    expect(screen.getByText(/updated on 2026-11-11/)).toBeInTheDocument();
+  });
+
+  it('o terminal mostra o mesmo conteúdo com o par de ações', async () => {
+    const user = userEvent.setup();
+
+    renderApp('/');
+    await user.type(input(), 'agora{Enter}');
+    expect(within(log()).getByText('Foco')).toBeInTheDocument();
+    expect(within(log()).getByRole('button', { name: /abrir página própria/ })).toBeInTheDocument();
+  });
+});
+
+describe('ls e cd', () => {
   it('ls lista as duas páginas e cd abre', async () => {
     const user = userEvent.setup();
 
