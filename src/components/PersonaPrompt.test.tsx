@@ -75,3 +75,19 @@ describe('faixa de persona na home (PR-02, PR-03, PR-11, PR-15)', () => {
     ).toBeInTheDocument();
   });
 });
+
+describe('idioma (PR-13)', () => {
+  it('trocar o idioma troca os textos da persona sem perder a escolha', async () => {
+    const user = userEvent.setup();
+
+    localStorage.setItem(PERSONA_ASKED_KEY, '1');
+    localStorage.setItem(PERSONA_KEY, 'cliente');
+    renderApp('/');
+
+    expect(document.querySelector('.persona-slot')).toHaveTextContent('Vendo como: Cliente');
+    await user.click(screen.getByRole('button', { name: /EN|English/ }));
+    expect(document.querySelector('.persona-slot')).toHaveTextContent('Viewing as: Client');
+    expect(screen.getByRole('link', { name: 'See the services' })).toBeInTheDocument();
+    expect(localStorage.getItem(PERSONA_KEY)).toBe('cliente');
+  });
+});

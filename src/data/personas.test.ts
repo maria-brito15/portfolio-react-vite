@@ -1,6 +1,7 @@
 import { PERSONA_IDS, byPersona, findPersona, isPick, personaById, personas } from './personas';
 import { routeById } from './routes';
 import { findCommand } from '../terminal/commands';
+import { ui } from '../i18n/ui';
 
 describe('personas (PR-01, PR-12, PR-13)', () => {
   it('são as cinco da v1', () => {
@@ -58,5 +59,11 @@ describe('personas (PR-01, PR-12, PR-13)', () => {
     expect(isPick(personaById('rh'), 'curriculo')).toBe(true);
     expect(isPick(personaById('rh'), 'jogos')).toBe(false);
     expect(isPick(undefined, 'curriculo')).toBe(false);
+  });
+});
+
+describe('textos de interface das personas (PR-13)', () => {
+  it('o bloco `persona` tem as mesmas chaves em PT e EN', () => {
+    expect(Object.keys(ui.en.persona).sort()).toEqual(Object.keys(ui.pt.persona).sort());
   });
 });
