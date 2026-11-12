@@ -79,8 +79,8 @@
 .hero-pill {
   font-size: 0.78rem;
   color: var(--accent);
-  background: rgba(163, 116, 242, 0.08);
-  border: 1px solid rgba(163, 116, 242, 0.2);
+  background: color-mix(in srgb, var(--accent) var(--tint-bg), transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) var(--tint-line), transparent);
   padding: 4px 12px;
   border-radius: var(--radius-sm);
 }
@@ -116,8 +116,8 @@
 .price-tag {
   font-size: 0.74rem;
   font-weight: 700;
-  color: var(--accent);
-  background: rgba(102, 144, 242, 0.1);
+  color: var(--info);
+  background: color-mix(in srgb, var(--info) var(--tint-bg), transparent);
   padding: 4px 12px;
   border-radius: var(--radius-sm);
 }
@@ -454,11 +454,11 @@
   flex-direction: column;
   justify-content: space-between;
   border-style: dashed;
-  border-color: rgba(255, 140, 0, 0.35);
-  background: rgba(255, 140, 0, 0.04);
+  border-color: color-mix(in srgb, var(--warn) var(--tint-line), transparent);
+  background: color-mix(in srgb, var(--warn) var(--tint-bg), transparent);
 }
 .svc-card-custom h3 {
-  color: var(--accent);
+  color: var(--warn);
 }
 .price-tag {
   align-self: flex-start;

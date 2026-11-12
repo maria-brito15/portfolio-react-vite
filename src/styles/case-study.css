@@ -101,11 +101,8 @@
   margin-bottom: 1.15rem;
 }
 .case-body strong {
-  color: #eef0f3;
+  color: var(--text);
   font-weight: 600;
-}
-[data-theme='light'] .case-body strong {
-  color: #1a1a1a;
 }
 .case-body ul,
 .case-body ol.list {
@@ -127,8 +124,8 @@
 }
 .case-callout {
   background: var(--surface-2);
-  border: 1px solid rgba(102, 144, 242, 0.25);
-  border-left: 3px solid var(--accent);
+  border: 1px solid color-mix(in srgb, var(--info) var(--tint-line), transparent);
+  border-left: 3px solid var(--info);
   border-radius: var(--radius-md);
   padding: 1.2rem 1.4rem;
   margin: 1.7rem 0 2rem;
@@ -137,24 +134,17 @@
   color: var(--text-2);
 }
 .case-callout strong {
-  color: var(--accent);
+  color: var(--info);
 }
 .case-tech {
-  background: rgba(163, 116, 242, 0.06);
-  border: 1px solid rgba(163, 116, 242, 0.22);
+  background: color-mix(in srgb, var(--accent) var(--tint-bg), transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) var(--tint-line), transparent);
   border-radius: var(--radius-md);
   padding: 1rem 1.3rem;
   margin: 0 0 1.6rem;
   font-size: 0.88rem;
   line-height: 1.75;
   color: var(--text-2);
-}
-[data-theme='light'] .case-tech {
-  background: rgba(124, 58, 201, 0.05);
-  border: 1px solid rgba(124, 58, 201, 0.22);
-}
-[data-theme='light'] .case-callout {
-  border: 1px solid rgba(63, 99, 201, 0.25);
 }
 [data-theme='light'] .case-example {
 }

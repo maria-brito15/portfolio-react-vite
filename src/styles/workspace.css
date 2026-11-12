@@ -59,6 +59,7 @@
 }
 .sidebar-group summary::before {
   content: '▾';
+  color: var(--tone, var(--dim));
 }
 .sidebar-group:not([open]) summary::before {
   content: '▸';
@@ -73,22 +74,45 @@
   padding: 0;
 }
 .sidebar-link {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
   padding: var(--space-2) var(--space-3);
   color: var(--text-2);
   text-decoration: none;
   border-radius: var(--radius-sm);
   box-shadow: inset 2px 0 0 transparent;
+  transition:
+    color 0.15s,
+    background-color 0.15s,
+    box-shadow 0.15s;
+}
+/* Marcador de categoria: quadrado no tom do grupo (a página ativa também tem barra e negrito). */
+.sidebar-link::before {
+  content: '';
+  flex: none;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 2px;
+  background: var(--tone, var(--accent));
+  opacity: 0.55;
+  transition: opacity 0.15s;
 }
 .sidebar-link:hover {
   color: var(--text);
-  background: var(--surface-2);
+  background: var(--tone-bg, var(--surface-2));
+}
+.sidebar-link:hover::before {
+  opacity: 1;
 }
 .sidebar-link.is-active {
-  color: var(--accent);
+  color: var(--text);
   font-weight: 700;
-  background: var(--surface-2);
-  box-shadow: inset 2px 0 0 var(--accent);
+  background: var(--tone-bg, var(--surface-2));
+  box-shadow: inset 3px 0 0 var(--tone, var(--accent));
+}
+.sidebar-link.is-active::before {
+  opacity: 1;
 }
 .sidebar-shortcuts {
   display: flex;
@@ -255,9 +279,16 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
 }
+.dash-btn {
+  transition:
+    border-color 0.15s,
+    color 0.15s,
+    background-color 0.15s;
+}
 .dash-btn:hover {
   border-color: var(--accent);
   color: var(--accent);
+  background: color-mix(in srgb, var(--accent) var(--tint-bg), var(--surface-2));
 }
 .dash-btn--primary {
   color: var(--on-accent);
@@ -309,9 +340,28 @@
   background: var(--surface-2);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
+  transition:
+    border-color 0.15s,
+    background-color 0.15s;
 }
 .quick-tile:hover {
-  border-color: var(--accent);
+  border-color: var(--tone, var(--accent));
+  background: color-mix(in srgb, var(--tone, var(--accent)) var(--tint-bg), var(--surface-2));
+}
+/* Contêiner do ícone: tom do grupo, texto mono de duas letras. */
+.quick-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  margin-bottom: var(--space-2);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--tone, var(--accent));
+  background: var(--tone-bg);
+  border: 1px solid var(--tone-line);
+  border-radius: var(--radius-sm);
 }
 .quick-tile span {
   font-size: var(--fs-chrome);
@@ -328,8 +378,22 @@
   box-sizing: border-box;
 }
 .featured-project h3 {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
   margin: 0;
   font-size: 1rem;
+}
+.project-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  flex: none;
+  background: var(--tone-bg);
+  border: 1px solid var(--tone-line);
+  border-radius: var(--radius-sm);
 }
 .featured-project p {
   margin: 0;
@@ -401,10 +465,12 @@
 }
 .catalog-group h3 {
   margin: 0 0 var(--space-2);
+  padding-bottom: var(--space-1);
   font-size: var(--fs-chrome);
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--dim);
+  color: var(--tone, var(--dim));
+  border-bottom: 1px solid var(--tone-line, var(--border));
 }
 .catalog-group ul {
   display: grid;
@@ -450,7 +516,25 @@
 }
 .game-level-name {
   font-weight: 700;
-  color: var(--accent);
+  color: var(--tone, var(--accent));
+}
+.game-card h2 {
+  color: var(--tone, var(--text));
+}
+.game-levels li {
+  padding: var(--space-2) var(--space-3);
+  background: var(--tone-bg, transparent);
+  border: 1px solid var(--tone-line, var(--border));
+  border-radius: var(--radius-sm);
+}
+.game-levels .run-btn:hover:not(:disabled) {
+  color: var(--tone);
+  border-color: var(--tone);
+}
+.game-levels .run-btn[aria-pressed='true'] {
+  color: var(--on-accent);
+  background: var(--tone);
+  border-color: var(--tone);
 }
 .game-board {
   margin: var(--space-4) 0;
@@ -566,6 +650,16 @@
 .run-btn:disabled {
   opacity: 0.6;
   cursor: default;
+}
+.run-btn {
+  transition:
+    border-color 0.15s,
+    color 0.15s,
+    background-color 0.15s;
+}
+.catalog-group[data-tone] .run-btn:hover:not(:disabled) {
+  color: var(--tone);
+  border-color: var(--tone);
 }
 .catalog-cmd {
   display: flex;

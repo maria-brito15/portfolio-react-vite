@@ -87,7 +87,7 @@
   font-weight: 500;
 }
 .t-path {
-  color: var(--accent);
+  color: var(--info);
 }
 .t-input {
   color: var(--text);
@@ -106,8 +106,12 @@
 .t-ok {
   color: var(--ok);
 }
-.t-cmd {
+.t-cmd,
+.t-warn {
   color: var(--warn);
+}
+.t-info {
+  color: var(--info);
 }
 .term a {
   color: var(--accent);
@@ -152,7 +156,7 @@
   grid-template-columns: 22ch 1fr;
 }
 .t-kv dt {
-  color: var(--accent);
+  color: var(--tone, var(--accent));
 }
 .t-help dd,
 .t-kv dd {
@@ -175,8 +179,11 @@
   text-decoration: none;
   font-weight: 500;
 }
+.term .t-dir {
+  color: var(--info);
+}
 .term .t-file {
-  color: var(--warn);
+  color: var(--accent-2);
 }
 .t-table li {
   display: grid;
@@ -538,7 +545,8 @@
   cursor: pointer;
 }
 .ms-cell:hover:not(.is-open) {
-  border-color: var(--accent);
+  border-color: var(--c-pink);
+  background: color-mix(in srgb, var(--c-pink) var(--tint-bg), var(--surface-3));
 }
 .ms-cell:focus-visible {
   outline: 2px solid var(--accent);
@@ -559,21 +567,29 @@
 .ms-cell.is-exploded {
   outline: 2px solid var(--text);
 }
-.ms-n1,
+.ms-n1 {
+  color: var(--c-cyan);
+}
+.ms-n2 {
+  color: var(--c-mint);
+}
+.ms-n3 {
+  color: var(--c-coral);
+}
+.ms-n4 {
+  color: var(--c-violet);
+}
 .ms-n5 {
-  color: var(--accent);
+  color: var(--c-amber);
 }
-.ms-n2,
 .ms-n6 {
-  color: var(--ok);
+  color: var(--c-pink);
 }
-.ms-n3,
 .ms-n7 {
-  color: var(--err);
+  color: var(--text);
 }
-.ms-n4,
 .ms-n8 {
-  color: var(--warn);
+  color: var(--text-2);
 }
 .ms-status {
   margin: var(--space-2) 0 0;

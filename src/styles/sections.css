@@ -38,7 +38,7 @@
   right: 12px;
   width: 13px;
   height: 13px;
-  background: #4ade80;
+  background: var(--ok);
   border-radius: 50%;
   border: 2px solid var(--bg);
 }
@@ -180,13 +180,13 @@
 }
 .ecoshop-card {
   grid-column: 1/-1;
-  border-color: rgba(74, 222, 128, 0.22);
+  border-color: var(--tone-line, var(--border));
   overflow: hidden;
   padding: 0;
   transition: border-color 0.2s;
 }
 .ecoshop-card:hover {
-  border-color: rgba(74, 222, 128, 0.45);
+  border-color: var(--tone, var(--accent));
 }
 .ecoshop-info {
   padding: 2.25rem;
@@ -199,7 +199,7 @@
   cursor: pointer;
 }
 .proj-card:hover {
-  border-color: var(--warn);
+  border-color: var(--tone, var(--accent));
   transform: translateY(-2px);
 }
 .proj-header {
@@ -222,8 +222,8 @@
 }
 .proj-bdg.award {
   color: var(--warn);
-  background: rgba(230, 161, 92, 0.12);
-  border-color: rgba(230, 161, 92, 0.3);
+  background: color-mix(in srgb, var(--warn) var(--tint-bg), transparent);
+  border-color: color-mix(in srgb, var(--warn) var(--tint-line), transparent);
 }
 .proj-card h2 {
   font-family: var(--font-mono);
@@ -243,33 +243,33 @@
   gap: 5px;
 }
 .st {
-  background: rgba(102, 144, 242, 0.08);
-  border: 1px solid rgba(102, 144, 242, 0.18);
-  color: var(--accent);
+  background: var(--tone-bg);
+  border: 1px solid var(--tone-line);
+  color: var(--tone);
   padding: 3px 9px;
   border-radius: var(--radius-sm);
   font-size: 0.72rem;
 }
 .proj-bdg.wip {
   color: var(--accent);
-  background: rgba(163, 116, 242, 0.12);
-  border-color: rgba(163, 116, 242, 0.3);
+  background: color-mix(in srgb, var(--accent) var(--tint-bg), transparent);
+  border-color: color-mix(in srgb, var(--accent) var(--tint-line), transparent);
 }
 .proj-bdg.case {
-  color: var(--accent);
-  background: rgba(102, 144, 242, 0.12);
-  border-color: rgba(102, 144, 242, 0.3);
+  color: var(--info);
+  background: color-mix(in srgb, var(--info) var(--tint-bg), transparent);
+  border-color: color-mix(in srgb, var(--info) var(--tint-line), transparent);
 }
 
 /* Featured card: architecture-forward projects (dispatcher) */
 .featured-card {
   grid-column: 1/-1;
-  border-color: rgba(163, 116, 242, 0.22);
+  border-color: var(--tone-line, var(--border));
   padding: 2.25rem;
   transition: border-color 0.2s;
 }
 .featured-card:hover {
-  border-color: rgba(163, 116, 242, 0.4);
+  border-color: var(--tone, var(--accent));
 }
 .featured-card .proj-header {
   margin-bottom: 1.1rem;
@@ -511,7 +511,7 @@
   padding: 1.4rem;
 }
 .evo-col.current {
-  border-color: rgba(74, 222, 128, 0.35);
+  border-color: color-mix(in srgb, var(--ok) var(--tint-line), transparent);
 }
 .evo-tag {
   display: inline-block;
@@ -525,9 +525,9 @@
   border: 1px solid var(--border);
 }
 .evo-tag.current {
-  color: #4ade80;
-  background: rgba(74, 222, 128, 0.12);
-  border-color: rgba(74, 222, 128, 0.3);
+  color: var(--ok);
+  background: color-mix(in srgb, var(--ok) var(--tint-bg), transparent);
+  border-color: color-mix(in srgb, var(--ok) var(--tint-line), transparent);
 }
 .evo-stack {
   font-family: var(--font-mono);
@@ -616,13 +616,13 @@
   width: 11px;
   height: 11px;
   border-radius: 50%;
-  background: var(--accent);
+  background: var(--tone, var(--accent));
   box-shadow: 0 0 0 4px var(--bg);
 }
 .timeline-date {
   font-size: 0.8rem;
   font-weight: 600;
-  color: var(--accent);
+  color: var(--tone, var(--accent));
   margin-bottom: 0.75rem;
   letter-spacing: 0.02em;
 }
@@ -846,16 +846,13 @@
   line-height: 1.6;
 }
 .form-note.success {
-  color: #30a46c;
+  color: var(--ok);
 }
 .form-note.failure {
   color: var(--text-2);
 }
 .form-note a {
   color: var(--accent);
-}
-[data-theme='light'] .form-note.success {
-  color: #18794e;
 }
 
 /* ========== GITHUB (números ao vivo, na página Sobre) ========== */
@@ -881,11 +878,15 @@
   flex-direction: column;
   gap: var(--space-1);
 }
+.gh-metrics li {
+  padding-left: var(--space-3);
+  border-left: 2px solid var(--tone, var(--border));
+}
 .gh-metrics strong {
   font-size: 1.5rem;
   font-weight: 700;
   line-height: 1.2;
-  color: var(--text);
+  color: var(--tone, var(--text));
 }
 .gh-metrics span,
 .gh-meta,
@@ -909,7 +910,18 @@
   font-size: 0.85rem;
 }
 .gh-lang-name {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
   color: var(--text-2);
+}
+.gh-lang-name::before {
+  content: '';
+  flex: none;
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 2px;
+  background: var(--tone, var(--accent));
 }
 .gh-bar {
   height: 6px;
@@ -920,7 +932,7 @@
 .gh-bar span {
   display: block;
   height: 100%;
-  background: var(--accent);
+  background: var(--tone, var(--accent));
 }
 .gh-lang-n {
   text-align: right;
