@@ -86,3 +86,17 @@ Como responder: escreva "aprovo tudo", ou marque o que quer mudar (ex.: "RH 3: t
 | Progresso (RH e tech) | Você viu {x} de {n} | You have seen {x} of {n} | aprovado |
 | Conclusão (selo) | Trilha concluída | Trail completed | aprovado |
 | Sem persona (comando) | Escolha quem está visitando com `visitante` e a trilha aparece. | Pick who is visiting with `visitor` and the trail appears. | aprovado |
+
+## Palavras de interface acrescentadas na implementação (a aprovar)
+
+Surgiram ao construir o tour e não estavam na lista aprovada. Estão no código como
+provisórias; se você preferir outra palavra, é só dizer.
+
+| Onde | PT | EN | Estado |
+| --- | --- | --- | --- |
+| Botão do último passo | Concluir | Finish | a aprovar |
+| Botão de passo "fazer" | rodar `comando` | run `command` | a aprovar |
+| Passo feito | ✓ feito | ✓ done | a aprovar |
+| Nome acessível do cartão | Trilha guiada: {título} | Guided trail: {title} | a aprovar |
+| Ação de imprimir (já existe no currículo) | Imprimir / salvar em PDF | Print / save as PDF | reaproveitado do site |
+| Ação de abrir outra página | o nome da própria página (ex.: Serviços) | idem | reaproveitado do site |

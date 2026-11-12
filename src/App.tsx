@@ -5,6 +5,7 @@ import type { PersonaId } from './data/personas';
 import { TerminalProvider } from './terminal/TerminalSession';
 import { PersonaProvider, usePersona } from './hooks/usePersona';
 import { TrailProvider } from './trails/TrailProvider';
+import TourHost from './trails/TourHost';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import {
@@ -83,6 +84,7 @@ export default function App() {
               <Page id={route?.id} persona={route?.persona} />
             </Suspense>
             <GlobalOverlays />
+            <TourHost />
           </TerminalProvider>
         </TrailProvider>
       </PersonaProvider>
