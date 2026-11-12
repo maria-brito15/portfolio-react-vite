@@ -249,6 +249,9 @@ export const ui = {
       notNow: 'Agora não',
       completed: 'Trilha concluída',
       seen: (done: number, n: number) => `Você viu ${done} de ${n}`,
+      secrets: (found: number, total: number) => `Segredos: ${found} de ${total}`,
+      secretFound: (name: string, found: number, total: number) =>
+        `Segredo encontrado: ${name} (${found} de ${total})`,
       cmd: {
         noPersona: 'Escolha quem está visitando com `visitante` e a trilha aparece.',
         usage: 'trilha iniciar · continuar · reiniciar · sair',
@@ -510,6 +513,9 @@ export const ui = {
       notNow: 'Not now',
       completed: 'Trail completed',
       seen: (done: number, n: number) => `You have seen ${done} of ${n}`,
+      secrets: (found: number, total: number) => `Secrets: ${found} of ${total}`,
+      secretFound: (name: string, found: number, total: number) =>
+        `Secret found: ${name} (${found} of ${total})`,
       cmd: {
         noPersona: 'Pick who is visiting with `visitor` and the trail appears.',
         usage: 'trail start · resume · restart · exit',

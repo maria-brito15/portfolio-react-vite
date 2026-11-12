@@ -105,3 +105,4 @@ provisórias; se você preferir outra palavra, é só dizer.
 | Comando `trilha`: fechada | trilha fechada. · nenhuma trilha aberta. | trail closed. · no trail open. | a aprovar |
 | Comando `trilha`: uso | trilha iniciar · continuar · reiniciar · sair | trail start · resume · restart · exit | a aprovar |
 | Cartão: número de passos | {n} passos | {n} steps | a aprovar |
+| Contador de segredos (amigo) | Segredos: {x} de {y} | Secrets: {x} of {y} | a aprovar |

@@ -6,6 +6,7 @@ import { prefersReducedMotion } from '../utils/env';
 import { useTerminalSession } from '../terminal/sessionContext';
 import type { TrailStep } from '../data/trails';
 import { useTrail } from './TrailProvider';
+import TrailProgress from './TrailProgress';
 
 // Tour com destaque (docs/specs/trilhas/): leva à página do passo, destaca o elemento
 // real com um anel e mostra o cartão com o texto, o contador e os botões. Carregado
@@ -36,11 +37,12 @@ export default function Tour() {
   const { lang, t } = useLanguage();
   const { path, navigate } = useRouter();
   const session = useTerminalSession();
-  const { trail, steps, step, index, progress, next, prev, exit, markDone } = useTrail();
+  const { trail, steps, step, index, progress, doneCount, found, next, prev, exit, markDone } =
+    useTrail();
   const text = t.trail;
   // Alvo achado, junto do passo a que pertence (trocar de passo "esquece" o anterior
   // sem precisar zerar o estado dentro de um efeito).
-  const [found, setFound] = useState<{ id: string; el: HTMLElement } | null>(null);
+  const [located, setLocated] = useState<{ id: string; el: HTMLElement } | null>(null);
   const [box, setBox] = useState<Box | null>(null);
   const [placement, setPlacement] = useState<'top' | 'bottom'>('bottom');
   const cardRef = useRef<HTMLDivElement>(null);
@@ -50,7 +52,7 @@ export default function Tour() {
 
   const route = step ? routeById(step.route) : undefined;
   const onRoute = Boolean(route && normalizePath(path) === route.path);
-  const target = found && step && found.id === step.id ? found.el : null;
+  const target = located && step && located.id === step.id ? located.el : null;
 
   // Devolve o foco a quem abriu o tour, se esse elemento ainda existe.
   useEffect(
@@ -84,7 +86,7 @@ export default function Tour() {
       const el = findTarget(step);
 
       if (el) {
-        setFound({ id: step.id, el });
+        setLocated({ id: step.id, el });
 
         const rect = el.getBoundingClientRect();
         const top = rect.top + window.scrollY - window.innerHeight * 0.18;
@@ -218,6 +220,8 @@ export default function Tour() {
         <p className="tour-meta t-dim">
           <span>{trail.title[lang]}</span> <span>{text.counter(index + 1, steps.length)}</span>
         </p>
+
+        <TrailProgress trail={trail} done={doneCount} total={steps.length} found={found} compact />
 
         <p className="tour-text" aria-live="polite">
           {withCode(step.text(lang))}

@@ -6,6 +6,7 @@ import { TerminalProvider } from './terminal/TerminalSession';
 import { PersonaProvider, usePersona } from './hooks/usePersona';
 import { TrailProvider } from './trails/TrailProvider';
 import TourHost from './trails/TourHost';
+import SecretToast from './trails/SecretToast';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import {
@@ -85,6 +86,7 @@ export default function App() {
             </Suspense>
             <GlobalOverlays />
             <TourHost />
+            <SecretToast />
           </TerminalProvider>
         </TrailProvider>
       </PersonaProvider>

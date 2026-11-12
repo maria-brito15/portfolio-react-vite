@@ -919,3 +919,59 @@
     display: none;
   }
 }
+
+/* Progresso das trilhas: barra e segredos. */
+.trail-progress {
+  margin: 0 0 var(--space-3);
+}
+.trail-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-3);
+}
+.trail-bar progress {
+  width: 8rem;
+  height: 0.6rem;
+  accent-color: var(--accent);
+}
+.trail-secrets ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-3);
+  padding: 0;
+  list-style: none;
+}
+.trail-secrets li {
+  padding: 0 var(--space-2);
+  font-size: var(--fs-chrome);
+  color: var(--dim);
+  border: 1px solid var(--border-ui);
+  border-radius: var(--radius-pill);
+}
+.trail-secrets li[data-found] {
+  color: var(--ok);
+  border-color: var(--ok);
+}
+.secret-toast-slot {
+  position: fixed;
+  z-index: 996;
+  left: var(--space-4);
+  bottom: var(--space-4);
+  pointer-events: none;
+}
+.secret-toast {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--fs-chrome);
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--ok);
+  border-radius: var(--radius-sm);
+}
+@media print {
+  .secret-toast-slot {
+    display: none;
+  }
+}
