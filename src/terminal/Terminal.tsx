@@ -8,6 +8,8 @@ import { prefersReducedMotion } from '../utils/env';
 import CommandInput from './CommandInput';
 import TerminalOutput from './TerminalOutput';
 import BootSequence, { markBooted, shouldBoot } from './extras/Boot';
+import { PersonaQuestion } from './extras/persona';
+import { usePersona } from '../hooks/usePersona';
 
 // Conteúdo da janela do terminal da página inicial (a Window é do SiteShell):
 // banner, a última entrada (cada comando limpa a anterior), a linha de comando
@@ -15,6 +17,7 @@ import BootSequence, { markBooted, shouldBoot } from './extras/Boot';
 export default function Terminal({ content }: { content: PortfolioContent['hero'] }) {
   const { lang } = useLanguage();
   const { entry, inputs, execute, busy } = useTerminalSession();
+  const { asked } = usePersona();
   const term = ui[lang].term;
   // Primeira visita: ainda não há nenhum comando no histórico da sessão.
   const firstVisit = inputs.length === 0;
@@ -71,6 +74,9 @@ export default function Terminal({ content }: { content: PortfolioContent['hero'
           <p className="term-sub">{content.sub}</p>
           <p className="t-dim">{firstVisit ? term.firstVisit : content.terminal.hint}</p>
         </header>
+
+        {/* Pergunta da primeira visita: some ao responder, pular (Enter) ou rodar qualquer comando. */}
+        {!asked && !entry && !showBoot && <PersonaQuestion lang={lang} />}
 
         <div className="term-log" aria-live="polite">
           <TerminalOutput />
