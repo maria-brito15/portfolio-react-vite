@@ -121,6 +121,8 @@ export async function handleAsk(req: Request, info: AskRequestInfo, deps: AskDep
 
   // Sem chave ou modelo (preview sem variável, dev): degrada sem chamar nada (IA-22).
   if (!deps.apiKey || !deps.model) return fail('down');
+  // Sem contexto o modelo responderia de cabeça: melhor indisponível do que inventar.
+  if (!deps.context.sections.length) return fail('down');
 
   const limit = await deps.limiter.check(info.ip);
 

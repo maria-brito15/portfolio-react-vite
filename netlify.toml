@@ -10,6 +10,14 @@
   # o build ao encontrá-los em dist/.
   SECRETS_SCAN_OMIT_KEYS = "VITE_EMAILJS_SERVICE_ID,VITE_EMAILJS_TEMPLATE_ID,VITE_EMAILJS_PUBLIC_KEY"
 
+# Assistente de IA (docs/specs/assistente-ia/): a função fica em netlify/functions/ask.mts
+# e o contexto, gerado no build, em netlify/assistant/context.json (lido em tempo de
+# execução, por isso entra em included_files). A chave do Gemini NUNCA vai neste arquivo:
+# GEMINI_API_KEY e GEMINI_MODEL são variáveis de ambiente do painel da Netlify.
+[functions]
+  directory = "netlify/functions"
+  included_files = ["netlify/assistant/context.json"]
+
 # Sem regra "/* -> /index.html 200": o build grava um HTML por rota (sobre.html,
 # projetos.html…) e a Netlify serve dist/404.html, com status 404 de verdade,
 # para qualquer endereço que não exista (antes, tudo respondia 200 = soft 404).

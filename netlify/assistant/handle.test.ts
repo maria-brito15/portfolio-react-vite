@@ -137,6 +137,16 @@ describe('POST /api/ask: pedidos que nunca chegam ao modelo', () => {
   });
 });
 
+describe('contexto ausente', () => {
+  it('sem seções no contexto responde down e não chama o modelo (nada de inventar)', async () => {
+    const fetchFn = gemini(modelReply('x'));
+    const res = await handleAsk(post(valid), BR, deps({ fetchFn, context: { sections: [] } }));
+
+    expect(res.status).toBe(502);
+    expect(fetchFn).not.toHaveBeenCalled();
+  });
+});
+
 describe('bloqueio por região (IA-23)', () => {
   it('EEA, Reino Unido e Suíça são recusados sem chamar o modelo', async () => {
     for (const country of ['PT', 'DE', 'FR', 'IS', 'NO', 'GB', 'CH', 'gb']) {

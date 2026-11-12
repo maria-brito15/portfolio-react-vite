@@ -31,3 +31,19 @@ um resumidor automático; **antes de publicar, a Duda deve ler o trecho original
 `npm run dev` (Vite) não executa funções: o comando `ask` responde "serviço indisponível"
 (IA-22). Para testar de verdade: `npx netlify dev` com as variáveis em um `.env` local
 (**ignorado pelo git**).
+
+## Custo em créditos da Netlify
+
+Cada pergunta aceita faz cerca de 4 operações no Blobs (ler e gravar o contador do IP e o
+do dia); a primeira pergunta de cada IP por hora faz mais algumas para apagar as chaves
+vencidas. A Netlify não publica o preço por operação do Blobs e ele consome o mesmo pool de
+créditos do site: acompanhe o painel (Usage & billing) nas primeiras semanas e, se for
+preciso, baixe `ASK_DAILY_CAP`.
+
+## Estrutura
+
+- `netlify/functions/ask.mts`: ponto de entrada (liga o núcleo ao ambiente real).
+- `netlify/assistant/*`: núcleo testável (`handle`, `validate`, `prompt`, `gemini`, `region`,
+  `limiter`). Fica fora de `netlify/functions/` porque subpastas dali viram funções.
+- `netlify/assistant/context.json`: gerado por `npm run build` e ignorado pelo git; entra na
+  função por `included_files` em `netlify.toml`.
