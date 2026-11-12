@@ -19,8 +19,12 @@ vi.mock('../pages/lazyPages', async () => ({
   TerminalPage: (await import('../pages/TerminalPage')).default,
 }));
 
-// O boot da primeira visita fica desligado nos testes (quem o testa limpa a marca).
-beforeEach(() => localStorage.setItem('portfolio-booted', '1'));
+// O boot da primeira visita e a pergunta de persona ficam desligados nos testes
+// (quem os testa limpa a marca).
+beforeEach(() => {
+  localStorage.setItem('portfolio-booted', '1');
+  localStorage.setItem('portfolio-persona-asked', '1');
+});
 
 afterEach(() => {
   cleanup();

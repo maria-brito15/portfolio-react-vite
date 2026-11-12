@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import { useRouter } from './router';
 import { findPageByPath } from './data/routes';
 import { TerminalProvider } from './terminal/TerminalSession';
+import { PersonaProvider } from './hooks/usePersona';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import {
@@ -59,12 +60,14 @@ export default function App() {
 
   return (
     <WindowProvider>
-      <TerminalProvider>
-        <Suspense fallback={null}>
-          <Page id={route?.id} />
-        </Suspense>
-        <GlobalOverlays />
-      </TerminalProvider>
+      <PersonaProvider>
+        <TerminalProvider>
+          <Suspense fallback={null}>
+            <Page id={route?.id} />
+          </Suspense>
+          <GlobalOverlays />
+        </TerminalProvider>
+      </PersonaProvider>
     </WindowProvider>
   );
 }
