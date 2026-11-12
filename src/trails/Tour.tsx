@@ -4,7 +4,7 @@ import { useRouter } from '../router';
 import { normalizePath, routeById } from '../data/routes';
 import { prefersReducedMotion } from '../utils/env';
 import { useTerminalSession } from '../terminal/sessionContext';
-import type { TrailStep } from '../data/trails';
+import { secrets, type TrailStep } from '../data/trails';
 import { useTrail } from './TrailProvider';
 import TrailProgress from './TrailProgress';
 
@@ -14,6 +14,9 @@ import TrailProgress from './TrailProgress';
 // cartão, que recebe o foco a cada passo e devolve o foco ao sair.
 const FIND_TIMEOUT_MS = 4000;
 const RING_PAD = 6;
+const CARD_GAP = 16;
+// Altura aproximada da barra fixa do topo (cabeçalho e barra de comandos).
+const TOP_BAR = 100;
 
 interface Box {
   top: number;
@@ -52,7 +55,8 @@ export default function Tour() {
 
   const route = step ? routeById(step.route) : undefined;
   const onRoute = Boolean(route && normalizePath(path) === route.path);
-  const target = located && step && located.id === step.id ? located.el : null;
+  const target =
+    !progress.finished && located && step && located.id === step.id ? located.el : null;
 
   // Devolve o foco a quem abriu o tour, se esse elemento ainda existe.
   useEffect(
@@ -66,8 +70,8 @@ export default function Tour() {
 
   // Leva à página do passo.
   useEffect(() => {
-    if (route && !onRoute) navigate(route.path);
-  }, [route, onRoute, navigate]);
+    if (!progress.finished && route && !onRoute) navigate(route.path);
+  }, [progress.finished, route, onRoute, navigate]);
 
   // Passo "ver": conclui assim que a página dele está aberta.
   useEffect(() => {
@@ -77,7 +81,7 @@ export default function Tour() {
   // Acha o alvo (a página pode demorar a montar) e rola até ele. Sem alvo, o cartão
   // aparece do mesmo jeito, sem anel (TR-13).
   useEffect(() => {
-    if (!step || !onRoute) return;
+    if (!step || !onRoute || progress.finished) return;
 
     let frame = 0;
     const started = performance.now();
@@ -104,7 +108,7 @@ export default function Tour() {
     frame = requestAnimationFrame(look);
 
     return () => cancelAnimationFrame(frame);
-  }, [step, onRoute]);
+  }, [step, onRoute, progress.finished]);
 
   // Posição do anel e do cartão: acompanha rolagem, redimensionamento e mudanças do alvo.
   const measure = useCallback(() => {
@@ -124,8 +128,16 @@ export default function Tour() {
           }
         : null,
     );
-    // Alvo na metade de baixo da tela: o cartão sobe, para nunca cobri-lo.
-    setPlacement(rect.top + rect.height / 2 > window.innerHeight / 2 ? 'top' : 'bottom');
+
+    // O cartão fica embaixo. Só sobe quando cobriria o alvo E há lugar acima dele (alvo
+    // alto demais para isso fica com o cartão embaixo: o começo da seção segue à vista).
+    const cardHeight = cardRef.current?.offsetHeight ?? 200;
+    const roomAbove = rect.top - TOP_BAR;
+    const roomBelow = window.innerHeight - rect.bottom;
+
+    setPlacement(
+      roomBelow >= cardHeight + CARD_GAP || roomAbove < cardHeight + CARD_GAP ? 'bottom' : 'top',
+    );
   }, [target]);
 
   useEffect(() => {
@@ -154,7 +166,7 @@ export default function Tour() {
   // O foco vai para o cartão a cada passo (o leitor de tela lê o texto novo).
   useEffect(() => {
     cardRef.current?.focus({ preventScroll: true });
-  }, [step?.id]);
+  }, [step?.id, progress.finished]);
 
   // Esc sai do tour de onde estiver o foco.
   useEffect(() => {
@@ -171,6 +183,34 @@ export default function Tour() {
   }, [exit]);
 
   if (!trail || !step) return null;
+
+  // Trilha concluída: mensagem final (texto aprovado) e um botão para sair.
+  if (progress.finished) {
+    const count = secrets.filter((s) => found.includes(s.id)).length;
+
+    return (
+      <div
+        ref={cardRef}
+        className="tour-card tour-card--bottom"
+        role="dialog"
+        aria-modal="false"
+        aria-label={`${text.region}: ${trail.title[lang]}`}
+        tabIndex={-1}
+      >
+        <p className="tour-meta t-dim">
+          <span>{trail.title[lang]}</span> <span>{text.completed}</span>
+        </p>
+        <p className="tour-text" aria-live="polite">
+          {trail.outro(lang, count, secrets.length)}
+        </p>
+        <div className="tour-nav">
+          <button type="button" className="dash-btn dash-btn--primary" onClick={exit}>
+            {text.exit}
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   const done = progress.done.includes(step.id);
   const last = index === steps.length - 1;

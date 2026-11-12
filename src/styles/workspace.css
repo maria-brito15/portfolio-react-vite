@@ -297,6 +297,9 @@
 }
 .dash-btn--primary:hover {
   color: var(--on-accent);
+  /* O :hover genérico do .dash-btn troca o fundo por um tom claro; sem isto o texto
+     do botão principal some no tema claro. */
+  background: var(--accent);
   filter: brightness(1.08);
 }
 .dash-section h2,
@@ -850,6 +853,10 @@
 .tour-text {
   margin: 0 0 var(--space-3);
 }
+.tour-act .dash-btn {
+  /* Botão em flex: o espaço entre "rodar" e o comando não existe sem gap. */
+  gap: 0.4em;
+}
 .tour-act,
 .tour-done {
   margin: 0 0 var(--space-3);
@@ -957,8 +964,10 @@
 .secret-toast-slot {
   position: fixed;
   z-index: 996;
-  left: var(--space-4);
-  bottom: var(--space-4);
+  left: 50%;
+  top: calc(var(--top-h) + var(--space-3));
+  transform: translateX(-50%);
+  max-width: calc(100vw - 2 * var(--space-4));
   pointer-events: none;
 }
 .secret-toast {

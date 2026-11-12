@@ -148,7 +148,7 @@ describe('abrir e navegar (TR-11)', () => {
     expect(card).toHaveTextContent('1 de 5');
   });
 
-  it('o último passo oferece "Concluir", que fecha e marca a trilha como concluída', async () => {
+  it('o último passo oferece "Concluir", que mostra a mensagem final; "Sair" fecha', async () => {
     const user = userEvent.setup();
 
     setup('cliente');
@@ -158,8 +158,15 @@ describe('abrir e navegar (TR-11)', () => {
     for (let i = 0; i < 3; i++) await user.click(screen.getByRole('button', { name: 'Próximo' }));
     await user.click(screen.getByRole('button', { name: 'Concluir' }));
 
-    expect(screen.queryByRole('dialog')).toBeNull();
+    const end = screen.getByRole('dialog');
+
+    expect(end).toHaveTextContent('Trilha concluída');
+    expect(end).toHaveTextContent('Pronto. É só preencher o formulário quando quiser.');
+    expect(document.querySelector('.tour-ring')).toBeNull();
     expect(saved().trails.cliente.finished).toBe(true);
+
+    await user.click(screen.getByRole('button', { name: 'Sair' }));
+    expect(screen.queryByRole('dialog')).toBeNull();
   });
 });
 
@@ -230,7 +237,7 @@ describe('tipos de passo (TR-14 a TR-17)', () => {
     stop();
   });
 
-  it('"agir" com link: abre o destino, conclui o passo e fecha a trilha', async () => {
+  it('"agir" com link: abre o destino, conclui o passo e mostra a mensagem final', async () => {
     const user = userEvent.setup();
 
     setup('cliente');
@@ -241,7 +248,9 @@ describe('tipos de passo (TR-14 a TR-17)', () => {
     await user.click(screen.getByRole('button', { name: 'Serviços' }));
 
     expect(window.location.pathname + window.location.hash).toBe('/servicos#contato');
-    expect(screen.queryByRole('dialog')).toBeNull();
+    expect(screen.getByRole('dialog')).toHaveTextContent(
+      'Pronto. É só preencher o formulário quando quiser.',
+    );
     expect(saved().trails.cliente.done).toContain('orcamento');
     expect(saved().trails.cliente.finished).toBe(true);
   });

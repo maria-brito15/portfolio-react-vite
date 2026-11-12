@@ -60,7 +60,7 @@ describe('estado das trilhas (TR-10, TR-18)', () => {
     expect(result.current.trail.index).toBe(2);
   });
 
-  it('anterior para no primeiro passo; próximo no último conclui e fecha', () => {
+  it('anterior para no primeiro passo; próximo no último conclui e mostra o fim', () => {
     const { result } = setup('cliente');
 
     act(() => result.current.trail.start());
@@ -73,6 +73,9 @@ describe('estado das trilhas (TR-10, TR-18)', () => {
 
     act(() => result.current.trail.next());
     expect(result.current.trail.progress.finished).toBe(true);
+    // O tour segue aberto para mostrar a mensagem final; sair fecha.
+    expect(result.current.trail.active).toBe(true);
+    act(() => result.current.trail.exit());
     expect(result.current.trail.active).toBe(false);
   });
 

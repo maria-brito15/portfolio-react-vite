@@ -96,6 +96,9 @@ describe('cartão da trilha na home (TR-06, TR-07, TR-08)', () => {
     renderApp('/');
 
     expect(card()).toHaveTextContent('Trilha concluída');
+    // a mensagem final aprovada substitui a introdução
+    expect(card()).toHaveTextContent('Pronto. Se quiser conversar, o contato está a um clique.');
+    expect(card()).not.toHaveTextContent('Em cinco paradas');
     await user.click(within(card()!).getByRole('button', { name: 'Refazer' }));
 
     expect(await screen.findByRole('dialog')).toHaveTextContent('1 de 5');
@@ -138,5 +141,24 @@ describe('cartão da trilha na home (TR-06, TR-07, TR-08)', () => {
     renderApp('/');
     expect(document.querySelector('.trail-card')).toBeNull();
     agent.mockRestore();
+  });
+});
+
+describe('mensagem final (TR-21)', () => {
+  it('o amigo vê quantos segredos achou na mensagem final', () => {
+    localStorage.setItem(PERSONA_KEY, 'amigo');
+    localStorage.setItem(
+      TRAIL_KEY,
+      JSON.stringify({
+        trails: { amigo: { step: 4, done: ['sobre'], finished: true } },
+        secrets: ['fortune', 'matrix', 'tema'],
+      }),
+    );
+    renderApp('/');
+
+    const section = screen.getByRole('region', { name: 'Caça aos segredos' });
+
+    expect(section).toHaveTextContent('Você achou 3 de 8 segredos. Ainda dá para achar mais.');
+    expect(section).toHaveTextContent('Trilha concluída');
   });
 });

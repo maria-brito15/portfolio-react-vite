@@ -140,7 +140,7 @@ describe('segredo encontrado (TR-20)', () => {
     expect(toast()).toBeEmptyDOMElement();
   });
 
-  it('as outras personas não recebem aviso nenhum', async () => {
+  it('as outras personas não têm nem a região de aviso, e nada é anunciado', async () => {
     localStorage.setItem(PERSONA_KEY, 'rh');
     renderApp('/');
 
@@ -148,7 +148,8 @@ describe('segredo encontrado (TR-20)', () => {
     await act(async () => {
       await new Promise((resolve) => setTimeout(resolve, 50));
     });
-    expect(toast()).toBeEmptyDOMElement();
+    expect(document.querySelector('.secret-toast-slot')).toBeNull();
+    expect(screen.queryByRole('status')).toBeNull();
   });
 
   it('rodar o comando no terminal desbloqueia e avisa, e o aviso some sozinho', async () => {

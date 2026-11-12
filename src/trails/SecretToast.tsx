@@ -32,6 +32,9 @@ export default function SecretToast() {
     return () => clearTimeout(timer);
   }, [message]);
 
+  // Só a trilha de conquistas tem a região viva; nas outras páginas ela nem existe.
+  if (!on) return null;
+
   return (
     <div className="secret-toast-slot" role="status" aria-live="polite">
       {message && <p className="secret-toast">{message}</p>}

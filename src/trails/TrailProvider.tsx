@@ -137,9 +137,8 @@ export function TrailProvider({ children }: { children: ReactNode }) {
 
       return;
     }
-    // Último passo: concluir.
+    // Último passo: conclui, e o tour segue aberto para mostrar a mensagem final (TR-21).
     update((p) => ({ ...p, finished: true }));
-    setActive(false);
   }, [index, steps.length, update]);
 
   const prev = useCallback(() => {

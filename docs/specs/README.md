@@ -1,6 +1,6 @@
 # Especificações por feature
 
-Cada pasta segue o fluxo PRD → especificação → plano → tarefas → verificação, em arquivos separados. Quatorze features cobrem o site atual; o assistente de IA está implementado e testado sem rede, mas ainda não foi publicado (ver o estado dele).
+Cada pasta segue o fluxo PRD → especificação → plano → tarefas → verificação, em arquivos separados. Quinze features cobrem o site atual; o assistente de IA está implementado e testado sem rede, mas ainda não foi publicado (ver o estado dele).
 
 | Feature | Requisitos | Estado |
 | --- | --- | --- |
@@ -17,6 +17,7 @@ Cada pasta segue o fluxo PRD → especificação → plano → tarefas → verif
 | [GitHub em números](github-stats/status.md) | GH-xx | ✅ 5 · ◐ 0 · ❌ 0 · ❔ 0 |
 | [Workspace: painel, barra lateral, Game Center](workspace/status.md) | WS-xx | ✅ 16 · ◐ 0 · ❌ 0 · ❔ 0 |
 | [Personas (o site se adapta a quem visita)](personas/status.md) | PR-xx | ✅ 14 · ◐ 2 · ❌ 0 · ❔ 0 |
+| [Trilhas por persona (percurso guiado e gamificado)](trilhas/status.md) | TR-xx | ✅ 21 · ◐ 5 · ❌ 1 · ❔ 0 (TR-27: peso acima do teto, decisão pendente) |
 | [Assistente de IA no terminal](assistente-ia/status.md) | IA-xx | ✅ 17 · ◐ 8 · ❌ 0 · ❔ 0 (código pronto; falta chave, deploy e avaliação com o modelo real) |
 
 Spec geral e análise de lacunas originais: `docs/sdd-terminal-v2/`. Estilo de escrita: skill `technical-writing`. Fluxo: skill `spec-driven-development`.

@@ -47,3 +47,10 @@ preciso, baixe `ASK_DAILY_CAP`.
   `limiter`). Fica fora de `netlify/functions/` porque subpastas dali viram funções.
 - `netlify/assistant/context.json`: gerado por `npm run build` e ignorado pelo git; entra na
   função por `included_files` em `netlify.toml`.
+
+## Passo do assistente na trilha do tech
+
+A trilha "Tour do código" só inclui o passo "pergunte" quando o assistente está publicado.
+Ao publicar de verdade (chave e variáveis configuradas, avaliação lida), defina também
+`VITE_ASK_ENABLED=true` nas variáveis da Netlify e faça um novo deploy: é uma variável de
+build, lida por `assistantAvailable()` em `src/data/trails.ts`.

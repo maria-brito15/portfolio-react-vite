@@ -1,4 +1,5 @@
 import { useLanguage } from '../i18n/LanguageContext';
+import { secrets } from '../data/trails';
 import { isCrawler } from '../utils/env';
 import { useTrail } from './TrailProvider';
 import TrailProgress from './TrailProgress';
@@ -6,6 +7,8 @@ import TrailProgress from './TrailProgress';
 // Cartão da trilha na home (docs/specs/trilhas/): o convite para começar, continuar ou
 // refazer a trilha da persona escolhida. Nunca inicia sozinho (TR-07), some com "Agora
 // não" e volta com o comando `trilha` (TR-08). Sem persona, ou para robôs, não aparece.
+const secretIds = secrets.map((s) => s.id);
+
 export default function TrailCard() {
   const { lang, t } = useLanguage();
   const { trail, steps, progress, doneCount, found, start, restart, dismiss } = useTrail();
@@ -23,7 +26,11 @@ export default function TrailCard() {
         {progress.finished && <span className="trail-seal">{text.completed}</span>}
       </div>
 
-      <p className="trail-intro">{trail.intro[lang]}</p>
+      <p className="trail-intro">
+        {progress.finished
+          ? trail.outro(lang, found.filter((id) => secretIds.includes(id)).length, secrets.length)
+          : trail.intro[lang]}
+      </p>
       <TrailProgress trail={trail} done={doneCount} total={steps.length} found={found} />
 
       <div className="trail-actions">
