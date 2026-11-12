@@ -45,6 +45,19 @@ MAN = checagem manual.
 | IA-21 | Aviso de privacidade            | Na primeira pergunta da sessão, o terminal avisa que o texto é enviado a um serviço de IA externo e que não se deve digitar dados pessoais                                                               | P0   | AUT     |
 | IA-22 | Degradação                      | Sem a função (dev sem chave, falha de rede), o comando responde com mensagem fixa; o resto do site e os testes passam sem a chave                                                                        | P0   | AUT     |
 
+## Região e proteção do site (acrescentado em 12/11/2026, depois de T-IA0)
+
+Os termos do nível gratuito da API Gemini só permitem uso de visitantes fora do Espaço
+Econômico Europeu, Reino Unido e Suíça, e o plano gratuito da Netlify para o site inteiro
+quando os créditos mensais acabam. Decisão da Duda: continuar gratuito e bloquear essas
+regiões. Fontes e data da conferência em `operacao.md`.
+
+| ID | Requisito | Critério de aceitação | Pri. | Verif. |
+| --- | --- | --- | --- | --- |
+| IA-23 | Bloqueio por região | A função recusa (`403 { error: 'region' }`, sem chamar o modelo) visitantes do EEA (UE + Islândia, Liechtenstein, Noruega), do Reino Unido (`GB`) e da Suíça (`CH`); país desconhecido em produção também é recusado; o cliente mostra mensagem própria em PT/EN dizendo que o assistente não está disponível na região, e o restante do site segue normal | P0 | AUT |
+| IA-24 | Teto global diário | Além do limite por IP (IA-16), a função aceita no máximo N perguntas por dia no site todo (valor em variável de ambiente, padrão 200); ao atingir, responde como cota esgotada (IA-17). Protege os créditos da Netlify e a cota do Gemini | P0 | AUT |
+| IA-25 | Aviso de dados | O aviso de IA-21 também diz que, no nível gratuito, o provedor pode usar e revisar o texto, e que a pessoa deve ser maior de 18 anos | P0 | AUT |
+
 ## Fora desta spec
 
 - Cache de respostas, busca vetorial, streaming, voz, chat flutuante, registro de

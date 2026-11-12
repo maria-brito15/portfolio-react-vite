@@ -37,6 +37,14 @@ terminal: pergunte "..."
 | D9 | A resposta é texto puro, nunca HTML/Markdown; os únicos links vêm das fontes validadas | Renderizar Markdown | Fecha a porta a injeção na saída |
 | D10 | Endpoint `/api/ask` via `export const config = { path: '/api/ask' }` na função (v2) | `/.netlify/functions/ask` | URL estável e curta |
 
+## Decisões acrescentadas depois de T-IA0 (12/11/2026)
+
+| # | Decisão | Por quê |
+| --- | --- | --- |
+| D11 | Bloqueio por região na função, pelo país que a Netlify informa (`context.geo.country.code`); lista fixa em `lib/region.ts` (UE27, IS, LI, NO, GB, CH). Fora do `netlify dev`, país ausente = recusa | Termos do nível gratuito (IA-23). Falhar fechado evita violar os termos por engano |
+| D12 | Contagem global diária no mesmo armazenamento do limite por IP (uma chave por dia), com teto em `ASK_DAILY_CAP` | Cada chamada gasta créditos da Netlify e o plano gratuito para o **site inteiro** ao esgotá-los (IA-24) |
+| D13 | O Blobs tem consistência eventual (até 60 s) e "última escrita vence": a contagem é aproximada, e isso é aceito. O limite de verdade é a soma do por IP, do global e da cota do Gemini | Documentação do Netlify Blobs, conferida em T-IA0 |
+
 ## Contrato da função
 
 Requisição `POST /api/ask`, JSON: `{ q: string (≤300), lang: 'pt'|'en', persona?: PersonaId, history?: {q, a}[] (≤6) }`.
@@ -44,7 +52,7 @@ Requisição `POST /api/ask`, JSON: `{ q: string (≤300), lang: 'pt'|'en', pers
 Resposta:
 - `200 { answer: string, sources: { id, label, path }[] }`
 - `400 { error: 'invalid' }`
-- `429 { error: 'rate' }` (limite por IP) · `503 { error: 'quota' }` (cota do provedor) · `502 { error: 'down' }`
+- `403 { error: 'region' }` (EEA, Reino Unido, Suíça) · `429 { error: 'rate' }` (limite por IP) · `503 { error: 'quota' }` (cota do provedor ou teto global) · `502 { error: 'down' }`
 
 O cliente traduz cada `error` para uma mensagem PT/EN de `ui.ts` (IA-03); falha de rede vira `offline`, 404 em desenvolvimento vira `down` (IA-22).
 
