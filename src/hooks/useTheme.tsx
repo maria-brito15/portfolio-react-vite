@@ -1,6 +1,15 @@
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react';
 import type { Theme } from '../types';
 import { DEFAULT_THEME, isTheme } from '../data/themes';
+import { emitTrailEvent } from '../trails/events';
 
 const STORAGE_KEY = 'portfolio-theme';
 // [tema atual, alternar claro/escuro, escolher um tema pelo id]
@@ -21,9 +30,13 @@ function readInitialTheme(): Theme {
 // cabeçalho e o comando `tema` do terminal.
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<Theme>(readInitialTheme);
+  const previous = useRef(theme);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
+    // Troca de tema (não a carga inicial) conta como segredo achado nas trilhas.
+    if (previous.current !== theme) emitTrailEvent({ type: 'theme' });
+    previous.current = theme;
     try {
       localStorage.setItem(STORAGE_KEY, theme);
     } catch {

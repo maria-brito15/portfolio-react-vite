@@ -5,10 +5,12 @@ import { useTheme } from '../hooks/useTheme';
 import { TERMINAL_PATH, normalizePath, routes } from '../data/routes';
 import { prefersReducedMotion } from '../utils/env';
 import { usePersona } from '../hooks/usePersona';
+import { emitTrailEvent } from '../trails/events';
 import {
   contextAfter,
   contextOfHistory,
   findCommand,
+  parse,
   runCommand,
   type CommandContext,
   type NavContext,
@@ -229,6 +231,11 @@ export function TerminalProvider({ children }: { children: ReactNode }) {
       // Qualquer comando dispensa a pergunta de persona (responder já a encerrou).
       if (!asked) skip();
       setContext(contextAfter(input, context));
+
+      // As trilhas ouvem os comandos (passos "fazer" e segredos); o replay não conta.
+      const ran = findCommand(parse(input).name);
+
+      if (ran) emitTrailEvent({ type: 'command', name: ran.names[0] });
       setEntry(next);
       if (next?.redirect) {
         const { to } = next.redirect;
