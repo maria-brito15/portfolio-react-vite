@@ -1,6 +1,8 @@
 import { Link } from '../../router';
 import { useLanguage } from '../../i18n/LanguageContext';
 import { routeById } from '../../data/routes';
+import { byPersona, isPick } from '../../data/personas';
+import { usePersona } from '../../hooks/usePersona';
 import { GROUP_TONE, ROUTE_GLYPH } from '../../data/tones';
 import SectionTitle from '../ui/SectionTitle';
 
@@ -19,7 +21,13 @@ const QUICK = [
 
 export default function QuickAccess() {
   const { lang, t } = useLanguage();
-  const items = QUICK.map((id) => routeById(id)).filter((r) => r && !r.draft);
+  const { persona } = usePersona();
+  // A lente da persona reordena e marca os atalhos dela; nenhum atalho some.
+  const items = byPersona(
+    QUICK.map((id) => routeById(id)).filter((r) => r && !r.draft),
+    persona,
+    (r) => r?.id ?? '',
+  );
 
   return (
     <section className="dash-section" aria-labelledby="quick-title">
@@ -35,11 +43,13 @@ export default function QuickAccess() {
                   to={r.path}
                   className="quick-tile"
                   data-tone={r.group ? GROUP_TONE[r.group] : undefined}
+                  data-pick={isPick(persona, r.id) || undefined}
                 >
                   <span className="quick-icon" aria-hidden="true">
                     {ROUTE_GLYPH[r.id]}
                   </span>
                   <strong>{r.label[lang]}</strong>
+                  {isPick(persona, r.id) && <span className="sr-only">{t.persona.highlight}</span>}
                   <span className="t-dim">{r.desc?.[lang]}</span>
                 </Link>
               </li>
