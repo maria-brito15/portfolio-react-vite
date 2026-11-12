@@ -13,4 +13,4 @@ playwright-report
 e2e/shots
 
 # Contexto do assistente, gerado no build (scripts/assistantContext.ts)
-netlify/functions/ask/context.json
+netlify/assistant/context.json

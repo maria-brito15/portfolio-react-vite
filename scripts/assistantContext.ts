@@ -2,7 +2,7 @@
 // (`src/data/*`) e os converte em texto por seção, nos dois idiomas. Nada sobre a
 // Duda é escrito aqui: o que não está nos dados não chega ao modelo, e o que entra
 // nos dados passa a valer sozinho. O build grava o resultado em
-// `netlify/functions/ask/context.json`, que a função empacota (arquivo ignorado
+// `netlify/assistant/context.json`, que a função empacota (arquivo ignorado
 // pelo git).
 //
 // Cada seção tem um `id` e o caminho da página de onde veio; é o `id` que o modelo
@@ -192,7 +192,7 @@ export function assertContextFits(context: AssistantContext) {
   }
 }
 
-export const CONTEXT_FILE = 'netlify/functions/ask/context.json';
+export const CONTEXT_FILE = 'netlify/assistant/context.json';
 
 export function assistantContextPlugin(): Plugin {
   let root = process.cwd();
