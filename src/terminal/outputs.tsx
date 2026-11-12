@@ -4,7 +4,7 @@
 import { createContext, useContext, type ReactNode } from 'react';
 import { Link, useRouter, type LinkProps } from '../router';
 import { useLanguage } from '../i18n/LanguageContext';
-import { normalizePath, routeById, terminalUrl, type Route } from '../data/routes';
+import { TERMINAL_PATH, normalizePath, routeById, terminalUrl, type Route } from '../data/routes';
 import { sectionCommand, targetPath, type Section } from '../data/sections';
 import ViewActions from '../components/shell/ViewActions';
 import { useTerminalSession, type RedirectState } from './sessionContext';
@@ -49,17 +49,17 @@ export function TermLink({ to, onClick, ...rest }: LinkProps) {
 }
 
 // `[ ver no terminal ]  [ abrir página própria ↗ ]` no fim da saída de um
-// comando que tem página dedicada. Na home, "ver no terminal" é a visão atual;
-// em outra página ele leva à home com o comando já executado (/?cmd=…).
+// comando que tem página dedicada. No terminal, "ver no terminal" é a visão atual;
+// em outra página ele leva ao terminal com o comando já executado (/terminal?cmd=…).
 export function ActionLine({ routeId, section }: { routeId: string; section?: Section }) {
   const route = routeById(routeId) as Route;
   const { path } = useRouter();
   const session = useTerminalSession();
   const entryId = useContext(EntryContext);
-  const onHome = normalizePath(path) === '/';
+  const onHome = normalizePath(path) === TERMINAL_PATH;
 
   const terminal = onHome
-    ? { onClick: () => document.getElementById('inicio')?.scrollIntoView({ behavior: 'smooth' }) }
+    ? { onClick: () => document.getElementById('terminal')?.scrollIntoView({ behavior: 'smooth' }) }
     : { to: terminalUrl(route, sectionCommand(route, section)) };
   const page = { onClick: () => session.openPage(targetPath(route, section), entryId) };
 

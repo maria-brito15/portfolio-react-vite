@@ -1,10 +1,14 @@
 // Números do GitHub (src/services/github.ts) com carregando, erro e "tentar de
-// novo". `compact` é a versão do terminal (comando `stats`); sem ele, é o
-// painel da página Sobre. Mesmos dados e mesmos estados nos dois.
+// novo". `compact` é a versão do terminal (comando `stats`); `summary` é o
+// resumo do painel inicial (números, linguagens e link para a página do
+// GitHub); sem nenhum dos dois, é o painel completo (Sobre e /github). Mesmos
+// dados e mesmos estados nos três.
 import { useLanguage } from '../i18n/LanguageContext';
 import { useGithubStats } from '../hooks/useGithubStats';
+import { Link } from '../router';
 import { GITHUB_USER, type GithubStats as Data } from '../services/github';
 import { profile } from '../data/profile';
+import { routeById } from '../data/routes';
 import Card from './ui/Card';
 import SectionTitle from './ui/SectionTitle';
 
@@ -47,7 +51,7 @@ function Languages({ data, g }: { data: Data; g: Text }) {
   );
 }
 
-function Body({ compact }: { compact: boolean }) {
+function Body({ compact, summary }: { compact: boolean; summary: boolean }) {
   const { lang, t } = useLanguage();
   const g = t.github;
   const { state, retry } = useGithubStats();
@@ -99,6 +103,24 @@ function Body({ compact }: { compact: boolean }) {
       </dl>
     );
 
+  if (summary)
+    return (
+      <>
+        <ul className="gh-metrics">
+          {metrics(data, g, locale).map(([value, label]) => (
+            <li key={label}>
+              <strong>{value}</strong>
+              <span>{label}</span>
+            </li>
+          ))}
+        </ul>
+        <p className="gh-meta">
+          {data.languages.length > 0 && `${data.languages.map((l) => l.name).join(' · ')} — `}
+          {g.lastPush} {lastPush}
+        </p>
+      </>
+    );
+
   return (
     <>
       <ul className="gh-metrics">
@@ -117,18 +139,39 @@ function Body({ compact }: { compact: boolean }) {
   );
 }
 
-export default function GithubStats({ compact = false }: { compact?: boolean }) {
+export default function GithubStats({
+  compact = false,
+  summary = false,
+}: {
+  compact?: boolean;
+  summary?: boolean;
+}) {
   const { t } = useLanguage();
   const g = t.github;
 
   if (compact)
     return (
       <div>
-        <Body compact />
+        <Body compact summary={false} />
         <p className="t-dim">
           {g.source} · @{GITHUB_USER}
         </p>
       </div>
+    );
+
+  if (summary)
+    return (
+      <section className="gh-section gh-summary" aria-labelledby="github-title">
+        <SectionTitle as="h2" id="github-title" label={g.label} size="md">
+          {g.title}
+        </SectionTitle>
+        <Card className="gh-card">
+          <Body compact={false} summary />
+        </Card>
+        <p className="gh-source">
+          <Link to={routeById('github')?.path ?? '/github'}>{t.ws.home.githubMore}</Link>
+        </p>
+      </section>
     );
 
   return (
@@ -137,7 +180,7 @@ export default function GithubStats({ compact = false }: { compact?: boolean }) 
         {g.title}
       </SectionTitle>
       <Card className="gh-card" aria-busy={false}>
-        <Body compact={false} />
+        <Body compact={false} summary={false} />
       </Card>
       <p className="gh-source">
         {g.source} ·{' '}

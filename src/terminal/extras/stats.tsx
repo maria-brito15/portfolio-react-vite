@@ -25,6 +25,7 @@ export function statsRows(info: BuildInfo, lang: Lang): [string, string][] {
 
 export const stats: Command = {
   names: ['stats', 'stats'],
+  aliases: ['github', 'gh'],
   desc: L(
     'dados reais: GitHub, commits, versão e build do site',
     'real data: GitHub, site commits, version, build',

@@ -11,6 +11,13 @@ export interface LevelConfig {
   mines: number;
 }
 
+// Nome de cada nível (usado pelo tabuleiro, pelo Game Center e pelo painel inicial).
+export const LEVEL_NAMES: Record<Level, { pt: string; en: string }> = {
+  easy: { pt: 'fácil', en: 'easy' },
+  medium: { pt: 'médio', en: 'medium' },
+  hard: { pt: 'difícil', en: 'hard' },
+};
+
 // Níveis clássicos: 9×9 com 10 minas, 16×16 com 40, 30×16 com 99.
 export const LEVELS: Record<Level, LevelConfig> = {
   easy: { rows: 9, cols: 9, mines: 10 },

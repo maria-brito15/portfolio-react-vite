@@ -814,7 +814,7 @@
   font-size: 1rem;
   color: var(--text);
   background: var(--bg);
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-ui);
   border-radius: 8px;
   padding: 0.75rem 0.9rem;
   resize: vertical;
@@ -826,14 +826,11 @@
   outline-offset: 1px;
 }
 .form-field [aria-invalid='true'] {
-  border-color: #e5484d;
+  border-color: var(--err);
 }
 .form-error {
-  color: #e5484d;
+  color: var(--err);
   font-size: 0.8rem;
-}
-[data-theme='light'] .form-error {
-  color: #c4242b;
 }
 .contact-form .btn {
   justify-self: start;

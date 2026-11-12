@@ -13,7 +13,7 @@
 | SE-09 | Idioma | ✅ | `src/i18n/LanguageContext.tsx` (`lang`); hreflang descartado por decisão |
 | SE-10 | Hierarquia de títulos | ✅ | `src/App.test.tsx`, `src/sections/portfolio/Projects.test.tsx`; Lighthouse acessibilidade 100 |
 | SE-11 | Desempenho | ◐ | JS da home 151 → 109 kB gzip; Lighthouse local (mobile, sem compressão) conferido; medir de novo em produção |
-| SE-12 | Sem intersticial para robôs | ✅ | `src/components/MobileNoticeModal.test.tsx` — "não aparece para robôs de busca" |
+| SE-12 | Sem intersticial para robôs | ✅ | O aviso mobile foi removido (12/11/2026): não há mais intersticial para ninguém; `isCrawler` segue só no boot (`Boot.test.tsx`) |
 
 Resumo: ✅ 10 · ◐ 2 · ❌ 0 · ❔ 0
 

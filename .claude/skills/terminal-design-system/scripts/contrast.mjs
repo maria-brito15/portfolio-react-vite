@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Contraste WCAG AA dos tokens de src/styles/tokens.css (escuro e claro).
+// Contraste WCAG AA dos tokens de src/styles/tokens.css (os cinco temas).
 // Uso: node contrast.mjs [caminho/tokens.css]   → sai com 1 se algum par reprovar.
 import { readFileSync } from 'node:fs';
 
@@ -13,7 +13,11 @@ function block(re) {
   return vars;
 }
 const dark = block(/:root\s*\{([\s\S]*?)\n\}/);
-const light = { ...dark, ...block(/\[data-theme='light'\]\s*\{([\s\S]*?)\n\}/) };
+const extra = (id) => ({
+  ...dark,
+  ...block(new RegExp(String.raw`\[data-theme='${id}'\]\s*\{([\s\S]*?)\n\}`)),
+});
+const light = extra('light');
 
 const lum = (hex) => {
   let h = hex.slice(1);
@@ -34,9 +38,12 @@ const pairs = [
   ['text', 'surface-2', 4.5], ['dim', 'surface-2', 4.5], ['accent', 'surface-2', 4.5],
   ['ok', 'surface-2', 4.5], ['warn', 'surface-2', 4.5], ['err', 'surface-2', 4.5],
   ['text', 'bg', 4.5], ['on-accent', 'accent', 4.5],
+  // contorno de campo/seletor (WCAG 1.4.11, não-texto essencial): 3:1
+  ['border-ui', 'bg', 3], ['border-ui', 'surface', 3], ['border-ui', 'surface-2', 3], ['border-ui', 'surface-3', 3],
+  ['err', 'bg', 4.5],
 ];
 let fail = 0;
-for (const [name, theme] of [['escuro', dark], ['claro', light]]) {
+for (const [name, theme] of [['escuro', dark], ['claro', light], ['dracula', extra('dracula')], ['solarized', extra('solarized')], ['âmbar', extra('amber')]]) {
   console.log(`\n# tema ${name}`);
   for (const [fg, bg, min] of pairs) {
     if (!theme[fg] || !theme[bg]) { console.log(`  ?  --${fg} / --${bg}: token ausente`); continue; }

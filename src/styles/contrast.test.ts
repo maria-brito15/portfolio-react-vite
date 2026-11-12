@@ -106,6 +106,31 @@ describe('contraste AA dos tokens (ES-05)', () => {
     expect(ratio(theme['on-accent'], theme.accent)).toBeGreaterThanOrEqual(4.5);
   });
 
+  it.each(themes)(
+    'tema %s: --border-ui (contorno de campos) tem ≥ 3:1 em bg e nas três superfícies (WCAG 1.4.11)',
+    (_, theme) => {
+      for (const surface of ['bg', ...SURFACES]) {
+        const value = ratio(theme['border-ui'], theme[surface]);
+
+        expect(
+          value,
+          `--border-ui sobre --${surface}: ${value.toFixed(2)}:1`,
+        ).toBeGreaterThanOrEqual(3);
+      }
+    },
+  );
+
+  it('campos e mensagem de erro do formulário usam tokens, não cores fixas', () => {
+    const sections = readFileSync(join(process.cwd(), 'src/styles/sections.css'), 'utf8');
+    const form = sections.slice(
+      sections.indexOf('.form-field {'),
+      sections.indexOf('.contact-form .btn'),
+    );
+
+    expect(form).not.toMatch(/#[0-9a-f]{3,6}(?![0-9a-z])/i);
+    expect(form).toContain('var(--border-ui)');
+  });
+
   it('a impressão usa os mesmos tokens do tema claro (ES-09)', () => {
     const print = tokens(/@media print\s*\{\s*:root,\s*\[data-theme\]\s*\{([\s\S]*?)\n {2}\}/);
 

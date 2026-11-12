@@ -1,16 +1,55 @@
 import { screen, within, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderApp } from './test/helpers';
+import { findPageByPath } from './data/routes';
 
 describe('página inicial', () => {
-  it('é só o terminal: sem bloco de marketing rolável abaixo da janela', () => {
+  it('é o painel: apresentação, acesso rápido, projetos, GitHub e interativo, sem janela', () => {
     renderApp('/');
+
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Duda Brito');
+    for (const name of ['Acesso rápido', 'Projetos em destaque', 'GitHub em números', 'Interativo'])
+      expect(screen.getByRole('heading', { level: 2, name })).toBeInTheDocument();
+    expect(document.querySelectorAll('.win')).toHaveLength(0);
+    expect(screen.queryByRole('textbox', { name: /Linha de comando do terminal/ })).toBeNull();
+  });
+
+  it('o acesso rápido leva a destinos reais, e o terminal tem página própria', async () => {
+    const user = userEvent.setup();
+
+    renderApp('/');
+
+    const quick = screen
+      .getByRole('heading', { level: 2, name: 'Acesso rápido' })
+      .closest('section')!;
+
+    for (const link of within(quick).getAllByRole('link'))
+      expect(findPageByPath(link.getAttribute('href')!), link.textContent ?? '').toBeDefined();
+
+    await user.click(within(quick).getByRole('link', { name: /Terminal/ }));
+    expect(window.location.pathname).toBe('/terminal');
+    expect(
+      screen.getByRole('textbox', { name: /Linha de comando do terminal/ }),
+    ).toBeInTheDocument();
+  });
+
+  it('o terminal é uma janela com a documentação dos comandos logo abaixo', () => {
+    renderApp();
 
     const ids = [...document.querySelectorAll('main section[id]')].map((s) => s.id);
 
-    expect(ids).toEqual(['inicio']);
+    expect(ids).toEqual(['terminal']);
     expect(document.querySelectorAll('.win')).toHaveLength(1);
-    expect(document.querySelector<HTMLElement>('main')!.nextElementSibling!.tagName).toBe('FOOTER');
+    expect(
+      screen.getByRole('heading', { level: 2, name: 'Referência de comandos' }),
+    ).toBeInTheDocument();
+  });
+
+  it('os endereços antigos /?cmd=… continuam valendo: levam ao terminal com o comando rodado', async () => {
+    renderApp('/?cmd=curriculo');
+    await waitFor(() => expect(window.location.pathname).toBe('/terminal'));
+    expect(window.location.search).toBe('');
+    expect(await screen.findByRole('button', { name: /abrir página própria/ })).toBeInTheDocument();
   });
 
   it('cada página tem ids únicos', () => {
@@ -53,15 +92,15 @@ describe('página inicial', () => {
   it('alterna o tema e persiste no localStorage', async () => {
     const user = userEvent.setup();
 
-    renderApp('/');
-    await user.click(screen.getByRole('button', { name: 'Modo claro' }));
+    renderApp();
+    await user.selectOptions(screen.getByRole('combobox', { name: 'Tema' }), 'light');
     expect(document.documentElement.getAttribute('data-theme')).toBe('light');
     expect(localStorage.getItem('portfolio-theme')).toBe('light');
-    expect(screen.getByRole('button', { name: 'Modo escuro' })).toBeInTheDocument();
+    expect(screen.getByRole('combobox', { name: 'Tema' })).toHaveValue('light');
   });
 
-  it('o header não tem menu de links nem menu recolhível', () => {
-    renderApp('/');
+  it('o header só tem o logo como link; a navegação mora na barra lateral', () => {
+    renderApp();
 
     const header = document.querySelector<HTMLElement>('header.site-nav')!;
 
@@ -70,7 +109,7 @@ describe('página inicial', () => {
         .queryAllByRole('link')
         .map((a) => a.getAttribute('href')),
     ).toEqual(['/']);
-    expect(within(header).queryByRole('button', { name: /menu/i })).toBeNull();
+    expect(screen.getByRole('navigation', { name: 'Navegação principal' })).toBeInTheDocument();
   });
 });
 

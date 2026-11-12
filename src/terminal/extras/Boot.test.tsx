@@ -46,7 +46,7 @@ describe('linhas do boot (TB-06)', () => {
 describe('boot na primeira visita (TB-06)', () => {
   it('anima uma linha por vez, sai sozinho e grava a marca', () => {
     vi.useFakeTimers();
-    renderApp('/');
+    renderApp();
     expect(boot()).toBeInTheDocument();
     expect(localStorage.getItem(BOOT_KEY)).toBe('1');
     expect(boot()!.querySelectorAll('p')).toHaveLength(1); // só a dica
@@ -70,18 +70,18 @@ describe('boot na primeira visita (TB-06)', () => {
   });
 
   it('não repete na visita seguinte', () => {
-    const first = renderApp('/');
+    const first = renderApp();
 
     expect(boot()).toBeInTheDocument();
     first.unmount();
-    renderApp('/');
+    renderApp();
     expect(boot()).toBeNull();
   });
 
   it('qualquer tecla pula, e a tecla continua indo ao campo de comando', async () => {
     const user = userEvent.setup();
 
-    renderApp('/');
+    renderApp();
     expect(boot()).toBeInTheDocument();
     await user.type(input(), 'a');
     expect(input()).toHaveValue('a');
@@ -93,7 +93,7 @@ describe('boot na primeira visita (TB-06)', () => {
   it('o primeiro comando encerra o boot, e limpar não o traz de volta', async () => {
     const user = userEvent.setup();
 
-    renderApp('/');
+    renderApp();
     await user.type(input(), 'sobre{Enter}');
     expect(boot()).toBeNull();
     await user.type(input(), 'limpar{Enter}');
@@ -102,7 +102,7 @@ describe('boot na primeira visita (TB-06)', () => {
 
   it('não roda com histórico da sessão, nem para robôs de busca', () => {
     sessionStorage.setItem('portfolio-terminal', JSON.stringify(['ajuda']));
-    renderApp('/');
+    renderApp();
     expect(boot()).toBeNull();
 
     const ua = Object.getOwnPropertyDescriptor(window.navigator, 'userAgent');
@@ -125,7 +125,7 @@ describe('movimento reduzido (TB-07)', () => {
   it('mostra as linhas de uma vez, sem temporizador de animação', () => {
     setReducedMotion(true);
     vi.useFakeTimers();
-    renderApp('/');
+    renderApp();
     expect(boot()!.querySelectorAll('p')).toHaveLength(bootLines('pt').length);
     // sem temporizador de animação: nada sai da tela sozinho; só uma ação do visitante
     act(() => {
@@ -141,7 +141,7 @@ describe('comando boot (TB-08)', () => {
     const user = userEvent.setup();
 
     localStorage.setItem(BOOT_KEY, '1');
-    renderApp('/');
+    renderApp();
     await user.type(input(), 'boot{Enter}');
     expect(log().querySelector('.t-boot')).toBeInTheDocument();
     await user.type(input(), 'ajuda{Enter}');
@@ -151,7 +151,7 @@ describe('comando boot (TB-08)', () => {
   it('no replay do histórico mostra a sequência completa, sem animar', () => {
     sessionStorage.setItem('portfolio-terminal', JSON.stringify(['boot']));
     localStorage.setItem(BOOT_KEY, '1');
-    renderApp('/');
+    renderApp();
     expect(log().querySelectorAll('.t-boot p')).toHaveLength(bootLines('pt').length);
   });
 

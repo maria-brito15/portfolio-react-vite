@@ -74,6 +74,7 @@
   --surface-2: #161920; /* barra de título e sub-painéis */
   --surface-3: #1d2029; /* trilhas, realces */
   --border: rgba(255, 255, 255, 0.1);
+  --border-ui: #6a6d72; /* contorno de campo e seletor: ≥ 3:1 (WCAG 1.4.11) */
   --text: #dfe3ea;
   --text-2: #b4bac6;
   --dim: #8a919f;
@@ -96,6 +97,7 @@
   --surface-2: #eceef2;
   --surface-3: #e2e5ea;
   --border: rgba(20, 22, 26, 0.14);
+  --border-ui: #7d8085; /* contorno de campo e seletor: ≥ 3:1 (WCAG 1.4.11) */
   --text: #1d2128;
   --text-2: #3f454f;
   --dim: #5d636e;
@@ -118,6 +120,7 @@
   --surface-2: #343746;
   --surface-3: #3e4254;
   --border: rgba(248, 248, 242, 0.12);
+  --border-ui: #8f9092; /* contorno de campo e seletor: ≥ 3:1 (WCAG 1.4.11) */
   --text: #f8f8f2;
   --text-2: #d6d8e0;
   --dim: #aab2d5;
@@ -136,6 +139,7 @@
   --surface-2: #073642;
   --surface-3: #0d4452;
   --border: rgba(238, 232, 213, 0.14);
+  --border-ui: #838e89; /* contorno de campo e seletor: ≥ 3:1 (WCAG 1.4.11) */
   --text: #eee8d5;
   --text-2: #cdd0c4;
   --dim: #9fb0b0;
@@ -155,6 +159,7 @@
   --surface-2: #1a1204;
   --surface-3: #251a07;
   --border: rgba(255, 194, 51, 0.18);
+  --border-ui: #85651a; /* contorno de campo e seletor: ≥ 3:1 (WCAG 1.4.11) */
   --text: #ffc233;
   --text-2: #e8a90f;
   --dim: #bf8a1a;

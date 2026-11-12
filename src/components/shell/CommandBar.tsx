@@ -9,7 +9,7 @@ import { useRouter } from '../../router';
 import { SHOW_OUTPUT } from './commandBarEvents';
 import { useLanguage } from '../../i18n/LanguageContext';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
-import { normalizePath } from '../../data/routes';
+import { TERMINAL_PATH, normalizePath } from '../../data/routes';
 import CommandInput from '../../terminal/CommandInput';
 import TerminalOutput from '../../terminal/TerminalOutput';
 import { useTerminalSession } from '../../terminal/sessionContext';
@@ -23,8 +23,8 @@ const isFormField = (el: EventTarget | null) =>
 
 // Barra de comandos fixa, logo abaixo do Header, em todas as páginas: um
 // mini-terminal de uma linha que usa a mesma sessão do terminal da home.
-// Fora da home, a saída aparece num painel suspenso; na home ela vai para o
-// terminal. Em tela estreita a barra vira o botão `>_`, que a abre em tela cheia.
+// Fora do terminal, a saída aparece num painel suspenso; no terminal ela vai para o
+// terminal da página. Em tela estreita a barra vira o botão `>_`, que a abre em tela cheia.
 export default function CommandBar() {
   const { t } = useLanguage();
   const { path, hash, search } = useRouter();
@@ -35,7 +35,7 @@ export default function CommandBar() {
   const [open, setOpen] = useState(false); // tela cheia (só em tela estreita)
   const [panel, setPanel] = useState(false); // painel de saída
 
-  const onHome = normalizePath(path) === '/';
+  const onTerminal = normalizePath(path) === TERMINAL_PATH;
   const overlay = narrow && open;
 
   // Ao trocar de página ou âncora, fecha painel e tela cheia.
@@ -70,21 +70,21 @@ export default function CommandBar() {
   }, [narrow]);
 
   function afterSubmit() {
-    if (!onHome || narrow) setPanel(true);
-    else document.getElementById('inicio')?.scrollIntoView({ behavior: 'smooth' });
+    if (!onTerminal || narrow) setPanel(true);
+    else document.getElementById('terminal')?.scrollIntoView({ behavior: 'smooth' });
   }
 
   // A paleta de comandos roda o comando na sessão e pede para mostrar a saída.
   useEffect(() => {
     const onShowOutput = () => {
-      if (!onHome || narrow) setPanel(true);
-      else document.getElementById('inicio')?.scrollIntoView({ behavior: 'smooth' });
+      if (!onTerminal || narrow) setPanel(true);
+      else document.getElementById('terminal')?.scrollIntoView({ behavior: 'smooth' });
     };
 
     window.addEventListener(SHOW_OUTPUT, onShowOutput);
 
     return () => window.removeEventListener(SHOW_OUTPUT, onShowOutput);
-  }, [onHome, narrow]);
+  }, [onTerminal, narrow]);
 
   function onKeyDown(event: ReactKeyboardEvent) {
     if (event.key !== 'Escape') return;
@@ -93,7 +93,7 @@ export default function CommandBar() {
     else inputRef.current?.blur();
   }
 
-  const showPanel = panel && entry && (!onHome || narrow);
+  const showPanel = panel && entry && (!onTerminal || narrow);
 
   return (
     // O onKeyDown só trata Esc, vindo dos controles filhos.

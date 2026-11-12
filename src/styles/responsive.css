@@ -145,6 +145,54 @@
   }
 }
 
+/* Alvos de toque dos controles compartilhados: 40 px de altura (o header, a barra lateral
+   e o breadcrumb usam 44 px, em workspace.css). Sem exceção por rota: vale para o
+   componente onde quer que ele apareça. Links dentro de frase continuam isentos. */
+@media (pointer: coarse), (max-width: 720px) {
+  .btn,
+  .btn-o,
+  .run-btn,
+  .term-quick button,
+  .xp-more,
+  .sk-all summary,
+  .doc-entry-head a,
+  .dash-head a,
+  .featured-links a,
+  .interactive-grid .card > a,
+  .data-table td a,
+  .repo-card a,
+  .gh-source a,
+  .doc-toc a,
+  .shell p > a:only-child,
+  .img-wrap {
+    box-sizing: border-box;
+    min-height: 2.5rem;
+  }
+  .btn,
+  .btn-o,
+  .run-btn,
+  .term-quick button,
+  .xp-more,
+  .sk-all summary,
+  .doc-entry-head a,
+  .dash-head a,
+  .featured-links a,
+  .interactive-grid .card > a,
+  .data-table td a,
+  .repo-card a,
+  .gh-source a,
+  .shell p > a:only-child {
+    display: inline-flex;
+    align-items: center;
+  }
+  .featured-links {
+    gap: 0 var(--space-4);
+  }
+  .term-input {
+    min-height: 2.5rem;
+  }
+}
+
 /* Texto nunca abaixo de 11 px (rótulos decorativos e números de seção). */
 span.doc-num,
 .case-tech-label,

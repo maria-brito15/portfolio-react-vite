@@ -1,6 +1,6 @@
 # Especificações por feature
 
-Cada pasta segue o fluxo PRD → especificação → plano → tarefas → verificação, em arquivos separados. Onze features cobrem o site atual.
+Cada pasta segue o fluxo PRD → especificação → plano → tarefas → verificação, em arquivos separados. Doze features cobrem o site atual.
 
 | Feature | Requisitos | Estado |
 | --- | --- | --- |
@@ -11,9 +11,10 @@ Cada pasta segue o fluxo PRD → especificação → plano → tarefas → verif
 | [Descoberta das seções pelo terminal](descoberta-secoes/status.md) | DS-xx | ✅ 12 · ◐ 0 · ❌ 0 · ❔ 0 |
 | [Dados, ordem e competências](dados-e-ordem/status.md) | DT-xx | ✅ 4 · ◐ 0 · ❌ 0 · ❔ 0 |
 | [Qualidade e requisitos não funcionais](qualidade-nao-funcionais/status.md) | NF-xx | ✅ 4 · ◐ 0 · ❌ 0 · ❔ 0 |
-| [Aviso de visualização em celular](aviso-mobile/status.md) | MB-xx | ✅ 9 · ◐ 0 · ❌ 0 · ❔ 0 |
+| [Aviso de visualização em celular](aviso-mobile/status.md) | MB-xx | ⛔ removido em 12/11/2026 (o site é feito para celular) |
 | [SEO e descoberta em buscadores](seo/status.md) | SE-xx | ✅ 10 · ◐ 2 · ❌ 0 · ❔ 0 |
 | [Experiência interativa e originalidade](experiencia-interativa/status.md) | PE/TB/JG/JA/CE-xx | ✅ 40 · ◐ 2 · ❌ 1 · ❔ 0 |
 | [GitHub em números](github-stats/status.md) | GH-xx | ✅ 5 · ◐ 0 · ❌ 0 · ❔ 0 |
+| [Workspace: painel, barra lateral, Game Center](workspace/status.md) | WS-xx | ✅ 16 · ◐ 0 · ❌ 0 · ❔ 0 |
 
 Spec geral e análise de lacunas originais: `docs/sdd-terminal-v2/`. Estilo de escrita: skill `technical-writing`. Fluxo: skill `spec-driven-development`.

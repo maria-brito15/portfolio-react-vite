@@ -53,8 +53,8 @@ describe('tabela de rotas', () => {
     expect(windowPath(routeById('home'), 'pt')).toBe('~');
   });
 
-  it('"ver no terminal" aponta para a home com o comando da página', () => {
-    expect(terminalUrl(routeById('academico')!)).toBe('/?cmd=academico');
-    expect(terminalUrl(routeById('whatsapp-dispatcher')!)).toBe('/?cmd=projetos');
+  it('"ver no terminal" aponta para o terminal com o comando da página', () => {
+    expect(terminalUrl(routeById('academico')!)).toBe('/terminal?cmd=academico');
+    expect(terminalUrl(routeById('whatsapp-dispatcher')!)).toBe('/terminal?cmd=projetos');
   });
 });

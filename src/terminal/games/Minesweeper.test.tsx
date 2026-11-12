@@ -163,7 +163,7 @@ describe('mouse, toque e teclado (JG-06)', () => {
   it('Esc sai do jogo e devolve o foco para a linha de comando', async () => {
     const user = userEvent.setup();
 
-    renderApp('/');
+    renderApp();
     await run(user, 'minas');
     expect(await screen.findByRole('group', { name: 'Campo minado' })).toBeInTheDocument();
     await user.keyboard('{Escape}');
@@ -234,7 +234,7 @@ describe('comandos (JG-01, JG-04, JG-09)', () => {
   it('jogos lista os três níveis e entra na ajuda junto com minas', async () => {
     const user = userEvent.setup();
 
-    renderApp('/');
+    renderApp();
     await run(user, 'jogos');
 
     const options = [...log().querySelectorAll('.t-index-list li')].map((li) => li.textContent);
@@ -255,7 +255,7 @@ describe('comandos (JG-01, JG-04, JG-09)', () => {
   it('minas abre o tabuleiro sob demanda, no nível pedido, em PT e EN', async () => {
     const user = userEvent.setup();
 
-    renderApp('/');
+    renderApp();
     await run(user, 'minas medio');
     expect(await screen.findByRole('group', { name: 'Campo minado' })).toBeInTheDocument();
     expect(cells()).toHaveLength(256);
@@ -270,7 +270,7 @@ describe('comandos (JG-01, JG-04, JG-09)', () => {
   it('nível inválido ensina as opções em vez de quebrar', async () => {
     const user = userEvent.setup();
 
-    renderApp('/');
+    renderApp();
     await run(user, 'minas gigante');
     expect(log()).toHaveTextContent('minas: gigante: nível desconhecido');
     expect(within(log()).getByRole('button', { name: /minas dificil/ })).toBeInTheDocument();
@@ -281,7 +281,7 @@ describe('comandos (JG-01, JG-04, JG-09)', () => {
   it('trocar de idioma redesenha o tabuleiro sem perder a partida', async () => {
     const user = userEvent.setup();
 
-    renderApp('/');
+    renderApp();
     await run(user, 'minas');
     await screen.findByRole('group', { name: 'Campo minado' });
     await user.click(cell(5, 5));
@@ -298,7 +298,7 @@ describe('comandos (JG-01, JG-04, JG-09)', () => {
   it('sair volta ao prompt; no replay do histórico nunca reabre uma partida', async () => {
     const user = userEvent.setup();
 
-    renderApp('/');
+    renderApp();
     await run(user, 'minas');
     await screen.findByRole('group', { name: 'Campo minado' });
     await run(user, 'sair');
@@ -308,7 +308,7 @@ describe('comandos (JG-01, JG-04, JG-09)', () => {
 
   it('o replay do histórico mostra só "partida encerrada"', () => {
     sessionStorage.setItem('portfolio-terminal', JSON.stringify(['minas']));
-    renderApp('/');
+    renderApp();
     expect(document.querySelectorAll('.ms-cell')).toHaveLength(0);
     expect(log()).toHaveTextContent('partida encerrada');
   });

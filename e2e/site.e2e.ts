@@ -19,11 +19,10 @@ const THEMES = ['dark', 'light'] as const;
 const SHOTS = process.env.SHOTS === '1';
 
 async function prepare(page: Page, theme: string) {
-  // Sem boot da primeira visita, sem aviso de celular, e GitHub com dados fixos.
+  // Sem boot da primeira visita, e GitHub com dados fixos.
   await page.addInitScript((t) => {
     localStorage.setItem('portfolio-booted', '1');
     localStorage.setItem('portfolio-theme', t);
-    localStorage.setItem('portfolio-mobile-notice-dismissed', '1');
   }, theme);
   await page.route('https://api.github.com/**', (route) => {
     const url = route.request().url();
@@ -131,7 +130,7 @@ test.describe('GitHub em números', () => {
 
   test('comando stats no terminal', async ({ page }) => {
     await prepare(page, 'dark');
-    await page.goto('/');
+    await page.goto('/terminal');
     await page.getByRole('textbox', { name: /Linha de comando/ }).fill('stats');
     await page.keyboard.press('Enter');
     await expect(page.locator('.term-log').getByText('321')).toBeVisible();

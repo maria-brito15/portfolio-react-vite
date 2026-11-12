@@ -52,7 +52,7 @@ describe('git log: timeline de habilidades (CE-01)', () => {
   it('o terminal mostra os anos reais e conta os sem data, nos dois idiomas', async () => {
     const user = userEvent.setup();
 
-    renderApp('/');
+    renderApp();
     await run(user, 'git log');
 
     const real = skillLog(skillTimeline, 'pt');
@@ -71,7 +71,7 @@ describe('git log: timeline de habilidades (CE-01)', () => {
 
     expect(findCommand('evolucao')).toBe(findCommand('git'));
     expect(findCommand('log')).toBe(findCommand('git'));
-    renderApp('/');
+    renderApp();
     await run(user, 'git status');
     expect(log()).toHaveTextContent("git: 'status' não é um comando daqui");
   });
@@ -100,7 +100,7 @@ describe('stats (CE-02)', () => {
     const user = userEvent.setup();
 
     expect(commandInventory().find((c) => c.id === 'stats')?.hidden).toBe(false);
-    renderApp('/');
+    renderApp();
     await run(user, 'stats');
     if (buildInfo.commits !== null) expect(log()).toHaveTextContent(String(buildInfo.commits));
     expect(log()).toHaveTextContent('lidos do repositório');

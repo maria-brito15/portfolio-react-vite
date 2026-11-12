@@ -175,6 +175,42 @@ export const pageMeta: Record<string, Localized<PageMeta>> = {
         'Architecture case study of a WhatsApp message dispatch system: DDD, Clean Architecture, BullMQ and Redis queues, idempotency and trade-offs.',
     },
   ),
+  jogos: M(
+    {
+      title: 'Game Center | Campo Minado e Experiências | Duda Brito',
+      description:
+        'Os jogos e as experiências interativas do portfólio de Duda Brito: campo minado em três níveis, com recorde de tempo, e comandos extras do terminal.',
+    },
+    {
+      title: 'Game Center | Minesweeper and Experiences | Duda Brito',
+      description:
+        "The games and interactive experiences in Duda Brito's portfolio: minesweeper in three levels with a best time, and extra terminal commands.",
+    },
+  ),
+  terminal: M(
+    {
+      title: 'Terminal | Linha de Comando do Portfólio | Duda Brito',
+      description:
+        'O terminal interativo do portfólio de Duda Brito: navegue pelas páginas, rode comandos e veja a documentação de todos eles.',
+    },
+    {
+      title: 'Terminal | Portfolio Command Line | Duda Brito',
+      description:
+        "Duda Brito's interactive portfolio terminal: browse the pages, run commands and read the documentation for all of them.",
+    },
+  ),
+  github: M(
+    {
+      title: 'GitHub | Números e Repositórios | Duda Brito',
+      description:
+        'Números públicos do GitHub de Duda Brito (repositórios, estrelas, seguidores, contribuições e linguagens) e os repositórios dos projetos do portfólio.',
+    },
+    {
+      title: 'GitHub | Numbers and Repositories | Duda Brito',
+      description:
+        "Duda Brito's public GitHub numbers (repositories, stars, followers, contributions and languages) and the repositories of the portfolio projects.",
+    },
+  ),
   [NOT_FOUND_ID]: M(
     {
       title: 'Página não encontrada | Duda Brito',

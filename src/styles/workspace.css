@@ -1,0 +1,631 @@
+/* Workspace: barra lateral, painel inicial (dashboard), Game Center, catálogo de
+   comandos e página do GitHub. Só usa as variáveis de tokens.css; o resto do
+   esqueleto (topo, Window, breadcrumb) está em shell.css. */
+
+:root {
+  --side-w: 15rem;
+}
+
+/* ---------- Estrutura: barra lateral + conteúdo ---------- */
+.workspace {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: var(--side-w) minmax(0, 1fr);
+  padding-top: var(--top-h);
+}
+
+/* A barra de comandos alinha com a coluna de conteúdo (a que ela comanda), não com a
+   viewport inteira: com a barra lateral visível, o centro da viewport cai sobre ela. */
+@media (min-width: 961px) {
+  .cmdbar {
+    box-sizing: border-box;
+    padding-left: var(--side-w);
+  }
+}
+
+/* ---------- Barra lateral ---------- */
+.sidebar {
+  position: sticky;
+  top: var(--top-h);
+  align-self: start;
+  height: calc(100vh - var(--top-h));
+  height: calc(100dvh - var(--top-h));
+  overflow-y: auto;
+  box-sizing: border-box;
+  padding: var(--space-4) var(--space-3);
+  border-right: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+}
+.sidebar-group {
+  margin-bottom: var(--space-3);
+}
+.sidebar-group summary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--fs-chrome);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--dim);
+  cursor: pointer;
+  list-style: none;
+}
+.sidebar-group summary::-webkit-details-marker {
+  display: none;
+}
+.sidebar-group summary::before {
+  content: '▾';
+}
+.sidebar-group:not([open]) summary::before {
+  content: '▸';
+}
+.sidebar-group summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+.sidebar ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.sidebar-link {
+  display: block;
+  padding: var(--space-2) var(--space-3);
+  color: var(--text-2);
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  box-shadow: inset 2px 0 0 transparent;
+}
+.sidebar-link:hover {
+  color: var(--text);
+  background: var(--surface-2);
+}
+.sidebar-link.is-active {
+  color: var(--accent);
+  font-weight: 700;
+  background: var(--surface-2);
+  box-shadow: inset 2px 0 0 var(--accent);
+}
+.sidebar-shortcuts {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  margin-top: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  font: inherit;
+  color: var(--dim);
+  background: none;
+  border: 0;
+  border-top: 1px solid var(--border);
+  cursor: pointer;
+}
+.sidebar-shortcuts:hover {
+  color: var(--accent);
+}
+.sidebar-shortcuts kbd {
+  font: inherit;
+  padding: 0 0.4rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+.sidebar-scrim {
+  display: none;
+}
+
+/* Em tela estreita a barra vira uma gaveta aberta pelo botão do Header. */
+@media (max-width: 960px) {
+  .workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .site-nav {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+  .nav-center .header-cmd {
+    width: auto;
+    margin-left: auto;
+  }
+  .header-menu {
+    display: inline-flex;
+  }
+  .sidebar {
+    position: fixed;
+    top: var(--top-h);
+    left: 0;
+    bottom: 0;
+    z-index: 90;
+    width: min(18rem, 85vw);
+    height: auto;
+    background: var(--surface);
+    transform: translateX(-100%);
+    visibility: hidden;
+    /* Ao abrir, fica visível já (o foco precisa de um alvo visível); ao fechar, espera a saída. */
+    transition:
+      transform 0.2s,
+      visibility 0s linear 0.2s;
+  }
+  .sidebar.is-open {
+    transform: none;
+    visibility: visible;
+    transition-delay: 0s;
+  }
+  .sidebar-scrim {
+    display: block;
+    position: fixed;
+    inset: var(--top-h) 0 0 0;
+    z-index: 89;
+    background: rgba(0, 0, 0, 0.5);
+  }
+  .sidebar-link,
+  .sidebar-group summary,
+  .sidebar-shortcuts {
+    min-height: 2.75rem;
+    box-sizing: border-box;
+  }
+  .sidebar-link {
+    display: flex;
+    align-items: center;
+  }
+}
+/* Alvos de toque do header e do voltar: 44 px em tela de toque. */
+@media (max-width: 960px) {
+  .header-menu,
+  .site-nav .header-cmd,
+  .site-nav .theme-toggle,
+  .theme-select {
+    min-height: 2.75rem;
+    box-sizing: border-box;
+  }
+  .site-nav .header-cmd {
+    min-width: 2.75rem;
+    justify-content: center;
+  }
+  .crumbs li:first-child a {
+    min-width: 2.5rem;
+    justify-content: center;
+  }
+  .site-nav .logo,
+  .shell-back {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    box-sizing: border-box;
+  }
+}
+@media (max-width: 720px) {
+  .palette-item {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+  .header-cmd-text,
+  .nav-center .header-cmd kbd {
+    display: none;
+  }
+}
+
+/* ---------- Painel inicial ---------- */
+.shell--dashboard .shell-stage {
+  max-width: 1180px;
+}
+.dash {
+  display: grid;
+  gap: var(--space-7);
+  font-family: var(--font-mono);
+}
+.dash-hero h1 {
+  margin: var(--space-2) 0;
+  font-size: var(--fs-h1);
+  line-height: 1.2;
+}
+.dash-hero p {
+  margin: var(--space-2) 0;
+}
+.dash-roles {
+  color: var(--text-2);
+}
+.dash-sub {
+  max-width: var(--measure);
+  color: var(--text-2);
+  line-height: var(--lh-mono);
+}
+.dash-focus {
+  max-width: var(--measure);
+}
+.dash-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+.dash-btn {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.5rem;
+  box-sizing: border-box;
+  padding: 0 var(--space-4);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text);
+  text-decoration: none;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+.dash-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.dash-btn--primary {
+  color: var(--on-accent);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.dash-btn--primary:hover {
+  color: var(--on-accent);
+  filter: brightness(1.08);
+}
+.dash-section h2,
+.dash-section h3 {
+  margin-top: 0;
+}
+.dash-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+}
+.dash-head a,
+.gh-source a,
+.interactive-grid a,
+.featured-links a {
+  color: var(--accent);
+}
+
+.quick-grid,
+.featured-grid {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.quick-grid {
+  grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+}
+.quick-tile {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  height: 100%;
+  box-sizing: border-box;
+  padding: var(--space-3) var(--space-4);
+  color: var(--text);
+  text-decoration: none;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+.quick-tile:hover {
+  border-color: var(--accent);
+}
+.quick-tile span {
+  font-size: var(--fs-chrome);
+}
+
+.featured-grid {
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+}
+.featured-project {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  height: 100%;
+  box-sizing: border-box;
+}
+.featured-project h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+.featured-project p {
+  margin: 0;
+}
+.featured-desc {
+  flex: 1 0 auto;
+  max-height: 6.6em;
+  overflow: hidden;
+  font-size: 0.85rem;
+  line-height: 1.65;
+  color: var(--text-2);
+}
+.featured-tech {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+.featured-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-4);
+  font-size: var(--fs-chrome);
+}
+
+.dash-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: var(--space-6);
+  align-items: start;
+}
+.gh-summary .gh-metrics {
+  grid-template-columns: repeat(2, 1fr);
+}
+.interactive-grid {
+  display: grid;
+  gap: var(--space-3);
+}
+.interactive-grid h3 {
+  margin: 0 0 var(--space-2);
+  font-size: 1rem;
+}
+.interactive-grid p {
+  margin: var(--space-2) 0;
+}
+@media (max-width: 960px) {
+  .dash-split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 720px) {
+  .dash {
+    gap: var(--space-6);
+    padding: 0 var(--space-4);
+  }
+  .dash-hero h1 {
+    font-size: 1.5rem;
+  }
+}
+
+/* ---------- Catálogo de comandos (terminal e Game Center) ---------- */
+.catalog {
+  margin-top: var(--space-6);
+  font-family: var(--font-mono);
+}
+.catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+  gap: var(--space-5);
+}
+.catalog-group h3 {
+  margin: 0 0 var(--space-2);
+  font-size: var(--fs-chrome);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+.catalog-group ul {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.catalog-group p {
+  margin: var(--space-1) 0 0;
+  font-size: 0.85rem;
+  color: var(--text-2);
+}
+.catalog-group code {
+  color: var(--warn);
+}
+@media (max-width: 720px) {
+  .catalog {
+    padding: 0 var(--space-4);
+  }
+}
+
+/* ---------- Game Center ---------- */
+.games .game-card {
+  margin: var(--space-5) 0;
+}
+.game-card h2,
+.game-card h3 {
+  margin: 0 0 var(--space-2);
+}
+.game-levels {
+  display: grid;
+  gap: var(--space-2);
+  margin: var(--space-4) 0;
+  padding: 0;
+  list-style: none;
+}
+.game-levels li {
+  display: grid;
+  grid-template-columns: 6rem 1fr 1fr auto;
+  align-items: center;
+  gap: var(--space-3);
+}
+.game-level-name {
+  font-weight: 700;
+  color: var(--accent);
+}
+.game-board {
+  margin: var(--space-4) 0;
+  padding: var(--space-3);
+  overflow-x: auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+@media (max-width: 720px) {
+  .game-levels li {
+    grid-template-columns: 1fr auto;
+  }
+  .game-levels li .game-level-name {
+    grid-column: 1;
+  }
+  .game-levels li button {
+    grid-column: 2;
+    grid-row: 1 / span 3;
+    min-height: 2.75rem;
+  }
+}
+
+/* ---------- Página do GitHub ---------- */
+.repo-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  gap: var(--space-3);
+  margin: var(--space-3) 0;
+  padding: 0;
+  list-style: none;
+}
+.repo-card h3 {
+  margin: 0 0 var(--space-1);
+  font-size: 1rem;
+}
+.repo-card p {
+  margin: var(--space-1) 0;
+}
+.repo-tech {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+.repo-card a {
+  color: var(--accent);
+}
+
+/* ---------- Rodapé ---------- */
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-1) var(--space-4);
+  margin-bottom: var(--space-2);
+}
+.footer-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.5rem;
+  color: var(--text-2);
+}
+.footer-links a:hover {
+  color: var(--accent);
+}
+
+/* ---------- Paleta: grupos ---------- */
+.palette-group {
+  padding: var(--space-2) var(--space-3) var(--space-1);
+  font-size: var(--fs-chrome);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+@media print {
+  .workspace {
+    display: block;
+    padding-top: 0;
+  }
+  .sidebar,
+  .sidebar-scrim,
+  .footer-links {
+    display: none !important;
+  }
+}
+
+/* ---------- Refinos da revisão visual ---------- */
+/* Botão de comando fora da saída do terminal: parece botão (a .t-run é só texto). */
+.run-btn {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.5rem;
+  box-sizing: border-box;
+  padding: 0 var(--space-3);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+.run-btn:hover:not(:disabled) {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.run-btn[aria-pressed='true'] {
+  color: var(--on-accent);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.run-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+.catalog-cmd {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+.interactive-grid .run-btn {
+  margin: 0 var(--space-2) var(--space-2) 0;
+}
+.game-levels .run-btn {
+  min-width: 5.5rem;
+  justify-content: center;
+}
+/* O resumo do GitHub e a página /github não repetem a margem e o filete de topo da seção Sobre. */
+.gh-summary,
+.github-page .gh-section {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+.github-page .repo-list {
+  margin-bottom: var(--space-4);
+}
+.github-page .gh-source {
+  margin-bottom: var(--space-6);
+}
+.featured-badge .chip {
+  white-space: normal;
+}
+/* Acesso rápido: 4 colunas em tela larga (8 destinos = 2 linhas cheias), 2 no celular. */
+.quick-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+@media (max-width: 960px) {
+  .quick-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 720px) {
+  .quick-tile {
+    padding: var(--space-3);
+    min-height: 4.5rem;
+  }
+}
+@media (max-width: 960px) {
+  .crumbs a,
+  .action-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.5rem;
+    box-sizing: border-box;
+  }
+}
+@media (max-width: 960px) {
+  .crumbs ol {
+    align-items: center;
+  }
+  .crumbs li {
+    display: flex;
+    align-items: center;
+  }
+}

@@ -1,5 +1,7 @@
 // Textos de interface (navegação, botões, formulário). O conteúdo do portfólio
 // fica em src/data, separado por idioma.
+import { wsEn, wsPt } from './ws';
+
 export const ui = {
   pt: {
     nav: {
@@ -51,11 +53,6 @@ export const ui = {
       close: 'Fechar',
       prev: 'Imagem anterior',
       next: 'Próxima imagem',
-    },
-    mobileNotice: {
-      title: 'Feito para computador',
-      body: 'Este portfólio foi desenhado para telas de computador. Ele funciona no celular, mas a melhor experiência é acessando de um desktop.',
-      dismiss: 'Entendi',
     },
     form: {
       title: 'Ou mande uma mensagem por aqui',
@@ -111,8 +108,6 @@ export const ui = {
       palettePlaceholder: 'buscar página ou comando…',
       results: (n: number) => (n === 1 ? '1 resultado' : `${n} resultados`),
       none: 'nada encontrado',
-      kindPage: 'página',
-      kindCommand: 'comando',
       paletteHint: '↑ ↓ navegam · Enter executa · Esc fecha',
       shortcuts: 'Atalhos de teclado',
       close: 'Fechar',
@@ -194,6 +189,7 @@ export const ui = {
       title: 'Em construção',
       text: 'Esta página ainda está sendo escrita. O conteúdo vai entrar aqui em breve.',
     },
+    ws: wsPt,
   },
   en: {
     nav: {
@@ -245,11 +241,6 @@ export const ui = {
       close: 'Close',
       prev: 'Previous image',
       next: 'Next image',
-    },
-    mobileNotice: {
-      title: 'Built for desktop',
-      body: "This portfolio was designed for computer screens. It works on mobile, but you'll get the best experience on a desktop.",
-      dismiss: 'Got it',
     },
     form: {
       title: 'Or send a message here',
@@ -304,8 +295,6 @@ export const ui = {
       palettePlaceholder: 'search a page or command…',
       results: (n: number) => (n === 1 ? '1 result' : `${n} results`),
       none: 'nothing found',
-      kindPage: 'page',
-      kindCommand: 'command',
       paletteHint: '↑ ↓ move · Enter runs · Esc closes',
       shortcuts: 'Keyboard shortcuts',
       close: 'Close',
@@ -388,5 +377,6 @@ export const ui = {
       title: 'Under construction',
       text: 'This page is still being written. The content will land here soon.',
     },
+    ws: wsEn,
   },
 };

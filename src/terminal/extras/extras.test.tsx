@@ -52,7 +52,7 @@ describe('neofetch (PE-01, PE-02)', () => {
   it('o terminal mostra o monograma das iniciais e os campos nos dois idiomas', async () => {
     const user = userEvent.setup();
 
-    renderApp('/');
+    renderApp();
     await run(user, 'neofetch');
     expect(log().querySelector('.t-ascii')).toHaveTextContent('####');
     expect(within(log()).getByText('cargo')).toBeInTheDocument();
@@ -65,7 +65,7 @@ describe('sudo, rm e cowsay (PE-03 a PE-05)', () => {
   it('sudo contratar-duda aponta o contato; outro sudo mantém a resposta antiga', async () => {
     const user = userEvent.setup();
 
-    renderApp('/');
+    renderApp();
     await run(user, 'sudo contratar-duda');
     expect(within(log()).getByRole('link', { name: /@/ })).toHaveAttribute(
       'href',
@@ -80,19 +80,19 @@ describe('sudo, rm e cowsay (PE-03 a PE-05)', () => {
   it('rm -rf não apaga nada: o histórico e a sessão ficam intactos', async () => {
     const user = userEvent.setup();
 
-    renderApp('/');
+    renderApp();
     await run(user, 'rm -rf /');
     expect(log()).toHaveTextContent('nada foi apagado');
     expect(JSON.parse(sessionStorage.getItem('portfolio-terminal') as string)).toEqual([
       'rm -rf /',
     ]);
-    expect(window.location.pathname).toBe('/');
+    expect(window.location.pathname).toBe('/terminal');
   });
 
   it('cowsay desenha o balão com o texto, e tem frase padrão', async () => {
     const user = userEvent.setup();
 
-    renderApp('/');
+    renderApp();
     await run(user, 'cowsay "oi, tudo bem"');
     expect(log().querySelector('pre')).toHaveTextContent('< oi, tudo bem >');
     await run(user, 'cowsay');
@@ -105,7 +105,7 @@ describe('fortune (PE-07)', () => {
     const user = userEvent.setup();
 
     expect(fortunes).toHaveLength(0);
-    renderApp('/');
+    renderApp();
     await run(user, 'fortune');
     expect(log()).toHaveTextContent('sem frases ainda (em construção)');
   });
@@ -115,7 +115,7 @@ describe('historico (PE-08)', () => {
   it('fecha a lista com a contagem e continua listando os comandos', async () => {
     const user = userEvent.setup();
 
-    renderApp('/');
+    renderApp();
     await run(user, 'ls');
     await run(user, 'historico');
     expect(log().querySelectorAll('.t-history li')).toHaveLength(2);
@@ -179,14 +179,14 @@ describe('matrix (PE-06)', () => {
   it('o comando carrega sob demanda e mostra o canvas', async () => {
     const user = userEvent.setup();
 
-    renderApp('/');
+    renderApp();
     await run(user, 'matrix');
     expect(await screen.findByText(/qualquer tecla ou clique/)).toBeInTheDocument();
   });
 
   it('no replay do histórico não anima de novo', () => {
     sessionStorage.setItem('portfolio-terminal', JSON.stringify(['matrix']));
-    renderApp('/');
+    renderApp();
     expect(document.querySelector('canvas')).toBeNull();
     expect(log()).toHaveTextContent('matrix encerrado');
   });

@@ -11,6 +11,7 @@ import type { Lang } from '../../types';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { readBest, saveBest } from './bestTimes';
 import {
+  LEVEL_NAMES,
   createBoard,
   minesLeft,
   openCell,
@@ -22,13 +23,7 @@ import {
 
 const LONG_PRESS_MS = 450;
 
-const NAMES: Record<Level, { pt: string; en: string }> = {
-  easy: { pt: 'fácil', en: 'easy' },
-  medium: { pt: 'médio', en: 'medium' },
-  hard: { pt: 'difícil', en: 'hard' },
-};
-
-export const levelName = (level: Level, lang: Lang) => NAMES[level][lang];
+export const levelName = (level: Level, lang: Lang) => LEVEL_NAMES[level][lang];
 
 function labelOf(board: Board, index: number, lang: Lang): string {
   const cell: Cell = board.cells[index];
@@ -57,7 +52,17 @@ function face(cell: Cell): string {
   return cell.near ? String(cell.near) : '';
 }
 
-export default function Minesweeper({ lang, level }: { lang: Lang; level: Level }) {
+// `onExit`: quem hospeda o tabuleiro fora do terminal (Game Center) decide o que
+// fazer ao sair; no terminal, sair só devolve o foco ao prompt.
+export default function Minesweeper({
+  lang,
+  level,
+  onExit,
+}: {
+  lang: Lang;
+  level: Level;
+  onExit?: () => void;
+}) {
   const [board, setBoard] = useState<Board>(() => createBoard(level));
   const [seconds, setSeconds] = useState(0);
   const [flagMode, setFlagMode] = useState(false);
@@ -111,6 +116,11 @@ export default function Minesweeper({ lang, level }: { lang: Lang; level: Level 
   }
 
   function exit() {
+    if (onExit) {
+      onExit();
+
+      return;
+    }
     setExited(true);
     // Volta ao prompt: o foco vai para a linha de comando.
     // Na home é a linha do terminal; nas outras páginas, a barra de comandos.

@@ -49,7 +49,7 @@ describe('comando tema (TB-01, TB-02, TB-03)', () => {
   it('sem argumento continua alternando claro/escuro', async () => {
     const user = userEvent.setup();
 
-    renderApp('/');
+    renderApp();
     await run(user, 'tema');
     expect(attr()).toBe('light');
     await run(user, 'tema');
@@ -59,7 +59,7 @@ describe('comando tema (TB-01, TB-02, TB-03)', () => {
   it('tema <nome> aplica e salva, em PT ou EN', async () => {
     const user = userEvent.setup();
 
-    renderApp('/');
+    renderApp();
     await run(user, 'tema dracula');
     expect(attr()).toBe('dracula');
     expect(localStorage.getItem('portfolio-theme')).toBe('dracula');
@@ -72,7 +72,7 @@ describe('comando tema (TB-01, TB-02, TB-03)', () => {
   it('nome inválido não muda o tema e lista os válidos (erro que reensina)', async () => {
     const user = userEvent.setup();
 
-    renderApp('/');
+    renderApp();
     await run(user, 'tema rosa');
     expect(attr()).toBe('dark');
     expect(log()).toHaveTextContent('tema: rosa: tema não encontrado');
@@ -84,7 +84,7 @@ describe('comando tema (TB-01, TB-02, TB-03)', () => {
   it('tema ls lista com o atual marcado, e cada nome é um botão que aplica', async () => {
     const user = userEvent.setup();
 
-    renderApp('/');
+    renderApp();
     await run(user, 'tema dracula');
     await run(user, 'tema ls');
 
@@ -99,27 +99,35 @@ describe('comando tema (TB-01, TB-02, TB-03)', () => {
 
   it('o replay do histórico não reaplica o tema', () => {
     sessionStorage.setItem('portfolio-terminal', JSON.stringify(['tema amber']));
-    renderApp('/');
+    renderApp();
     expect(attr()).toBe('dark');
   });
 });
 
 describe('botão do cabeçalho (TB-05) e persistência (TB-03)', () => {
-  it('a partir de um tema extra, o botão volta ao escuro', async () => {
+  it('o seletor do cabeçalho lista os cinco temas, reflete o comando tema e aplica a escolha', async () => {
     const user = userEvent.setup();
 
-    renderApp('/');
+    renderApp();
+
+    const select = screen.getByRole('combobox', { name: 'Tema' });
+
+    expect([...select.querySelectorAll('option')].map((o) => o.value)).toEqual(
+      themes.map((t) => t.id),
+    );
     await run(user, 'tema solarized');
     expect(attr()).toBe('solarized');
-    await user.click(screen.getByRole('button', { name: /Modo escuro/ }));
+    expect(select).toHaveValue('solarized');
+    await user.selectOptions(select, DEFAULT_THEME);
     expect(attr()).toBe(DEFAULT_THEME);
-    await user.click(screen.getByRole('button', { name: /Modo claro/ }));
+    await user.selectOptions(select, 'light');
     expect(attr()).toBe('light');
+    expect(localStorage.getItem('portfolio-theme')).toBe('light');
   });
 
   it('um valor salvo desconhecido cai no tema padrão', () => {
     document.documentElement.setAttribute('data-theme', 'rosa');
-    renderApp('/');
+    renderApp();
     expect(attr()).toBe('dark');
   });
 });

@@ -4,6 +4,9 @@ import { renderApp } from '../../test/helpers';
 
 const ROUTES = [
   '/',
+  '/terminal',
+  '/jogos',
+  '/github',
   '/curriculo',
   '/academico',
   '/servicos',
@@ -25,13 +28,19 @@ describe('layout único em todas as páginas', () => {
     renderApp(route);
     expect(document.querySelectorAll('header.site-nav')).toHaveLength(1);
     expect(document.querySelectorAll('.cmdbar')).toHaveLength(1);
-    expect(document.querySelectorAll('.win')).toHaveLength(1);
+    // a home é o painel (sem janela); as demais páginas têm uma Window
+    expect(document.querySelectorAll('.win')).toHaveLength(route === '/' ? 0 : 1);
+    expect(document.querySelectorAll('nav.sidebar')).toHaveLength(1);
     expect(document.querySelectorAll('footer')).toHaveLength(1);
 
-    // a ordem do esqueleto: Header → barra → Window → Footer
-    const order = ['header.site-nav', '.cmdbar', '.win', 'footer'].map((sel) =>
-      document.querySelector<HTMLElement>(sel)!,
-    );
+    // a ordem do esqueleto: Header → barra → barra lateral → Window (ou painel) → Footer
+    const order = [
+      'header.site-nav',
+      '.cmdbar',
+      'nav.sidebar',
+      route === '/' ? '.dash' : '.win',
+      'footer',
+    ].map((sel) => document.querySelector<HTMLElement>(sel)!);
 
     for (let i = 1; i < order.length; i++) {
       expect(
@@ -40,7 +49,7 @@ describe('layout único em todas as páginas', () => {
     }
   });
 
-  it('o header é o mesmo em todas as rotas: acesso a comandos, logo e dois controles', () => {
+  it('o header é o mesmo em todas as rotas: menu, logo, busca, tema e idioma', () => {
     for (const route of ROUTES) {
       const { unmount } = renderApp(route);
       const header = document.querySelector<HTMLElement>('header.site-nav')!;
@@ -57,9 +66,14 @@ describe('layout único em todas as páginas', () => {
         .getAllByRole('button')
         .map((b) => b.getAttribute('aria-label'));
 
-      expect(buttons, route).toEqual(['Comandos (Ctrl K)', 'Modo claro', 'EN — Switch to English']);
-      // sem menu de links nem menu recolhível
-      expect(header.querySelector<HTMLElement>('ul, .nav-links, .menu-toggle')!).toBeNull();
+      expect(buttons, route).toEqual([
+        'Abrir menu de navegação',
+        'Comandos (Ctrl K)',
+        'EN — Switch to English',
+      ]);
+      expect(within(header).getByRole('combobox', { name: 'Tema' })).toBeInTheDocument();
+      // a navegação mora na barra lateral, não no header
+      expect(header.querySelector<HTMLElement>('ul, .nav-links')).toBeNull();
       unmount();
     }
   });
@@ -158,7 +172,7 @@ describe('barra de comandos', () => {
   it('os atalhos não roubam o foco de campos de formulário', async () => {
     const user = userEvent.setup();
 
-    renderApp('/');
+    renderApp();
 
     const terminal = screen.getByRole('textbox', { name: 'Linha de comando do terminal' });
 
@@ -187,7 +201,7 @@ describe('barra de comandos', () => {
     // fora da home, "ver no terminal" leva à home com o comando já executado
     expect(within(panel).getByRole('link', { name: /ver no terminal/ })).toHaveAttribute(
       'href',
-      '/?cmd=curriculo',
+      '/terminal?cmd=curriculo',
     );
     expect(within(panel).getByRole('button', { name: /abrir página própria/ })).toBeInTheDocument();
     // Esc fecha o painel
@@ -214,7 +228,7 @@ describe('barra de comandos', () => {
   it('na home, a barra e o terminal compartilham o histórico e a saída', async () => {
     const user = userEvent.setup();
 
-    renderApp('/');
+    renderApp();
     await user.type(barInput(), 'ajuda{Enter}');
     expect(
       within(document.querySelector<HTMLElement>('.term-log')!).getByText(/Comandos disponíveis/),
@@ -235,14 +249,14 @@ describe('duas visualizações', () => {
 
     expect(within(bar).getByRole('link', { name: 'ver no terminal' })).toHaveAttribute(
       'href',
-      '/?cmd=academico',
+      '/terminal?cmd=academico',
     );
     expect(within(bar).getByRole('button', { name: 'página própria' })).toHaveAttribute(
       'aria-pressed',
       'true',
     );
     await user.click(within(bar).getByRole('link', { name: 'ver no terminal' }));
-    expect(window.location.pathname).toBe('/');
+    expect(window.location.pathname).toBe('/terminal');
     expect(window.location.search).toBe('');
 
     const log = document.querySelector<HTMLElement>('.term-log')!;
@@ -253,8 +267,8 @@ describe('duas visualizações', () => {
     expect(within(log).getByRole('button', { name: /abrir página própria/ })).toBeInTheDocument();
   });
 
-  it('/?cmd=servicos abre a home com o comando executado e limpa a URL', () => {
-    renderApp('/?cmd=servicos');
+  it('/terminal?cmd=servicos abre a home com o comando executado e limpa a URL', () => {
+    renderApp('/terminal?cmd=servicos');
     expect(window.location.search).toBe('');
     expect(document.querySelector<HTMLElement>('.term-entry')!).toHaveTextContent('servicos');
     expect(document.querySelector<HTMLElement>('.term-log')!).toHaveTextContent(
@@ -263,7 +277,7 @@ describe('duas visualizações', () => {
   });
 
   it('ignora ?cmd= que não é de uma página', () => {
-    renderApp('/?cmd=tema');
+    renderApp('/terminal?cmd=tema');
     expect(document.querySelector<HTMLElement>('.term-entry')!).toBeNull();
   });
 
@@ -273,7 +287,7 @@ describe('duas visualizações', () => {
       within(document.querySelector<HTMLElement>('.win-bar')!).getByRole('link', {
         name: 'ver no terminal',
       }),
-    ).toHaveAttribute('href', '/?cmd=servicos');
+    ).toHaveAttribute('href', '/terminal?cmd=servicos');
   });
 
   it('o estudo de caso leva a projetos no terminal', () => {
@@ -282,13 +296,13 @@ describe('duas visualizações', () => {
       within(document.querySelector<HTMLElement>('.win-bar')!).getByRole('link', {
         name: 'ver no terminal',
       }),
-    ).toHaveAttribute('href', '/?cmd=projetos');
+    ).toHaveAttribute('href', '/terminal?cmd=projetos');
   });
 
   it('toda saída com página dedicada termina com as duas ações', async () => {
     const user = userEvent.setup();
 
-    renderApp('/');
+    renderApp();
 
     const input = screen.getByRole('textbox', { name: 'Linha de comando do terminal' });
 

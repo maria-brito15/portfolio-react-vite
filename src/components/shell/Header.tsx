@@ -1,19 +1,42 @@
 import { Link } from '../../router';
 import { useLanguage } from '../../i18n/LanguageContext';
 import { useTheme } from '../../hooks/useTheme';
+import { findTheme, themes } from '../../data/themes';
 import { openPalette } from './commandBarEvents';
 
-// Header em três zonas: acesso a comandos (esquerda), logo centralizado e os
-// dois controles (tema e idioma, direita). Não há menu de links: o "menu" do
-// site é o terminal. O botão da esquerda abre a paleta de comandos, como `Ctrl K`.
-export default function Header() {
-  const { t, toggleLang } = useLanguage();
-  const [theme, toggleTheme] = useTheme();
-  const dark = theme === 'dark';
+// Header compacto em três zonas: menu (celular) e logo à esquerda, busca global
+// no centro (abre a paleta, como `Ctrl K`) e, à direita, seletor de tema e
+// idioma. A navegação em si mora na barra lateral (Sidebar).
+export default function Header({
+  menuOpen,
+  menuId,
+  onMenu,
+}: {
+  menuOpen: boolean;
+  menuId: string;
+  onMenu: () => void;
+}) {
+  const { lang, t, toggleLang } = useLanguage();
+  const [theme, , setTheme] = useTheme();
 
   return (
     <header className="site-nav">
       <div className="nav-left">
+        <button
+          type="button"
+          className="header-menu"
+          aria-label={menuOpen ? t.ws.sidebar.close : t.ws.sidebar.open}
+          aria-expanded={menuOpen}
+          aria-controls={menuId}
+          onClick={onMenu}
+        >
+          <span aria-hidden="true">{menuOpen ? '✕' : '☰'}</span>
+        </button>
+        <Link to="/" className="logo" aria-label={t.nav.home}>
+          mariab.dev
+        </Link>
+      </div>
+      <div className="nav-center">
         <button
           type="button"
           className="header-cmd"
@@ -24,22 +47,27 @@ export default function Header() {
           <span className="header-cmd-prompt" aria-hidden="true">
             &gt;_
           </span>
+          <span className="header-cmd-text">{t.ws.header.search}</span>
           <kbd aria-hidden="true">Ctrl K</kbd>
         </button>
       </div>
-      <Link to="/" className="logo" aria-label={t.nav.home}>
-        mariab.dev
-      </Link>
       <div className="nav-right">
-        <button
-          type="button"
-          className="theme-toggle"
-          onClick={toggleTheme}
-          aria-label={dark ? t.theme.toLight : t.theme.toDark}
+        <select
+          className="theme-select"
+          aria-label={t.ws.header.theme}
+          value={theme}
+          onChange={(event) => {
+            const next = findTheme(event.target.value);
+
+            if (next) setTheme(next.id);
+          }}
         >
-          <span aria-hidden="true">{dark ? '☀️' : '🌙'}</span>
-          <span>{dark ? t.theme.toLight : t.theme.toDark}</span>
-        </button>
+          {themes.map((th) => (
+            <option key={th.id} value={th.id}>
+              {th.names[lang]}
+            </option>
+          ))}
+        </select>
         <button
           type="button"
           className="theme-toggle lang-toggle"

@@ -4,9 +4,17 @@ import { findPageByPath } from './data/routes';
 import { TerminalProvider } from './terminal/TerminalSession';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
-import { Academics, CaseStudy, Resume, SectionPage, Services } from './pages/lazyPages';
+import {
+  Academics,
+  CaseStudy,
+  GameCenter,
+  GithubPage,
+  Resume,
+  SectionPage,
+  Services,
+  TerminalPage,
+} from './pages/lazyPages';
 
-import MobileNoticeModal from './components/MobileNoticeModal';
 import GlobalOverlays from './components/GlobalOverlays';
 import { Now, Uses } from './pages/InfoPages';
 import { WindowProvider } from './components/shell/windowManager';
@@ -28,6 +36,12 @@ function Page({ id }: { id?: string }) {
       return <Academics />;
     case 'servicos':
       return <Services />;
+    case 'jogos':
+      return <GameCenter />;
+    case 'terminal':
+      return <TerminalPage />;
+    case 'github':
+      return <GithubPage />;
     case 'agora':
       return <Now />;
     case 'setup':
@@ -49,7 +63,6 @@ export default function App() {
         <Suspense fallback={null}>
           <Page id={route?.id} />
         </Suspense>
-        <MobileNoticeModal />
         <GlobalOverlays />
       </TerminalProvider>
     </WindowProvider>

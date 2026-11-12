@@ -3,7 +3,8 @@ import userEvent from '@testing-library/user-event';
 import { renderApp } from '../test/helpers';
 import { directories } from '../data/routes';
 import { shortcuts } from '../data/shortcuts';
-import { filterItems, paletteItems } from './paletteItems';
+import { PALETTE_KINDS, filterItems, paletteItems } from './paletteItems';
+import { projects } from '../data/projects';
 import { commandInventory } from '../terminal/commands';
 
 const palette = () => screen.findByRole('dialog', { name: 'Paleta de comandos' });
@@ -41,8 +42,37 @@ describe('opções da paleta (JA-06)', () => {
     expect(filterItems(items, 'acadêmico').map((i) => i.id)).toContain('page:academico');
     expect(filterItems(items, 'resume').map((i) => i.id)).toContain('page:curriculo');
     expect(filterItems(items, 'zzzz')).toEqual([]);
-    expect(filterItems(items, '')).toHaveLength(items.length);
+    // sem busca a lista é curta: habilidades só aparecem quando se digita
+    expect(filterItems(items, '')).toHaveLength(items.filter((i) => i.kind !== 'skill').length);
     expect(filterItems(items, 'tema escuro').length).toBeGreaterThan(0);
+  });
+
+  it('cobre páginas, projetos, estudo de caso, jogos, habilidades e comandos, e agrupa nessa ordem', () => {
+    const items = paletteItems('pt');
+    const kinds = new Set(items.map((i) => i.kind));
+
+    expect([...kinds].sort()).toEqual(['command', 'game', 'page', 'project', 'skill']);
+    for (const p of projects) expect(items.map((i) => i.id)).toContain(`project:${p.id}`);
+    expect(items.find((i) => i.id === 'case:whatsapp-dispatcher')?.to).toBe(
+      '/estudos-de-caso/whatsapp-dispatcher',
+    );
+    expect(items.find((i) => i.id === 'page:terminal')?.to).toBe('/terminal');
+    expect(items.find((i) => i.id === 'project:ecoshop')?.run).toBe('cd projetos/ecoshop');
+    expect(paletteItems('en').find((i) => i.id === 'project:ecoshop')?.run).toBe(
+      'cd projects/ecoshop',
+    );
+
+    const order = filterItems(items, 'e').map((i) => PALETTE_KINDS.indexOf(i.kind));
+
+    expect(order).toEqual([...order].sort((a, b) => a - b));
+  });
+
+  it('o melhor casamento vem primeiro dentro do grupo', () => {
+    const items = paletteItems('pt');
+
+    expect(filterItems(items, 'java').find((i) => i.kind === 'skill')?.label).toBe('Java');
+    expect(filterItems(items, 'minas').map((i) => i.kind)).toContain('game');
+    expect(filterItems(items, 'github').map((i) => i.id)).toContain('page:github');
   });
 });
 
@@ -50,7 +80,7 @@ describe('paleta de comandos (JA-06, JA-07)', () => {
   it('Ctrl+K abre, o foco vai ao campo, e Ctrl+K de novo ou Esc fecham devolvendo o foco', async () => {
     const user = userEvent.setup();
 
-    renderApp('/');
+    renderApp();
     await user.click(terminalInput());
     await ctrlK(user);
 
@@ -69,7 +99,7 @@ describe('paleta de comandos (JA-06, JA-07)', () => {
   it('filtra enquanto digita, anuncia a contagem e navega com as setas', async () => {
     const user = userEvent.setup();
 
-    renderApp('/');
+    renderApp();
     await ctrlK(user);
 
     const dialog = await palette();
@@ -96,7 +126,7 @@ describe('paleta de comandos (JA-06, JA-07)', () => {
   it('o foco fica preso no diálogo (Tab não escapa)', async () => {
     const user = userEvent.setup();
 
-    renderApp('/');
+    renderApp();
     await ctrlK(user);
 
     const dialog = await palette();
@@ -110,7 +140,7 @@ describe('paleta de comandos (JA-06, JA-07)', () => {
   it('escolher uma página roda `cd` pela sessão e abre a página', async () => {
     const user = userEvent.setup();
 
-    renderApp('/');
+    renderApp();
     await ctrlK(user);
     await palette();
     await user.keyboard('academ{Enter}');
@@ -125,7 +155,7 @@ describe('paleta de comandos (JA-06, JA-07)', () => {
   it('escolher um comando na home roda no terminal e mostra a saída lá', async () => {
     const user = userEvent.setup();
 
-    renderApp('/');
+    renderApp();
     await user.click(terminalInput());
     await ctrlK(user);
     await palette();
@@ -169,7 +199,7 @@ describe('lista de atalhos (JA-08, JA-09)', () => {
   it('? abre a lista da tabela única e Esc fecha', async () => {
     const user = userEvent.setup();
 
-    renderApp('/');
+    renderApp();
     await user.keyboard('?');
 
     const dialog = await screen.findByRole('dialog', { name: 'Atalhos de teclado' });
@@ -185,7 +215,7 @@ describe('lista de atalhos (JA-08, JA-09)', () => {
   it('? digitado na linha de comando é só texto', async () => {
     const user = userEvent.setup();
 
-    renderApp('/');
+    renderApp();
     await user.click(terminalInput());
     await user.keyboard('a?b');
     expect(terminalInput()).toHaveValue('a?b');
@@ -195,7 +225,7 @@ describe('lista de atalhos (JA-08, JA-09)', () => {
   it('o comando atalhos e a dica da ajuda leem a mesma tabela', async () => {
     const user = userEvent.setup();
 
-    renderApp('/');
+    renderApp();
     await user.type(terminalInput(), 'atalhos{Enter}');
     for (const s of shortcuts) expect(within(log()).getByText(s.desc.pt)).toBeInTheDocument();
     await user.type(terminalInput(), 'ajuda{Enter}');

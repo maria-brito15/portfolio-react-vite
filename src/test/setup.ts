@@ -14,6 +14,9 @@ vi.mock('../pages/lazyPages', async () => ({
   Resume: (await import('../pages/Resume')).default,
   Academics: (await import('../pages/Academics')).default,
   SectionPage: (await import('../pages/SectionPage')).default,
+  GameCenter: (await import('../pages/GameCenter')).default,
+  GithubPage: (await import('../pages/GithubPage')).default,
+  TerminalPage: (await import('../pages/TerminalPage')).default,
 }));
 
 // O boot da primeira visita fica desligado nos testes (quem o testa limpa a marca).

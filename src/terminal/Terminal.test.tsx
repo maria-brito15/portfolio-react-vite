@@ -13,7 +13,7 @@ describe('terminal da página inicial', () => {
   it('mostra o nome como título e responde ao comando ajuda', async () => {
     const user = userEvent.setup();
 
-    renderApp('/');
+    renderApp();
     expect(screen.getByRole('heading', { level: 1, name: 'Duda Brito' })).toBeInTheDocument();
     await user.type(terminalInput(), 'ajuda{Enter}');
     expect(screen.getByText(/Comandos disponíveis/)).toBeInTheDocument();
@@ -23,7 +23,7 @@ describe('terminal da página inicial', () => {
   it('o botão "inicio" ao lado de "ajuda" volta à tela inicial (banner, sem saída)', async () => {
     const user = userEvent.setup();
 
-    renderApp('/');
+    renderApp();
 
     const quick = screen.getByRole('group', { name: /atalhos|comandos/i });
     const buttons = within(quick).getAllByRole('button');
@@ -38,7 +38,7 @@ describe('terminal da página inicial', () => {
   });
 
   it('primeira visita: o banner sugere ls/ajuda; com histórico, não', async () => {
-    const { unmount } = renderApp('/');
+    const { unmount } = renderApp();
 
     expect(
       screen.getByText(/Primeira vez\? Digite ls para ver tudo, ou ajuda\./),
@@ -46,14 +46,14 @@ describe('terminal da página inicial', () => {
     unmount();
 
     sessionStorage.setItem('portfolio-terminal', JSON.stringify(['ajuda']));
-    renderApp('/');
+    renderApp();
     expect(screen.queryByText(/Primeira vez\?/)).not.toBeInTheDocument();
   });
 
   it('o placeholder ensina um exemplo nos dois idiomas e some com a saída', async () => {
     const user = userEvent.setup();
 
-    renderApp('/');
+    renderApp();
     expect(terminalInput()).toHaveAttribute('placeholder', 'experimente: curriculo');
     await user.click(screen.getByRole('button', { name: /Switch to English/ }));
 
@@ -70,7 +70,7 @@ describe('terminal da página inicial', () => {
   it('avisa quando o comando não existe', async () => {
     const user = userEvent.setup();
 
-    renderApp('/');
+    renderApp();
     await user.type(terminalInput(), 'xyz{Enter}');
     expect(screen.getByText(/xyz: comando não encontrado/)).toBeInTheDocument();
   });
@@ -78,7 +78,7 @@ describe('terminal da página inicial', () => {
   it('lista os projetos com link para o GitHub', async () => {
     const user = userEvent.setup();
 
-    renderApp('/');
+    renderApp();
     await user.type(terminalInput(), 'projetos{Enter}');
 
     const log = document.querySelector<HTMLElement>('.term-log')!;
@@ -90,9 +90,13 @@ describe('terminal da página inicial', () => {
   it('o atalho "curriculo" mostra a visão em terminal, sem navegar', async () => {
     const user = userEvent.setup();
 
-    renderApp('/');
-    await user.click(screen.getByRole('button', { name: /curriculo/ }));
-    expect(window.location.pathname).toBe('/');
+    renderApp();
+    await user.click(
+      within(document.querySelector<HTMLElement>('.term-quick')!).getByRole('button', {
+        name: /curriculo/,
+      }),
+    );
+    expect(window.location.pathname).toBe('/terminal');
 
     const log = document.querySelector<HTMLElement>('.term-log')!;
 
@@ -104,7 +108,7 @@ describe('terminal da página inicial', () => {
   it('tema e idioma pelo terminal atualizam o resto do site', async () => {
     const user = userEvent.setup();
 
-    renderApp('/');
+    renderApp();
 
     const before = document.documentElement.getAttribute('data-theme');
 
@@ -119,7 +123,7 @@ describe('terminal da página inicial', () => {
   it('↑ recupera o comando anterior e limpar zera a tela', async () => {
     const user = userEvent.setup();
 
-    renderApp('/');
+    renderApp();
     await user.type(terminalInput(), 'sobre{Enter}');
     await user.type(terminalInput(), '{ArrowUp}');
     expect(terminalInput()).toHaveValue('sobre');
@@ -131,7 +135,7 @@ describe('terminal da página inicial', () => {
   it('cada comando limpa a tela: fica só a última entrada', async () => {
     const user = userEvent.setup();
 
-    renderApp('/');
+    renderApp();
     await user.type(terminalInput(), 'ajuda{Enter}');
     await user.type(terminalInput(), 'projetos{Enter}');
     expect(document.querySelectorAll('.term-entry')).toHaveLength(1);
@@ -145,8 +149,8 @@ describe('terminal da página inicial', () => {
 
   it('restaura só a última saída ao voltar para a página, sem repetir a navegação', () => {
     sessionStorage.setItem('portfolio-terminal', JSON.stringify(['contato', 'cd curriculo']));
-    renderApp('/');
-    expect(window.location.pathname).toBe('/');
+    renderApp();
+    expect(window.location.pathname).toBe('/terminal');
     expect(document.querySelectorAll('.term-entry')).toHaveLength(1);
     expect(document.querySelector<HTMLElement>('.term-entry')!).toHaveTextContent('cd curriculo');
     expect(document.querySelector<HTMLElement>('.term-entry')!).toHaveTextContent(

@@ -12,7 +12,7 @@ import { profile } from '../data/profile';
 import { projects } from '../data/projects';
 import { experienceGroups } from '../data/experiences';
 import { portfolio } from '../data/portfolio';
-import { directories, fold, type Route } from '../data/routes';
+import { TERMINAL_PATH, directories, fold, type Route } from '../data/routes';
 import {
   findSection,
   resolveTarget,
@@ -420,7 +420,7 @@ const commands: Command[] = [
     run: (args) => {
       const target = resolveTarget(args);
 
-      if (target.home) return { output: () => null, redirect: '/' };
+      if (target.home) return { output: () => null, redirect: TERMINAL_PATH };
       if (target.error) {
         return {
           output: (lang) =>

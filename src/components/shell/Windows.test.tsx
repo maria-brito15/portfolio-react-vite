@@ -104,17 +104,19 @@ describe('bolinhas da janela (JA-04)', () => {
     expect(window.location.pathname).toBe('/');
   });
 
-  it('fechar o terminal da home recolhe a janela até reabrir', async () => {
+  it('fechar o terminal leva ao painel, como em qualquer página; recolher guarda a janela até reabrir', async () => {
     const user = userEvent.setup();
 
-    renderApp('/');
-    await user.click(dot(/Fechar janela/));
-    expect(window.location.pathname).toBe('/');
+    renderApp();
+    await user.click(dot(/Recolher janela/));
+    expect(window.location.pathname).toBe('/terminal');
     expect(win()).toHaveClass('is-min');
     await user.click(
       within(screen.getByRole('navigation', { name: 'Janelas recolhidas' })).getByRole('button'),
     );
     expect(win()).not.toHaveClass('is-min');
+    await user.click(dot(/Fechar janela/));
+    expect(window.location.pathname).toBe('/');
   });
 
   it('maximizar e restaurar alternam a classe e o aria-pressed', async () => {

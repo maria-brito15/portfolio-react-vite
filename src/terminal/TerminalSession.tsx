@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } fro
 import { useRouter } from '../router';
 import { useLanguage } from '../i18n/LanguageContext';
 import { useTheme } from '../hooks/useTheme';
-import { normalizePath, routes } from '../data/routes';
+import { TERMINAL_PATH, normalizePath, routes } from '../data/routes';
 import { prefersReducedMotion } from '../utils/env';
 import {
   contextAfter,
@@ -218,8 +218,8 @@ export function TerminalProvider({ children }: { children: ReactNode }) {
       if (next?.redirect) {
         const { to } = next.redirect;
 
-        // "Ir para a home" estando nela não precisa de carregamento.
-        if (to === '/' && normalizePath(path) === '/') {
+        // Ir para a página em que já está não precisa de carregamento.
+        if (normalizePath(to) === normalizePath(path) && !to.includes('#')) {
           setEntry({ ...next, redirect: { ...next.redirect, status: 'done', direct: true } });
           navigate(to);
         } else {
@@ -252,12 +252,20 @@ export function TerminalProvider({ children }: { children: ReactNode }) {
   // "abrir página própria": roda o mesmo fluxo de carregamento de `cd <página>`.
   const openPage = startRedirect;
 
-  // /?cmd=academico: a home já abre com o comando executado (visão em terminal).
-  // Só comandos que têm página dedicada; o parâmetro some da URL em seguida.
+  // /terminal?cmd=academico: o terminal já abre com o comando executado (visão em
+  // terminal). Só comandos que têm página dedicada; o parâmetro some da URL em
+  // seguida. O endereço antigo /?cmd=academico (quando a home era o terminal)
+  // continua valendo: é redirecionado para /terminal?cmd=academico.
   const handled = useRef('');
 
   useEffect(() => {
-    if (path !== '/' || !search || handled.current === search) return;
+    if (!search || !new URLSearchParams(search).has('cmd')) return;
+    if (normalizePath(path) === '/') {
+      navigate(TERMINAL_PATH + search, { replace: true });
+
+      return;
+    }
+    if (normalizePath(path) !== TERMINAL_PATH || handled.current === search) return;
     handled.current = search;
 
     const cmd = new URLSearchParams(search).get('cmd');
@@ -269,7 +277,7 @@ export function TerminalProvider({ children }: { children: ReactNode }) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       execute(cmd as string);
     }
-    navigate('/', { replace: true });
+    navigate(TERMINAL_PATH, { replace: true });
   }, [path, search, execute, navigate]);
 
   const value = useMemo<TerminalSessionValue>(

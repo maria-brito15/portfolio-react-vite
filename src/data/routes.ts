@@ -5,8 +5,9 @@
 // - `name` / `alias`: nome do "diretório" em português e em inglês (o mesmo
 //   nome do comando que mostra a visão em terminal);
 // - `path`: onde a página própria mora;
-// - `kind`: sempre "page" (a home é só o terminal; tudo o mais é página própria);
-// - `command`: comando que mostra a visão em terminal (`/?cmd=<command>`);
+// - `kind`: sempre "page" (a home é o painel; o terminal mora em `/terminal`);
+// - `group`: grupo da barra lateral (rota sem grupo não aparece nela);
+// - `command`: comando que mostra a visão em terminal (`/terminal?cmd=<command>`);
 // - `parent`: id da rota-mãe no breadcrumb.
 
 import type { Lang, Localized } from '../types';
@@ -14,6 +15,20 @@ import { now } from './now';
 import { uses } from './uses';
 
 const L = (pt: string, en: string): Localized => ({ pt, en });
+
+export type NavGroup = 'home' | 'portfolio' | 'interactive' | 'development' | 'personal';
+
+// Ordem dos grupos da barra lateral; os rótulos ficam em `ui.nav.groups`.
+export const NAV_GROUPS: NavGroup[] = [
+  'home',
+  'portfolio',
+  'interactive',
+  'development',
+  'personal',
+];
+
+// O terminal é uma página própria (antes era a home); o `/?cmd=` antigo é redirecionado para cá.
+export const TERMINAL_PATH = '/terminal';
 
 export interface Route {
   id: string;
@@ -26,6 +41,7 @@ export interface Route {
   label: Localized;
   desc?: Localized;
   parent?: string;
+  group?: NavGroup;
   segment?: Localized;
   hidden?: boolean;
   // Página em construção (sem conteúdo): existe e abre, mas não entra no
@@ -43,12 +59,17 @@ export const routes: Route[] = [
     id: 'home',
     kind: 'page',
     path: '/',
+    group: 'home',
     label: L('Início', 'Home'),
-    desc: L('terminal e seções', 'terminal and sections'),
+    desc: L(
+      'painel com projetos, GitHub e atalhos',
+      'dashboard with projects, GitHub and shortcuts',
+    ),
   },
   {
     id: 'sobre',
     kind: 'page',
+    group: 'portfolio',
     path: '/sobre',
     aliases: ['/about'],
     name: 'sobre',
@@ -60,6 +81,7 @@ export const routes: Route[] = [
   {
     id: 'habilidades',
     kind: 'page',
+    group: 'portfolio',
     path: '/habilidades',
     aliases: ['/skills'],
     name: 'habilidades',
@@ -71,6 +93,7 @@ export const routes: Route[] = [
   {
     id: 'projetos',
     kind: 'page',
+    group: 'portfolio',
     path: '/projetos',
     aliases: ['/projects'],
     name: 'projetos',
@@ -82,6 +105,7 @@ export const routes: Route[] = [
   {
     id: 'experiencias',
     kind: 'page',
+    group: 'portfolio',
     path: '/experiencias',
     aliases: ['/experience'],
     name: 'experiencias',
@@ -93,6 +117,7 @@ export const routes: Route[] = [
   {
     id: 'contato',
     kind: 'page',
+    group: 'personal',
     path: '/contato',
     aliases: ['/contact'],
     name: 'contato',
@@ -104,6 +129,7 @@ export const routes: Route[] = [
   {
     id: 'curriculo',
     kind: 'page',
+    group: 'portfolio',
     path: '/curriculo',
     aliases: ['/resume'],
     name: 'curriculo',
@@ -115,6 +141,7 @@ export const routes: Route[] = [
   {
     id: 'academico',
     kind: 'page',
+    group: 'portfolio',
     path: '/academico',
     aliases: ['/academics'],
     name: 'academico',
@@ -126,6 +153,7 @@ export const routes: Route[] = [
   {
     id: 'servicos',
     kind: 'page',
+    group: 'portfolio',
     path: '/servicos',
     aliases: ['/services'],
     name: 'servicos',
@@ -135,9 +163,45 @@ export const routes: Route[] = [
     desc: L('sites e landing pages', 'websites and landing pages'),
   },
   {
+    id: 'jogos',
+    kind: 'page',
+    path: '/jogos',
+    aliases: ['/games'],
+    name: 'jogos',
+    alias: 'games',
+    command: 'jogos',
+    group: 'interactive',
+    label: L('Jogos', 'Games'),
+    desc: L('campo minado e experiências interativas', 'minesweeper and interactive experiences'),
+  },
+  {
+    // Sem `name`: não entra em `ls`/`cd` (a página já é o terminal).
+    id: 'terminal',
+    kind: 'page',
+    path: TERMINAL_PATH,
+    group: 'interactive',
+    label: L('Terminal', 'Terminal'),
+    desc: L(
+      'a linha de comando do site, com todos os comandos',
+      'the site command line, with every command',
+    ),
+  },
+  {
+    id: 'github',
+    kind: 'page',
+    path: '/github',
+    name: 'github',
+    alias: 'gh',
+    command: 'stats',
+    group: 'development',
+    label: L('GitHub', 'GitHub'),
+    desc: L('números e repositórios', 'numbers and repositories'),
+  },
+  {
     // Em construção (sem conteúdo em data/now.ts): fora do sitemap e do índice.
     id: 'agora',
     kind: 'page',
+    group: 'personal',
     path: '/agora',
     aliases: ['/now'],
     name: 'agora',
@@ -151,6 +215,7 @@ export const routes: Route[] = [
     // Em construção (sem conteúdo em data/uses.ts): fora do sitemap e do índice.
     id: 'setup',
     kind: 'page',
+    group: 'personal',
     path: '/setup',
     aliases: ['/uses'],
     name: 'setup',
@@ -231,7 +296,11 @@ export function windowPath(route: Route | undefined | null, lang: Lang) {
 
 // URL da home que já executa o comando da página (visão em terminal).
 export const terminalUrl = (route: Route, command = route.command) =>
-  `/?cmd=${encodeURIComponent(command ?? route.id)}`;
+  `${TERMINAL_PATH}?cmd=${encodeURIComponent(command ?? route.id)}`;
+
+// Rotas da barra lateral de um grupo, sem rascunhos.
+export const navRoutes = (group: NavGroup) =>
+  routes.filter((r) => r.group === group && !r.hidden && !r.draft);
 
 // Âncoras da home antiga (`/#projetos`…) → página própria equivalente (SH-10).
 // A home virou só o terminal; links publicados antes disso (LinkedIn, currículo,

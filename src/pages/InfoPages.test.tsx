@@ -68,7 +68,7 @@ describe('/setup em construção', () => {
   it('o terminal mostra o aviso e o par "ver no terminal / abrir página própria"', async () => {
     const user = userEvent.setup();
 
-    renderApp('/');
+    renderApp();
     await user.type(input(), 'setup{Enter}');
     expect(within(log()).getByText('Em construção.')).toBeInTheDocument();
     expect(within(log()).getByRole('button', { name: /abrir página própria/ })).toBeInTheDocument();
@@ -102,7 +102,7 @@ describe('/agora com conteúdo (CE-06)', () => {
   it('o terminal mostra o mesmo conteúdo com o par de ações', async () => {
     const user = userEvent.setup();
 
-    renderApp('/');
+    renderApp();
     await user.type(input(), 'agora{Enter}');
     expect(within(log()).getByText('Foco')).toBeInTheDocument();
     expect(within(log()).getByRole('button', { name: /abrir página própria/ })).toBeInTheDocument();
@@ -113,7 +113,7 @@ describe('ls e cd', () => {
   it('ls lista as duas páginas e cd abre', async () => {
     const user = userEvent.setup();
 
-    renderApp('/');
+    renderApp();
     await user.type(input(), 'ls{Enter}');
     expect(within(log()).getByRole('link', { name: 'agora' })).toHaveAttribute('href', '/agora');
     expect(within(log()).getByRole('link', { name: 'setup' })).toHaveAttribute('href', '/setup');
