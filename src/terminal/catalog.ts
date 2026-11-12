@@ -21,6 +21,7 @@ const CATEGORY_OF: Record<string, CommandCategory> = {
   atalhos: 'navigation',
   visitante: 'personalize',
   pergunte: 'info',
+  trilha: 'personalize',
   sobre: 'pages',
   projetos: 'pages',
   habilidades: 'pages',

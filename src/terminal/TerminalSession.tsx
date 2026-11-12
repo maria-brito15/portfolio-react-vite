@@ -6,6 +6,7 @@ import { TERMINAL_PATH, normalizePath, routes } from '../data/routes';
 import { prefersReducedMotion } from '../utils/env';
 import { usePersona } from '../hooks/usePersona';
 import { emitTrailEvent } from '../trails/events';
+import { useTrail } from '../trails/TrailProvider';
 import {
   contextAfter,
   contextOfHistory,
@@ -85,6 +86,7 @@ export function TerminalProvider({ children }: { children: ReactNode }) {
   const [theme, toggleTheme, setTheme] = useTheme();
   const { path, search, navigate } = useRouter();
   const { persona, asked, choose, skip, clear } = usePersona();
+  const trail = useTrail();
 
   const [inputs, setInputs] = useState<string[]>(readStored);
   const [entry, setEntry] = useState<Entry | null>(() => {
@@ -100,6 +102,7 @@ export function TerminalProvider({ children }: { children: ReactNode }) {
           setTheme,
           replay: true,
           persona,
+          trail,
         })
       : null;
   });
@@ -226,6 +229,7 @@ export function TerminalProvider({ children }: { children: ReactNode }) {
         personaPending: !asked,
         choosePersona: choose,
         clearPersona: clear,
+        trail,
       });
 
       // Qualquer comando dispensa a pergunta de persona (responder já a encerrou).
@@ -267,6 +271,7 @@ export function TerminalProvider({ children }: { children: ReactNode }) {
       choose,
       skip,
       clear,
+      trail,
     ],
   );
 

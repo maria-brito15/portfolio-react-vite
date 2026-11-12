@@ -9,6 +9,7 @@ import { agora, setup } from './pages';
 import { stats } from './stats';
 import { visitante } from './persona';
 import { pergunte } from './ask';
+import { trilha } from './trilha';
 
 export { HIRE, hireResult } from './fun';
 export { personaAnswer } from './persona';
@@ -17,6 +18,7 @@ export const extraCommands: Command[] = [
   agora,
   visitante,
   pergunte,
+  trilha,
   setup,
   neofetch,
   gitlog,

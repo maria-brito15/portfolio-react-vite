@@ -100,3 +100,8 @@ provisórias; se você preferir outra palavra, é só dizer.
 | Nome acessível do cartão | Trilha guiada: {título} | Guided trail: {title} | a aprovar |
 | Ação de imprimir (já existe no currículo) | Imprimir / salvar em PDF | Print / save as PDF | reaproveitado do site |
 | Ação de abrir outra página | o nome da própria página (ex.: Serviços) | idem | reaproveitado do site |
+| Comando `trilha`: passo atual | passo {i} de {n}: {texto do passo} | step {i} of {n}: {step text} | a aprovar |
+| Comando `trilha`: trilha aberta | trilha aberta: {título} · {i} de {n} | trail open: {title} · {i} of {n} | a aprovar |
+| Comando `trilha`: fechada | trilha fechada. · nenhuma trilha aberta. | trail closed. · no trail open. | a aprovar |
+| Comando `trilha`: uso | trilha iniciar · continuar · reiniciar · sair | trail start · resume · restart · exit | a aprovar |
+| Cartão: número de passos | {n} passos | {n} steps | a aprovar |
