@@ -723,3 +723,67 @@
     align-items: center;
   }
 }
+
+/* Persona: faixa da home (pergunta e escolha) e destaque das entradas da persona. */
+.persona-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  margin: 0 0 var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+.persona-bar > p {
+  margin: 0;
+}
+.persona-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.persona-option,
+.persona-link {
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.persona-option {
+  min-height: 2.5rem;
+  padding: 0 var(--space-3);
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border-ui);
+  border-radius: var(--radius-sm);
+}
+.persona-option:hover,
+.persona-option[aria-pressed='true'] {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) var(--tint-bg), var(--surface));
+}
+.persona-link {
+  min-height: 2.5rem;
+  padding: 0 var(--space-2);
+  color: var(--dim);
+  background: none;
+  border: 0;
+  text-decoration: underline;
+}
+.persona-link:hover {
+  color: var(--accent);
+}
+.persona-idle {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-3);
+}
+.persona-option:focus-visible,
+.persona-link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
