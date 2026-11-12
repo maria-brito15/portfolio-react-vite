@@ -77,6 +77,17 @@ for (const [device, size] of Object.entries(VIEWPORTS)) {
 
           expect(overflow, 'rolagem horizontal da página').toBeLessThanOrEqual(0);
           expect(errors).toEqual([]);
+          if (SHOTS) {
+            // Imagens são lazy: rola a página para carregá-las antes da captura.
+            await page.evaluate(async () => {
+              for (let y = 0; y < document.body.scrollHeight; y += 600) {
+                window.scrollTo(0, y);
+                await new Promise((r) => setTimeout(r, 100));
+              }
+              window.scrollTo(0, 0);
+            });
+            await page.waitForTimeout(500);
+          }
           if (SHOTS)
             await page.screenshot({
               path: `e2e/shots/${device}-${theme}${path.replace('/', '-')}.png`,
