@@ -7,10 +7,13 @@ import Card from '../components/ui/Card';
 import SectionTitle from '../components/ui/SectionTitle';
 import { LEVELS, LEVEL_NAMES, type Level } from '../terminal/games/mines';
 import { readBest } from '../terminal/games/bestTimes';
+import type { Tone } from '../data/tones';
 
 const Minesweeper = lazy(() => import('../terminal/games/Minesweeper'));
 
 const LEVEL_IDS = Object.keys(LEVELS) as Level[];
+// Dificuldade em três cores (o nome do nível continua escrito ao lado).
+const LEVEL_TONE: Record<Level, Tone> = { easy: 'mint', medium: 'amber', hard: 'coral' };
 
 // Biblioteca de jogos: cada jogo com descrição, níveis, melhor tempo (o recorde
 // que o próprio jogo já grava no navegador) e botão de jogar. O tabuleiro é o
@@ -34,7 +37,7 @@ export default function GameCenter() {
         </SectionTitle>
         <p className="t-dim">{g.lead}</p>
 
-        <Card as="article" className="game-card" aria-labelledby="game-mines">
+        <Card as="article" className="game-card" data-tone="pink" aria-labelledby="game-mines">
           <h2 id="game-mines">{g.mines}</h2>
           <p>{g.minesText}</p>
           <ul className="game-levels">
@@ -44,7 +47,7 @@ export default function GameCenter() {
               const active = playing?.level === level;
 
               return (
-                <li key={level}>
+                <li key={level} data-tone={LEVEL_TONE[level]}>
                   <span className="game-level-name">{LEVEL_NAMES[level][lang]}</span>
                   <span className="t-dim">{g.size(rows, cols, mines)}</span>
                   <span className="t-dim">

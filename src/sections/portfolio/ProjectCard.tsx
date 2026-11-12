@@ -6,6 +6,7 @@ import { useLanguage } from '../../i18n/LanguageContext';
 import { formatProjectDate, projectPeriod } from '../../utils/projectDate';
 import ProjectMedia from './ProjectMedia';
 import Card from '../../components/ui/Card';
+import { PROJECT_TONE, techTone } from '../../data/tones';
 
 interface VariantProps {
   project: Project;
@@ -29,7 +30,7 @@ function Stack({ tech }: { tech: string[] }) {
   return (
     <div className="stacks">
       {tech.map((item) => (
-        <span className="st" key={item}>
+        <span className="st" key={item} data-tone={techTone(item)}>
           {item}
         </span>
       ))}
@@ -165,7 +166,7 @@ export default function ProjectCard({
   const Variant = VARIANTS[project.variant];
 
   return (
-    <li className="timeline-item" id={`projeto-${project.id}`}>
+    <li className="timeline-item" id={`projeto-${project.id}`} data-tone={PROJECT_TONE[project.id]}>
       <div className="timeline-date">
         <time dateTime={toDateTime(project.date)}>{projectPeriod(project, lang)}</time>
         {orderUndetermined && (

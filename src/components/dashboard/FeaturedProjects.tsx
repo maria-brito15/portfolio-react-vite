@@ -2,6 +2,7 @@ import { Link } from '../../router';
 import { useLanguage } from '../../i18n/LanguageContext';
 import { projects } from '../../data/projects';
 import { routeById } from '../../data/routes';
+import { PROJECT_TONE, techTone } from '../../data/tones';
 import Card from '../ui/Card';
 import Chip from '../ui/Chip';
 import SectionTitle from '../ui/SectionTitle';
@@ -25,9 +26,13 @@ export default function FeaturedProjects() {
       <ul className="featured-grid">
         {featured.map((p) => (
           <li key={p.id}>
-            <Card as="article" className="featured-project">
+            <Card as="article" className="featured-project" data-tone={PROJECT_TONE[p.id]}>
               <h3>
-                {p.icon && <span aria-hidden="true">{p.icon} </span>}
+                {p.icon && (
+                  <span className="project-icon" aria-hidden="true">
+                    {p.icon}
+                  </span>
+                )}
                 {p.name}
               </h3>
               <p className="featured-badge">
@@ -36,7 +41,9 @@ export default function FeaturedProjects() {
               <div className="featured-desc">{p[lang].description}</div>
               <p className="featured-tech">
                 {p.tech.slice(0, 4).map((tech) => (
-                  <Chip key={tech}>{tech}</Chip>
+                  <Chip key={tech} accent={techTone(tech)}>
+                    {tech}
+                  </Chip>
                 ))}
               </p>
               <p className="featured-links">

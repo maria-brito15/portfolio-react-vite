@@ -5,6 +5,7 @@ import SiteShell from '../components/shell/SiteShell';
 import GithubStats from '../components/GithubStats';
 import Card from '../components/ui/Card';
 import Chip from '../components/ui/Chip';
+import { techTone } from '../data/tones';
 import SectionTitle from '../components/ui/SectionTitle';
 
 // Detalhe do GitHub: os números ao vivo (mesmo painel da página Sobre) e os
@@ -36,7 +37,9 @@ export default function GithubPage() {
                 <p className="repo-badge t-dim">{p[lang].badge}</p>
                 <p className="repo-tech">
                   {p.tech.map((tech) => (
-                    <Chip key={tech}>{tech}</Chip>
+                    <Chip key={tech} accent={techTone(tech)}>
+                      {tech}
+                    </Chip>
                   ))}
                 </p>
                 <a href={p.repo ?? undefined} target="_blank" rel="noopener noreferrer">

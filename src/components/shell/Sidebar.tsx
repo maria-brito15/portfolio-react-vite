@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { Link, useRouter } from '../../router';
 import { useLanguage } from '../../i18n/LanguageContext';
 import { NAV_GROUPS, findPageByPath, navRoutes } from '../../data/routes';
+import { GROUP_TONE } from '../../data/tones';
 import { openShortcuts } from './commandBarEvents';
 
 // Navegação principal do site: grupos recolhíveis montados de routes.ts (uma
@@ -81,7 +82,7 @@ export default function Sidebar({
           if (!items.length) return null;
 
           return (
-            <details key={group} className="sidebar-group" open>
+            <details key={group} className="sidebar-group" data-tone={GROUP_TONE[group]} open>
               <summary>{t.ws.groups[group]}</summary>
               <ul>
                 {items.map((r) => (

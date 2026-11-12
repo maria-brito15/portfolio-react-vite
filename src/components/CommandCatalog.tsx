@@ -2,6 +2,7 @@
 // comando na sessão. Lê o inventário de `commands.tsx` (via terminal/catalog).
 import { useLanguage } from '../i18n/LanguageContext';
 import { CATEGORIES, commandsIn, type CommandCategory } from '../terminal/catalog';
+import { seriesTone } from '../data/tones';
 import SectionTitle from './ui/SectionTitle';
 import RunButton from './RunButton';
 
@@ -27,8 +28,8 @@ export default function CommandCatalog({
       </SectionTitle>
       <p className="t-dim">{lead}</p>
       <div className="catalog-grid">
-        {(only ?? CATEGORIES).map((category) => (
-          <div key={category} className="catalog-group">
+        {(only ?? CATEGORIES).map((category, i) => (
+          <div key={category} className="catalog-group" data-tone={seriesTone(i)}>
             <h3>{t.ws.terminal.categories[category]}</h3>
             <ul>
               {commandsIn(category).map((c) => {

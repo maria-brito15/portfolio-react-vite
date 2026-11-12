@@ -9,10 +9,14 @@ import { Link } from '../router';
 import { GITHUB_USER, type GithubStats as Data } from '../services/github';
 import { profile } from '../data/profile';
 import { routeById } from '../data/routes';
+import { seriesTone, type Tone } from '../data/tones';
 import Card from './ui/Card';
 import SectionTitle from './ui/SectionTitle';
 
 type Text = ReturnType<typeof useLanguage>['t']['github'];
+
+// Uma cor por métrica (a mesma no painel, na página e no resumo da home).
+const METRIC_TONES: Tone[] = ['violet', 'amber', 'mint', 'pink'];
 
 function metrics(data: Data, g: Text, locale: string): [string, string][] {
   const n = (v: number | null) => (v === null ? g.unavailable : v.toLocaleString(locale));
@@ -34,8 +38,8 @@ function Languages({ data, g }: { data: Data; g: Text }) {
     <div className="gh-langs">
       <div className="lbl">{g.languages}</div>
       <ul className="gh-lang-list">
-        {data.languages.map((l) => (
-          <li key={l.name}>
+        {data.languages.map((l, i) => (
+          <li key={l.name} data-tone={seriesTone(i)}>
             <span className="gh-lang-name">{l.name}</span>
             <span className="gh-bar" aria-hidden="true">
               <span style={{ width: `${Math.round((l.repos / total) * 100)}%` }} />
@@ -82,8 +86,8 @@ function Body({ compact, summary }: { compact: boolean; summary: boolean }) {
   if (compact)
     return (
       <dl className="t-kv">
-        {metrics(data, g, locale).map(([value, label]) => (
-          <div key={label}>
+        {metrics(data, g, locale).map(([value, label], i) => (
+          <div key={label} data-tone={METRIC_TONES[i]}>
             <dt>{label}</dt>
             <dd>{value}</dd>
           </div>
@@ -107,8 +111,8 @@ function Body({ compact, summary }: { compact: boolean; summary: boolean }) {
     return (
       <>
         <ul className="gh-metrics">
-          {metrics(data, g, locale).map(([value, label]) => (
-            <li key={label}>
+          {metrics(data, g, locale).map(([value, label], i) => (
+            <li key={label} data-tone={METRIC_TONES[i]}>
               <strong>{value}</strong>
               <span>{label}</span>
             </li>
@@ -124,8 +128,8 @@ function Body({ compact, summary }: { compact: boolean; summary: boolean }) {
   return (
     <>
       <ul className="gh-metrics">
-        {metrics(data, g, locale).map(([value, label]) => (
-          <li key={label}>
+        {metrics(data, g, locale).map(([value, label], i) => (
+          <li key={label} data-tone={METRIC_TONES[i]}>
             <strong>{value}</strong>
             <span>{label}</span>
           </li>
