@@ -13,13 +13,15 @@ import InteractivePanel from '../components/dashboard/InteractivePanel';
 // A home é o painel do workspace: apresentação, foco atual, acesso rápido,
 // projetos em destaque, resumo do GitHub e as experiências interativas. O
 // terminal continua a um clique (/terminal), mas não é mais o único caminho.
-export default function Home() {
+// `routeId` só muda para as rotas de persona (`/r/tech`), que mostram esta mesma
+// página mas ficam fora do índice dos buscadores (meta em `seo.ts`).
+export default function Home({ routeId = 'home' }: { routeId?: string }) {
   const { lang, t } = useLanguage();
   const c = portfolio[lang];
   const h = t.ws.home;
   const focus = now.items[0];
 
-  useDocumentMeta('home');
+  useDocumentMeta(routeId);
 
   return (
     <SiteShell routeId="home">

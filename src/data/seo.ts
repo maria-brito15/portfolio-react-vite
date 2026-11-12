@@ -223,8 +223,12 @@ export const pageMeta: Record<string, Localized<PageMeta>> = {
   ),
 };
 
+// Rota de persona (`/r/tech`) é a home com uma lente: mesma meta, mesmo canonical,
+// fora do índice. Qualquer outro id sem meta cai no 404.
+const isPersonaRoute = (id: string) => Boolean(routeById(id)?.persona);
+
 export const metaFor = (id: string, lang: Lang): PageMeta =>
-  (pageMeta[id] ?? pageMeta[NOT_FOUND_ID])[lang];
+  (pageMeta[id] ?? (isPersonaRoute(id) ? pageMeta.home : pageMeta[NOT_FOUND_ID]))[lang];
 
 export const absoluteUrl = (path: string) => `${SITE_URL}${normalizePath(path)}`;
 
@@ -240,15 +244,16 @@ const LOCALES: Record<Lang, string> = { pt: 'pt_BR', en: 'en_US' };
 export function headTags(routeId: string, lang: Lang): { title: string; tags: HeadTag[] } {
   const { title, description } = metaFor(routeId, lang);
   const route = routeById(routeId);
-  const url = absoluteUrl(route?.path ?? '/');
+  const url = absoluteUrl(route?.persona ? '/' : (route?.path ?? '/'));
   const image = `${SITE_URL}${OG_IMAGE}`;
   const imageAlt =
     lang === 'pt'
       ? 'Duda Brito, estudante de Engenharia de Software na PUC Minas'
       : 'Duda Brito, Software Engineering student at PUC Minas';
-  // O 404 e as páginas em construção (`draft`, sem conteúdo) ficam fora do índice.
+  // O 404, as páginas em construção (`draft`, sem conteúdo) e as rotas de persona
+  // (cópias da home) ficam fora do índice.
   const robots =
-    routeId === NOT_FOUND_ID || route?.draft
+    routeId === NOT_FOUND_ID || route?.draft || route?.persona
       ? 'noindex, follow'
       : 'index, follow, max-image-preview:large, max-snippet:-1';
   const m = (attr: 'name' | 'property', key: string, content: string): HeadTag => ({
@@ -396,9 +401,11 @@ function breadcrumb(route: Route, lang: Lang) {
 // Grafo da página. Home e Sobre são `ProfilePage` (a pessoa é a entidade principal);
 // Projetos lista os projetos; as demais são `WebPage` ligadas ao mesmo site e à mesma pessoa.
 export function jsonLdFor(routeId: string, lang: Lang) {
-  const route = routeById(routeId);
+  // Rota de persona: o mesmo grafo da home.
+  const route = routeById(isPersonaRoute(routeId) ? 'home' : routeId);
 
   if (!route) return null;
+  routeId = route.id;
 
   const { title, description } = metaFor(routeId, lang);
   const url = absoluteUrl(route.path);

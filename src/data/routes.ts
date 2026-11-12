@@ -12,6 +12,7 @@
 
 import type { Lang, Localized } from '../types';
 import { now } from './now';
+import { personas, type PersonaId } from './personas';
 import { uses } from './uses';
 
 const L = (pt: string, en: string): Localized => ({ pt, en });
@@ -47,6 +48,9 @@ export interface Route {
   // Página em construção (sem conteúdo): existe e abre, mas não entra no
   // sitemap nem no índice dos buscadores.
   draft?: boolean;
+  // Link direto com persona (`/r/tech`): mostra a home com a lente aplicada. Fica
+  // fora do sitemap e do índice; o canonical aponta para `/`.
+  persona?: PersonaId;
 }
 
 export interface Crumb {
@@ -236,6 +240,15 @@ export const routes: Route[] = [
     label: L('Estudo de caso', 'Case study'),
     hidden: true,
   },
+  // `/r/<persona>`: uma rota por persona, geradas de `personas.ts` (PR-08).
+  ...personas.map((p): Route => ({
+    id: `persona-${p.id}`,
+    kind: 'page',
+    path: `/r/${p.id}`,
+    label: p.label,
+    hidden: true,
+    persona: p.id,
+  })),
 ];
 
 export const routeById = (id: string) => routes.find((r) => r.id === id);

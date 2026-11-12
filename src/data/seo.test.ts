@@ -45,7 +45,8 @@ describe('tags do <head>', () => {
   it('canonical absoluto, sem barra final (exceto a home), e og:url igual a ele', () => {
     expect(find(headTags('home', 'pt').tags, 'canonical')?.attrs.href).toBe(`${SITE_URL}/`);
 
-    for (const r of routes.filter((r) => r.id !== 'home')) {
+    // rotas de persona repetem a home: canonical `/` (ver personaRoutes.test.tsx)
+    for (const r of routes.filter((r) => r.id !== 'home' && !r.persona)) {
       const { tags } = headTags(r.id, 'pt');
       const canonical = find(tags, 'canonical')?.attrs.href;
 
@@ -83,10 +84,10 @@ describe('tags do <head>', () => {
     expect(find(notFound, 'robots')?.attrs.content).toContain('noindex');
     expect(find(notFound, 'canonical')).toBeUndefined();
 
-    // fora o 404, só as páginas em construção (draft) ficam de fora do índice
+    // fora o 404, só as páginas em construção (draft) e as rotas de persona ficam de fora do índice
     for (const r of routes)
       expect(find(headTags(r.id, 'pt').tags, 'robots')?.attrs.content, r.id).toContain(
-        r.draft ? 'noindex' : 'index, follow',
+        r.draft || r.persona ? 'noindex' : 'index, follow',
       );
   });
 
@@ -135,7 +136,7 @@ describe('JSON-LD', () => {
   it('toda página, exceto a home, tem BreadcrumbList terminando na própria URL', () => {
     expect(ofType('home', 'BreadcrumbList')).toBeUndefined();
 
-    for (const r of routes.filter((r) => r.id !== 'home')) {
+    for (const r of routes.filter((r) => r.id !== 'home' && !r.persona)) {
       const items = (ofType(r.id, 'BreadcrumbList')?.itemListElement ?? []) as {
         position: number;
         item: string;

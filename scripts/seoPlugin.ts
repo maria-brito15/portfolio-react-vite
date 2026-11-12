@@ -98,9 +98,10 @@ export function seoPlugin(): Plugin {
 
       write('404.html', withRoute(template, NOT_FOUND_ID));
 
-      // Páginas em construção não entram no sitemap (o HTML delas sai com noindex).
+      // Páginas em construção e rotas de persona (`/r/*`) não entram no sitemap
+      // (o HTML delas sai com noindex).
       const urls = routes
-        .filter((r) => !r.draft)
+        .filter((r) => !r.draft && !r.persona)
         .map((r) => `  <url><loc>${absoluteUrl(r.path)}</loc></url>`);
 
       write(
