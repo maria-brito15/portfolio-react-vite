@@ -876,3 +876,46 @@
     display: none;
   }
 }
+
+/* Cartão da trilha na home. */
+.trail-card {
+  margin: 0 0 var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius-sm);
+}
+.trail-card-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-3);
+}
+.trail-card-head h2 {
+  margin: 0;
+  font-size: 1rem;
+}
+.trail-seal {
+  padding: 0 var(--space-2);
+  font-size: var(--fs-chrome);
+  color: var(--ok);
+  border: 1px solid var(--ok);
+  border-radius: var(--radius-pill);
+}
+.trail-intro {
+  max-width: var(--measure);
+  margin: var(--space-2) 0 var(--space-3);
+  color: var(--text-2);
+}
+.trail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+@media print {
+  .trail-card {
+    display: none;
+  }
+}

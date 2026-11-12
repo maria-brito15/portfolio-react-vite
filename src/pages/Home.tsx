@@ -7,6 +7,7 @@ import { useDocumentMeta } from '../hooks/useDocumentMeta';
 import SiteShell from '../components/shell/SiteShell';
 import GithubStats from '../components/GithubStats';
 import PersonaPrompt from '../components/PersonaPrompt';
+import TrailCard from '../trails/TrailCard';
 import QuickAccess from '../components/dashboard/QuickAccess';
 import FeaturedProjects from '../components/dashboard/FeaturedProjects';
 import InteractivePanel from '../components/dashboard/InteractivePanel';
@@ -57,6 +58,7 @@ export default function Home({ routeId = 'home' }: { routeId?: string }) {
         </header>
 
         <PersonaPrompt />
+        <TrailCard />
         <QuickAccess />
         <FeaturedProjects />
         <div className="dash-split">
