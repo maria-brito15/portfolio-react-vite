@@ -20,12 +20,48 @@
   font-weight: 600;
 }
 
+/* ---------- Tons de categoria ----------
+   `data-tone="violet|mint|amber|coral|cyan|pink"` em qualquer elemento define --tone
+   (a cor, por tema, vinda de tokens.css) e os dois tingidos derivados: --tone-bg (fundo
+   suave) e --tone-line (filete). Quem quiser a cor lê var(--tone, var(--accent)); sem
+   o atributo, cai no acento primário. Cor é reforço: o texto e o rótulo sempre dizem o mesmo. */
+[data-tone] {
+  --tone: var(--accent);
+  --tone-bg: color-mix(in srgb, var(--tone) var(--tint-bg), transparent);
+  --tone-line: color-mix(in srgb, var(--tone) var(--tint-line), transparent);
+}
+[data-tone='violet'] {
+  --tone: var(--c-violet);
+}
+[data-tone='mint'] {
+  --tone: var(--c-mint);
+}
+[data-tone='amber'] {
+  --tone: var(--c-amber);
+}
+[data-tone='coral'] {
+  --tone: var(--c-coral);
+}
+[data-tone='cyan'] {
+  --tone: var(--c-cyan);
+}
+[data-tone='pink'] {
+  --tone: var(--c-pink);
+}
+
 /* ---------- Card ---------- */
 .card {
   padding: var(--space-4) var(--space-4);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   background: var(--surface-2);
+  transition:
+    border-color 0.15s,
+    background-color 0.15s;
+}
+/* Cartão com identidade (projeto, jogo): filete de 3px no tom, sem tingir o corpo todo. */
+.card[data-tone] {
+  border-left: 3px solid var(--tone);
 }
 @media print {
   .card {
@@ -42,12 +78,18 @@
   line-height: 1.5;
   padding: 1px 9px;
   border-radius: var(--radius-pill);
-  color: var(--accent);
-  background: rgba(163, 116, 242, 0.1);
-  border: 1px solid rgba(163, 116, 242, 0.22);
+  color: var(--tone, var(--accent));
+  background: var(--tone-bg, color-mix(in srgb, var(--accent) var(--tint-bg), transparent));
+  border: 1px solid var(--tone-line, color-mix(in srgb, var(--accent) var(--tint-line), transparent));
   white-space: nowrap;
   text-transform: none;
   letter-spacing: 0;
+}
+/* Tecnologia sem tipo claro (ou fora de um cartão com tom): neutra, sem cor emprestada. */
+.st:not([data-tone]) {
+  --tone: var(--text-2);
+  --tone-bg: var(--surface-3);
+  --tone-line: var(--border);
 }
 .chip--live {
   color: var(--ok);

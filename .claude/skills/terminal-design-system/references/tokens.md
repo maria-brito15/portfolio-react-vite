@@ -10,10 +10,13 @@ Escuro é o padrão em `:root`; `[data-theme='light']` só sobrescreve o que mud
 | Trilhas e realces | `--surface-3` | barras de progresso, hover |
 | Borda | `--border` | 1px em tudo |
 | Texto | `--text` · `--text-2` · `--dim` | principal · secundário · rótulos |
-| Acento (link/caminho) | `--accent` (+ `--on-accent`) | links, caminho, foco |
-| Ok/ativo | `--ok` | usuário, sucesso, "em andamento" |
-| Comando/ação | `--warn` | comandos, destaques de ação |
-| Erro | `--err` | mensagens de erro |
+| Acento primário (violeta) | `--accent` (+ `--on-accent`) | links, foco, ação principal |
+| Acento secundário (rosa) | `--accent-2` | arquivos, detalhes secundários |
+| Ok/ativo (menta) | `--ok` | usuário, sucesso, "em andamento" |
+| Comando/ação (âmbar) | `--warn` | comandos, destaques de ação |
+| Erro (coral) | `--err` | mensagens de erro |
+| Informação (ciano) | `--info` | caminhos, diretórios, callouts |
+| Categorias | `--c-violet/mint/amber/coral/cyan/pink` | via `data-tone="…"` (ui.css); nomes em `src/data/tones.ts` |
 
 Tipografia: `--font-mono`, `--fs-chrome` (0.75rem), `--fs-body`, `--fs-mono`, `--fs-mono-sm`,
 `--fs-h1` (1.9rem), `--fs-h2` (1.1rem), `--lh-mono` (1.65), `--measure` (72ch).

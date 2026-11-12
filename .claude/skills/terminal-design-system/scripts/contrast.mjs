@@ -41,6 +41,8 @@ const pairs = [
   // contorno de campo/seletor (WCAG 1.4.11, não-texto essencial): 3:1
   ['border-ui', 'bg', 3], ['border-ui', 'surface', 3], ['border-ui', 'surface-2', 3], ['border-ui', 'surface-3', 3],
   ['err', 'bg', 4.5],
+  ...['accent-2', 'info', 'c-violet', 'c-mint', 'c-amber', 'c-coral', 'c-cyan', 'c-pink'].flatMap((n) =>
+    ['bg', 'surface', 'surface-2', 'surface-3'].map((b) => [n, b, 4.5])),
 ];
 let fail = 0;
 for (const [name, theme] of [['escuro', dark], ['claro', light], ['dracula', extra('dracula')], ['solarized', extra('solarized')], ['âmbar', extra('amber')]]) {

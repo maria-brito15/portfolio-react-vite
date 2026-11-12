@@ -33,7 +33,9 @@ const ratio = (a: string, b: string) => {
 };
 
 const SURFACES = ['surface', 'surface-2', 'surface-3'];
-const ACCENTS = ['accent', 'ok', 'warn', 'err'];
+const ACCENTS = ['accent', 'accent-2', 'ok', 'warn', 'err', 'info'];
+// Paleta de categorias (--c-*): mesmos 4,5:1, também sobre --bg (a barra lateral fica sobre ele).
+const TONES = ['violet', 'mint', 'amber', 'coral', 'cyan', 'pink'].map((n) => `c-${n}`);
 const TEXTS = ['text', 'text-2', 'dim'];
 // Temas extras (TB-04): só sobrescrevem tokens sobre o escuro; cada um precisa
 // de bloco próprio em tokens.css, com contraste AA.
@@ -131,10 +133,32 @@ describe('contraste AA dos tokens (ES-05)', () => {
     expect(form).toContain('var(--border-ui)');
   });
 
+  it.each(themes)(
+    'tema %s: cada tom de categoria (--c-*) tem ≥ 4,5:1 em bg e nas três superfícies',
+    (_, theme) => {
+      for (const tone of TONES) {
+        for (const surface of ['bg', ...SURFACES]) {
+          const value = ratio(theme[tone], theme[surface]);
+
+          expect(
+            value,
+            `--${tone} sobre --${surface}: ${value.toFixed(2)}:1`,
+          ).toBeGreaterThanOrEqual(4.5);
+        }
+      }
+    },
+  );
+
+  it.each(themes)('tema %s: o texto de acento sobre bg também passa AA', (_, theme) => {
+    for (const accent of ACCENTS) {
+      expect(ratio(theme[accent], theme.bg), `--${accent}`).toBeGreaterThanOrEqual(4.5);
+    }
+  });
+
   it('a impressão usa os mesmos tokens do tema claro (ES-09)', () => {
     const print = tokens(/@media print\s*\{\s*:root,\s*\[data-theme\]\s*\{([\s\S]*?)\n {2}\}/);
 
-    for (const name of [...SURFACES, ...ACCENTS, ...TEXTS, 'on-accent']) {
+    for (const name of [...SURFACES, ...ACCENTS, ...TONES, ...TEXTS, 'on-accent']) {
       expect(print[name], `--${name} na impressão`).toBe(light[name]);
     }
   });
