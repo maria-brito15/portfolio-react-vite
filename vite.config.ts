@@ -1,10 +1,11 @@
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import { seoPlugin } from './scripts/seoPlugin';
+import { assistantContextPlugin } from './scripts/assistantContext';
 import { buildInfo } from './scripts/buildInfo';
 
 export default defineConfig(({ command }) => ({
-  plugins: [react(), seoPlugin()],
+  plugins: [react(), seoPlugin(), assistantContextPlugin()],
   // Dados reais do build para o comando `stats` (src/data/build.ts).
   define: { __BUILD__: JSON.stringify(buildInfo(command)) },
   build: {
