@@ -8,6 +8,7 @@ import { jogos, minas, sair } from './games';
 import { agora, setup } from './pages';
 import { stats } from './stats';
 import { visitante } from './persona';
+import { pergunte } from './ask';
 
 export { HIRE, hireResult } from './fun';
 export { personaAnswer } from './persona';
@@ -15,6 +16,7 @@ export { personaAnswer } from './persona';
 export const extraCommands: Command[] = [
   agora,
   visitante,
+  pergunte,
   setup,
   neofetch,
   gitlog,

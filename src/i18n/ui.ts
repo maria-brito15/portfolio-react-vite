@@ -209,6 +209,33 @@ export const ui = {
       choose: 'Escolher visitante',
       cta: 'Para você',
     },
+    ask: {
+      usage:
+        'Pergunte sobre a Duda: projetos, formação, experiências, serviços ou contato. O assistente responde só com o que está neste site.',
+      examples: [
+        'quais projetos a Duda já fez?',
+        'como falo com a Duda?',
+        'o que a Duda estuda?',
+      ],
+      tryAsking: 'experimente:',
+      thinking: 'consultando o conteúdo do site…',
+      sources: 'fontes:',
+      contact: 'contato',
+      notice:
+        'Aviso: sua pergunta é enviada a um serviço de IA externo (Google Gemini, nível gratuito), que pode usá-la e revisá-la. Não digite dados pessoais. Uso só para maiores de 18 anos.',
+      stale: 'resposta não guardada (a página foi recarregada). Rode o comando de novo.',
+      errors: {
+        invalid: 'escreva a pergunta depois do comando.',
+        tooLong: (max: number) => `pergunta longa demais (no máximo ${max} caracteres).`,
+        region:
+          'o assistente não está disponível na sua região (Espaço Econômico Europeu, Reino Unido e Suíça). O resto do site funciona normalmente.',
+        rate: 'muitas perguntas em pouco tempo. Tente de novo mais tarde.',
+        quota: 'o assistente atingiu o limite gratuito de hoje. Tente amanhã.',
+        down: 'o assistente está indisponível agora. O site continua funcionando.',
+        offline: 'sem conexão. Verifique a internet e tente de novo.',
+        session: (max: number) => `limite de ${max} perguntas nesta sessão.`,
+      },
+    },
     ws: wsPt,
   },
   en: {
@@ -416,6 +443,33 @@ export const ui = {
       clear: 'remove',
       choose: 'Choose visitor',
       cta: 'For you',
+    },
+    ask: {
+      usage:
+        'Ask about Duda: projects, education, experience, services or contact. The assistant answers only with what is on this site.',
+      examples: [
+        'which projects has Duda built?',
+        'how do I contact Duda?',
+        'what does Duda study?',
+      ],
+      tryAsking: 'try:',
+      thinking: 'checking the site content…',
+      sources: 'sources:',
+      contact: 'contact',
+      notice:
+        'Notice: your question is sent to an external AI service (Google Gemini, free tier), which may use and review it. Do not type personal data. For users aged 18 or over only.',
+      stale: 'answer not kept (the page was reloaded). Run the command again.',
+      errors: {
+        invalid: 'write the question after the command.',
+        tooLong: (max: number) => `question too long (at most ${max} characters).`,
+        region:
+          'the assistant is not available in your region (European Economic Area, United Kingdom and Switzerland). The rest of the site works normally.',
+        rate: 'too many questions in a short time. Try again later.',
+        quota: 'the assistant reached its free limit for today. Try again tomorrow.',
+        down: 'the assistant is unavailable right now. The site keeps working.',
+        offline: 'no connection. Check your internet and try again.',
+        session: (max: number) => `limit of ${max} questions in this session.`,
+      },
     },
     ws: wsEn,
   },
