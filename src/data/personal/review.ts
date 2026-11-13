@@ -71,14 +71,14 @@ export function groupByMonth<T extends { watchedDate?: string }>(entries: T[]): 
 
 // Data e hora da última sincronização, no formato do idioma. Data inválida devolve texto
 // vazio: a interface omite a frase em vez de mostrar "Invalid Date".
-export function formatSyncDate(iso: string, lang: Lang, timeZone?: string) {
+export function formatSyncDate(iso: string, lang: Lang, timeZone?: string, withTime = true) {
   const date = new Date(iso);
 
   if (Number.isNaN(date.getTime())) return '';
 
   return new Intl.DateTimeFormat(lang === 'pt' ? 'pt-BR' : 'en-US', {
     dateStyle: 'medium',
-    timeStyle: 'short',
+    timeStyle: withTime ? 'short' : undefined,
     timeZone,
   }).format(date);
 }
@@ -89,19 +89,23 @@ export interface YearGroup<T> {
   items: T[];
 }
 
-// Livros lidos por ano de término, do mais recente ao mais antigo; dentro do ano, o término
-// mais recente primeiro. Sem data (ou fora do formato) vai ao grupo `undated`, por último.
-export function groupByYear<T extends { finishedAt?: string }>(items: T[]): YearGroup<T>[] {
+// Agrupa por ano da data que `dateOf` devolve, do mais recente ao mais antigo; dentro do ano, a
+// data mais recente primeiro. Sem data (ou fora do formato) vai ao grupo `undated`, por último.
+export function groupByYearOf<T>(
+  items: T[],
+  dateOf: (item: T) => string | undefined,
+): YearGroup<T>[] {
   const groups = new Map<string, T[]>();
 
   for (const item of items) {
-    const match = item.finishedAt ? /^(\d{4})-(0[1-9]|1[0-2])/.exec(item.finishedAt) : null;
+    const date = dateOf(item);
+    const match = date ? /^(\d{4})-(0[1-9]|1[0-2])/.exec(date) : null;
     const key = match ? match[1] : 'undated';
 
     groups.set(key, [...(groups.get(key) ?? []), item]);
   }
 
-  const byDateDesc = (a: T, b: T) => (b.finishedAt ?? '').localeCompare(a.finishedAt ?? '');
+  const byDateDesc = (a: T, b: T) => (dateOf(b) ?? '').localeCompare(dateOf(a) ?? '');
 
   return [...groups]
     .map(([key, list]) => ({ key, items: key === 'undated' ? list : [...list].sort(byDateDesc) }))
@@ -112,6 +116,10 @@ export function groupByYear<T extends { finishedAt?: string }>(items: T[]): Year
       return b.key.localeCompare(a.key);
     });
 }
+
+// Livros lidos por ano de término.
+export const groupByYear = <T extends { finishedAt?: string }>(items: T[]) =>
+  groupByYearOf(items, (item) => item.finishedAt);
 
 const locale = (lang: Lang) => (lang === 'pt' ? 'pt-BR' : 'en-US');
 

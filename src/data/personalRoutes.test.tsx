@@ -79,13 +79,16 @@ describe('rascunho enquanto houver mock (CL-02)', () => {
     }
   });
 
-  it('com a fonte em "live" as rotas saem do rascunho e o hub entra na barra lateral', async () => {
+  it('com a fonte em "live" saem do rascunho as rotas com conteúdo; música e teatro (manuais e vazios) não', async () => {
     vi.stubEnv('VITE_PERSONAL_SOURCE', 'live');
     vi.resetModules();
 
     const live = await import('./routes');
 
-    for (const p of PAGES) expect(live.routeById(p.id)?.draft, p.id).toBe(false);
+    // música e teatro são curadoria manual da Duda: sem itens, continuam em construção
+    const manual = ['pessoal-musica', 'pessoal-teatro'];
+
+    for (const p of PAGES) expect(live.routeById(p.id)?.draft, p.id).toBe(manual.includes(p.id));
     expect(live.navRoutes('personal').map((r) => r.id)).toContain('pessoal');
     expect(live.navRoutes('personal').some((r) => r.id.startsWith('pessoal-'))).toBe(false);
   });

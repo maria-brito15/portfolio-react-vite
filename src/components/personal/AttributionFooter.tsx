@@ -2,30 +2,41 @@ import type { PersonalFeed } from '../../data/personal/types';
 import { formatSyncDate } from '../../data/personal/review';
 import { useLanguage } from '../../i18n/LanguageContext';
 
+type FeedInfo = Pick<PersonalFeed<unknown>, 'updatedAt' | 'source'>;
+
 // Rodapé das páginas do espaço (CL-12): fonte e "última sincronização", mais o aviso de
 // atribuição do TMDB quando a página usa dados dele. Transparência acima de parecer tempo real.
+// Dado manual não sincroniza: mostra "Atualizado em <dia>", sem hora. `entries` serve o hub, que
+// reúne a fonte de cada seção num só rodapé.
 export default function AttributionFooter({
   feed,
+  entries,
   tmdb = false,
 }: {
-  feed?: Pick<PersonalFeed<unknown>, 'updatedAt' | 'source'>;
+  feed?: FeedInfo;
+  entries?: { label: string; feed: FeedInfo }[];
   tmdb?: boolean;
 }) {
   const { lang, t } = useLanguage();
   const text = t.personal.footer;
+  const lines = [...(feed ? [{ label: '', feed }] : []), ...(entries ?? [])];
 
-  if (!feed && !tmdb) return null;
-
-  const synced = feed ? formatSyncDate(feed.updatedAt, lang) : '';
+  if (lines.length === 0 && !tmdb) return null;
 
   return (
     <footer className="pe-foot">
-      {feed && (
-        <p>
-          {synced && `${text.synced}: ${synced} · `}
-          {text.via} {text.sources[feed.source]}
-        </p>
-      )}
+      {lines.map(({ label, feed: info }) => {
+        const manual = info.source === 'manual';
+        const when = formatSyncDate(info.updatedAt, lang, manual ? 'UTC' : undefined, !manual);
+
+        return (
+          <p key={label || info.source}>
+            {label && `${label}: `}
+            {when && `${manual ? text.updated : text.synced}: ${when} · `}
+            {text.via} {text.sources[info.source]}
+          </p>
+        );
+      })}
       {tmdb && <p>{text.tmdb}</p>}
     </footer>
   );

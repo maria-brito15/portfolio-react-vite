@@ -190,7 +190,7 @@ export interface FilmMeta {   // enriquecimento TMDB, por tmdbId
 
 export interface Album {      // manual
   id: string; title: string; artist: string; year?: number;
-  coverUrl?: string; note?: Localized; provenance: Provenance; // source: 'manual'
+  coverUrl?: string; inRotation?: boolean; note?: Localized; provenance: Provenance; // source: manual
 }
 
 export interface TheaterVisit { // manual

@@ -1,0 +1,94 @@
+import type { Album, Book, FilmDiaryEntry, TheaterVisit } from '../../data/personal/types';
+import { currentBook, featuredAlbum, latestFilm, latestPlay } from '../../data/personal/highlights';
+import { routeById } from '../../data/routes';
+import type { PersonalState } from '../../hooks/usePersonal';
+import { useLanguage } from '../../i18n/LanguageContext';
+import AttributionFooter from './AttributionFooter';
+import PlaceholderBadge from './PlaceholderBadge';
+import SectionIndex, { type SectionIndexItem } from './SectionIndex';
+
+type Highlight = SectionIndexItem['highlight'];
+
+// Uma seção de curadoria manual sem nenhum item não tem o que mostrar: sai do índice, em vez de
+// levar a uma página vazia.
+const isEmptyManual = <T,>(state: PersonalState<T>) =>
+  state.status === 'ready' && state.feed.items.length === 0 && state.feed.source === 'manual';
+
+// Hub (CL-20): índice numerado das seções, com o destaque de cada uma (livro de agora, último
+// filme, disco em rotação, última peça) e, no rodapé, a fonte e a data de cada seção.
+export default function HubIndex({
+  books,
+  films,
+  albums,
+  plays,
+}: {
+  books: PersonalState<Book>;
+  films: PersonalState<FilmDiaryEntry>;
+  albums: PersonalState<Album>;
+  plays: PersonalState<TheaterVisit>;
+}) {
+  const { lang, t } = useLanguage();
+  const text = t.personal.hub;
+
+  // Uma entrada do índice: rota, feed (se já carregou) e o destaque calculado dele.
+  function entry<T>(routeId: string, state: PersonalState<T>, pick: (items: T[]) => Highlight) {
+    if (isEmptyManual(state)) return undefined;
+
+    const route = routeById(routeId)!;
+    const feed = state.status === 'ready' ? state.feed : undefined;
+
+    return {
+      feed,
+      label: route.label[lang],
+      item: {
+        to: route.path,
+        title: route.label[lang],
+        hint: route.desc?.[lang],
+        highlight: feed ? pick(feed.items) : undefined,
+      } satisfies SectionIndexItem,
+    };
+  }
+
+  const entries = [
+    entry('pessoal-livros', books, (items) => {
+      const book = currentBook(items);
+
+      return book && { label: text.highlight.books, text: book.title };
+    }),
+    entry('pessoal-filmes', films, (items) => {
+      const film = latestFilm(items);
+
+      return (
+        film && {
+          label: text.highlight.films,
+          text: film.year === undefined ? film.title : `${film.title} (${film.year})`,
+        }
+      );
+    }),
+    entry('pessoal-musica', albums, (items) => {
+      const album = featuredAlbum(items);
+
+      return (
+        album && {
+          label: album.inRotation ? text.highlight.music : t.personal.music.all,
+          text: `${album.title} — ${album.artist}`,
+        }
+      );
+    }),
+    entry('pessoal-teatro', plays, (items) => {
+      const play = latestPlay(items);
+
+      return play && { label: text.highlight.theater, text: play.title };
+    }),
+  ].filter((e) => e !== undefined);
+
+  const feeds = entries.flatMap((e) => (e.feed ? [{ label: e.label, feed: e.feed }] : []));
+
+  return (
+    <>
+      <PlaceholderBadge source={feeds.some((f) => f.feed.source === 'mock') ? 'mock' : undefined} />
+      <SectionIndex label={text.indexLabel} items={entries.map((e) => e.item)} />
+      <AttributionFooter entries={feeds} />
+    </>
+  );
+}

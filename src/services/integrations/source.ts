@@ -57,3 +57,16 @@ export function unavailableSource<T>(name: string): PersonalSource<T> {
     load: () => Promise.reject(new Error(`Fonte "${name}" ainda não está integrada.`)),
   };
 }
+
+// Dado manual (música e teatro): vem de um arquivo de `src/data/personal/`, não de uma API.
+// `updated` é a data da última edição ("AAAA-MM-DD"); sem ela o rodapé omite a data.
+export function staticSource<T>(items: T[], updated: string | null): PersonalSource<T> {
+  return {
+    load: async () => ({
+      items,
+      updatedAt: updated ?? '',
+      stale: false,
+      source: 'manual',
+    }),
+  };
+}

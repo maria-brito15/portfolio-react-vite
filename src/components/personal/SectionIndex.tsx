@@ -4,6 +4,8 @@ export interface SectionIndexItem {
   to: string;
   title: string;
   hint?: string;
+  // Destaque da seção ("Lendo agora: …"); some quando não há o que destacar.
+  highlight?: { label: string; text: string };
 }
 
 // Índice numerado ("01", "02"…) das seções do espaço, no padrão do índice de `DocPage`.
@@ -25,6 +27,11 @@ export default function SectionIndex({
               </span>
               <span className="pe-index-title">{item.title}</span>
               {item.hint && <span className="pe-index-hint">{item.hint}</span>}
+              {item.highlight && (
+                <span className="pe-index-highlight">
+                  <span className="pe-kicker">{item.highlight.label}</span> {item.highlight.text}
+                </span>
+              )}
             </Link>
           </li>
         ))}

@@ -335,3 +335,69 @@
     grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr));
   }
 }
+
+/* ---------- Destaque do hub ---------- */
+.pe-index-highlight {
+  grid-column: 2 / -1;
+  color: var(--text-2);
+  overflow-wrap: anywhere;
+}
+.pe-index-highlight .pe-kicker {
+  display: inline;
+  margin: 0 var(--space-2) 0 0;
+}
+
+/* ---------- Listas editoriais (música e teatro) ---------- */
+.pe-entries {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.pe-entries li {
+  display: grid;
+  grid-template-columns: 3.5rem 1fr;
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--border);
+}
+.pe-entries--dated li {
+  grid-template-columns: 5.5rem 1fr;
+}
+.pe-entries .pe-num {
+  font-size: var(--fs-chrome);
+}
+.pe-entries p {
+  margin: 0;
+}
+.pe-entry-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+.pe-entry-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+  align-items: center;
+  margin-top: var(--space-1);
+  font-size: var(--fs-chrome);
+  color: var(--text-2);
+  overflow-wrap: anywhere;
+}
+.pe-entry-note {
+  max-width: var(--measure);
+  margin-top: var(--space-2);
+  color: var(--text-2);
+}
+.pe-entry-note .pe-kicker {
+  display: inline;
+  margin: 0 var(--space-2) 0 0;
+}
+
+@media (max-width: 720px) {
+  .pe-entries li,
+  .pe-entries--dated li {
+    grid-template-columns: 4.25rem 1fr;
+  }
+}

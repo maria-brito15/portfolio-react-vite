@@ -5,6 +5,7 @@ import { booksSource } from './hardcover';
 import { mockBooks } from './hardcover/mock';
 import { filmsSource } from './letterboxd';
 import { mockFilms } from './letterboxd/mock';
+import { mockAlbums, mockVisits } from './manual/mock';
 import { parseMode, personalMode } from './mode';
 import { MOCK_STALE_UPDATED_AT, lazySource, mockSource, unavailableSource } from './source';
 import { filmMetaSource } from './tmdb';
@@ -92,7 +93,7 @@ describe('os index.ts das fontes (CL-08)', () => {
 });
 
 describe('mocks fictícios e realistas (CL-09, CL-10)', () => {
-  const all = [...mockBooks, ...mockFilms];
+  const all = [...mockBooks, ...mockFilms, ...mockAlbums, ...mockVisits];
 
   it('todo item é marcado como mock, com id "mock:" único', () => {
     for (const item of all) {
@@ -184,6 +185,7 @@ describe('isolamento do mock (CL-08, CL-15)', () => {
     expect(importers.sort()).toEqual([
       'services/integrations/hardcover/index.ts',
       'services/integrations/letterboxd/index.ts',
+      'services/integrations/manual/index.ts',
       'services/integrations/tmdb/index.ts',
     ]);
   });

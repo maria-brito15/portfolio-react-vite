@@ -39,11 +39,36 @@ export const personalPt = {
     note: 'NOTA',
   },
   review: { label: 'RESENHA', more: 'continuar no Letterboxd →' },
+  hub: {
+    kicker: 'Espaço cultural',
+    deck: 'Livros, filmes, música e teatro: o que leio, assisto, ouço e vejo no palco, fora do código.',
+    indexLabel: 'Seções do espaço pessoal',
+    highlight: {
+      books: 'Lendo agora',
+      films: 'Último filme',
+      music: 'Em rotação',
+      theater: 'Última peça',
+    },
+  },
+  music: {
+    deck: 'Uma seleção curada: discos e artistas que escolhi mostrar, com uma nota curta.',
+    empty: 'Nenhum disco registrado ainda.',
+    rotation: 'Em rotação',
+    all: 'Discos e artistas',
+    note: 'NOTA',
+  },
+  theater: {
+    deck: 'As peças que vi: título, companhia, local e data.',
+    empty: 'Nenhuma peça registrada ainda.',
+    undated: 'Sem data',
+    note: 'NOTA',
+  },
   stale: {
     notice: (date: string) => `Não foi possível atualizar agora. Mostrando os dados de ${date}.`,
   },
   footer: {
     synced: 'Última sincronização',
+    updated: 'Atualizado em',
     via: 'via',
     sources: {
       hardcover: 'Hardcover',
@@ -96,11 +121,36 @@ export const personalEn = {
     note: 'NOTE',
   },
   review: { label: 'REVIEW', more: 'continue on Letterboxd →' },
+  hub: {
+    kicker: 'Cultural space',
+    deck: 'Books, films, music and theater: what I read, watch, listen to and see on stage, beyond code.',
+    indexLabel: 'Sections of the personal space',
+    highlight: {
+      books: 'Reading now',
+      films: 'Latest film',
+      music: 'In rotation',
+      theater: 'Latest play',
+    },
+  },
+  music: {
+    deck: 'A curated selection: records and artists I chose to show, with a short note.',
+    empty: 'No records logged yet.',
+    rotation: 'In rotation',
+    all: 'Records and artists',
+    note: 'NOTE',
+  },
+  theater: {
+    deck: 'The plays I have seen: title, company, venue and date.',
+    empty: 'No plays logged yet.',
+    undated: 'No date',
+    note: 'NOTE',
+  },
   stale: {
     notice: (date: string) => `Could not refresh right now. Showing the data from ${date}.`,
   },
   footer: {
     synced: 'Last synced',
+    updated: 'Updated on',
     via: 'via',
     sources: {
       hardcover: 'Hardcover',

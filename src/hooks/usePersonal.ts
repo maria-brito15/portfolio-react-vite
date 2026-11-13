@@ -1,7 +1,15 @@
 import { useCallback, useEffect, useState } from 'react';
-import type { Book, FilmDiaryEntry, FilmMeta, PersonalFeed } from '../data/personal/types';
+import type {
+  Album,
+  Book,
+  FilmDiaryEntry,
+  FilmMeta,
+  PersonalFeed,
+  TheaterVisit,
+} from '../data/personal/types';
 import { booksSource } from '../services/integrations/hardcover';
 import { filmsSource } from '../services/integrations/letterboxd';
+import { albumsSource, theaterSource } from '../services/integrations/manual';
 import { filmMetaSource } from '../services/integrations/tmdb';
 import type { PersonalSource } from '../services/integrations/types';
 
@@ -41,3 +49,5 @@ export function usePersonalSource<T>(source: PersonalSource<T>) {
 export const usePersonalBooks = () => usePersonalSource<Book>(booksSource);
 export const usePersonalFilms = () => usePersonalSource<FilmDiaryEntry>(filmsSource);
 export const usePersonalFilmMeta = () => usePersonalSource<FilmMeta>(filmMetaSource);
+export const usePersonalAlbums = () => usePersonalSource<Album>(albumsSource);
+export const usePersonalTheater = () => usePersonalSource<TheaterVisit>(theaterSource);

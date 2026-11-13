@@ -71,6 +71,8 @@ export interface Album {
   artist: string;
   year?: number;
   coverUrl?: string;
+  // Entra na seção "Em rotação" (o que a Duda está ouvindo agora). Só ela marca.
+  inRotation?: boolean;
   note?: Localized;
   provenance: Provenance;
 }

@@ -12,6 +12,8 @@
 
 import type { Lang, Localized } from '../types';
 import { personalMode } from '../services/integrations/mode';
+import { music } from './personal/music';
+import { theater } from './personal/theater';
 import { now } from './now';
 import { personas, type PersonaId } from './personas';
 import { uses } from './uses';
@@ -58,6 +60,12 @@ export interface Crumb {
   label: string;
   to: string;
 }
+
+// Páginas de curadoria manual ainda sem nenhum item (ver data/personal/music.ts e theater.ts).
+const hasNoContent: Record<string, boolean> = {
+  musica: music.albums.length === 0,
+  teatro: theater.visits.length === 0,
+};
 
 export const routes: Route[] = [
   {
@@ -261,7 +269,8 @@ export const routes: Route[] = [
     label: L(labelPt, labelEn),
     desc: L(descPt, descEn),
     hidden: true,
-    draft: personalMode === 'mock',
+    // Música e teatro são curadoria manual: sem conteúdo da Duda, ficam em construção.
+    draft: personalMode === 'mock' || hasNoContent[pt] === true,
   })),
   {
     // Fora do `ls`: é uma página dentro de "projetos".
