@@ -1,5 +1,6 @@
 // Textos de interface (navegação, botões, formulário). O conteúdo do portfólio
 // fica em src/data, separado por idioma.
+import { personalEn, personalPt } from './personal';
 import { wsEn, wsPt } from './ws';
 
 export const ui = {
@@ -265,6 +266,7 @@ export const ui = {
       },
     },
     ws: wsPt,
+    personal: personalPt,
   },
   en: {
     nav: {
@@ -532,5 +534,6 @@ export const ui = {
       },
     },
     ws: wsEn,
+    personal: personalEn,
   },
 };
