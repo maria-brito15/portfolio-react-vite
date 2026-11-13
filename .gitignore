@@ -14,3 +14,6 @@ e2e/shots
 
 # Contexto do assistente, gerado no build (scripts/assistantContext.ts)
 netlify/assistant/context.json
+
+# Arquivo compactado de variáveis: nunca versionar
+.env.zip
