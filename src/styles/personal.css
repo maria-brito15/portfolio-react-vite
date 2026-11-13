@@ -175,3 +175,163 @@
     grid-column: 2;
   }
 }
+
+/* ---------- Estados (carregando, erro, vazio) ---------- */
+.pe-state {
+  margin: var(--space-5) 0;
+  color: var(--text-2);
+}
+
+/* ---------- Seções por mês ou por ano ---------- */
+.pe-month {
+  margin-bottom: var(--space-6);
+}
+.pe-month-title {
+  margin: 0 0 var(--space-3);
+  padding-bottom: var(--space-2);
+  font-size: var(--fs-chrome);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  border-bottom: 1px solid var(--border);
+}
+
+/* ---------- Diário de filmes ---------- */
+.pe-diary {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.pe-row {
+  display: flex;
+  gap: var(--space-4);
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--border);
+}
+.pe-row-poster {
+  flex: 0 0 3.75rem;
+}
+.pe-row-body {
+  min-width: 0;
+  flex: 1;
+}
+.pe-row-body p {
+  margin: 0;
+}
+.pe-row-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+.pe-row-year {
+  font-weight: 400;
+  color: var(--dim);
+}
+.pe-row-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+  align-items: center;
+  margin-top: var(--space-1);
+  font-size: var(--fs-chrome);
+  color: var(--text-2);
+}
+.pe-row-review {
+  margin-top: var(--space-2);
+}
+.pe-row-review summary {
+  min-height: 1.75rem;
+  font-size: var(--fs-chrome);
+  color: var(--accent);
+  cursor: pointer;
+}
+.pe-row-link {
+  display: inline-block;
+  margin-top: var(--space-2);
+  font-size: var(--fs-chrome);
+}
+/* O site não define cor global de link: cada componente usa o acento (AA nos cinco temas). */
+.pe-row-link,
+.pe-review a {
+  color: var(--accent);
+  text-underline-offset: 3px;
+}
+
+/* ---------- Resenha ---------- */
+.pe-review {
+  max-width: var(--measure);
+  margin: var(--space-2) 0 0;
+  padding: var(--space-1) 0 var(--space-1) var(--space-4);
+  border-left: 3px solid var(--tone, var(--warn));
+}
+.pe-review p {
+  margin: 0 0 var(--space-2);
+  overflow-wrap: anywhere;
+}
+.pe-review .pe-kicker {
+  margin-bottom: var(--space-1);
+}
+.pe-review a {
+  font-size: var(--fs-chrome);
+}
+
+/* ---------- Estante ---------- */
+.pe-shelf {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr));
+  gap: var(--space-5) var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.pe-shelf--lg {
+  grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+}
+.pe-shelf figcaption {
+  display: grid;
+  gap: var(--space-1);
+}
+.pe-book-title {
+  font-weight: 700;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+.pe-book-by {
+  color: var(--text-2);
+  overflow-wrap: anywhere;
+}
+.pe-book-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+  align-items: center;
+}
+.pe-book-note {
+  color: var(--text-2);
+}
+.pe-want {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.pe-want li {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-1);
+  padding-left: var(--space-3);
+  border-left: 3px solid var(--border);
+}
+
+@media (max-width: 720px) {
+  .pe-row {
+    gap: var(--space-3);
+  }
+  .pe-shelf,
+  .pe-shelf--lg {
+    grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr));
+  }
+}

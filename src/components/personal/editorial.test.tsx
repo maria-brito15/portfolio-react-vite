@@ -253,6 +253,10 @@ describe('personal.css (CL-16, CL-17)', () => {
     expect(css).not.toMatch(/font-style\s*:\s*italic/i);
   });
 
+  it('links têm cor própria do acento: o site não define cor global de link', () => {
+    expect(css).toMatch(/\.pe-row-link,\s*\.pe-review a\s*\{[^}]*color:\s*var\(--accent\)/);
+  });
+
   it('não declara família de fonte própria (herda o mono)', () => {
     expect(css).not.toMatch(/font-family/);
   });

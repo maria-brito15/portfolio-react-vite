@@ -82,3 +82,62 @@ export function formatSyncDate(iso: string, lang: Lang, timeZone?: string) {
     timeZone,
   }).format(date);
 }
+
+export interface YearGroup<T> {
+  // `AAAA`, ou `undated` para o que não tem data de término.
+  key: string;
+  items: T[];
+}
+
+// Livros lidos por ano de término, do mais recente ao mais antigo; dentro do ano, o término
+// mais recente primeiro. Sem data (ou fora do formato) vai ao grupo `undated`, por último.
+export function groupByYear<T extends { finishedAt?: string }>(items: T[]): YearGroup<T>[] {
+  const groups = new Map<string, T[]>();
+
+  for (const item of items) {
+    const match = item.finishedAt ? /^(\d{4})-(0[1-9]|1[0-2])/.exec(item.finishedAt) : null;
+    const key = match ? match[1] : 'undated';
+
+    groups.set(key, [...(groups.get(key) ?? []), item]);
+  }
+
+  const byDateDesc = (a: T, b: T) => (b.finishedAt ?? '').localeCompare(a.finishedAt ?? '');
+
+  return [...groups]
+    .map(([key, list]) => ({ key, items: key === 'undated' ? list : [...list].sort(byDateDesc) }))
+    .sort((a, b) => {
+      if (a.key === 'undated') return 1;
+      if (b.key === 'undated') return -1;
+
+      return b.key.localeCompare(a.key);
+    });
+}
+
+const locale = (lang: Lang) => (lang === 'pt' ? 'pt-BR' : 'en-US');
+
+// "07 de nov." / "Nov 07" a partir de `AAAA-MM-DD`. Lê a data como UTC: sem deslocamento de
+// fuso, o dia exibido é sempre o do texto. Fora do formato devolve vazio.
+export function formatDay(day: string, lang: Lang) {
+  const match = /^(\d{4})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/.exec(day);
+
+  if (!match) return '';
+
+  return new Intl.DateTimeFormat(locale(lang), {
+    day: '2-digit',
+    month: 'short',
+    timeZone: 'UTC',
+  }).format(new Date(Date.UTC(+match[1], +match[2] - 1, +match[3])));
+}
+
+// "novembro de 2026" / "November 2026" a partir de `AAAA-MM`. Fora do formato devolve vazio.
+export function formatMonth(month: string, lang: Lang) {
+  const match = /^(\d{4})-(0[1-9]|1[0-2])$/.exec(month);
+
+  if (!match) return '';
+
+  return new Intl.DateTimeFormat(locale(lang), {
+    month: 'long',
+    year: 'numeric',
+    timeZone: 'UTC',
+  }).format(new Date(Date.UTC(+match[1], +match[2] - 1, 1)));
+}
