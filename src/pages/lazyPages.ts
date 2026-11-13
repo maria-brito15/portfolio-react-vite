@@ -12,3 +12,8 @@ export const SectionPage = lazy(() => import('./SectionPage'));
 export const GameCenter = lazy(() => import('./GameCenter'));
 export const GithubPage = lazy(() => import('./GithubPage'));
 export const TerminalPage = lazy(() => import('./TerminalPage'));
+export const PersonalHub = lazy(() => import('./personal/PersonalHub'));
+export const PersonalBooks = lazy(() => import('./personal/Books'));
+export const PersonalFilms = lazy(() => import('./personal/Films'));
+export const PersonalMusic = lazy(() => import('./personal/Music'));
+export const PersonalTheater = lazy(() => import('./personal/Theater'));

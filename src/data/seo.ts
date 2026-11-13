@@ -163,6 +163,66 @@ export const pageMeta: Record<string, Localized<PageMeta>> = {
         'The tools and setup that Duda Brito, a Software Engineering student, uses every day.',
     },
   ),
+  pessoal: M(
+    {
+      title: 'Pessoal | Livros, Filmes, Música e Teatro | Duda Brito',
+      description:
+        'Livros, filmes, música e teatro de Duda Brito: um espaço editorial sobre o que ela lê, assiste, ouve e vê no palco, fora do código.',
+    },
+    {
+      title: 'Personal | Books, Films, Music and Theater | Duda Brito',
+      description:
+        'Books, films, music and theater by Duda Brito: an editorial space about what she reads, watches, listens to and sees on stage, beyond code.',
+    },
+  ),
+  'pessoal-livros': M(
+    {
+      title: 'Livros | Leituras de Duda Brito',
+      description:
+        'Os livros que Duda Brito está lendo, já leu e quer ler, com notas e datas, numa estante editorial do portfólio.',
+    },
+    {
+      title: 'Books | Reading of Duda Brito',
+      description:
+        'The books Duda Brito is reading, has read and wants to read, with ratings and dates, on an editorial shelf of the portfolio.',
+    },
+  ),
+  'pessoal-filmes': M(
+    {
+      title: 'Filmes | Diário de Cinema de Duda Brito',
+      description:
+        'O diário de filmes de Duda Brito: o que ela assistiu, com nota, data e resenhas, em ordem cronológica por mês.',
+    },
+    {
+      title: 'Films | Film Diary of Duda Brito',
+      description:
+        "Duda Brito's film diary: what she watched, with ratings, dates and reviews, in chronological order by month.",
+    },
+  ),
+  'pessoal-musica': M(
+    {
+      title: 'Música | Discos e Artistas | Duda Brito',
+      description:
+        'A seleção de música de Duda Brito: discos e artistas que ela escolheu mostrar, com notas editoriais curtas, sem player embutido.',
+    },
+    {
+      title: 'Music | Records and Artists | Duda Brito',
+      description:
+        "Duda Brito's music selection: records and artists she chose to show, with short editorial notes and no embedded player.",
+    },
+  ),
+  'pessoal-teatro': M(
+    {
+      title: 'Teatro | Peças Vistas por Duda Brito',
+      description:
+        'As peças de teatro que Duda Brito viu: título, companhia, local e data, numa linha do tempo editorial do portfólio.',
+    },
+    {
+      title: 'Theater | Plays Seen by Duda Brito',
+      description:
+        'The plays Duda Brito has seen: title, company, venue and date, on an editorial timeline of the portfolio.',
+    },
+  ),
   'whatsapp-dispatcher': M(
     {
       title: 'WhatsApp Dispatcher: Estudo de Caso de Arquitetura | Duda Brito',

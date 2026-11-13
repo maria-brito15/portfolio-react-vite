@@ -17,6 +17,11 @@ vi.mock('../pages/lazyPages', async () => ({
   GameCenter: (await import('../pages/GameCenter')).default,
   GithubPage: (await import('../pages/GithubPage')).default,
   TerminalPage: (await import('../pages/TerminalPage')).default,
+  PersonalHub: (await import('../pages/personal/PersonalHub')).default,
+  PersonalBooks: (await import('../pages/personal/Books')).default,
+  PersonalFilms: (await import('../pages/personal/Films')).default,
+  PersonalMusic: (await import('../pages/personal/Music')).default,
+  PersonalTheater: (await import('../pages/personal/Theater')).default,
 }));
 
 // O boot da primeira visita e a pergunta de persona ficam desligados nos testes

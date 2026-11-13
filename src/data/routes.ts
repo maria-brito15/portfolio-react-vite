@@ -11,6 +11,7 @@
 // - `parent`: id da rota-mãe no breadcrumb.
 
 import type { Lang, Localized } from '../types';
+import { personalMode } from '../services/integrations/mode';
 import { now } from './now';
 import { personas, type PersonaId } from './personas';
 import { uses } from './uses';
@@ -229,6 +230,39 @@ export const routes: Route[] = [
     desc: L('ferramentas do dia a dia', 'everyday tools'),
     draft: uses.groups.length === 0,
   },
+  // Espaço cultural (docs/specs/personal/). Enquanto a fonte estiver em mock (dados fictícios),
+  // as cinco rotas abrem mas ficam fora do sitemap, da barra lateral e do índice (CL-02). Só o
+  // hub entra na barra; as subpáginas são "hidden" e vivem dentro dele, como o estudo de caso.
+  {
+    id: 'pessoal',
+    kind: 'page',
+    group: 'personal',
+    path: '/pessoal',
+    aliases: ['/personal'],
+    segment: L('pessoal', 'personal'),
+    label: L('Pessoal', 'Personal'),
+    desc: L('livros, filmes, música e teatro', 'books, films, music and theater'),
+    draft: personalMode === 'mock',
+  },
+  ...(
+    [
+      ['livros', 'books', 'Livros', 'Books', 'o que leio', 'what I read'],
+      ['filmes', 'films', 'Filmes', 'Films', 'o que assisto', 'what I watch'],
+      ['musica', 'music', 'Música', 'Music', 'o que ouço', 'what I listen to'],
+      ['teatro', 'theater', 'Teatro', 'Theater', 'o que vejo no palco', 'what I see on stage'],
+    ] as const
+  ).map(([pt, en, labelPt, labelEn, descPt, descEn]): Route => ({
+    id: `pessoal-${pt}`,
+    kind: 'page',
+    path: `/pessoal/${pt}`,
+    aliases: [`/personal/${en}`],
+    parent: 'pessoal',
+    segment: L(pt, en),
+    label: L(labelPt, labelEn),
+    desc: L(descPt, descEn),
+    hidden: true,
+    draft: personalMode === 'mock',
+  })),
   {
     // Fora do `ls`: é uma página dentro de "projetos".
     id: 'whatsapp-dispatcher',
@@ -296,7 +330,14 @@ export function crumbsFor(route: Route | undefined | null, lang: Lang): Crumb[] 
   const parent = route.parent ? routeById(route.parent) : undefined;
 
   return parent
-    ? [{ label: (lang === 'pt' ? parent.name : parent.alias) ?? parent.id, to: parent.path }, own]
+    ? [
+        {
+          label:
+            parent.segment?.[lang] ?? (lang === 'pt' ? parent.name : parent.alias) ?? parent.id,
+          to: parent.path,
+        },
+        own,
+      ]
     : [own];
 }
 

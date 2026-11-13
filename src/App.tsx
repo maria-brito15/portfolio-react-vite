@@ -14,6 +14,11 @@ import {
   CaseStudy,
   GameCenter,
   GithubPage,
+  PersonalBooks,
+  PersonalFilms,
+  PersonalHub,
+  PersonalMusic,
+  PersonalTheater,
   Resume,
   SectionPage,
   Services,
@@ -65,6 +70,16 @@ function Page({ id, persona }: { id?: string; persona?: PersonaId }) {
       return <Now />;
     case 'setup':
       return <Uses />;
+    case 'pessoal':
+      return <PersonalHub />;
+    case 'pessoal-livros':
+      return <PersonalBooks />;
+    case 'pessoal-filmes':
+      return <PersonalFilms />;
+    case 'pessoal-musica':
+      return <PersonalMusic />;
+    case 'pessoal-teatro':
+      return <PersonalTheater />;
     case 'whatsapp-dispatcher':
       return <CaseStudy />;
     default:
