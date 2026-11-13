@@ -1,28 +1,39 @@
 import { Link } from '../../router';
 import { useLanguage } from '../../i18n/LanguageContext';
-import { projects } from '../../data/projects';
+import { projects, type Project } from '../../data/projects';
 import { routeById } from '../../data/routes';
 import { PROJECT_TONE, techTone } from '../../data/tones';
 import Card from '../ui/Card';
 import Chip from '../ui/Chip';
 import SectionTitle from '../ui/SectionTitle';
+import { usePersona } from '../../hooks/usePersona';
+import { usePerspectives } from '../../hooks/usePerspectives';
+import ProjectLens from '../ProjectLens';
+import type { BlockProps } from './blockProps';
 
-// Em destaque = os projetos que têm selo (reconhecimento, estudo de caso ou "este
-// site"). Nada escolhido à mão: se o selo mudar nos dados, a lista muda junto.
-export default function FeaturedProjects() {
+// Sem lista, em destaque = os projetos que têm selo (reconhecimento, estudo de caso ou "este
+// site"): se o selo mudar nos dados, a lista muda junto. Com `ids` (a composição da persona,
+// `personaHome.ts`), vale a lista na ordem dada; id que não existe é ignorado.
+export default function FeaturedProjects({ heading, lead, ids }: BlockProps & { ids?: string[] }) {
   const { lang, t } = useLanguage();
   const h = t.ws.home;
+  const { persona } = usePersona();
+  const perspectives = usePerspectives(Boolean(persona));
+  const lensOf = (id: string) => perspectives?.perspectiveFor(id, persona?.id);
   const page = routeById('projetos')?.path ?? '/projetos';
-  const featured = projects.filter((p) => p[lang].badge);
+  const featured: Project[] = ids
+    ? ids.flatMap((id) => projects.filter((p) => p.id === id))
+    : projects.filter((p) => p[lang].badge);
 
   return (
     <section className="dash-section" aria-labelledby="featured-title">
       <div className="dash-head">
         <SectionTitle as="h2" id="featured-title" size="md">
-          {h.featured}
+          {heading ?? h.featured}
         </SectionTitle>
         <Link to={page}>{h.allProjects}</Link>
       </div>
+      {lead && <p className="t-dim">{lead}</p>}
       <ul className="featured-grid">
         {featured.map((p) => (
           <li key={p.id}>
@@ -35,10 +46,16 @@ export default function FeaturedProjects() {
                 )}
                 {p.name}
               </h3>
-              <p className="featured-badge">
-                <Chip tone="live">{p[lang].badge}</Chip>
-              </p>
-              <div className="featured-desc">{p[lang].description}</div>
+              {p[lang].badge && (
+                <p className="featured-badge">
+                  <Chip tone="live">{p[lang].badge}</Chip>
+                </p>
+              )}
+              {lensOf(p.id) ? (
+                <ProjectLens projectId={p.id} />
+              ) : (
+                <div className="featured-desc">{p[lang].description}</div>
+              )}
               <p className="featured-tech">
                 {p.tech.slice(0, 4).map((tech) => (
                   <Chip key={tech} accent={techTone(tech)}>
@@ -47,10 +64,22 @@ export default function FeaturedProjects() {
                 ))}
               </p>
               <p className="featured-links">
-                {p.caseStudy && <Link to={p.caseStudy}>{h.caseStudy}</Link>}
+                {p.caseStudy && (
+                  <Link
+                    to={p.caseStudy}
+                    data-primary={lensOf(p.id)?.action === 'caseStudy' || undefined}
+                  >
+                    {h.caseStudy}
+                  </Link>
+                )}
                 <Link to={`${page}#projeto-${p.id}`}>{h.details}</Link>
                 {p.repo && (
-                  <a href={p.repo} target="_blank" rel="noopener noreferrer">
+                  <a
+                    href={p.repo}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    data-primary={lensOf(p.id)?.action === 'repo' || undefined}
+                  >
                     {h.repo}
                   </a>
                 )}

@@ -197,6 +197,7 @@ html {
 }
 .crumbs li + li::before {
   content: '/';
+  content: '/' / ''; /* decorativo: fora do nome acessível */
   margin-right: var(--space-2);
 }
 .crumbs a {
@@ -796,4 +797,11 @@ html {
 /* Janela maximizada: o corpo da página sobe acima do rodapé, que senão aparece por cima dela. */
 .shell:has(.win.is-max) {
   z-index: 60;
+}
+.palette-item mark {
+  color: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  background: none;
 }

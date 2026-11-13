@@ -10,9 +10,10 @@ import Breadcrumb from './Breadcrumb';
 import ViewActions from './ViewActions';
 import Footer from './Footer';
 import Taskbar from './Taskbar';
+import PageNext from '../PageNext';
 
 // Esqueleto único de todas as páginas:
-//   Header → barra de comandos → Sidebar + [voltar + breadcrumb] → Window → Footer
+//   Header → barra de comandos → Sidebar + [voltar + breadcrumb] → Window → próximos passos → Footer
 // Nenhuma página monta isso por conta própria. `routeId` vem de routes.ts;
 // o 404 não está na tabela e informa só o caminho digitado (`missingPath`).
 //
@@ -111,6 +112,7 @@ export default function SiteShell({
                   {children}
                 </Window>
                 {after}
+                {routeId && !terminal && <PageNext routeId={routeId} />}
               </>
             )}
           </section>

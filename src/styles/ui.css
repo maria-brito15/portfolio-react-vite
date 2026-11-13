@@ -78,9 +78,11 @@
   line-height: 1.5;
   padding: 1px 9px;
   border-radius: var(--radius-pill);
-  color: var(--tone, var(--accent));
+  /* Um pouco do texto principal na cor, para o contraste AA sobre o fundo tingido. */
+  color: color-mix(in srgb, var(--tone, var(--accent)) 80%, var(--text));
   background: var(--tone-bg, color-mix(in srgb, var(--accent) var(--tint-bg), transparent));
-  border: 1px solid var(--tone-line, color-mix(in srgb, var(--accent) var(--tint-line), transparent));
+  border: 1px solid
+    var(--tone-line, color-mix(in srgb, var(--accent) var(--tint-line), transparent));
   white-space: nowrap;
   text-transform: none;
   letter-spacing: 0;
@@ -190,6 +192,7 @@
 /* ---------- Tipografia: hierarquia por peso e tamanho, uma família só ---------- */
 .lbl::before {
   content: '//';
+  content: '//' / ''; /* decorativo: fora do nome acessível */
   color: var(--dim);
 }
 .stitle em {
@@ -198,6 +201,7 @@
 }
 .stitle.stitle--md:not(:has(.doc-num))::before {
   content: '##';
+  content: '##' / ''; /* decorativo: fora do nome acessível */
   margin-right: 1ch;
   color: var(--dim);
 }

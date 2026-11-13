@@ -1,12 +1,10 @@
 import { useState } from 'react';
-import { Link } from '../router';
 import { useLanguage } from '../i18n/LanguageContext';
 import { usePersona } from '../hooks/usePersona';
 import { personas } from '../data/personas';
-import { routeById } from '../data/routes';
 
 // Faixa da home: pergunta quem está visitando (opcional) e, depois da escolha,
-// mostra a persona atual com o chamado para ação dela. A região é `aria-live`
+// mostra a persona atual (o chamado para ação dela fica no topo da home). A região é `aria-live`
 // para a troca ser anunciada. Os mesmos dados e o mesmo estado do terminal.
 export default function PersonaPrompt() {
   const { lang, t } = useLanguage();
@@ -34,8 +32,6 @@ export default function PersonaPrompt() {
     </div>
   );
 
-  const cta = persona && routeById(persona.cta.route);
-
   return (
     <div className="persona-slot" aria-live="polite">
       {!asked && (
@@ -54,11 +50,6 @@ export default function PersonaPrompt() {
             <span className="t-dim">{p.viewing} </span>
             <strong>{persona.label[lang]}</strong>
           </p>
-          {cta && (
-            <Link to={cta.path} className="dash-btn dash-btn--primary">
-              {persona.cta.label[lang]}
-            </Link>
-          )}
           <button type="button" className="persona-link" onClick={() => setChanging((v) => !v)}>
             {p.change}
           </button>

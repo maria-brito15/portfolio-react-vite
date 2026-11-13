@@ -41,6 +41,8 @@ export interface TrailValue {
   dismiss: () => void;
   undismiss: () => void;
   markDone: (stepId: string) => void;
+  // Zera só os segredos achados (Modo Explorar); o progresso da trilha fica como está.
+  resetSecrets: () => void;
 }
 
 const noop = () => {};
@@ -64,6 +66,7 @@ const TrailContext = createContext<TrailValue>({
   dismiss: noop,
   undismiss: noop,
   markDone: noop,
+  resetSecrets: noop,
 });
 
 const firstWord = (command: string) => command.split(/\s+/)[0];
@@ -145,6 +148,11 @@ export function TrailProvider({ children }: { children: ReactNode }) {
     if (index > 0) update((p) => ({ ...p, step: index - 1 }));
   }, [index, update]);
 
+  const resetSecrets = useCallback(() => {
+    dirty.current = true;
+    setStore((prev) => ({ ...prev, secrets: [] }));
+  }, []);
+
   const exit = useCallback(() => setActive(false), []);
   const dismiss = useCallback(() => update((p) => ({ ...p, dismissed: true })), [update]);
   const undismiss = useCallback(() => update((p) => ({ ...p, dismissed: false })), [update]);
@@ -203,6 +211,7 @@ export function TrailProvider({ children }: { children: ReactNode }) {
       dismiss,
       undismiss,
       markDone,
+      resetSecrets,
     }),
     [
       trail,
@@ -220,6 +229,7 @@ export function TrailProvider({ children }: { children: ReactNode }) {
       dismiss,
       undismiss,
       markDone,
+      resetSecrets,
     ],
   );
 

@@ -3,24 +3,50 @@
 // sessão do terminal (o mesmo interpretador); os demais destinos abrem direto.
 // Combobox acessível: o foco fica no campo e a opção ativa vai em
 // `aria-activedescendant`.
-import { Fragment, useEffect, useId, useMemo, useState, type KeyboardEvent } from 'react';
+import {
+  Fragment,
+  useEffect,
+  useId,
+  useMemo,
+  useState,
+  type KeyboardEvent,
+  type ReactNode,
+} from 'react';
 import { useLanguage } from '../i18n/LanguageContext';
 import { useRouter } from '../router';
 import { useTerminalSession } from '../terminal/sessionContext';
 import { showCommandOutput } from './shell/commandBarEvents';
-import { filterItems, paletteItems, type PaletteItem } from './paletteItems';
+import { filterItems, matchRanges, paletteItems, type PaletteItem } from './paletteItems';
+import { usePersona } from '../hooks/usePersona';
 import Overlay from './Overlay';
+
+// Destaca no nome o que a busca casou (sem acento nem caixa).
+function highlight(text: string, query: string) {
+  const parts: ReactNode[] = [];
+  let at = 0;
+
+  for (const [start, end] of matchRanges(text, query)) {
+    if (start < at) continue;
+    parts.push(text.slice(at, start), <mark key={start}>{text.slice(start, end)}</mark>);
+    at = end;
+  }
+
+  parts.push(text.slice(at));
+
+  return parts;
+}
 
 export default function CommandPalette({ onClose }: { onClose: () => void }) {
   const { lang, t } = useLanguage();
   const session = useTerminalSession();
   const { navigate } = useRouter();
+  const { persona } = usePersona();
   const listId = useId();
   const [query, setQuery] = useState('');
   const [active, setActive] = useState(0);
 
   const items = useMemo(() => paletteItems(lang), [lang]);
-  const results = useMemo(() => filterItems(items, query), [items, query]);
+  const results = useMemo(() => filterItems(items, query, persona?.id), [items, query, persona]);
   const current = Math.min(active, results.length - 1);
   const optionId = (item: PaletteItem) => `${listId}-${item.id}`;
 
@@ -91,7 +117,7 @@ export default function CommandPalette({ onClose }: { onClose: () => void }) {
                 onMouseDown={(event) => event.preventDefault()}
                 onClick={() => choose(item)}
               >
-                <span className="t-accent">{item.label}</span>
+                <span className="t-accent">{highlight(item.label, query)}</span>
                 <span className="t-dim palette-hint">{item.hint}</span>
               </li>
             </Fragment>
@@ -100,6 +126,9 @@ export default function CommandPalette({ onClose }: { onClose: () => void }) {
         <p className="palette-foot t-dim" role="status">
           {results.length ? t.overlay.results(results.length) : t.overlay.none}
           {!results.length && <span> · {t.ws.palette.emptyHint}</span>}
+          {persona && results.length > 0 && (
+            <span> · {t.ws.palette.sortedFor(persona.label[lang])}</span>
+          )}
           <span aria-hidden="true"> · {t.overlay.paletteHint}</span>
         </p>
       </div>

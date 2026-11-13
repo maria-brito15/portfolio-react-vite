@@ -30,8 +30,8 @@ em `textos.md`; plano em `design.md`.
 | TR-23 | Movimento reduzido | ✅ rolagem instantânea (teste) e regra global de CSS |
 | TR-24 | Celular | ✅ 390×844 conferido em imagens: cartão embaixo, começo da seção à vista, sem rolagem horizontal. (Corrigido durante a verificação: o cartão cobria o alvo) |
 | TR-25 | Estilo único e contraste | ◐ só tokens; `contrast.mjs` passa nos cinco temas; tour e cartão capturados nos cinco temas, **vistos** em escuro, claro e âmbar. Faltam olhar dracula e solarized |
-| TR-26 | Impressão e robôs | ◐ robôs: testado. Impressão: regras `@media print` escritas, **não conferidas** num navegador |
-| TR-27 | Peso | ❌ **+5,5 kB gzip** no JS inicial (410,57 → 427,55 kB; gzip 130,84 → 136,33) contra o teto de +3 kB. O `Tour` (1,8 kB gzip) já é carregado sob demanda |
+| TR-26 | Impressão e robôs | ◐ robôs: testado. Impressão: em mídia `print` o fundo é branco e o texto preto, sem shell (estilos computados no navegador, Fase 6); o **PDF não foi visto** |
+| TR-27 | Peso | ◐ trilhas: +5,5 kB gzip (130,84 → 136,33). Fase 6: SEO e perspectivas sob demanda, JS inicial em **138,45 kB** (+2,1 sobre as trilhas; +7,6 sobre o marco original). Teto de +3 kB **não** atingido; ver `qualidade-personas/status.md` |
 
 Contagem: ✅ 21 · ◐ 5 · ❌ 1 · ❔ 0.
 

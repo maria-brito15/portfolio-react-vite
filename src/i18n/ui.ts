@@ -248,6 +248,9 @@ export const ui = {
       restart: 'Refazer',
       notNow: 'Agora não',
       completed: 'Trilha concluída',
+      pageNext: 'Para seguir',
+      nextStop: (name: string) => `próxima parada: ${name}`,
+      offer: 'Fazer esta trilha',
       seen: (done: number, n: number) => `Você viu ${done} de ${n}`,
       secrets: (found: number, total: number) => `Segredos: ${found} de ${total}`,
       secretFound: (name: string, found: number, total: number) =>
@@ -512,6 +515,9 @@ export const ui = {
       restart: 'Restart',
       notNow: 'Not now',
       completed: 'Trail completed',
+      pageNext: 'Keep exploring',
+      nextStop: (name: string) => `next stop: ${name}`,
+      offer: 'Take this trail',
       seen: (done: number, n: number) => `You have seen ${done} of ${n}`,
       secrets: (found: number, total: number) => `Secrets: ${found} of ${total}`,
       secretFound: (name: string, found: number, total: number) =>

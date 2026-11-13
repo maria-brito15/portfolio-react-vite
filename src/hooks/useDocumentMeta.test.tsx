@@ -1,4 +1,4 @@
-import { act, render, screen } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { LanguageProvider, useLanguage } from '../i18n/LanguageContext';
 import { useDocumentMeta } from './useDocumentMeta';
@@ -21,14 +21,15 @@ describe('useDocumentMeta', () => {
     document.head.innerHTML = '';
   });
 
-  it('atualiza título, descrição, canonical, Open Graph e JSON-LD da rota', () => {
+  it('atualiza título, descrição, canonical, Open Graph e JSON-LD da rota', async () => {
     render(
       <LanguageProvider>
         <Probe id="projetos" />
       </LanguageProvider>,
     );
 
-    expect(document.title).toBe(metaFor('projetos', 'pt').title);
+    // O módulo de SEO é carregado sob demanda: espera o primeiro título.
+    await waitFor(() => expect(document.title).toBe(metaFor('projetos', 'pt').title));
     expect(content('meta[name="description"]')).toBe(metaFor('projetos', 'pt').description);
     expect(content('meta[property="og:url"]')).toBe(absoluteUrl('/projetos'));
     expect(document.head.querySelector('link[rel="canonical"]')?.getAttribute('href')).toBe(
@@ -45,13 +46,13 @@ describe('useDocumentMeta', () => {
     );
     await act(async () => userEvent.click(screen.getByText('trocar')));
 
-    expect(document.title).toBe(metaFor('sobre', 'en').title);
+    await waitFor(() => expect(document.title).toBe(metaFor('sobre', 'en').title));
     expect(content('meta[property="og:locale"]')).toBe('en_US');
     expect(document.head.querySelectorAll('meta[name="description"]')).toHaveLength(1);
     expect(document.head.querySelectorAll('#ld-json')).toHaveLength(1);
   });
 
-  it('no 404: noindex, sem canonical e sem JSON-LD herdados da página anterior', () => {
+  it('no 404: noindex, sem canonical e sem JSON-LD herdados da página anterior', async () => {
     const { rerender } = render(
       <LanguageProvider>
         <Probe id="contato" />
@@ -64,7 +65,7 @@ describe('useDocumentMeta', () => {
       </LanguageProvider>,
     );
 
-    expect(content('meta[name="robots"]')).toContain('noindex');
+    await waitFor(() => expect(content('meta[name="robots"]')).toContain('noindex'));
     expect(document.head.querySelector('link[rel="canonical"]')).toBeNull();
     expect(document.getElementById('ld-json')).toBeNull();
   });

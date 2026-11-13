@@ -9,7 +9,9 @@ const sidebarLinks = () =>
   );
 const quickTiles = () =>
   within(
-    screen.getByRole('heading', { level: 2, name: 'Acesso rápido' }).closest('section')!,
+    screen
+      .getByRole('heading', { level: 2, name: /^(Acesso rápido|Todas as páginas)$/ })
+      .closest('section')!,
   ).getAllByRole('link');
 
 describe('lente da persona (PR-10, PR-14)', () => {

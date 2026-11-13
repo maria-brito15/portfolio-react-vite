@@ -5,6 +5,7 @@ import { byPersona, isPick } from '../../data/personas';
 import { usePersona } from '../../hooks/usePersona';
 import { GROUP_TONE, ROUTE_GLYPH } from '../../data/tones';
 import SectionTitle from '../ui/SectionTitle';
+import type { BlockProps } from './blockProps';
 
 // Atalhos para os destinos principais. Cada um é uma rota real de routes.ts
 // (rótulo e descrição vêm de lá); rascunhos ficam de fora.
@@ -19,7 +20,7 @@ const QUICK = [
   'contato',
 ];
 
-export default function QuickAccess() {
+export default function QuickAccess({ heading, lead }: BlockProps) {
   const { lang, t } = useLanguage();
   const { persona } = usePersona();
   // A lente da persona reordena e marca os atalhos dela; nenhum atalho some.
@@ -32,8 +33,9 @@ export default function QuickAccess() {
   return (
     <section className="dash-section" aria-labelledby="quick-title">
       <SectionTitle as="h2" id="quick-title" size="md">
-        {t.ws.home.quick}
+        {heading ?? t.ws.home.quick}
       </SectionTitle>
+      {lead && <p className="t-dim">{lead}</p>}
       <ul className="quick-grid">
         {items.map(
           (r) =>

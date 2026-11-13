@@ -113,6 +113,7 @@
 }
 .interests-list li:not(:last-child)::after {
   content: '·';
+  content: '·' / ''; /* decorativo: fora do nome acessível */
   margin-left: 0.7rem;
   color: var(--dim);
 }
@@ -682,6 +683,7 @@
 }
 .evo-points li::before {
   content: '>';
+  content: '>' / ''; /* decorativo: fora do nome acessível */
   flex-shrink: 0;
 }
 .ecoshop-info .stacks {

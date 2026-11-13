@@ -1,0 +1,326 @@
+/* Experiências por persona (src/experiences/). Os mesmos tokens e tons do resto do site:
+   cada bloco recebe `data-tone` e só o filete e os destaques mudam de cor. Sem degradê. */
+
+.exp-block {
+  --pad: var(--space-3);
+}
+.exp-block h3 {
+  margin: var(--space-4) 0 var(--space-2);
+  font-size: 0.95rem;
+}
+.exp-block h4 {
+  margin: 0 0 var(--space-2);
+  font-size: 0.85rem;
+}
+
+/* Troca rápida de seção ou filtro. */
+.exp-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: var(--space-3) 0;
+}
+.exp-tab {
+  min-height: 2.5rem;
+  padding: 0 var(--space-3);
+  font: inherit;
+  font-size: 0.85rem;
+  color: var(--text);
+  text-align: left;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+.exp-tab:hover {
+  border-color: var(--tone, var(--accent));
+}
+.exp-tab[aria-pressed='true'] {
+  background: var(--tone-bg);
+  border-color: var(--tone, var(--accent));
+  font-weight: 600;
+}
+
+.exp-panel,
+.exp-list {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.exp-item {
+  padding: var(--space-2) var(--space-3);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--tone, var(--accent));
+  border-radius: var(--radius-sm);
+}
+.exp-item summary {
+  min-height: 1.75rem;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+.exp-item p {
+  margin: var(--space-2) 0 0;
+  font-size: var(--fs-chrome);
+  line-height: 1.6;
+}
+.exp-semester h3 {
+  margin: var(--space-3) 0 var(--space-1);
+}
+.exp-courses {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--fs-chrome);
+}
+.exp-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin: var(--space-4) 0 0;
+  align-items: center;
+}
+.exp-cta.card {
+  padding: var(--space-3);
+}
+
+/* Explorador de arquitetura. */
+.arch-legend {
+  font-size: var(--fs-chrome);
+}
+.arch-layers {
+  display: grid;
+  gap: var(--space-3);
+  margin: var(--space-3) 0;
+  padding: 0;
+  list-style: none;
+}
+.arch-layer {
+  padding: var(--space-3);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-md);
+}
+.arch-layer h3.arch-layer-name {
+  margin: 0 0 var(--space-2);
+  font-size: var(--fs-chrome);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+.arch-nodes {
+  display: grid;
+  gap: var(--space-2);
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.arch-node {
+  display: grid;
+  gap: var(--space-1);
+  width: 100%;
+  min-height: 2.75rem;
+  padding: var(--space-2) var(--space-3);
+  box-sizing: border-box;
+  font: inherit;
+  text-align: left;
+  color: var(--text);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+.arch-node:hover {
+  border-color: var(--tone, var(--accent));
+}
+.arch-node[data-related] {
+  border-color: var(--tone, var(--accent));
+  background: var(--tone-bg);
+}
+.arch-node[aria-pressed='true'] {
+  border-color: var(--tone, var(--accent));
+  box-shadow: inset 3px 0 0 var(--tone, var(--accent));
+  font-weight: 600;
+}
+/* Componente que não existe como código ou não foi concluído: tracejado, e o texto diz isso. */
+.arch-node[data-pending] {
+  border-style: dashed;
+}
+.arch-node-name {
+  font-size: 0.85rem;
+}
+.arch-node-tech {
+  font-size: 0.72rem;
+  font-weight: 400;
+  color: var(--text-2);
+}
+.arch-detail {
+  margin: var(--space-3) 0;
+}
+.arch-detail h3 {
+  margin-top: 0;
+}
+.arch-tech {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin: 0 0 var(--space-2);
+}
+.arch-status {
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--fs-chrome);
+  background: var(--tone-bg);
+  border-left: 3px solid var(--c-amber);
+  border-radius: var(--radius-sm);
+}
+.arch-facts {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0 0 var(--space-3);
+}
+.arch-facts dt {
+  margin-top: var(--space-2);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+.arch-facts dd {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+.arch-jump {
+  padding: 0;
+  font: inherit;
+  font-size: 0.85rem;
+  color: var(--accent);
+  text-decoration: underline;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+.arch-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+.arch-textual {
+  margin-top: var(--space-3);
+  font-size: var(--fs-chrome);
+}
+.arch-textual summary {
+  cursor: pointer;
+}
+.arch-textual ul {
+  display: grid;
+  gap: var(--space-1);
+  padding-left: var(--space-4);
+}
+
+/* Modo explorar. */
+.explore-list {
+  display: grid;
+  gap: var(--space-2);
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  margin: var(--space-3) 0;
+  padding: 0;
+  list-style: none;
+}
+.explore-item {
+  height: 100%;
+  box-sizing: border-box;
+}
+.explore-item[data-found] {
+  border-color: var(--tone, var(--accent));
+}
+.explore-item p {
+  margin: var(--space-1) 0;
+  font-size: var(--fs-chrome);
+}
+.explore-ask {
+  min-height: 2.5rem;
+  padding: 0 var(--space-3);
+  font: inherit;
+  font-size: var(--fs-chrome);
+  color: var(--text);
+  background: none;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+.explore-ask:hover {
+  border-color: var(--tone, var(--accent));
+}
+.explore-progress,
+.explore-next {
+  margin: var(--space-2) 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.explore-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+.explore-actions button.dash-btn {
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .exp-tab,
+  .arch-node,
+  .explore-ask {
+    transition:
+      border-color 0.15s,
+      background-color 0.15s;
+  }
+}
+@media (max-width: 600px) {
+  .arch-nodes,
+  .explore-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .exp-tab {
+    flex: 1 1 100%;
+  }
+}
+@media print {
+  .exp-block {
+    display: none;
+  }
+}
+
+/* Links dentro dos blocos usam o acento, como os demais links do painel. */
+.exp-block a:not(.dash-btn) {
+  color: var(--accent);
+}
+
+/* "O que você procura?": a grade respira antes do botão de busca. */
+.intent-grid {
+  margin-bottom: var(--space-3);
+}
+
+/* Alvos de toque: 40 px no celular, como os demais controles (responsive.css). */
+@media (pointer: coarse), (max-width: 720px) {
+  .exp-item summary,
+  .arch-textual summary,
+  .arch-jump {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    min-height: 2.5rem;
+  }
+  .arch-jump {
+    display: inline-flex;
+  }
+}

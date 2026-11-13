@@ -44,7 +44,7 @@ describe('faixa de persona na home (PR-02, PR-03, PR-11, PR-15)', () => {
 
     expect(slot).toHaveAttribute('aria-live', 'polite');
     expect(slot).toHaveTextContent('Vendo como: Recrutador(a) / RH');
-    expect(within(slot).getByRole('link', { name: 'Ver o currículo' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'Ver o currículo' })).toHaveAttribute(
       'href',
       '/curriculo',
     );

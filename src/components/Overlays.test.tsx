@@ -42,16 +42,18 @@ describe('opções da paleta (JA-06)', () => {
     expect(filterItems(items, 'acadêmico').map((i) => i.id)).toContain('page:academico');
     expect(filterItems(items, 'resume').map((i) => i.id)).toContain('page:curriculo');
     expect(filterItems(items, 'zzzz')).toEqual([]);
-    // sem busca a lista é curta: habilidades só aparecem quando se digita
-    expect(filterItems(items, '')).toHaveLength(items.filter((i) => i.kind !== 'skill').length);
+    // sem busca a lista é curta: habilidades e seções só aparecem quando se digita
+    expect(filterItems(items, '')).toHaveLength(
+      items.filter((i) => i.kind !== 'skill' && i.kind !== 'section').length,
+    );
     expect(filterItems(items, 'tema escuro').length).toBeGreaterThan(0);
   });
 
-  it('cobre páginas, projetos, estudo de caso, jogos, habilidades e comandos, e agrupa nessa ordem', () => {
+  it('cobre páginas, seções, projetos, estudo de caso, jogos, habilidades e comandos, e agrupa nessa ordem', () => {
     const items = paletteItems('pt');
     const kinds = new Set(items.map((i) => i.kind));
 
-    expect([...kinds].sort()).toEqual(['command', 'game', 'page', 'project', 'skill']);
+    expect([...kinds].sort()).toEqual(['command', 'game', 'page', 'project', 'section', 'skill']);
     for (const p of projects) expect(items.map((i) => i.id)).toContain(`project:${p.id}`);
     expect(items.find((i) => i.id === 'case:whatsapp-dispatcher')?.to).toBe(
       '/estudos-de-caso/whatsapp-dispatcher',
@@ -106,8 +108,8 @@ describe('paleta de comandos (JA-06, JA-07)', () => {
     const box = within(dialog).getByRole('combobox');
 
     await user.type(box, 'proj');
-    // "projetos" é uma página (cd) e também um comando (mostra no terminal)
-    expect(within(dialog).getAllByRole('option', { name: /projetos/ })).toHaveLength(2);
+    // "projetos" é uma página (cd), um comando (mostra no terminal) e uma seção do currículo
+    expect(within(dialog).getAllByRole('option', { name: /projetos/ })).toHaveLength(3);
     expect(within(dialog).queryByRole('option', { name: /academico/ })).toBeNull();
     expect(within(dialog).getByRole('status')).toHaveTextContent(/resultado/);
     await user.clear(box);
