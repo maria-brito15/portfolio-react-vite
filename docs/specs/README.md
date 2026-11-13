@@ -17,7 +17,14 @@ Cada pasta segue o fluxo PRD → especificação → plano → tarefas → verif
 | [GitHub em números](github-stats/status.md) | GH-xx | ✅ 5 · ◐ 0 · ❌ 0 · ❔ 0 |
 | [Workspace: painel, barra lateral, Game Center](workspace/status.md) | WS-xx | ✅ 16 · ◐ 0 · ❌ 0 · ❔ 0 |
 | [Personas (o site se adapta a quem visita)](personas/status.md) | PR-xx | ✅ 14 · ◐ 2 · ❌ 0 · ❔ 0 |
+| [Home adaptativa por persona](personas-home/status.md) | HP-xx | ✅ 7 · ◐ 1 · ❌ 0 · ❔ 0 |
+| [Projetos contextuais por persona](projetos-contextuais/status.md) | PP-xx | ✅ 6 · ◐ 3 · ❌ 0 · ❔ 0 |
+| [Navegação contextual e trilhas nas páginas](navegacao-contextual/status.md) | NV-xx | ✅ 10 · ◐ 1 · ❌ 0 · ❔ 0 |
+| [Experiências por persona](experiencias-persona/status.md) | EP-xx | ✅ 10 · ◐ 1 · ❌ 0 · ❔ 0 |
+| [Busca e descoberta contextual](busca-contextual/status.md) | BC-xx | ✅ 11 · ◐ 1 · ❌ 0 · ❔ 0 |
+| [Qualidade das personas (Fase 6)](qualidade-personas/status.md) | QA-xx | ✅ 10 · ◐ 2 · ❌ 0 · ❔ 1 |
 | [Trilhas por persona (percurso guiado e gamificado)](trilhas/status.md) | TR-xx | ✅ 21 · ◐ 5 · ❌ 1 · ❔ 0 (TR-27: peso acima do teto, decisão pendente) |
+| [Espaço cultural `/pessoal` (livros, filmes, música, teatro)](personal/README.md) | CL-xx (a definir) | 📝 descoberta e plano; decisões D1–D9 registradas; faltam credenciais (D5) ([checklist](personal/CHECKLIST.md)) |
 | [Assistente de IA no terminal](assistente-ia/status.md) | IA-xx | ✅ 17 · ◐ 8 · ❌ 0 · ❔ 0 (código pronto; falta chave, deploy e avaliação com o modelo real) |
 
 Spec geral e análise de lacunas originais: `docs/sdd-terminal-v2/`. Estilo de escrita: skill `technical-writing`. Fluxo: skill `spec-driven-development`.
