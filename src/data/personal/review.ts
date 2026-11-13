@@ -68,3 +68,17 @@ export function groupByMonth<T extends { watchedDate?: string }>(entries: T[]): 
       return b.key.localeCompare(a.key);
     });
 }
+
+// Data e hora da última sincronização, no formato do idioma. Data inválida devolve texto
+// vazio: a interface omite a frase em vez de mostrar "Invalid Date".
+export function formatSyncDate(iso: string, lang: Lang, timeZone?: string) {
+  const date = new Date(iso);
+
+  if (Number.isNaN(date.getTime())) return '';
+
+  return new Intl.DateTimeFormat(lang === 'pt' ? 'pt-BR' : 'en-US', {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+    timeZone,
+  }).format(date);
+}

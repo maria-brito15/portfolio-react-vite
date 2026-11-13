@@ -1,0 +1,177 @@
+/* Espaço cultural (/pessoal): linguagem editorial dentro do estilo único do site. Mono, os
+   mesmos tokens e tons; o caráter de publicação vem de numeração, kickers em caixa alta,
+   filetes finos, grade assimétrica, capas grandes e espaço em branco. Sem degradê, sem
+   itálico (a fonte hospedada só tem o estilo normal) e nenhuma cor fora de tokens.css. */
+
+.personal-placeholder {
+  margin: var(--space-3) 0;
+  font-size: var(--fs-chrome);
+}
+
+/* ---------- Cabeça de página ---------- */
+.pe-head {
+  margin-bottom: var(--space-6);
+  padding: var(--space-5) 0;
+  border-bottom: 1px solid var(--border);
+}
+.pe-kicker {
+  margin: 0 0 var(--space-3);
+  font-size: var(--fs-chrome);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--tone, var(--warn));
+}
+.pe-title {
+  margin: 0;
+  font-size: clamp(2rem, 6vw, 3.4rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  overflow-wrap: anywhere;
+}
+.pe-deck {
+  max-width: var(--measure);
+  margin: var(--space-4) 0 0;
+  font-size: 1.05rem;
+  color: var(--text-2);
+}
+
+/* ---------- Índice numerado ---------- */
+.pe-index {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--border);
+}
+.pe-index li {
+  border-bottom: 1px solid var(--border);
+}
+.pe-index a {
+  display: grid;
+  grid-template-columns: 3.5rem 1fr auto;
+  gap: var(--space-3);
+  align-items: baseline;
+  min-height: 2.75rem;
+  padding: var(--space-4) 0;
+  color: var(--text);
+  text-decoration: none;
+}
+.pe-num {
+  color: var(--dim);
+  font-variant-numeric: tabular-nums;
+}
+.pe-index-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+.pe-index-hint {
+  font-size: var(--fs-chrome);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+.pe-index a:hover .pe-index-title,
+.pe-index a:focus-visible .pe-index-title {
+  color: var(--accent);
+}
+
+/* ---------- Capa / pôster ---------- */
+.pe-cover {
+  margin: 0;
+}
+.pe-cover-frame {
+  aspect-ratio: 2 / 3;
+  width: 100%;
+  overflow: hidden;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+.pe-cover-frame img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.pe-cover-ph {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+  height: 100%;
+  padding: var(--space-3);
+  border-left: 3px solid var(--tone, var(--warn));
+}
+.pe-cover-ph-title {
+  font-size: var(--fs-mono-sm);
+  font-weight: 700;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+.pe-cover-ph-year {
+  font-size: var(--fs-chrome);
+  color: var(--dim);
+}
+.pe-cover figcaption {
+  margin-top: var(--space-2);
+  font-size: var(--fs-chrome);
+  color: var(--dim);
+}
+
+/* ---------- Nota, aviso e rodapé ---------- */
+.pe-rating {
+  font-size: 0.95rem;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+  color: var(--tone, var(--warn));
+}
+.pe-rating--none {
+  color: var(--dim);
+}
+.pe-stale {
+  margin: var(--space-4) 0;
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--fs-chrome);
+  color: var(--text-2);
+  background: var(--surface-2);
+  border-left: 3px solid var(--warn);
+}
+.pe-foot {
+  display: grid;
+  gap: var(--space-2);
+  margin-top: var(--space-7);
+  padding-top: var(--space-4);
+  font-size: var(--fs-chrome);
+  color: var(--dim);
+  border-top: 1px solid var(--border);
+}
+.pe-foot p {
+  margin: 0;
+}
+
+/* ---------- Grade assimétrica 7/5 (uma coluna no celular) ---------- */
+.pe-split {
+  display: grid;
+  grid-template-columns: 7fr 5fr;
+  gap: var(--space-6);
+}
+.pe-split--flip {
+  grid-template-columns: 5fr 7fr;
+}
+
+@media (max-width: 720px) {
+  .pe-split,
+  .pe-split--flip {
+    grid-template-columns: 1fr;
+    gap: var(--space-5);
+  }
+  .pe-index a {
+    grid-template-columns: 2.5rem 1fr;
+  }
+  .pe-index-hint {
+    grid-column: 2;
+  }
+}
