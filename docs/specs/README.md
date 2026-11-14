@@ -24,7 +24,7 @@ Cada pasta segue o fluxo PRD → especificação → plano → tarefas → verif
 | [Busca e descoberta contextual](busca-contextual/status.md) | BC-xx | ✅ 11 · ◐ 1 · ❌ 0 · ❔ 0 |
 | [Qualidade das personas (Fase 6)](qualidade-personas/status.md) | QA-xx | ✅ 10 · ◐ 2 · ❌ 0 · ❔ 1 |
 | [Trilhas por persona (percurso guiado e gamificado)](trilhas/status.md) | TR-xx | ✅ 21 · ◐ 5 · ❌ 1 · ❔ 0 (TR-27: peso acima do teto, decisão pendente) |
-| [Espaço cultural `/pessoal` (livros, filmes, música, teatro)](personal/README.md) | CL-xx (a definir) | 📝 descoberta e plano; decisões D1–D9 registradas; faltam credenciais (D5) ([checklist](personal/CHECKLIST.md)) |
+| [Espaço cultural `/pessoal` (livros, filmes, música, teatro)](personal/status.md) | CL-xx | ✅ 24 · ◐ 5 · ❌ 9 · ❔ 0 (Fase 1 com dados fictícios concluída; integrações reais nas Fases 2 a 5; [plano](personal/README.md), [checklist](personal/CHECKLIST.md)) |
 | [Assistente de IA no terminal](assistente-ia/status.md) | IA-xx | ✅ 17 · ◐ 8 · ❌ 0 · ❔ 0 (código pronto; falta chave, deploy e avaliação com o modelo real) |
 
 Spec geral e análise de lacunas originais: `docs/sdd-terminal-v2/`. Estilo de escrita: skill `technical-writing`. Fluxo: skill `spec-driven-development`.

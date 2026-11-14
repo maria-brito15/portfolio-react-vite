@@ -7,38 +7,38 @@ Em toda fase de código vale o fluxo do projeto: `npm run typecheck` · `npm run
 ## Fase 0: decisões e preparo
 
 - [x] D1–D9 registradas no `README.md` (13/11/2026).
-- [ ] PRD, `requirements.md` (IDs `CL-xx`), `design.md` e `tasks.md` aprovados antes de qualquer código.
-- [ ] Árvore pendente (`git status`) commitada ou estabilizada.
-- [ ] `.env.zip` coberto pelo `.gitignore`; nenhum segredo rastreado (`git ls-files | grep env`).
+- [x] PRD, `requirements.md` (IDs `CL-xx`), `design.md` e `tasks.md` aprovados antes de qualquer código.
+- [x] Árvore pendente (`git status`) commitada ou estabilizada.
+- [x] `.env.zip` coberto pelo `.gitignore`; nenhum segredo rastreado (`git ls-files | grep env`).
 - [x] Índice `docs/specs/README.md` com a nova linha.
 
 ## Fase 1: Foundation com dados fictícios
 
 Rotas e casca
-- [ ] Rotas só em `routes.ts` (`/pessoal` + 4 subpáginas, aliases `/personal/*`), `draft: true`; `App.tsx`, `seo.ts` (PT/EN), `lazyPages.ts` e o mock em `src/test/setup.js` atualizados.
-- [ ] Páginas abrem nos dois caminhos; 404 continua 404; fora do sitemap enquanto `draft`.
-- [ ] Barra lateral (grupo `personal`), breadcrumb e título da Window corretos em PT e EN.
-- [ ] Comando de terminal `pessoal`/`personal` com Tab, ajuda e saída PT/EN.
-- [ ] `amigo` e `professor` destacam o espaço (D6); `rh`, `tech`, `cliente` só no menu; testes de persona, trilhas, busca e `routes.test.ts` verdes.
+- [x] Rotas só em `routes.ts` (`/pessoal` + 4 subpáginas, aliases `/personal/*`), `draft: true`; `App.tsx`, `seo.ts` (PT/EN), `lazyPages.ts` e o mock em `src/test/setup.js` atualizados.
+- [x] Páginas abrem nos dois caminhos; 404 continua 404; fora do sitemap enquanto `draft`.
+- [x] Barra lateral (grupo `personal`), breadcrumb e título da Window corretos em PT e EN.
+- [x] Comando de terminal `pessoal`/`personal` com Tab, ajuda e saída PT/EN.
+- [x] `amigo` e `professor` destacam o espaço (D6); `rh`, `tech`, `cliente` só no menu; testes de persona, trilhas, busca e `routes.test.ts` verdes.
 
 Dados e contrato
-- [ ] Tipos da seção 7 em `src/data/personal/types.ts` (com `Source` incluindo `mock`).
-- [ ] `PersonalSource<T>` único; `mock.ts` em `src/services/integrations/{hardcover,letterboxd,tmdb}/`; páginas não importam mock direto.
-- [ ] Títulos fictícios claros; casos chatos presentes: livro sem capa, filme sem nota, sem data, série, revisto, resenha longa, `publish: false`, título longo, lista vazia, erro, `stale`.
+- [x] Tipos da seção 7 em `src/data/personal/types.ts` (com `Source` incluindo `mock`).
+- [x] `PersonalSource<T>` único; `mock.ts` em `src/services/integrations/{hardcover,letterboxd,tmdb}/`; páginas não importam mock direto.
+- [x] Títulos fictícios claros; casos chatos presentes: livro sem capa, filme sem nota, sem data, série, revisto, resenha longa, `publish: false`, título longo, lista vazia, erro, `stale`.
 
 Sistema editorial (mono, D2)
-- [ ] Só variáveis de `tokens.css`; sem hex solto, sem degradê; títulos de seção em peso 700 (sem itálico sintético).
-- [ ] Contraste AA nos 5 temas (`contrast.test.ts`); 390 px sem rolagem horizontal; `prefers-reduced-motion`.
-- [ ] Componentes com teste: capa/placeholder tipográfico, nota com rótulo acessível, linha de diário, resenha truncada (~400) com link, índice numerado.
-- [ ] Estados visíveis e testados: carregando, vazio, erro, `stale` ("última sincronização").
+- [x] Só variáveis de `tokens.css`; sem hex solto, sem degradê; títulos de seção em peso 700 (sem itálico sintético).
+- [x] Contraste AA nos 5 temas (`contrast.test.ts`); 390 px sem rolagem horizontal; `prefers-reduced-motion`.
+- [x] Componentes com teste: capa/placeholder tipográfico, nota com rótulo acessível, linha de diário, resenha truncada (~400) com link, índice numerado.
+- [x] Estados visíveis e testados: carregando, vazio, erro, `stale` ("última sincronização").
 
 Páginas
-- [ ] Hub, Livros, Filmes, Música e Teatro completos com mock; textos PT/EN com paridade em `ui.ts`.
+- [x] Hub, Livros, Filmes, Música e Teatro completos com mock; textos PT/EN com paridade em `ui.ts`.
 
 Trava de dados fictícios
-- [ ] Badge `DADOS FICTÍCIOS` / `PLACEHOLDER DATA` visível em páginas e itens, legível nos 5 temas.
-- [ ] Build de produção da Netlify **falha** com `VITE_PERSONAL_SOURCE=mock`.
-- [ ] Mock fora do sitemap, do snapshot, do `context.json` e da pré-renderização (teste automatizado).
+- [x] Badge `DADOS FICTÍCIOS` / `PLACEHOLDER DATA` visível em páginas e itens, legível nos 5 temas.
+- [x] Build de produção da Netlify **falha** com `VITE_PERSONAL_SOURCE=mock` (simulado com `CONTEXT=production`; confirmar o `CONTEXT` num deploy real).
+- [ ] Mock fora do sitemap, do snapshot, do `context.json` e da pré-renderização (teste automatizado). Feito para sitemap, busca e bundle; snapshot e pré-renderização só existem na Fase 4.
 
 ## Fase 2: filmes reais (Letterboxd RSS + TMDB)
 

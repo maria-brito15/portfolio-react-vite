@@ -4,6 +4,8 @@ Uma tarefa por commit; a mensagem leva o ID. Plano em `design.md`.
 
 ## Fase 1: Foundation com dados fictícios
 
+**Concluída em 14/11/2026** (T-CL1 a T-CL9, um commit cada na branch `feat/espaco-cultural`). Estado por requisito em `status.md`.
+
 | ID | Tarefa | Requisitos | Depende de | Feito quando |
 | --- | --- | --- | --- | --- |
 | T-CL1 | `types.ts`, `review.ts` (`truncateReview`, `groupByMonth`, `formatRating`) e testes | CL-07, CL-10, CL-22, CL-25 | — | Testes: truncamento em limite de palavra; mês sem data vai ao fim; nota `3.5` vira `★★★½` com rótulo PT/EN; tipos compilam |

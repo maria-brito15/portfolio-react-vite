@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderApp } from '../../test/helpers';
@@ -97,7 +99,8 @@ describe('saída do terminal (CL-05)', () => {
     renderApp();
     await run(user, 'pessoal');
 
-    expect(log()).toHaveTextContent('escolha uma seção');
+    // a visão é carregada sob demanda (fora do JS inicial)
+    expect(await screen.findByText(/escolha uma seção/)).toBeInTheDocument();
 
     const buttons = [...log().querySelectorAll('.t-index-list .t-run')].map((b) => b.textContent);
 
@@ -194,5 +197,18 @@ describe('saída do terminal (CL-05)', () => {
     renderApp('/terminal?cmd=pessoal%20livros');
 
     expect(await screen.findByText(/Livro de exemplo 1/)).toBeInTheDocument();
+  });
+});
+
+// Orçamento do JS inicial (CL-36): o comando fica leve; a visão, com o hook, as fontes de dados
+// e os formatadores, só é baixada quando `pessoal` roda.
+describe('peso do JS inicial (CL-36)', () => {
+  const source = readFileSync(join(process.cwd(), 'src/terminal/extras/personal.tsx'), 'utf8');
+
+  it('o comando carrega a visão sob demanda e não importa dados nem fontes', () => {
+    expect(source).toMatch(/lazy\(\(\) => import\('\.\/personalView'\)\)/);
+    expect(source).not.toMatch(
+      /from '[^']*(hooks\/usePersonal|services\/integrations|data\/personal)/,
+    );
   });
 });
