@@ -263,14 +263,16 @@ describe('ReviewBlock (CL-25)', () => {
 describe('BooksShelves com o mock (CL-21)', () => {
   const noop = () => {};
 
-  it('seções: lendo agora, lidos por ano (com "sem data" no fim), pausados e quero ler', () => {
+  it('seções: atividade, lendo agora, lidos por ano (com "sem data" no fim), favoritos, pausados e quero ler', () => {
     render(<BooksShelves state={ready(mockBooks)} retry={noop} />, { wrapper });
 
     expect(screen.getAllByRole('heading', { level: 2 }).map((h) => h.textContent)).toEqual([
+      'Atividade de leitura',
       'Lendo agora',
       'Lidos · 2026',
       'Lidos · 2025',
       'Lidos · Sem data de término',
+      'Favoritos · nota 5',
       'Pausados e abandonados',
       'Quero ler',
     ]);
@@ -282,7 +284,8 @@ describe('BooksShelves com o mock (CL-21)', () => {
     });
 
     // 6 livros nas estantes (os 2 "quero ler" não têm capa, só texto)
-    expect(container.querySelectorAll('.pe-cover-ph')).toHaveLength(6);
+    // 6 livros nas estantes + 1 que reaparece nos favoritos (nota 5)
+    expect(container.querySelectorAll('.pe-cover-ph')).toHaveLength(7);
     expect(container.querySelector('img')).toBeNull();
   });
 

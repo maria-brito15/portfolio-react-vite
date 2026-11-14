@@ -12,7 +12,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "ask:eval": "vitest run scripts/askEvals.live.test.ts",
-    "e2e": "playwright test"
+    "e2e": "playwright test",
+    "personal:probe": "node scripts/hardcoverProbe.mjs"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",

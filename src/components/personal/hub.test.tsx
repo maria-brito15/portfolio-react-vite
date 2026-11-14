@@ -367,7 +367,8 @@ describe('modo live de música e teatro (D4, CL-02)', () => {
     expect(live.routeById('pessoal-musica')?.draft).toBe(true);
     expect(live.routeById('pessoal-teatro')?.draft).toBe(true);
     expect(live.routeById('pessoal-livros')?.draft).toBe(false);
-    expect(live.routeById('pessoal-filmes')?.draft).toBe(false);
+    // Letterboxd + TMDB ainda sem integração (data/personal/integrations.ts): filmes em rascunho
+    expect(live.routeById('pessoal-filmes')?.draft).toBe(true);
     expect(live.routeById('pessoal')?.draft).toBe(false);
   });
 });

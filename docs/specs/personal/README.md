@@ -98,6 +98,12 @@ Arquivos propostos (nomes indicativos):
 
 ### 4.2 Hardcover GraphQL: **endpoint ativo, depende de token** [V parcial]
 
+> **Atualização (14/11/2026):** a integração foi implementada e testada sem rede; decisões, mapeamento
+> de campos, limites e o roteiro de validação com o token estão em `hardcover.md`. Status dos campos:
+> `status_id` 1–6, endpoint, Bearer, ~60 req/min, timeout de 30 s e profundidade 3 vieram da
+> documentação oficial (página User Books) por busca; `finished_at`, `cached_image`,
+> `cached_contributors`, listas e metas **continuam não confirmados**.
+
 - `POST https://api.hardcover.app/v1/graphql` respondeu `{"error":"invalid_request","error_description":"No Authorization header"}` sem token [V]. Ou seja, o endpoint existe e exige autenticação.
 - A documentação oficial (`docs.hardcover.app`) devolveu 403 à ferramenta de leitura; os detalhes abaixo vêm de **fontes de terceiros** e ficam como [A]: token pessoal gerado na conta (há divergência sobre a página: `/settings` ou `/account/api`), cabeçalho `Authorization: Bearer <token>`, ~60 req/min, timeout de 30 s, profundidade máxima de consulta baixa (~3), **API ainda em evolução/beta** (campos podem mudar), token com validade (renovar periodicamente).
 - Consequência: **não foi possível verificar o perfil `@dudapbrt` sem o token.** Dependência: a Duda gerar o token e confirmar que o perfil e as estantes estão públicos. Os campos exatos (`user_books`, status “lendo/lido/quero ler”, avaliação, `date_read`) serão fixados na Fase 1 com uma consulta real.

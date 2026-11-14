@@ -59,3 +59,46 @@ export function formatAverage(value: number | undefined, lang: Lang) {
 
   return lang === 'pt' ? text.replace('.', ',') : text;
 }
+
+export interface ActivityMonth {
+  // `AAAA-MM`.
+  month: string;
+  books: number;
+  // Soma das páginas dos livros do mês que têm páginas; ausente se nenhum tem.
+  pages?: number;
+}
+
+// Livros terminados por mês (do mais recente ao mais antigo, até `limit` meses com atividade).
+// Derivado das datas de término; livro lido sem data não entra (não há mês para atribuir).
+export function readingActivity(books: Book[], limit = 6): ActivityMonth[] {
+  const months = new Map<string, Book[]>();
+
+  for (const book of books) {
+    const match =
+      book.status === 'read' && book.finishedAt ? /^(\d{4}-\d{2})/.exec(book.finishedAt) : null;
+
+    if (match) months.set(match[1], [...(months.get(match[1]) ?? []), book]);
+  }
+
+  return [...months]
+    .sort(([a], [b]) => b.localeCompare(a))
+    .slice(0, limit)
+    .map(([month, list]) => {
+      const pages = list.map((b) => b.pages).filter((p): p is number => p !== undefined);
+
+      return {
+        month,
+        books: list.length,
+        pages: pages.length ? pages.reduce((sum, p) => sum + p, 0) : undefined,
+      };
+    });
+}
+
+// Os favoritos: livros com a nota máxima (5), do término mais recente ao mais antigo. A fonte não
+// tem (que se saiba) uma lista "favoritos" confirmada; ver docs/specs/personal/hardcover.md.
+export function favoriteBooks(books: Book[], limit = 6): Book[] {
+  return books
+    .filter((b) => b.rating === 5)
+    .sort((a, b) => (b.finishedAt ?? '').localeCompare(a.finishedAt ?? ''))
+    .slice(0, limit);
+}

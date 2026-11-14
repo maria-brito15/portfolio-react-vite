@@ -31,6 +31,10 @@ export interface Book {
   finishedAt?: string;
   // Nota editorial escrita pela Duda; nunca gerada.
   note?: Localized;
+  // Andamento de quem está lendo: só o que a fonte informa (páginas lidas e/ou percentual 0–100).
+  progress?: { pages?: number; percent?: number };
+  // Resenha escrita por ela na fonte (Hardcover `review_raw`); ausente se não houver.
+  review?: string;
   provenance: Provenance;
 }
 

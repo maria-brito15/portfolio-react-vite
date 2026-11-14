@@ -20,6 +20,7 @@ export const mockBooks: Book[] = [
     status: 'reading',
     pages: 412,
     startedAt: '2026-10-28',
+    progress: { pages: 120, percent: 29 },
   }),
   book({
     id: 'mock:book-2',
@@ -29,6 +30,7 @@ export const mockBooks: Book[] = [
     rating: 4.5,
     startedAt: '2026-08-30',
     finishedAt: '2026-09-14',
+    review: 'Resenha de exemplo do livro (dado fictício).',
     note: {
       pt: 'Nota editorial de exemplo (dado fictício).',
       en: 'Example editorial note (fictional data).',
@@ -46,7 +48,7 @@ export const mockBooks: Book[] = [
     id: 'mock:book-4',
     title: 'Livro de exemplo sem data de término',
     status: 'read',
-    rating: 4,
+    rating: 5,
   }),
   book({ id: 'mock:book-5', title: 'Livro de exemplo 5', status: 'want' }),
   book({

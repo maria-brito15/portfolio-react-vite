@@ -452,3 +452,43 @@
   border: 0;
   border-top: 1px solid var(--border);
 }
+
+/* ---------- Andamento, atividade e perfil dos livros ---------- */
+.pe-progress {
+  display: grid;
+  gap: var(--space-1);
+  font-size: var(--fs-chrome);
+  color: var(--text-2);
+}
+.pe-progress progress {
+  width: 100%;
+  height: 0.5rem;
+  accent-color: var(--tone, var(--warn));
+}
+.pe-activity {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.pe-activity li {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-1) var(--space-4);
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--border);
+  font-size: var(--fs-chrome);
+}
+.pe-activity li span:first-child {
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.pe-profile-link {
+  display: inline-block;
+  margin-top: var(--space-4);
+  font-size: var(--fs-chrome);
+  color: var(--accent);
+  text-underline-offset: 3px;
+}

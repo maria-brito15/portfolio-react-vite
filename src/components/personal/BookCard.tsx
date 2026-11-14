@@ -3,6 +3,7 @@ import { useLanguage } from '../../i18n/LanguageContext';
 import { usePersonalText } from '../../i18n/usePersonalText';
 import Chip from '../ui/Chip';
 import CoverFigure from './CoverFigure';
+import ReviewBlock from './ReviewBlock';
 import RatingStars from './RatingStars';
 import SourceBadge from './SourceBadge';
 
@@ -35,6 +36,25 @@ export default function BookCard({ book }: { book: Book }) {
             )}
             <SourceBadge provenance={book.provenance} />
           </span>
+          {book.progress && (
+            <span className="pe-progress">
+              {book.progress.percent !== undefined && (
+                <progress
+                  max={100}
+                  value={book.progress.percent}
+                  aria-label={text.progress(book.progress.pages, book.progress.percent)}
+                />
+              )}
+              <span>{text.progress(book.progress.pages, book.progress.percent)}</span>
+            </span>
+          )}
+          {book.review && (
+            <ReviewBlock
+              review={book.review}
+              url={book.provenance.url}
+              moreLabel={text.reviewMore}
+            />
+          )}
           {book.note && (
             <span className="pe-book-note">
               <span className="pe-kicker">{text.note}</span> {book.note[lang]}

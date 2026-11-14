@@ -62,10 +62,19 @@ Trava de dados fictícios
 
 ## Fase 3: livros reais (Hardcover) e CSV
 
-- [ ] Token obtido; consulta real devolve as estantes de `@dudapbrt` (status, nota, datas, capa); modelo ajustado ao que a API entrega.
-- [ ] Função `/api/personal/books` com cache de 6 h e limite da API respeitado.
-- [ ] Importação do CSV do Letterboxd para JSON versionado, com `publish: false` por entrada; CSV bruto fora do repositório.
-- [ ] `index.ts` de livros troca o mock; páginas inalteradas.
+Detalhes e decisões em `hardcover.md`.
+
+- [ ] Token obtido; consulta real devolve as estantes de `@dudapbrt` (status, nota, datas, capa); modelo ajustado ao que a API entrega. **Pendente do token:** rodar `npm run personal:probe`.
+- [x] Cliente do servidor (`fetch` tipado, justificado contra o SDK 0.x) com timeout, novas tentativas, `Retry-After` e consulta mínima de reserva (`hardcover.test.ts`).
+- [x] Normalização para `Book`: estados, nota, datas, andamento, resenha, capa `https`, autores; sem inventar campo; duplicados resolvidos.
+- [x] Função `/api/personal/books` com cache em Blobs (TTL configurável, padrão 6 h), snapshot de reserva, *single-flight* e *backoff* (`cache.test.ts`, `books.test.ts`).
+- [x] "Última sincronização" exposta (`updatedAt`) e mostrada no rodapé, com aviso de dado vencido.
+- [x] Token só no servidor: nenhum arquivo de `src/` o cita; `.env.example` vazio; resposta e erros sem token (testes).
+- [x] `index.ts` de livros troca o mock pela fonte real em modo `live`; Filmes fica em rascunho no `live` até ser integrado.
+- [x] Página de livros: andamento, resenhas, favoritos (nota 5), atividade por mês, estatísticas, link do perfil, quatro estados, PT/EN.
+- [ ] Listas e metas de leitura do Hardcover: esquema não confirmado, ficam para depois do `probe`.
+- [ ] Importação do CSV do Letterboxd para JSON versionado, com `publish: false` por entrada; CSV bruto fora do repositório (é da parte de filmes).
+- [ ] Função executada na Netlify real, com a primeira leitura a frio dentro do tempo limite (hoje depende do aquecimento da Fase 4).
 
 ## Fase 4: sincronização e HTML estático
 

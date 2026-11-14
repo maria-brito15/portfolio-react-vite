@@ -37,7 +37,17 @@ export const personalPt = {
       read: 'Lidos',
       want: 'Quero ler',
       other: 'Pausados e abandonados',
+      favorites: 'Favoritos · nota 5',
+      activity: 'Atividade de leitura',
     },
+    activity: (books: number, pages?: number) =>
+      `${books} ${books === 1 ? 'livro' : 'livros'}${pages ? ` · ${pages.toLocaleString('pt-BR')} páginas` : ''}`,
+    progress: (pages?: number, percent?: number) =>
+      [pages ? `${pages} páginas lidas` : '', percent === undefined ? '' : `${percent}%`]
+        .filter(Boolean)
+        .join(' · '),
+    profile: 'Ver perfil no Hardcover →',
+    reviewMore: 'ler no Hardcover →',
     undated: 'Sem data de término',
     stats: {
       read: (year?: number) => (year === undefined ? 'Lidos' : `Lidos em ${year}`),
@@ -140,7 +150,17 @@ export const personalEn = {
       read: 'Read',
       want: 'Want to read',
       other: 'Paused and dropped',
+      favorites: 'Favorites · 5 stars',
+      activity: 'Reading activity',
     },
+    activity: (books: number, pages?: number) =>
+      `${books} ${books === 1 ? 'book' : 'books'}${pages ? ` · ${pages.toLocaleString('en-US')} pages` : ''}`,
+    progress: (pages?: number, percent?: number) =>
+      [pages ? `${pages} pages read` : '', percent === undefined ? '' : `${percent}%`]
+        .filter(Boolean)
+        .join(' · '),
+    profile: 'View profile on Hardcover →',
+    reviewMore: 'read on Hardcover →',
     undated: 'No finish date',
     stats: {
       read: (year?: number) => (year === undefined ? 'Read' : `Read in ${year}`),

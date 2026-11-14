@@ -34,9 +34,13 @@ export default function HubIndex({
 
   // Uma entrada do índice: rota, feed (se já carregou) e o destaque calculado dele.
   function entry<T>(routeId: string, state: PersonalState<T>, pick: (items: T[]) => Highlight) {
-    if (isEmptyManual(state)) return undefined;
-
     const route = routeById(routeId)!;
+
+    // Fora do índice: curadoria manual vazia e, no ar, seção em rascunho (sem conteúdo ou sem
+    // integração). Na prévia com dados fictícios (`showInNav` do hub), todas aparecem.
+    if (isEmptyManual(state)) return undefined;
+    if (route.draft && !routeById('pessoal')?.showInNav) return undefined;
+
     const feed = state.status === 'ready' ? state.feed : undefined;
 
     return {

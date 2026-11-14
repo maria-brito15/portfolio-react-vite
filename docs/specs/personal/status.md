@@ -41,9 +41,9 @@ Legenda: ✅ feito e verificado · ◐ feito, com ressalva anotada · ❌ não c
 | CL-26 | Dois idiomas | ✅ paridade de chaves, tipos e textos em `i18n/personal.test.ts` (o `check-i18n.mjs` da skill **não carrega** o `ui.ts`, já na base: importa `./ws` sem extensão) |
 | CL-27 | Letterboxd RSS | ❌ Fase 2 |
 | CL-28 | TMDB | ❌ Fase 2 |
-| CL-29 | Hardcover | ❌ Fase 3 (depende do token) |
+| CL-29 | Hardcover | ◐ cliente, normalização, cache e página implementados e testados sem rede (`hardcover.md`); **não validado com o Hardcover real**: o esquema é assumido até rodar `npm run personal:probe` com o token. Listas, metas e favoritos nativos não feitos |
 | CL-30 | CSV do Letterboxd | ❌ Fase 3 |
-| CL-31 | Função e cache | ❌ Fases 2 e 3 |
+| CL-31 | Função e cache | ◐ `/api/personal/books` pronta (cache em Blobs, snapshot de reserva, retry, timeout, `Retry-After`); `/api/personal/films` ainda não (Fase 2). A função não foi executada na Netlify real |
 | CL-32 | Segredos | ◐ `.env.example` com nomes e descrições e teste (`scripts/envExample.test.ts`), `.env.zip` ignorado; falta o teste de "nada em `dist/`" com as integrações (Fase 2) |
 | CL-33 | Atualização agendada | ❌ Fase 4 |
 | CL-34 | HTML estático | ❌ Fase 4 |
@@ -52,7 +52,7 @@ Legenda: ✅ feito e verificado · ◐ feito, com ressalva anotada · ❌ não c
 | CL-37 | Acessibilidade | ◐ rótulos, `alt`, `role`/`aria` testados; **foco por teclado e leitor de tela não foram passados à mão** |
 | CL-38 | Descoberta | ❌ Fase 5 (hoje a busca só conhece as páginas, nunca o mock) |
 
-Resumo: ✅ 24 · ◐ 6 · ❌ 8 · ❔ 0.
+Resumo: ✅ 24 · ◐ 8 · ❌ 6 · ❔ 0.
 
 ## Evidência da Fase 1 (14/11/2026)
 
@@ -62,6 +62,12 @@ Resumo: ✅ 24 · ◐ 6 · ❌ 8 · ❔ 0.
 - `sweep.mjs` (estilo único, variáveis CSS, rotas, SDD): "Varredura limpa". `contrast.mjs`: todos os pares passam AA. `gap-summary.mjs`: 50 ✅ · 3 ◐ · 0 ❌ (não cobre esta feature).
 - Navegador (build servido por `vite preview`): 6 rotas × 1440×900 e 390×844 × claro e escuro = 24 capturas, todas sem rolagem horizontal, com um `h1`, selo de dados fictícios e `noindex`; console sem erro nos 4 contextos. Terminal capturado em PT, EN e celular.
 - Peso: JS inicial 441,54 kB (139,83 kB gzip) contra 437,93 kB (138,46 kB gzip) do commit anterior ao espaço cultural (+1,37 kB gzip). Ficam fora do JS inicial: a visão do comando `pessoal` (`personalView`), o bloco da home (`PersonalSpace`) e todo o texto de interface do espaço (`usePersonalText`); testes impedem as três importações estáticas.
+
+## Livros reais (Hardcover), 14/11/2026
+
+Implementação e testes sem rede em `hardcover.md`: cliente e normalização (`netlify/personal/hardcover.ts`), cache com snapshot (`cache.ts`), função (`personal-books.mts`), fonte `live` e página de livros. Testes novos: `hardcover.test.ts` (35), `cache.test.ts`, `books.test.ts` (servidor, 57 no total), `live.test.ts` (13), `books.test.tsx` (18), `hardcoverProbe.test.ts` (4).
+
+**Não verificado:** qualquer chamada ao Hardcover real (falta o token), a função na Netlify real, o esquema assumido (rodar `npm run personal:probe`) e a leitura a frio dentro do tempo limite.
 
 ## Reconciliação em 14/11/2026
 

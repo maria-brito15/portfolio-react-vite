@@ -12,6 +12,7 @@
 
 import type { Lang, Localized } from '../types';
 import { personalMode } from '../services/integrations/mode';
+import { integrated } from './personal/integrations';
 import { music } from './personal/music';
 import { theater } from './personal/theater';
 import { now } from './now';
@@ -69,6 +70,9 @@ export interface Crumb {
 const hasNoContent: Record<string, boolean> = {
   musica: music.albums.length === 0,
   teatro: theater.visits.length === 0,
+  // Fontes ainda sem integração real (data/personal/integrations.ts).
+  livros: !integrated.books,
+  filmes: !integrated.films,
 };
 
 export const routes: Route[] = [
@@ -279,7 +283,8 @@ export const routes: Route[] = [
     label: L(labelPt, labelEn),
     desc: L(descPt, descEn),
     hidden: true,
-    // Música e teatro são curadoria manual: sem conteúdo da Duda, ficam em construção.
+    // Em construção no modo `live` enquanto não há conteúdo: curadoria manual vazia (música e
+    // teatro) ou fonte sem integração (data/personal/integrations.ts).
     draft: personalMode === 'mock' || hasNoContent[pt] === true,
   })),
   {

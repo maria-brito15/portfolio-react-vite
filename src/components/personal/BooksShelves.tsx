@@ -1,6 +1,12 @@
 import type { Book } from '../../data/personal/types';
-import { groupByYear } from '../../data/personal/review';
-import { formatAverage, readingStats } from '../../data/personal/stats';
+import { formatMonth, groupByYear } from '../../data/personal/review';
+import { HARDCOVER_PROFILE } from '../../data/personal/profiles';
+import {
+  favoriteBooks,
+  formatAverage,
+  readingActivity,
+  readingStats,
+} from '../../data/personal/stats';
 import type { PersonalState } from '../../hooks/usePersonal';
 import { useLanguage } from '../../i18n/LanguageContext';
 import { usePersonalText } from '../../i18n/usePersonalText';
@@ -32,6 +38,28 @@ function BookStatTiles({ books }: { books: Book[] }) {
   );
 }
 
+// Livros terminados por mês (derivado das datas de término, `data/personal/stats.ts`).
+function ActivityBlock({ books }: { books: Book[] }) {
+  const { lang } = useLanguage();
+  const p = usePersonalText();
+  const months = readingActivity(books);
+
+  if (months.length === 0) return null;
+
+  return (
+    <EditorialSection title={p.books.sections.activity}>
+      <ul className="pe-activity">
+        {months.map((m) => (
+          <li key={m.month}>
+            <span>{formatMonth(m.month, lang)}</span>
+            <span>{p.books.activity(m.books, m.pages)}</span>
+          </li>
+        ))}
+      </ul>
+    </EditorialSection>
+  );
+}
+
 // Estante (CL-21): números do ano, "lendo agora" em destaque, lidos por ano de término, pausados
 // e abandonados, e "quero ler" numa coluna ao lado (grade 7/5; uma coluna no celular). Recebe o
 // estado pronto.
@@ -54,6 +82,7 @@ export default function BooksShelves({
         const read = groupByYear(by('read'));
         const other = by('paused', 'dnf');
         const want = by('want');
+        const favorites = favoriteBooks(feed.items);
 
         return (
           <>
@@ -65,6 +94,7 @@ export default function BooksShelves({
               <>
                 <BookStatTiles books={feed.items} />
                 <EditorialDivider />
+                <ActivityBlock books={feed.items} />
                 <div className={want.length > 0 ? 'pe-split' : undefined}>
                   <div>
                     {reading.length > 0 && (
@@ -80,6 +110,11 @@ export default function BooksShelves({
                         <ShelfGrid books={group.items} />
                       </EditorialSection>
                     ))}
+                    {favorites.length > 0 && (
+                      <EditorialSection title={text.sections.favorites}>
+                        <ShelfGrid books={favorites} />
+                      </EditorialSection>
+                    )}
                     {other.length > 0 && (
                       <EditorialSection title={text.sections.other}>
                         <ShelfGrid books={other} />
@@ -103,6 +138,16 @@ export default function BooksShelves({
                   )}
                 </div>
               </>
+            )}
+            {feed.source === 'hardcover' && (
+              <a
+                className="pe-profile-link"
+                href={HARDCOVER_PROFILE}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {text.profile}
+              </a>
             )}
             <AttributionFooter feed={feed} />
           </>
