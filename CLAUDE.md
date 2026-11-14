@@ -3,14 +3,16 @@
 React 19 + Vite 6, TypeScript (strict), roteador próprio, Vitest. Terminal na home; páginas dedicadas como janelas.
 Specs por feature em `docs/specs/` (índice em `docs/specs/README.md`); spec geral e análise em `docs/sdd-terminal-v2/`.
 
-## Gate de aprovação (`.status`) — leia antes de agir
+## Spec gate (read before touching any feature)
 
-- Cada spec tem `docs/specs/<feature>/.status`; é a única fonte de aprovação. Existir o arquivo de spec não é aprovação. Regras: `docs/specs/GATES.md`.
-- Antes de mexer numa feature: `node scripts/status.mjs read <feature>`.
-- Nenhum código antes de `tasks:approved`; nenhum design vinculante antes de `requirements:approved`.
-- `.status` ausente ou inválido: pare e pergunte; não infira.
-- Lacuna em fase aprovada: proponha a mudança e peça aprovação; não edite o documento em silêncio.
-- Nunca promova `.status` por conta própria; só com pedido explícito (`promote ... --yes`).
+- Every feature spec in `docs/specs/<name>/` has a `.status` file.
+- `.status` is the ONLY source of truth for approval.
+- Do NOT write implementation code unless the feature's `.status` reads `tasks:approved` or further.
+- Do NOT treat the presence of `design.md` or `tasks.md` as approval.
+- If `.status` is missing or invalid: STOP and ask the human.
+- To check a gate: run `node scripts/status.mjs check <feature> <token>`.
+- Never promote a `.status` on your own; only when asked (`promote <feature> <token> --yes`).
+- Full rules: `docs/specs/GATES.md`.
 
 ## Sempre
 
