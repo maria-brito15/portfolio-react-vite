@@ -63,10 +63,14 @@ describe('rotas do espaço cultural (CL-01)', () => {
 });
 
 describe('rascunho enquanto houver mock (CL-02)', () => {
-  it('nos testes (modo mock) as cinco rotas são rascunho: fora da barra lateral', () => {
+  it('nos testes (modo mock) as cinco rotas são rascunho, mas só o hub aparece no menu', () => {
     for (const p of PAGES) expect(routeById(p.id)?.draft, p.id).toBe(true);
 
-    expect(navRoutes('personal').some((r) => r.id.startsWith('pessoal'))).toBe(false);
+    // o hub tem `showInNav`: entra na barra lateral mesmo como rascunho (prévia com dados fictícios)
+    expect(routeById('pessoal')?.showInNav).toBe(true);
+    expect(navRoutes('personal').map((r) => r.id)).toContain('pessoal');
+    // as subpáginas são ocultas: nunca entram na barra
+    expect(navRoutes('personal').some((r) => r.id.startsWith('pessoal-'))).toBe(false);
   });
 
   it('rascunho sai com noindex, e o alias aponta o canonical para o caminho principal', () => {

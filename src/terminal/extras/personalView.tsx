@@ -3,7 +3,7 @@
 // as fontes de dados e os formatadores, só é baixada quando alguém roda `pessoal`.
 import type { ReactNode } from 'react';
 import type { Lang } from '../../types';
-import { ui } from '../../i18n/ui';
+import { personalEn, personalPt } from '../../i18n/personal';
 import { routeById, routes, type Route } from '../../data/routes';
 import {
   formatDay,
@@ -23,6 +23,9 @@ import PlaceholderBadge from '../../components/personal/PlaceholderBadge';
 import { ActionLine } from '../outputs';
 import { RunCommand } from '../pageIndex';
 
+// Textos do terminal no idioma atual (ficam neste chunk lazy, fora do JS inicial).
+const termText = (lang: Lang) => (lang === 'pt' ? personalPt : personalEn).term;
+
 // Quantas linhas cada seção mostra no terminal; o resto fica na página própria.
 const MAX_LINES = 8;
 
@@ -31,7 +34,7 @@ const sections = () => routes.filter((r) => r.parent === HUB);
 const segment = (route: Route, lang: Lang) => route.segment?.[lang] ?? route.id;
 
 function Index({ lang, error }: { lang: Lang; error?: string }) {
-  const text = ui[lang].personal.term;
+  const text = termText(lang);
   const name = lang === 'pt' ? 'pessoal' : 'personal';
 
   return (
@@ -66,7 +69,7 @@ function Lines<T>({
   lang: Lang;
   lines: (items: T[]) => ReactNode[];
 }) {
-  const text = ui[lang].personal.term;
+  const text = termText(lang);
   const route = routeById(routeId) as Route;
 
   if (state.status === 'loading') return <p className="t-dim">{text.loading}</p>;
@@ -237,7 +240,5 @@ export default function PersonalView({
 
   if (route) return <SectionView route={route} lang={lang} />;
 
-  return (
-    <Index lang={lang} error={unknown ? ui[lang].personal.term.unknown(unknown) : undefined} />
-  );
+  return <Index lang={lang} error={unknown ? termText(lang).unknown(unknown) : undefined} />;
 }

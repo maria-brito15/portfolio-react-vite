@@ -73,46 +73,71 @@ describe('composição da home (D6)', () => {
 describe('home com o espaço no ar (CL-02, CL-06)', () => {
   const pages = PAGE_IDS.map((id) => routeById(id)!);
   const original = pages.map((r) => r.draft);
+  const hub = routeById('pessoal')!;
+  const originalShowInNav = hub.showInNav;
 
   afterEach(() => {
     pages.forEach((r, i) => (r.draft = original[i]));
+    hub.showInNav = originalShowInNav;
     localStorage.removeItem(PERSONA_KEY);
   });
 
-  const publish = () => pages.forEach((r) => (r.draft = false));
+  // "No ar": nenhuma rota é rascunho e o hub deixa de depender do `showInNav` da prévia.
+  const publish = () => {
+    pages.forEach((r) => (r.draft = false));
+    hub.showInNav = false;
+  };
   const block = () => document.querySelector('[aria-labelledby="personal-title"]');
   const personalLinks = () =>
     screen.queryAllByRole('link').filter((a) => a.getAttribute('href') === '/pessoal');
 
-  it('enquanto o espaço é rascunho (mock), a home não o anuncia para ninguém', () => {
+  it('na prévia com dados fictícios (mock) o atalho aparece para todos; o bloco, só para amigo e professor', async () => {
     for (const id of PERSONA_IDS) {
       localStorage.setItem(PERSONA_KEY, id);
 
       const { unmount } = renderApp('/');
 
-      expect(block(), id).toBeNull();
-      expect(personalLinks(), id).toHaveLength(0);
+      expect(personalLinks().length, id).toBeGreaterThan(0);
+      // o bloco é carregado sob demanda: espera quando deve existir; ausente nunca é renderizado
+      if (HIGHLIGHT.includes(id)) await vi.waitFor(() => expect(block(), id).not.toBeNull());
+      else expect(block(), id).toBeNull();
       unmount();
     }
   });
 
-  it.each(HIGHLIGHT)('no ar, %s vê o bloco com o hub e as seções com conteúdo', (id) => {
+  it('na prévia, o bloco mostra o hub e as quatro seções, mesmo sendo rascunho', async () => {
+    localStorage.setItem(PERSONA_KEY, 'amigo');
+    renderApp('/');
+    await vi.waitFor(() => expect(block()).not.toBeNull());
+
+    for (const path of [
+      '/pessoal',
+      '/pessoal/livros',
+      '/pessoal/filmes',
+      '/pessoal/musica',
+      '/pessoal/teatro',
+    ])
+      expect(block()!.querySelector(`a[href="${path}"]`), path).not.toBeNull();
+  });
+
+  it.each(HIGHLIGHT)('no ar, %s vê o bloco com o hub e as seções com conteúdo', async (id) => {
     publish();
     localStorage.setItem(PERSONA_KEY, id);
     renderApp('/');
 
-    expect(block()).not.toBeNull();
+    await vi.waitFor(() => expect(block()).not.toBeNull());
     expect(block()!.querySelector('a[href="/pessoal"]')).not.toBeNull();
     expect(block()!.querySelector('a[href="/pessoal/livros"]')).not.toBeNull();
     expect(block()!.querySelector('a[href="/pessoal/teatro"]')).not.toBeNull();
   });
 
-  it('o bloco só lista seções que não são rascunho (música e teatro vazios ficam de fora)', () => {
+  it('o bloco só lista seções que não são rascunho (música e teatro vazios ficam de fora)', async () => {
     publish();
     routeById('pessoal-musica')!.draft = true;
     routeById('pessoal-teatro')!.draft = true;
     localStorage.setItem(PERSONA_KEY, 'amigo');
     renderApp('/');
+    await vi.waitFor(() => expect(block()).not.toBeNull());
 
     expect(block()!.querySelector('a[href="/pessoal/livros"]')).not.toBeNull();
     expect(block()!.querySelector('a[href="/pessoal/musica"]')).toBeNull();

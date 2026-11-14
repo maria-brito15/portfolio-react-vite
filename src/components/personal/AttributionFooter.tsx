@@ -1,6 +1,7 @@
 import type { PersonalFeed } from '../../data/personal/types';
 import { formatSyncDate } from '../../data/personal/review';
 import { useLanguage } from '../../i18n/LanguageContext';
+import { usePersonalText } from '../../i18n/usePersonalText';
 
 type FeedInfo = Pick<PersonalFeed<unknown>, 'updatedAt' | 'source'>;
 
@@ -17,8 +18,9 @@ export default function AttributionFooter({
   entries?: { label: string; feed: FeedInfo }[];
   tmdb?: boolean;
 }) {
-  const { lang, t } = useLanguage();
-  const text = t.personal.footer;
+  const { lang } = useLanguage();
+  const p = usePersonalText();
+  const text = p.footer;
   const lines = [...(feed ? [{ label: '', feed }] : []), ...(entries ?? [])];
 
   if (lines.length === 0 && !tmdb) return null;

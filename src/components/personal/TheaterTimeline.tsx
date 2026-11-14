@@ -2,11 +2,14 @@ import type { TheaterVisit } from '../../data/personal/types';
 import { formatDay, groupByYearOf } from '../../data/personal/review';
 import type { PersonalState } from '../../hooks/usePersonal';
 import { useLanguage } from '../../i18n/LanguageContext';
+import { usePersonalText } from '../../i18n/usePersonalText';
 import AttributionFooter from './AttributionFooter';
+import EditorialSection from './EditorialSection';
 import FeedState from './FeedState';
 import PlaceholderBadge from './PlaceholderBadge';
 import SourceBadge from './SourceBadge';
 import StaleNotice from './StaleNotice';
+import { Empty } from './States';
 
 // Teatro (CL-24): linha do tempo por ano, da peça mais recente à mais antiga, com a data, o
 // título, companhia, local e cidade (só o que a Duda informou) e uma nota curta. Peça sem data
@@ -18,8 +21,9 @@ export default function TheaterTimeline({
   state: PersonalState<TheaterVisit>;
   retry: () => void;
 }) {
-  const { lang, t } = useLanguage();
-  const text = t.personal.theater;
+  const { lang } = useLanguage();
+  const p = usePersonalText();
+  const text = p.theater;
 
   return (
     <FeedState state={state} retry={retry}>
@@ -28,13 +32,13 @@ export default function TheaterTimeline({
           <PlaceholderBadge source={feed.source} />
           <StaleNotice stale={feed.stale} updatedAt={feed.updatedAt} />
           {feed.items.length === 0 ? (
-            <p className="pe-state">{text.empty}</p>
+            <Empty>{text.empty}</Empty>
           ) : (
             groupByYearOf(feed.items, (v) => v.date).map((group) => (
-              <section key={group.key} className="pe-month" aria-labelledby={`pe-y-${group.key}`}>
-                <h2 id={`pe-y-${group.key}`} className="pe-month-title">
-                  {group.key === 'undated' ? text.undated : group.key}
-                </h2>
+              <EditorialSection
+                key={group.key}
+                title={group.key === 'undated' ? text.undated : group.key}
+              >
                 <ol className="pe-entries pe-entries--dated">
                   {group.items.map((visit) => {
                     const where = [visit.company, visit.venue, visit.city].filter(Boolean);
@@ -60,7 +64,7 @@ export default function TheaterTimeline({
                     );
                   })}
                 </ol>
-              </section>
+              </EditorialSection>
             ))
           )}
           <AttributionFooter feed={feed} />

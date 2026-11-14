@@ -14,7 +14,7 @@ MAN = checagem manual. **Fase** = fase do plano (`README.md`, seção 9).
 | ID | Requisito | Critério de aceitação | Pri. | Verif. | Fase |
 | --- | --- | --- | --- | --- | --- |
 | CL-01 | Rotas em um só lugar | `routes.ts` define `pessoal`, `pessoal-livros`, `pessoal-filmes`, `pessoal-musica`, `pessoal-teatro` (paths `/pessoal`, `/pessoal/livros`…; aliases `/personal`, `/personal/books`, `/films`, `/music`, `/theater`); as subpáginas têm `parent: 'pessoal'`; nenhum outro arquivo repete caminhos | P0 | AUT | 1 |
-| CL-02 | Rascunho enquanto houver mock | Com fonte em modo mock, as cinco rotas têm `draft: true`: abrem, mas ficam fora do sitemap, da barra lateral e do índice; 404 continua 404 para o resto | P0 | AUT | 1 |
+| CL-02 | Rascunho enquanto houver mock | Com fonte em modo mock, as cinco rotas têm `draft: true`: abrem, mas ficam fora do sitemap e do índice dos buscadores (`noindex`); só o hub aparece no menu lateral e nos atalhos da home (`showInNav`, prévia com dados fictícios), e as subpáginas nunca; 404 continua 404 para o resto | P0 | AUT | 1 |
 | CL-03 | Casca e navegação | Páginas carregam sob demanda (`lazyPages.ts`, com o mock em `src/test/setup.js`); `App.tsx` mapeia os ids; grupo `personal` na barra lateral; breadcrumb e título da Window (`~/pessoal/livros`) corretos em PT e EN | P0 | AUT | 1 |
 | CL-04 | SEO por rota | `pageMeta` PT/EN para as cinco rotas (título ≤ ~60, descrição ≤ ~160); HTML estático por rota e canonical no caminho principal, também nos aliases | P0 | AUT | 1 |
 | CL-05 | Comando no terminal | `pessoal`/`personal` (+ `livros`, `filmes`, `musica`, `teatro` e equivalentes em EN) com Tab, `ajuda`, catálogo e saída PT/EN; abre a página própria | P1 | AUT | 1 |
@@ -51,7 +51,7 @@ MAN = checagem manual. **Fase** = fase do plano (`README.md`, seção 9).
 | CL-16 | Um só estilo | Mono único; só variáveis de `tokens.css`; nenhum hex fora dele; sem degradê (nem sobre imagens); títulos de seção em peso 700, sem itálico sintético | P0 | AUT/MAN | 1 |
 | CL-17 | Contraste, celular, movimento | AA nos cinco temas (`contrast.test.ts`); 390 px sem rolagem horizontal; `prefers-reduced-motion` respeitado | P0 | AUT/MAN | 1 |
 | CL-18 | Imagens | Capas/pôsteres com `width`/`height`, `loading="lazy"` e `alt`; sem imagem, placeholder tipográfico (título + ano em bloco mono) | P0 | AUT | 1 |
-| CL-19 | Linguagem editorial | Numeração de seções (`01`, `02`…), kickers em caixa alta, grid assimétrico, imagens grandes e espaço em branco, com os componentes `EditorialHeader`, `SectionIndex`, `CoverFigure`, `RatingStars`, `DiaryRow`, `ShelfGrid`, `SourceBadge`, `StaleNotice` | P1 | AUT/MAN | 1 |
+| CL-19 | Linguagem editorial | Numeração editorial 001 a 005 (o hub é 001; derivada da ordem das rotas) e do índice (`01`, `02`…), kickers em caixa alta, grid assimétrico, imagens grandes e espaço em branco, com os componentes `EditorialHeader`, `SectionIndex`, `CoverFigure`, `RatingStars`, `DiaryEntry`, `BookCard`, `FilmPoster`, `StatTile`, `EditorialPage`, `EditorialSection`, `EditorialDivider`, `Loading`, `Empty`, `ErrorState`, `ShelfGrid`, `SourceBadge`, `StaleNotice` | P1 | AUT/MAN | 1 |
 
 ## Páginas
 
@@ -74,7 +74,7 @@ MAN = checagem manual. **Fase** = fase do plano (`README.md`, seção 9).
 | CL-29 | Hardcover | Estantes (lendo, lido, quero ler) com nota, datas e capa, depois de uma consulta real que fixe os campos; cache de 6 h; respeita o limite da API | P0 | AUT/MAN | 3 |
 | CL-30 | CSV do Letterboxd | Script importa o CSV exportado para JSON versionado (histórico além dos 50 do RSS), com `publish` por entrada; o CSV bruto não entra no repositório | P1 | AUT | 3 |
 | CL-31 | Função e cache | `/api/personal/films` e `/api/personal/books` (Netlify Functions v2): origem restrita, erros tratados (fonte fora, 401, 429), cache em Blobs com revalidação; resposta traz `updatedAt` e `stale` | P0 | AUT | 2–3 |
-| CL-32 | Segredos | Tokens só em variáveis de servidor; nada em `dist/`; `.env.example` lista os nomes sem valores | P0 | AUT/MAN | 2 |
+| CL-32 | Segredos | Tokens só em variáveis de servidor; nada em `dist/`; `.env.example` lista os nomes com descrição e sem valores (feito); `ReadingStats` e `FilmStats` derivam dos itens (`data/personal/stats.ts`) | P0 | AUT/MAN | 2 |
 | CL-33 | Atualização agendada | Função agendada repopula o cache (Hardcover 6 h, Letterboxd 1 h) e aciona o build hook; falha de uma fonte não derruba as outras | P1 | AUT/MAN | 4 |
 | CL-34 | HTML estático | `seoPlugin` grava as listas no HTML de cada rota `/pessoal/*` a partir do snapshot; falha de fonte no build usa o snapshot anterior e não derruba o deploy | P1 | AUT | 4 |
 

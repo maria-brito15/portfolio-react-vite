@@ -131,14 +131,6 @@
 .pe-rating--none {
   color: var(--dim);
 }
-.pe-stale {
-  margin: var(--space-4) 0;
-  padding: var(--space-2) var(--space-3);
-  font-size: var(--fs-chrome);
-  color: var(--text-2);
-  background: var(--surface-2);
-  border-left: 3px solid var(--warn);
-}
 .pe-foot {
   display: grid;
   gap: var(--space-2);
@@ -174,12 +166,6 @@
   .pe-index-hint {
     grid-column: 2;
   }
-}
-
-/* ---------- Estados (carregando, erro, vazio) ---------- */
-.pe-state {
-  margin: var(--space-5) 0;
-  color: var(--text-2);
 }
 
 /* ---------- Seções por mês ou por ano ---------- */
@@ -400,4 +386,69 @@
   .pe-entries--dated li {
     grid-template-columns: 4.25rem 1fr;
   }
+}
+
+/* ---------- Número editorial, estados e estatísticas ---------- */
+.pe-number {
+  display: block;
+  margin-bottom: var(--space-2);
+  font-size: var(--fs-chrome);
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--dim);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Os quatro estados (carregando, vazio, erro, vencido) com a mesma geometria: filete à esquerda. */
+.pe-state,
+.pe-stale {
+  margin: var(--space-4) 0;
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--fs-chrome);
+  color: var(--text-2);
+  background: var(--surface-2);
+  border-left: 3px solid var(--border-ui);
+}
+.pe-state--error {
+  border-left-color: var(--err);
+}
+.pe-stale {
+  border-left-color: var(--warn);
+}
+
+.pe-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr));
+  gap: var(--space-3);
+  margin: 0 0 var(--space-4);
+}
+.pe-stat {
+  padding: var(--space-2) var(--space-3);
+  border-left: 3px solid var(--tone, var(--warn));
+}
+.pe-stat dd {
+  margin: 0;
+}
+.pe-stat-label {
+  font-size: var(--fs-chrome);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+.pe-stat-value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+}
+.pe-stat-hint {
+  font-size: var(--fs-chrome);
+  color: var(--text-2);
+}
+
+.pe-divider {
+  height: 0;
+  margin: var(--space-5) 0;
+  border: 0;
+  border-top: 1px solid var(--border);
 }

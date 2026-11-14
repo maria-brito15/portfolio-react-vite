@@ -51,6 +51,10 @@ export interface Route {
   // Página em construção (sem conteúdo): existe e abre, mas não entra no
   // sitemap nem no índice dos buscadores.
   draft?: boolean;
+  // Aparece na barra lateral e nos atalhos da home mesmo sendo rascunho. Só o espaço cultural
+  // enquanto usa dados fictícios: o rascunho continua tirando a página do sitemap e do índice dos
+  // buscadores, e a trava de build (scripts/personalGuard.ts) impede que isso chegue à produção.
+  showInNav?: boolean;
   // Link direto com persona (`/r/tech`): mostra a home com a lente aplicada. Fica
   // fora do sitemap e do índice; o canonical aponta para `/`.
   persona?: PersonaId;
@@ -251,6 +255,7 @@ export const routes: Route[] = [
     name: 'pessoal',
     alias: 'personal',
     command: 'pessoal',
+    showInNav: personalMode === 'mock',
     label: L('Pessoal', 'Personal'),
     desc: L('livros, filmes, música e teatro', 'books, films, music and theater'),
     draft: personalMode === 'mock',
@@ -367,8 +372,11 @@ export const terminalUrl = (route: Route, command = route.command) =>
   `${TERMINAL_PATH}?cmd=${encodeURIComponent(command ?? route.id)}`;
 
 // Rotas da barra lateral de um grupo, sem rascunhos.
+// Rota que a navegação pode mostrar: sem rascunho, ou rascunho marcado com `showInNav`.
+export const isListed = (r: Route) => !r.draft || Boolean(r.showInNav);
+
 export const navRoutes = (group: NavGroup) =>
-  routes.filter((r) => r.group === group && !r.hidden && !r.draft);
+  routes.filter((r) => r.group === group && !r.hidden && isListed(r));
 
 // Âncoras da home antiga (`/#projetos`…) → página própria equivalente (SH-10).
 // A home virou só o terminal; links publicados antes disso (LinkedIn, currículo,

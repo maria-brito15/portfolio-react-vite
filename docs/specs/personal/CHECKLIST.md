@@ -40,6 +40,17 @@ Trava de dados fictícios
 - [x] Build de produção da Netlify **falha** com `VITE_PERSONAL_SOURCE=mock` (simulado com `CONTEXT=production`; confirmar o `CONTEXT` num deploy real).
 - [ ] Mock fora do sitemap, do snapshot, do `context.json` e da pré-renderização (teste automatizado). Feito para sitemap, busca e bundle; snapshot e pré-renderização só existem na Fase 4.
 
+### Cruzamento com o pedido "Fase 1 — Foundation" (14/11/2026)
+
+- [x] Rotas `/personal`, `/personal/books`, `/personal/films`, `/personal/music`, `/personal/theater`: já existem como aliases; o caminho principal é `/pessoal/*` (decisão D1, segue o padrão de rotas em português do site). Cada página mostra o número editorial 001–005, kicker, título e lede.
+- [x] Primitivos editoriais: `EditorialPage`, `EditorialSection`, `EditorialDivider`, `BookCard`, `FilmPoster`, `StatTile`, `DiaryEntry` (visuais, recebem props) e os estados `Loading`, `Empty`, `ErrorState` e `StaleNotice` com a mesma geometria.
+- [x] Modelos de domínio: `Book`, `FilmDiaryEntry`, `ReadingStats`, `FilmStats`, `MusicItem` (= `Album`), `TheaterItem` (= `TheaterVisit`), em `src/data/personal/types.ts` (o caminho que a auditoria escolheu, não `src/domain/`). Só tipos; as estatísticas vêm de funções puras em `stats.ts`.
+- [x] Esqueletos de integração em `src/services/integrations/{hardcover,letterboxd,tmdb}/`, sem nenhuma chamada de rede. **Divergência deliberada:** o pedido fala em "resultado vazio simulado"; ficou o que foi aprovado depois (dados fictícios tipados e rotulados no `mock.ts`; o modo `live` ainda sem integração falha de forma explícita em vez de devolver vazio, para nunca parecer dado real).
+- [x] Menu: o hub entra na barra lateral e nos atalhos da home em PT e EN (`showInNav`); persona: `amigo` e `professor` destacam, todas continuam com acesso.
+- [x] `.env.example` com nomes e descrições, sem segredos (teste em `scripts/envExample.test.ts`).
+- [x] Sem dado inventado apresentado como real: todo item mock tem título "… de exemplo", selo visível e build de produção recusa o modo mock.
+- [x] Alterações fora de `/personal` já feitas e aprovadas antes (T-CL8): ordem de `amigo` e `professor`, bloco da home, busca e o campo `showInNav` em `routes.ts`.
+
 ## Fase 2: filmes reais (Letterboxd RSS + TMDB)
 
 - [ ] Normalizador puro testado com fixtures **reais** do feed (50 itens: sem data, sem nota, série).

@@ -9,7 +9,7 @@ import { mockFilms } from '../../services/integrations/letterboxd/mock';
 import { MOCK_FETCHED_AT, MOCK_STALE_UPDATED_AT } from '../../services/integrations/source';
 import { renderApp } from '../../test/helpers';
 import BooksShelves from './BooksShelves';
-import DiaryRow from './DiaryRow';
+import DiaryEntry from './DiaryEntry';
 import FilmsDiary from './FilmsDiary';
 import ReviewBlock from './ReviewBlock';
 
@@ -177,7 +177,7 @@ describe('estados do diário (CL-11, CL-12)', () => {
   });
 });
 
-describe('DiaryRow', () => {
+describe('DiaryEntry', () => {
   it('com pôster: imagem com alt de título e ano, e a atribuição do TMDB no diário', () => {
     render(
       <FilmsDiary
@@ -199,7 +199,7 @@ describe('DiaryRow', () => {
   it('sem pôster: não repete o título num placeholder', () => {
     const { container } = render(
       <ul>
-        <DiaryRow entry={film()} />
+        <DiaryEntry entry={film()} />
       </ul>,
       { wrapper },
     );
@@ -210,7 +210,7 @@ describe('DiaryRow', () => {
   it('sem data de exibição e sem ano: só o título e a nota', () => {
     render(
       <ul>
-        <DiaryRow entry={film({ rating: 4 })} />
+        <DiaryEntry entry={film({ rating: 4 })} />
       </ul>,
       { wrapper },
     );
@@ -222,7 +222,7 @@ describe('DiaryRow', () => {
   it('publish:false esconde a resenha; omitido (padrão) publica', () => {
     const { rerender } = render(
       <ul>
-        <DiaryRow entry={film({ review: 'Segredo', publish: false })} />
+        <DiaryEntry entry={film({ review: 'Segredo', publish: false })} />
       </ul>,
       { wrapper },
     );
@@ -231,7 +231,7 @@ describe('DiaryRow', () => {
 
     rerender(
       <ul>
-        <DiaryRow entry={film({ review: 'Aberta' })} />
+        <DiaryEntry entry={film({ review: 'Aberta' })} />
       </ul>,
     );
     expect(screen.getByText('Ler resenha')).toBeInTheDocument();

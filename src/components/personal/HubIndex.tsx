@@ -3,6 +3,7 @@ import { currentBook, featuredAlbum, latestFilm, latestPlay } from '../../data/p
 import { routeById } from '../../data/routes';
 import type { PersonalState } from '../../hooks/usePersonal';
 import { useLanguage } from '../../i18n/LanguageContext';
+import { usePersonalText } from '../../i18n/usePersonalText';
 import AttributionFooter from './AttributionFooter';
 import PlaceholderBadge from './PlaceholderBadge';
 import SectionIndex, { type SectionIndexItem } from './SectionIndex';
@@ -27,8 +28,9 @@ export default function HubIndex({
   albums: PersonalState<Album>;
   plays: PersonalState<TheaterVisit>;
 }) {
-  const { lang, t } = useLanguage();
-  const text = t.personal.hub;
+  const { lang } = useLanguage();
+  const p = usePersonalText();
+  const text = p.hub;
 
   // Uma entrada do índice: rota, feed (se já carregou) e o destaque calculado dele.
   function entry<T>(routeId: string, state: PersonalState<T>, pick: (items: T[]) => Highlight) {
@@ -70,7 +72,7 @@ export default function HubIndex({
 
       return (
         album && {
-          label: album.inRotation ? text.highlight.music : t.personal.music.all,
+          label: album.inRotation ? text.highlight.music : p.music.all,
           text: `${album.title} — ${album.artist}`,
         }
       );

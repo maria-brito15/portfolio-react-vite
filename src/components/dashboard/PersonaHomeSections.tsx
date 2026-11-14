@@ -11,7 +11,6 @@ import StackOverview from './StackOverview';
 import AcademicSnapshot from './AcademicSnapshot';
 import ServicesPreview from './ServicesPreview';
 import IntentShortcuts from './IntentShortcuts';
-import PersonalSpace from './PersonalSpace';
 
 // As experiências por persona são pesadas e cada visitante vê só uma: ficam fora do JS inicial.
 const ProfessionalOverview = lazy(() => import('../../experiences/recruiter/ProfessionalOverview'));
@@ -19,6 +18,8 @@ const ArchitectureExplorer = lazy(() => import('../../experiences/tech/Architect
 const AcademicTimeline = lazy(() => import('../../experiences/professor/AcademicTimeline'));
 const SolutionJourney = lazy(() => import('../../experiences/client/SolutionJourney'));
 const ExploreMode = lazy(() => import('../../experiences/explore/ExploreMode'));
+// O atalho do espaço pessoal só aparece para duas personas: também fica fora do JS inicial.
+const PersonalSpace = lazy(() => import('./PersonalSpace'));
 
 // Monta o corpo da home na ordem da persona (`personaHome.ts`). Os blocos são sempre os
 // mesmos componentes e os mesmos dados; a persona só escolhe quais, em que ordem e com que
@@ -49,7 +50,11 @@ export default function PersonaHomeSections() {
       case 'intents':
         return <IntentShortcuts {...text} />;
       case 'personal':
-        return <PersonalSpace {...text} />;
+        return (
+          <Suspense fallback={null}>
+            <PersonalSpace {...text} />
+          </Suspense>
+        );
       case 'interactive':
         return <InteractivePanel {...text} />;
       case 'overview':

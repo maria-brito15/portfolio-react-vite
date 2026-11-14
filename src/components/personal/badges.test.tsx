@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { LanguageProvider } from '../../i18n/LanguageContext';
-import { ui } from '../../i18n/ui';
+import { personalEn, personalPt } from '../../i18n/personal';
 import { mockProvenance } from '../../services/integrations/source';
 import PlaceholderBadge from './PlaceholderBadge';
 import SourceBadge from './SourceBadge';
@@ -14,11 +14,11 @@ afterEach(() => localStorage.removeItem('portfolio-lang'));
 
 describe('textos do selo (CL-13, CL-26)', () => {
   it('PT e EN completos, com os rótulos do PRD', () => {
-    expect(ui.pt.personal.placeholder.badge).toBe('DADOS FICTÍCIOS');
-    expect(ui.en.personal.placeholder.badge).toBe('PLACEHOLDER DATA');
+    expect(personalPt.placeholder.badge).toBe('DADOS FICTÍCIOS');
+    expect(personalEn.placeholder.badge).toBe('PLACEHOLDER DATA');
 
     for (const lang of ['pt', 'en'] as const)
-      for (const text of Object.values(ui[lang].personal.placeholder))
+      for (const text of Object.values((lang === 'pt' ? personalPt : personalEn).placeholder))
         expect(text.trim(), `${lang}`).not.toBe('');
   });
 });
@@ -52,7 +52,7 @@ describe('SourceBadge (CL-13)', () => {
   it('item mock: marca "fictício", com o aviso na dica', () => {
     render(<SourceBadge provenance={mockProvenance()} />, { wrapper });
 
-    expect(screen.getByText('fictício')).toHaveAttribute('title', ui.pt.personal.placeholder.hint);
+    expect(screen.getByText('fictício')).toHaveAttribute('title', personalPt.placeholder.hint);
   });
 
   it('item real: sem marca', () => {

@@ -1,6 +1,6 @@
 import { Link } from '../../router';
 import { useLanguage } from '../../i18n/LanguageContext';
-import { routeById } from '../../data/routes';
+import { isListed, routeById } from '../../data/routes';
 import { byPersona, isPick } from '../../data/personas';
 import { usePersona } from '../../hooks/usePersona';
 import { GROUP_TONE, ROUTE_GLYPH } from '../../data/tones';
@@ -26,7 +26,7 @@ export default function QuickAccess({ heading, lead }: BlockProps) {
   const { persona } = usePersona();
   // A lente da persona reordena e marca os atalhos dela; nenhum atalho some.
   const items = byPersona(
-    QUICK.map((id) => routeById(id)).filter((r) => r && !r.draft),
+    QUICK.map((id) => routeById(id)).filter((r) => r && isListed(r)),
     persona,
     (r) => r?.id ?? '',
   );

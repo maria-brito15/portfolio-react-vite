@@ -97,3 +97,29 @@ export interface PersonalFeed<T> {
   stale: boolean;
   source: Source | 'snapshot';
 }
+
+// Nomes de domínio das curadorias manuais (a música e o teatro da Duda).
+export type MusicItem = Album;
+export type TheaterItem = TheaterVisit;
+
+// Números derivados dos itens carregados (nunca digitados à mão). Campo ausente = a fonte não
+// tem o dado (sem páginas, sem nota): a interface mostra "—", não zero.
+export interface ReadingStats {
+  // Ano do recorte (o do término mais recente); ausente = nenhum livro lido tem data de término
+  // e os números valem para todos os lidos.
+  year?: number;
+  booksRead: number;
+  pagesRead?: number;
+  averageRating?: number;
+  currentlyReading: number;
+  wantToRead: number;
+}
+
+export interface FilmStats {
+  // Ano do recorte (o da exibição mais recente); ausente = nenhuma entrada tem data.
+  year?: number;
+  filmsWatched: number;
+  rewatches: number;
+  liked: number;
+  averageRating?: number;
+}

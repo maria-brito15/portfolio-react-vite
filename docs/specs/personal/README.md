@@ -124,8 +124,11 @@ Todas **somente no servidor** (painel da Netlify e `.env` local ignorado). **Nun
 | `HARDCOVER_API_TOKEN` | Para livros ao vivo | Token pessoal da API do Hardcover (Bearer). Renovar quando expirar |
 | `HARDCOVER_USERNAME` | Não (padrão `dudapbrt`) | Usuário cujas estantes são lidas |
 | `LETTERBOXD_USERNAME` | Não (padrão `dudapbrt`) | Usuário do feed `https://letterboxd.com/<usuário>/rss/` |
-| `TMDB_API_KEY` ou `TMDB_READ_TOKEN` | Para pôster/metadados | Credencial do TMDB (qual das duas, conforme a conta) |
-| `PERSONAL_CACHE_TTL_MIN` | Não (padrão 60) | Validade do cache antes de revalidar |
+| `TMDB_API_KEY` | Para pôster/metadados | Chave da API do TMDB |
+| `PERSONAL_HARDCOVER_TTL_MIN` | Não (padrão 360) | Validade do cache dos livros, em minutos (D9: 6 h) |
+| `PERSONAL_LETTERBOXD_TTL_MIN` | Não (padrão 60) | Validade do cache do diário de filmes, em minutos (D9: 1 h) |
+| `PERSONAL_BUILD_HOOK_URL` | Só com HTML estático (D7) | URL do build hook da Netlify que a função agendada aciona. Segredo |
+| `VITE_PERSONAL_SOURCE` | Não (padrão `mock`) | Cliente: `mock` (dados fictícios) ou `live`; produção recusa `mock` |
 | `PERSONAL_REFRESH_SECRET` | Só se houver gatilho HTTP | Segredo do endpoint de atualização manual/webhook |
 
 Acrescentar os nomes (sem valores) ao `.env.example` na Fase 1, e proteger `.env.zip` no `.gitignore`.
@@ -137,7 +140,7 @@ Restrições (Netlify) [V/A]: bundle estático sem sistema de arquivos gravável
 Estratégia em 3 camadas:
 
 1. **Snapshot versionado** (`*.snapshot.json`): garante página completa se APIs caírem, e alimenta SEO/assistente. Atualizado por script manual (`npm run personal:snapshot`) ou no build quando houver credencial.
-2. **Cache em Blobs** (`personal-cache`): a função serve o cache e revalida em segundo plano após `PERSONAL_CACHE_TTL_MIN` (stale-while-revalidate). Cabeçalho `Cache-Control: public, max-age=300, stale-while-revalidate=3600` na resposta.
+2. **Cache em Blobs** (`personal-cache`): a função serve o cache e revalida em segundo plano após o TTL de cada fonte (`PERSONAL_HARDCOVER_TTL_MIN`, `PERSONAL_LETTERBOXD_TTL_MIN`; stale-while-revalidate). Cabeçalho `Cache-Control: public, max-age=300, stale-while-revalidate=3600` na resposta.
 3. **Atualização agendada** (função agendada, 1x por hora ou por dia, a decidir): repopula os Blobs, evitando que o primeiro visitante pague a latência. Frequências decididas (D9): Hardcover 6 h, Letterboxd 1 h, TMDB permanente por filme. Limites do Hardcover (~60/min) ficam longe de serem atingidos.
 
 Falhas: se a fonte cair, serve o cache vencido com marca `stale: true` (a UI mostra “atualizado em <data>”); sem cache, cai no snapshot; sem snapshot, a seção mostra aviso, **nunca** número ou item inventado. CORS: a função só aceita a origem do site (padrão de `allowedOrigins` do `ask.mts`).

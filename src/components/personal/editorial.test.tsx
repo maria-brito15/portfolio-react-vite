@@ -4,7 +4,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { formatSyncDate } from '../../data/personal/review';
 import { LanguageProvider } from '../../i18n/LanguageContext';
-import { ui } from '../../i18n/ui';
+import { personalEn, personalPt } from '../../i18n/personal';
 import { RouterProvider } from '../../router';
 import AttributionFooter from './AttributionFooter';
 import CoverFigure from './CoverFigure';
@@ -233,12 +233,12 @@ describe('AttributionFooter (CL-12)', () => {
 
 describe('textos PT e EN completos (CL-26)', () => {
   it('as chaves do espaço cultural existem nos dois idiomas, com as mesmas fontes', () => {
-    expect(Object.keys(ui.en.personal.footer.sources).sort()).toEqual(
-      Object.keys(ui.pt.personal.footer.sources).sort(),
+    expect(Object.keys(personalEn.footer.sources).sort()).toEqual(
+      Object.keys(personalPt.footer.sources).sort(),
     );
-    expect(ui.pt.personal.stale.notice('x')).toContain('x');
-    expect(ui.en.personal.stale.notice('x')).toContain('x');
-    expect(ui.pt.personal.rating.none).not.toBe(ui.en.personal.rating.none);
+    expect(personalPt.stale.notice('x')).toContain('x');
+    expect(personalEn.stale.notice('x')).toContain('x');
+    expect(personalPt.rating.none).not.toBe(personalEn.rating.none);
   });
 });
 

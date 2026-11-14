@@ -1,15 +1,19 @@
 import type { Album } from '../../data/personal/types';
 import type { PersonalState } from '../../hooks/usePersonal';
 import { useLanguage } from '../../i18n/LanguageContext';
+import { usePersonalText } from '../../i18n/usePersonalText';
 import AttributionFooter from './AttributionFooter';
+import EditorialSection from './EditorialSection';
 import FeedState from './FeedState';
 import PlaceholderBadge from './PlaceholderBadge';
 import SourceBadge from './SourceBadge';
 import StaleNotice from './StaleNotice';
+import { Empty } from './States';
 
 // `start`: quantos itens vêm antes, para a numeração continuar entre as duas listas.
 function AlbumList({ albums, start = 0 }: { albums: Album[]; start?: number }) {
-  const { lang, t } = useLanguage();
+  const { lang } = useLanguage();
+  const p = usePersonalText();
 
   return (
     <ol className="pe-entries">
@@ -29,7 +33,7 @@ function AlbumList({ albums, start = 0 }: { albums: Album[]; start?: number }) {
             </p>
             {album.note && (
               <p className="pe-entry-note">
-                <span className="pe-kicker">{t.personal.music.note}</span> {album.note[lang]}
+                <span className="pe-kicker">{p.music.note}</span> {album.note[lang]}
               </p>
             )}
           </div>
@@ -48,8 +52,8 @@ export default function MusicList({
   state: PersonalState<Album>;
   retry: () => void;
 }) {
-  const { t } = useLanguage();
-  const text = t.personal.music;
+  const p = usePersonalText();
+  const text = p.music;
 
   return (
     <FeedState state={state} retry={retry}>
@@ -62,20 +66,18 @@ export default function MusicList({
             <PlaceholderBadge source={feed.source} />
             <StaleNotice stale={feed.stale} updatedAt={feed.updatedAt} />
             {feed.items.length === 0 ? (
-              <p className="pe-state">{text.empty}</p>
+              <Empty>{text.empty}</Empty>
             ) : (
               <>
                 {rotation.length > 0 && (
-                  <section className="pe-month">
-                    <h2 className="pe-month-title">{text.rotation}</h2>
+                  <EditorialSection title={text.rotation}>
                     <AlbumList albums={rotation} />
-                  </section>
+                  </EditorialSection>
                 )}
                 {rest.length > 0 && (
-                  <section className="pe-month">
-                    <h2 className="pe-month-title">{text.all}</h2>
+                  <EditorialSection title={text.all}>
                     <AlbumList albums={rest} start={rotation.length} />
-                  </section>
+                  </EditorialSection>
                 )}
               </>
             )}

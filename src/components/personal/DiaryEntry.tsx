@@ -1,34 +1,28 @@
 import type { FilmDiaryEntry } from '../../data/personal/types';
 import { formatDay } from '../../data/personal/review';
 import { useLanguage } from '../../i18n/LanguageContext';
+import { usePersonalText } from '../../i18n/usePersonalText';
 import Chip from '../ui/Chip';
-import CoverFigure from './CoverFigure';
+import FilmPoster from './FilmPoster';
 import RatingStars from './RatingStars';
 import ReviewBlock from './ReviewBlock';
 import SourceBadge from './SourceBadge';
 
-// Uma linha do diário: título, ano, nota, dia e marcas (série, revisto, curtido). A resenha só
+// Uma entrada do diário: título, ano, nota, dia e marcas (série, revisto, curtido). A resenha só
 // aparece ao expandir (D8) e some se a Duda marcou `publish: false`. O pôster só entra quando há
 // imagem: ao lado do título, um placeholder com o mesmo texto seria repetição.
-export default function DiaryRow({ entry }: { entry: FilmDiaryEntry }) {
-  const { lang, t } = useLanguage();
-  const text = t.personal.films;
+export default function DiaryEntry({ entry }: { entry: FilmDiaryEntry }) {
+  const { lang } = useLanguage();
+  const p = usePersonalText();
+  const text = p.films;
   const day = entry.watchedDate ? formatDay(entry.watchedDate, lang) : '';
   const review = entry.publish === false ? undefined : entry.review;
-  const alt = entry.year === undefined ? entry.title : `${entry.title} (${entry.year})`;
 
   return (
     <li className="pe-row">
       {entry.posterUrl && (
         <div className="pe-row-poster">
-          <CoverFigure
-            src={entry.posterUrl}
-            alt={alt}
-            title={entry.title}
-            year={entry.year}
-            width={60}
-            height={90}
-          />
+          <FilmPoster entry={entry} />
         </div>
       )}
       <div className="pe-row-body">

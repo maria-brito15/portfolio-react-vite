@@ -1,20 +1,21 @@
 import { Link } from '../../router';
 import { useLanguage } from '../../i18n/LanguageContext';
-import { routeById, routes } from '../../data/routes';
+import { isListed, routeById, routes } from '../../data/routes';
 import { GROUP_TONE } from '../../data/tones';
 import SectionTitle from '../ui/SectionTitle';
 import type { BlockProps } from './blockProps';
 
 // Atalho da home para o espaço cultural (/pessoal): o hub e as seções que já têm conteúdo.
-// Só aparece quando a página não é rascunho: enquanto o espaço usa dados fictícios (ou está sem
-// conteúdo), a home não o anuncia. O texto vem de `personaHome.ts` e de `routes.ts`.
+// Só aparece quando a página pode ser listada (`isListed`): no ar, ou em rascunho com dados
+// fictícios (prévia); sem conteúdo nenhum, a home não o anuncia. O texto vem de `personaHome.ts` e de `routes.ts`.
 export default function PersonalSpace({ heading, lead }: BlockProps) {
   const { lang } = useLanguage();
   const hub = routeById('pessoal');
 
-  if (!hub || hub.draft) return null;
+  if (!hub || !isListed(hub)) return null;
 
-  const tiles = [hub, ...routes.filter((r) => r.parent === hub.id && !r.draft)];
+  // Com `showInNav` (dados fictícios) o hub mostra todas as seções; senão, só as com conteúdo.
+  const tiles = [hub, ...routes.filter((r) => r.parent === hub.id && (!r.draft || hub.showInNav))];
 
   return (
     <section className="dash-section" aria-labelledby="personal-title">

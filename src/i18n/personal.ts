@@ -1,5 +1,5 @@
 // Textos de interface do espaço cultural (/pessoal). Ficam num arquivo próprio, como `ws.ts`,
-// para o `ui.ts` não crescer sem fim; `ui.ts` os inclui em `ui.pt.personal` e `ui.en.personal`.
+// para o `ui.ts` (que entra no JS inicial) não crescer: quem precisa lê com `usePersonalText()`.
 // Títulos de obras, autores e sinopses vêm das fontes e não passam por aqui (CL-26).
 export const personalPt = {
   placeholder: {
@@ -17,6 +17,12 @@ export const personalPt = {
     deck: 'O diário de cinema: o que assisti, com nota, data e, às vezes, uma resenha.',
     empty: 'Nenhum filme registrado ainda.',
     undated: 'Sem data de exibição',
+    stats: {
+      watched: (year?: number) => (year === undefined ? 'Assistidos' : `Assistidos em ${year}`),
+      rewatches: 'Revistos',
+      liked: 'Curtidos',
+      average: 'Nota média',
+    },
     series: 'série',
     rewatch: 'revisto',
     liked: 'curtido',
@@ -33,6 +39,12 @@ export const personalPt = {
       other: 'Pausados e abandonados',
     },
     undated: 'Sem data de término',
+    stats: {
+      read: (year?: number) => (year === undefined ? 'Lidos' : `Lidos em ${year}`),
+      pages: 'Páginas lidas',
+      average: 'Nota média',
+      reading: 'Lendo agora',
+    },
     status: { paused: 'pausado', dnf: 'abandonado' },
     pages: (n: number) => `${n} páginas`,
     by: 'de',
@@ -108,6 +120,12 @@ export const personalEn = {
     deck: 'The film diary: what I watched, with a rating, a date and, sometimes, a review.',
     empty: 'No films logged yet.',
     undated: 'No watched date',
+    stats: {
+      watched: (year?: number) => (year === undefined ? 'Watched' : `Watched in ${year}`),
+      rewatches: 'Rewatches',
+      liked: 'Liked',
+      average: 'Average rating',
+    },
     series: 'series',
     rewatch: 'rewatch',
     liked: 'liked',
@@ -124,6 +142,12 @@ export const personalEn = {
       other: 'Paused and dropped',
     },
     undated: 'No finish date',
+    stats: {
+      read: (year?: number) => (year === undefined ? 'Read' : `Read in ${year}`),
+      pages: 'Pages read',
+      average: 'Average rating',
+      reading: 'Reading now',
+    },
     status: { paused: 'paused', dnf: 'dropped' },
     pages: (n: number) => `${n} pages`,
     by: 'by',

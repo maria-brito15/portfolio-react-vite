@@ -1,22 +1,15 @@
+import EditorialPage from '../../components/personal/EditorialPage';
 import FilmsDiary from '../../components/personal/FilmsDiary';
-import PageHead from '../../components/personal/PageHead';
-import SiteShell from '../../components/shell/SiteShell';
-import { useDocumentMeta } from '../../hooks/useDocumentMeta';
 import { usePersonalFilms } from '../../hooks/usePersonal';
-import { useLanguage } from '../../i18n/LanguageContext';
+import { usePersonalText } from '../../i18n/usePersonalText';
 
 export default function Films() {
-  const { t } = useLanguage();
+  const p = usePersonalText();
   const { state, retry } = usePersonalFilms();
 
-  useDocumentMeta('pessoal-filmes');
-
   return (
-    <SiteShell routeId="pessoal-filmes">
-      <section className="sec info-page">
-        <PageHead routeId="pessoal-filmes" deck={t.personal.films.deck} />
-        <FilmsDiary state={state} retry={retry} />
-      </section>
-    </SiteShell>
+    <EditorialPage routeId="pessoal-filmes" deck={p.films.deck}>
+      <FilmsDiary state={state} retry={retry} />
+    </EditorialPage>
   );
 }
