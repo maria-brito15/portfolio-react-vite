@@ -53,7 +53,7 @@ export const personas: Persona[] = [
     label: L('Professor(a)', 'Professor'),
     desc: L('trajetória acadêmica e projetos', 'academic path and projects'),
     aliases: ['professora', 'docente', 'teacher'],
-    order: ['academico', 'projetos', 'curriculo', 'sobre'],
+    order: ['academico', 'projetos', 'curriculo', 'sobre', 'pessoal'],
     commands: ['academico', 'projetos', 'curriculo'],
     cta: { route: 'academico', label: L('Ver o acadêmico', 'See the academics') },
     askHint:
@@ -64,7 +64,7 @@ export const personas: Persona[] = [
     label: L('Amigo(a) / curioso(a)', 'Friend / curious'),
     desc: L('sobre, jogos e projetos', 'about, games and projects'),
     aliases: ['amiga', 'curioso', 'curiosa', 'friend', 'curious'],
-    order: ['sobre', 'jogos', 'projetos', 'agora'],
+    order: ['sobre', 'pessoal', 'jogos', 'projetos', 'agora'],
     commands: ['sobre', 'jogos', 'projetos'],
     cta: { route: 'sobre', label: L('Conhecer a Duda', 'Get to know Duda') },
     askHint:

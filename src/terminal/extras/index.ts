@@ -6,6 +6,7 @@ import { boot, cow, fortune, matrix, rm } from './fun';
 import { gitlog } from './gitlog';
 import { jogos, minas, sair } from './games';
 import { agora, setup } from './pages';
+import { pessoal } from './personal';
 import { stats } from './stats';
 import { visitante } from './persona';
 import { pergunte } from './ask';
@@ -16,6 +17,7 @@ export { personaAnswer } from './persona';
 
 export const extraCommands: Command[] = [
   agora,
+  pessoal,
   visitante,
   pergunte,
   trilha,

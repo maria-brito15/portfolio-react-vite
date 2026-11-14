@@ -72,6 +72,8 @@ export interface Command {
   aliases?: string[];
   route?: string;
   usage?: Localized;
+  // Argumentos aceitos (PT e EN), só para o autocompletar de comandos sem `route`.
+  args?: Localized[];
   desc?: Localized;
   hidden?: boolean;
   run: (args: string[], ctx: CommandContext) => CommandResult;
@@ -889,6 +891,13 @@ export function complete(input: string, lang: Lang): string | string[] {
   const command = findCommand(head);
   const isNav = NAV_COMMANDS.includes(head.toLowerCase());
 
+  // Comando sem página, mas com lista de argumentos (ex.: `pessoal livros`): completa neles.
+  if (command?.args && !command.route && !isNav) {
+    const typedArgs = [...splitTarget(args)];
+    const word = /[\s/]$/.test(input) ? '' : (typedArgs.pop() ?? '');
+
+    return typedArgs.length ? input : finish(input, word, matching(command.args, word, lang));
+  }
   if (!command || (!isNav && !command.route)) return input;
 
   // Partes já digitadas depois do comando, e o pedaço que está sendo completado.

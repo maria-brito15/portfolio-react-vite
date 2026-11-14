@@ -13,9 +13,9 @@ const L = (pt: string, en: string): Localized => ({ pt, en });
 export const personaTopics: Record<PersonaId, string[]> = {
   rh: ['sobre', 'curriculo', 'experiencias', 'habilidades', 'skill', 'project'],
   tech: ['project', 'case', 'github', 'habilidades', 'skill', 'curriculo'],
-  professor: ['academico', 'project', 'experiencias', 'curriculo', 'sobre'],
+  professor: ['academico', 'project', 'experiencias', 'curriculo', 'sobre', 'pessoal'],
   cliente: ['servicos', 'case', 'contato', 'project', 'sobre'],
-  amigo: ['sobre', 'project', 'jogos', 'game', 'terminal', 'command', 'agora'],
+  amigo: ['sobre', 'pessoal', 'project', 'jogos', 'game', 'terminal', 'command', 'agora'],
 };
 
 // Termos extras por página (id de `routes.ts`) e por tema.
@@ -46,9 +46,35 @@ export const topicKeywords: Record<string, Localized> = {
   ),
   contato: L('contato email mensagem falar orçamento', 'contact email message talk quote'),
   github: L('repositórios código open source', 'repositories code open source'),
-  jogos: L('jogar jogo diversão campo minado pessoal interativo', 'play game fun minesweeper personal interactive'),
-  terminal: L('comandos linha de comando shell interativo', 'commands command line shell interactive'),
+  jogos: L(
+    'jogar jogo diversão campo minado pessoal interativo',
+    'play game fun minesweeper personal interactive',
+  ),
+  terminal: L(
+    'comandos linha de comando shell interativo',
+    'commands command line shell interactive',
+  ),
   agora: L('foco atual novidades', 'current focus news'),
+  pessoal: L(
+    'pessoal interesses cultura hobbies lazer livros filmes música teatro leitura cinema',
+    'personal interests culture hobbies leisure books films movies music theater theatre reading cinema',
+  ),
+  'pessoal-livros': L(
+    'livros leitura lendo estante literatura autores hardcover',
+    'books reading shelf literature authors hardcover',
+  ),
+  'pessoal-filmes': L(
+    'filmes cinema diário séries assistidos resenhas notas letterboxd',
+    'films movies cinema diary series watched reviews ratings letterboxd',
+  ),
+  'pessoal-musica': L(
+    'música discos álbuns artistas bandas ouvindo playlist',
+    'music records albums artists bands listening playlist',
+  ),
+  'pessoal-teatro': L(
+    'teatro peças palco espetáculos companhia',
+    'theater theatre plays stage shows company',
+  ),
   case: L(
     'estudo de caso arquitetura decisões trade-offs backend',
     'case study architecture decisions trade-offs backend',

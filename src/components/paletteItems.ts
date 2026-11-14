@@ -87,6 +87,28 @@ export function paletteItems(lang: Lang): PaletteItem[] {
       ),
     });
 
+  // Seções do espaço cultural: rotas filhas de "pessoal", achadas pelo nome e pelas palavras-chave.
+  for (const r of routes.filter((route) => route.parent === 'pessoal'))
+    pages.push({
+      id: `page:${r.id}`,
+      kind: 'page',
+      topic: 'pessoal',
+      label: `${routeById('pessoal')?.label[lang] ?? ''}: ${r.label[lang]}`,
+      hint: r.desc?.[lang] ?? '',
+      to: r.path,
+      search: fold(
+        [
+          r.label.pt,
+          r.label.en,
+          r.desc?.pt,
+          r.desc?.en,
+          r.segment?.pt,
+          r.segment?.en,
+          keywords(r.id),
+        ].join(' '),
+      ),
+    });
+
   const projectsPage = routeById('projetos');
   const projectsName = projectsPage ? (lang === 'pt' ? projectsPage.name : projectsPage.alias) : '';
   const projects: PaletteItem[] = sectionsOf('projetos').map((s) => ({

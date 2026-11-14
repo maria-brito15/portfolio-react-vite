@@ -25,6 +25,7 @@ export const ROUTE_GLYPH: Record<string, string> = {
   jogos: ':)',
   terminal: '>_',
   contato: '@',
+  pessoal: 'pe',
 };
 
 // Identidade de cada projeto (timeline e painel). Projeto novo sem entrada fica no violeta.

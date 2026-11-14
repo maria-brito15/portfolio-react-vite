@@ -248,6 +248,9 @@ export const routes: Route[] = [
     path: '/pessoal',
     aliases: ['/personal'],
     segment: L('pessoal', 'personal'),
+    name: 'pessoal',
+    alias: 'personal',
+    command: 'pessoal',
     label: L('Pessoal', 'Personal'),
     desc: L('livros, filmes, música e teatro', 'books, films, music and theater'),
     draft: personalMode === 'mock',
@@ -266,6 +269,8 @@ export const routes: Route[] = [
     aliases: [`/personal/${en}`],
     parent: 'pessoal',
     segment: L(pt, en),
+    // Visão em terminal da subpágina: `pessoal livros` (o comando `pessoal` aceita o argumento).
+    command: `pessoal ${pt}`,
     label: L(labelPt, labelEn),
     desc: L(descPt, descEn),
     hidden: true,

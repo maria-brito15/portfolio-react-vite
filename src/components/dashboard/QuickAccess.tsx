@@ -17,6 +17,7 @@ const QUICK = [
   'academico',
   'jogos',
   'terminal',
+  'pessoal',
   'contato',
 ];
 

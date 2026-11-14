@@ -39,6 +39,15 @@ export const personalPt = {
     note: 'NOTA',
   },
   review: { label: 'RESENHA', more: 'continuar no Letterboxd →' },
+  term: {
+    pick: 'espaço pessoal: escolha uma seção (livros, filmes, música ou teatro):',
+    unknown: (arg: string) => `seção "${arg}" não existe; as seções são:`,
+    loading: 'carregando…',
+    error: 'não foi possível carregar agora. Tentar de novo:',
+    showing: (shown: number, total: number) => `mostrando ${shown} de ${total}`,
+    empty: 'nada registrado ainda.',
+    openPage: 'ver tudo na página:',
+  },
   hub: {
     kicker: 'Espaço cultural',
     deck: 'Livros, filmes, música e teatro: o que leio, assisto, ouço e vejo no palco, fora do código.',
@@ -121,6 +130,15 @@ export const personalEn = {
     note: 'NOTE',
   },
   review: { label: 'REVIEW', more: 'continue on Letterboxd →' },
+  term: {
+    pick: 'personal space: pick a section (books, films, music or theater):',
+    unknown: (arg: string) => `section "${arg}" does not exist; the sections are:`,
+    loading: 'loading…',
+    error: 'could not load right now. Try again:',
+    showing: (shown: number, total: number) => `showing ${shown} of ${total}`,
+    empty: 'nothing logged yet.',
+    openPage: 'see everything on the page:',
+  },
   hub: {
     kicker: 'Cultural space',
     deck: 'Books, films, music and theater: what I read, watch, listen to and see on stage, beyond code.',

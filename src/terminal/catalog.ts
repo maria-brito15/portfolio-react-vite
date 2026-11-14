@@ -31,6 +31,7 @@ const CATEGORY_OF: Record<string, CommandCategory> = {
   servicos: 'pages',
   contato: 'pages',
   agora: 'pages',
+  pessoal: 'pages',
   setup: 'pages',
   stats: 'info',
   evolucao: 'info',

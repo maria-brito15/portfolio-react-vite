@@ -26,7 +26,9 @@ export type HomeBlockId =
   | 'journey'
   | 'explore'
   // "O que você procura?" (docs/specs/busca-contextual/): atalhos por intenção.
-  | 'intents';
+  | 'intents'
+  // Espaço cultural (docs/specs/personal/): atalho para /pessoal, só quando a página não é rascunho.
+  | 'personal';
 
 export interface HomeBlock {
   id: HomeBlockId;
@@ -137,6 +139,14 @@ export const personaHome: Record<PersonaId, PersonaHome> = {
         ),
         projects: academicProjects,
       },
+      {
+        id: 'personal',
+        title: L('Pessoal', 'Personal'),
+        lead: L(
+          'Interesses fora da sala de aula: livros, filmes, música e teatro.',
+          'Interests beyond the classroom: books, films, music and theater.',
+        ),
+      },
       { id: 'intents' },
       { id: 'quick', title: L('Todas as páginas', 'All pages') },
     ],
@@ -184,6 +194,14 @@ export const personaHome: Record<PersonaId, PersonaHome> = {
         ),
       },
       { id: 'explore' },
+      {
+        id: 'personal',
+        title: L('Pessoal', 'Personal'),
+        lead: L(
+          'O que leio, assisto, ouço e vejo no palco, fora do código.',
+          'What I read, watch, listen to and see on stage, beyond code.',
+        ),
+      },
       {
         id: 'projects',
         title: L('Projetos pessoais', 'Personal projects'),

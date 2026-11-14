@@ -11,6 +11,7 @@ import StackOverview from './StackOverview';
 import AcademicSnapshot from './AcademicSnapshot';
 import ServicesPreview from './ServicesPreview';
 import IntentShortcuts from './IntentShortcuts';
+import PersonalSpace from './PersonalSpace';
 
 // As experiências por persona são pesadas e cada visitante vê só uma: ficam fora do JS inicial.
 const ProfessionalOverview = lazy(() => import('../../experiences/recruiter/ProfessionalOverview'));
@@ -47,6 +48,8 @@ export default function PersonaHomeSections() {
         return <GithubStats summary />;
       case 'intents':
         return <IntentShortcuts {...text} />;
+      case 'personal':
+        return <PersonalSpace {...text} />;
       case 'interactive':
         return <InteractivePanel {...text} />;
       case 'overview':
