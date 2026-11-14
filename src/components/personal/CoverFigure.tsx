@@ -1,5 +1,15 @@
 import { useState, type ReactNode } from 'react';
 
+// O servidor entrega pôsteres do TMDB em w342; para capas pequenas (hub, diário) o navegador
+// escolhe w185 e poupa banda. Outras fontes não têm tamanho alternativo: sem `srcSet`.
+const TMDB_W342 = /^(https:\/\/image\.tmdb\.org\/t\/p\/)w342(\/.+)$/;
+
+function tmdbSrcSet(src?: string) {
+  const match = src ? TMDB_W342.exec(src) : null;
+
+  return match ? `${match[1]}w185${match[2]} 185w, ${src} 342w` : undefined;
+}
+
 // Capa de livro ou pôster de filme (proporção 2:3). Sem URL, ou com a imagem quebrada,
 // mostra o placeholder tipográfico (título + ano em bloco mono): nunca o ícone de imagem
 // quebrada (CL-18). A imagem leva `width`/`height` e `loading="lazy"` para não deslocar o
@@ -34,7 +44,10 @@ export default function CoverFigure({
             alt={alt}
             width={width}
             height={height}
+            srcSet={tmdbSrcSet(src)}
+            sizes={`${width}px`}
             loading="lazy"
+            decoding="async"
             onError={() => setFailed(src)}
           />
         ) : (

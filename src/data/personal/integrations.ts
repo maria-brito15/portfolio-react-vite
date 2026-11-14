@@ -4,5 +4,5 @@
 // em docs/specs/personal/README.md, seção 9).
 export const integrated = {
   books: true, // Hardcover: netlify/functions/personal-books.mts
-  films: false, // Letterboxd + TMDB: ainda não
+  films: true, // Letterboxd (RSS + CSV) + TMDB: netlify/functions/personal-films.mts
 } as const;

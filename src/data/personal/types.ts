@@ -48,11 +48,17 @@ export interface FilmDiaryEntry {
   watchedDate?: string;
   rewatch: boolean;
   rating?: Rating;
-  liked: boolean;
+  // Só o RSS informa ("memberLike"); o CSV do diário não: ausente = a fonte não disse (não é "não").
+  liked?: boolean;
   tmdbId?: number;
+  // Pôster do TMDB (nunca do Letterboxd).
   posterUrl?: string;
   reviewUrl: string;
   review?: string;
+  // O Letterboxd marca a resenha como "pode conter spoilers" (ela decide ao publicar).
+  spoiler?: boolean;
+  // Metadados do TMDB, quando o filme já foi enriquecido.
+  meta?: FilmMeta;
   // `false` suprime a resenha (padrão: publicar). Decisão D8.
   publish?: boolean;
   provenance: Provenance;
@@ -62,8 +68,12 @@ export interface FilmDiaryEntry {
 export interface FilmMeta {
   tmdbId: number;
   directors: string[];
-  genres: string[];
+  // Nomes de gênero vêm do TMDB já em cada idioma.
+  genres: Localized<string[]>;
   runtimeMin?: number;
+  // Caminhos completos (https) já no tamanho usado pela página.
+  posterUrl?: string;
+  backdropUrl?: string;
   // PT e EN vêm do TMDB, não são escritos à mão.
   overview?: Localized;
 }
@@ -100,6 +110,76 @@ export interface PersonalFeed<T> {
   // `true` quando a fonte falhou e o dado vem de um cache vencido.
   stale: boolean;
   source: Source | 'snapshot';
+}
+
+// Curadoria manual: instrumento que a Duda toca. Nível, desde quando e nota só aparecem se ela
+// preencher; nada é presumido.
+export interface Instrument {
+  id: string;
+  name: Localized;
+  level?: Localized;
+  // Ano em que começou.
+  since?: number;
+  note?: Localized;
+}
+
+// Curadoria manual: o que está estudando agora ("APRENDENDO AGORA").
+export interface PracticeItem {
+  id: string;
+  title: string;
+  // `Instrument.id` ao qual o item se refere.
+  instrumentId?: string;
+  artist?: string;
+  note?: Localized;
+}
+
+// Curadoria manual: artista favorito.
+export interface FavoriteArtist {
+  id: string;
+  name: string;
+  note?: Localized;
+}
+
+// Curadoria manual: música favorita; `onRepeat` marca as que estão em repetição agora.
+export interface FavoriteSong {
+  id: string;
+  title: string;
+  artist: string;
+  onRepeat?: boolean;
+  note?: Localized;
+}
+
+// Curadoria manual: vivência com teatro (sem presumir que seja atuação ou profissão).
+export interface TheaterExperience {
+  id: string;
+  title: Localized;
+  // Texto livre: "2019", "2018–2020"…
+  period?: string;
+  note?: Localized;
+}
+
+// Curadoria manual: produção favorita.
+export interface FavoriteProduction {
+  id: string;
+  title: string;
+  company?: string;
+  year?: number;
+  note?: Localized;
+}
+
+// Curadoria manual: observação pessoal sobre teatro.
+export interface TheaterObservation {
+  id: string;
+  text: Localized;
+}
+
+// Curadoria manual: referência visual (cenografia, figurino, cartaz…). `url` só se ela passar.
+export interface VisualReference {
+  id: string;
+  title: Localized;
+  creator?: string;
+  url?: string;
+  note?: Localized;
 }
 
 // Nomes de domínio das curadorias manuais (a música e o teatro da Duda).

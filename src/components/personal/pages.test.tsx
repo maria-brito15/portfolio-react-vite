@@ -1,5 +1,6 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import type { ReactNode } from 'react';
+import { filmsPerYear } from '../../data/personal/stats';
 import type { Book, FilmDiaryEntry } from '../../data/personal/types';
 import type { PersonalState } from '../../hooks/usePersonal';
 import { LanguageProvider } from '../../i18n/LanguageContext';
@@ -61,13 +62,17 @@ describe('FilmsDiary com o mock (CL-22, CL-25, CL-13)', () => {
     render(<FilmsDiary state={ready(mockFilms)} retry={noop} />, { wrapper });
 
     expect(screen.getAllByRole('heading', { level: 2 }).map((h) => h.textContent)).toEqual([
+      'Por ano',
       'novembro de 2026',
       'setembro de 2026',
       'agosto de 2026',
       'dezembro de 2025',
       'Sem data de exibição',
     ]);
-    expect(screen.getAllByRole('listitem')).toHaveLength(mockFilms.length);
+    // uma linha do diário por filme, mais uma linha por ano em "Por ano"
+    expect(screen.getAllByRole('listitem')).toHaveLength(
+      mockFilms.length + filmsPerYear(mockFilms).length,
+    );
   });
 
   it('em inglês, meses e rótulos no idioma', () => {
@@ -158,7 +163,9 @@ describe('estados do diário (CL-11, CL-12)', () => {
     render(<FilmsDiary state={ready(mockFilms, { stale: true })} retry={() => {}} />, { wrapper });
 
     expect(screen.getByRole('status')).toHaveTextContent(/Não foi possível atualizar agora/);
-    expect(screen.getAllByRole('listitem')).toHaveLength(mockFilms.length);
+    expect(screen.getAllByRole('listitem')).toHaveLength(
+      mockFilms.length + filmsPerYear(mockFilms).length,
+    );
     expect(screen.getByRole('contentinfo')).toHaveTextContent(/Última sincronização/);
   });
 
@@ -189,10 +196,9 @@ describe('DiaryEntry', () => {
       { wrapper },
     );
 
-    expect(screen.getByRole('img', { name: 'Filme de teste (2020)' })).toHaveAttribute(
-      'src',
-      '/p.jpg',
-    );
+    // a parede de pôsteres e a linha do diário mostram o mesmo pôster
+    for (const img of screen.getAllByRole('img', { name: 'Filme de teste (2020)' }))
+      expect(img).toHaveAttribute('src', '/p.jpg');
     expect(screen.getByRole('contentinfo')).toHaveTextContent(/not endorsed or certified by TMDB/);
   });
 

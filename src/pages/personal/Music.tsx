@@ -1,5 +1,6 @@
 import EditorialPage from '../../components/personal/EditorialPage';
 import MusicList from '../../components/personal/MusicList';
+import MusicProfile from '../../components/personal/MusicProfile';
 import { usePersonalAlbums } from '../../hooks/usePersonal';
 import { usePersonalText } from '../../i18n/usePersonalText';
 
@@ -9,7 +10,8 @@ export default function Music() {
 
   return (
     <EditorialPage routeId="pessoal-musica" deck={p.music.deck}>
-      <MusicList state={state} retry={retry} />
+      <MusicProfile />
+      <MusicList state={state} retry={retry} hideEmpty />
     </EditorialPage>
   );
 }

@@ -358,17 +358,17 @@ describe('modo live de música e teatro (D4, CL-02)', () => {
       });
   });
 
-  it('sem conteúdo da Duda, as páginas de música e teatro continuam em construção', async () => {
+  it('só o teatro, sem conteúdo da Duda, continua em construção (a música já tem instrumentos)', async () => {
     vi.stubEnv('VITE_PERSONAL_SOURCE', 'live');
     vi.resetModules();
 
     const live = await import('../../data/routes');
 
-    expect(live.routeById('pessoal-musica')?.draft).toBe(true);
+    expect(live.routeById('pessoal-musica')?.draft).toBe(false);
     expect(live.routeById('pessoal-teatro')?.draft).toBe(true);
     expect(live.routeById('pessoal-livros')?.draft).toBe(false);
-    // Letterboxd + TMDB ainda sem integração (data/personal/integrations.ts): filmes em rascunho
-    expect(live.routeById('pessoal-filmes')?.draft).toBe(true);
+    // Letterboxd + TMDB integrados (data/personal/integrations.ts)
+    expect(live.routeById('pessoal-filmes')?.draft).toBe(false);
     expect(live.routeById('pessoal')?.draft).toBe(false);
   });
 });
@@ -379,7 +379,8 @@ describe('páginas inteiras, com o mock real (CL-03, CL-20, CL-23, CL-24)', () =
 
     expect(await screen.findByText('Lendo agora')).toBeInTheDocument();
     expect(screen.getByRole('heading', { level: 1, name: 'Pessoal' })).toBeInTheDocument();
-    expect(screen.getByText('Espaço cultural')).toBeInTheDocument();
+    expect(screen.getByText('Cultura · Interesses · Cotidiano')).toBeInTheDocument();
+    expect(screen.getByText('001')).toBeInTheDocument();
     expect(
       screen.getByRole('navigation', { name: 'Seções do espaço pessoal' }),
     ).toBeInTheDocument();

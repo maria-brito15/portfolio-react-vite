@@ -8,7 +8,7 @@ export const mockFilmMeta: FilmMeta[] = [
   {
     tmdbId: 9001,
     directors: ['Direção de exemplo'],
-    genres: ['Gênero de exemplo', 'Outro gênero de exemplo'],
+    genres: { pt: ['Gênero de exemplo', 'Outro gênero de exemplo'], en: ['Gênero de exemplo', 'Outro gênero de exemplo'] },
     runtimeMin: 112,
     overview: {
       pt: 'Sinopse de exemplo em português (dado fictício).',
@@ -18,14 +18,14 @@ export const mockFilmMeta: FilmMeta[] = [
   {
     tmdbId: 9002,
     directors: ['Direção de exemplo', 'Codireção de exemplo'],
-    genres: ['Gênero de exemplo'],
+    genres: { pt: ['Gênero de exemplo'], en: ['Gênero de exemplo'] },
     runtimeMin: 97,
   },
-  { tmdbId: 9003, directors: [], genres: ['Gênero de exemplo'] },
+  { tmdbId: 9003, directors: [], genres: { pt: ['Gênero de exemplo'], en: ['Gênero de exemplo'] } },
   {
     tmdbId: 9005,
     directors: [],
-    genres: ['Série de exemplo'],
+    genres: { pt: ['Série de exemplo'], en: ['Série de exemplo'] },
     overview: {
       pt: 'Sinopse de série de exemplo (dado fictício).',
       en: 'Example series synopsis (fictional data).',

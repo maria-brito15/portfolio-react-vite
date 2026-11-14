@@ -17,9 +17,12 @@ import { Empty } from './States';
 export default function TheaterTimeline({
   state,
   retry,
+  hideEmpty = false,
 }: {
   state: PersonalState<TheaterVisit>;
   retry: () => void;
+  // A página já mostra outras seções (vivências…): sem peças, não repete "nada registrado".
+  hideEmpty?: boolean;
 }) {
   const { lang } = useLanguage();
   const p = usePersonalText();
@@ -32,7 +35,7 @@ export default function TheaterTimeline({
           <PlaceholderBadge source={feed.source} />
           <StaleNotice stale={feed.stale} updatedAt={feed.updatedAt} />
           {feed.items.length === 0 ? (
-            <Empty>{text.empty}</Empty>
+            !hideEmpty && <Empty>{text.empty}</Empty>
           ) : (
             groupByYearOf(feed.items, (v) => v.date).map((group) => (
               <EditorialSection

@@ -102,3 +102,35 @@ export function favoriteBooks(books: Book[], limit = 6): Book[] {
     .sort((a, b) => (b.finishedAt ?? '').localeCompare(a.finishedAt ?? ''))
     .slice(0, limit);
 }
+
+// Exibições por ano (do mais recente ao mais antigo); entrada sem data não entra (sem ano para
+// atribuir).
+export function filmsPerYear(films: FilmDiaryEntry[]): { year: number; count: number }[] {
+  const years = new Map<number, number>();
+
+  for (const film of films) {
+    const year = yearOf(film.watchedDate);
+
+    if (year !== undefined) years.set(year, (years.get(year) ?? 0) + 1);
+  }
+
+  return [...years].map(([year, count]) => ({ year, count })).sort((a, b) => b.year - a.year);
+}
+
+// Filmes com pôster, do mais recente ao mais antigo, sem repetir o mesmo título (revisto).
+export function posterWall(films: FilmDiaryEntry[], limit = 18): FilmDiaryEntry[] {
+  const seen = new Set<string>();
+  const wall: FilmDiaryEntry[] = [];
+
+  for (const film of films) {
+    const key = `${film.kind}:${film.tmdbId ?? film.title}:${film.year ?? ''}`;
+
+    if (!film.posterUrl || seen.has(key)) continue;
+
+    seen.add(key);
+    wall.push(film);
+    if (wall.length === limit) break;
+  }
+
+  return wall;
+}

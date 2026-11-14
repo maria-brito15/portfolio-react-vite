@@ -13,8 +13,8 @@
 import type { Lang, Localized } from '../types';
 import { personalMode } from '../services/integrations/mode';
 import { integrated } from './personal/integrations';
-import { music } from './personal/music';
-import { theater } from './personal/theater';
+import { musicHasContent } from './personal/music';
+import { theaterHasContent } from './personal/theater';
 import { now } from './now';
 import { personas, type PersonaId } from './personas';
 import { uses } from './uses';
@@ -68,8 +68,8 @@ export interface Crumb {
 
 // Páginas de curadoria manual ainda sem nenhum item (ver data/personal/music.ts e theater.ts).
 const hasNoContent: Record<string, boolean> = {
-  musica: music.albums.length === 0,
-  teatro: theater.visits.length === 0,
+  musica: !musicHasContent(),
+  teatro: !theaterHasContent(),
   // Fontes ainda sem integração real (data/personal/integrations.ts).
   livros: !integrated.books,
   filmes: !integrated.films,

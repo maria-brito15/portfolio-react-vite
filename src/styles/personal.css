@@ -381,6 +381,26 @@
   margin: 0 var(--space-2) 0 0;
 }
 
+/* Cartões de instrumento: grade que quebra sozinha, sem rolagem horizontal. */
+.pe-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 13rem), 1fr));
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.pe-card {
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--border);
+}
+.pe-card p {
+  margin: 0;
+}
+.pe-entries li > div > .pe-kicker {
+  margin: 0 0 var(--space-1);
+}
+
 @media (max-width: 720px) {
   .pe-entries li,
   .pe-entries--dated li {
@@ -491,4 +511,67 @@
   font-size: var(--fs-chrome);
   color: var(--accent);
   text-underline-offset: 3px;
+}
+
+/* ---------- Filmes: parede de pôsteres e créditos ---------- */
+.pe-wall {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(6rem, 1fr));
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.pe-row-credits {
+  margin: 0;
+  color: var(--text-2);
+  overflow-wrap: anywhere;
+}
+
+/* ---------- Hub: cartões por seção ---------- */
+/* Cada seção tem a sua cor (`data-tone` no item): só o número, o filete e o destaque mudam. */
+.pe-index li {
+  border-left: 3px solid var(--tone, var(--border));
+  padding-left: var(--space-3);
+}
+.pe-index li .pe-num {
+  color: var(--tone, var(--dim));
+}
+.pe-index-posters {
+  grid-column: 2 / -1;
+  display: flex;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+.pe-index-posters .pe-cover {
+  width: 3.75rem;
+}
+.pe-index-highlight + .pe-index-highlight {
+  margin-top: calc(var(--space-1) * -1);
+}
+
+/* Entrada discreta: cada seção surge em sequência. Sem movimento para quem pede menos. */
+@keyframes pe-rise {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .pe-index li {
+    animation: pe-rise 0.32s ease-out both;
+  }
+  .pe-index li:nth-child(2) {
+    animation-delay: 60ms;
+  }
+  .pe-index li:nth-child(3) {
+    animation-delay: 120ms;
+  }
+  .pe-index li:nth-child(4) {
+    animation-delay: 180ms;
+  }
 }

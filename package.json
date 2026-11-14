@@ -13,7 +13,8 @@
     "test:watch": "vitest",
     "ask:eval": "vitest run scripts/askEvals.live.test.ts",
     "e2e": "playwright test",
-    "personal:probe": "node scripts/hardcoverProbe.mjs"
+    "personal:probe": "node scripts/hardcoverProbe.mjs",
+    "personal:import-letterboxd": "node scripts/importLetterboxd.mjs"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",

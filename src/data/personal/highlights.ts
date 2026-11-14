@@ -13,3 +13,16 @@ export const featuredAlbum = (albums: Album[]) => albums.find((a) => a.inRotatio
 
 export const latestPlay = (visits: TheaterVisit[]) =>
   groupByYearOf(visits, (v) => v.date).find((g) => g.key !== 'undated')?.items[0];
+
+// Últimos filmes do diário, do mais recente ao mais antigo; só os com data de exibição.
+export const recentFilms = (films: FilmDiaryEntry[], count = 3) =>
+  groupByMonth(films)
+    .filter((g) => g.key !== 'undated')
+    .flatMap((g) => g.items)
+    .slice(0, count);
+
+// Último livro terminado: o de término mais recente; sem data de término, nunca "o último".
+export const lastFinishedBook = (books: Book[]) =>
+  books
+    .filter((b) => b.status === 'read' && b.finishedAt)
+    .sort((a, b) => (b.finishedAt ?? '').localeCompare(a.finishedAt ?? ''))[0];

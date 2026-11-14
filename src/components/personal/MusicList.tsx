@@ -48,9 +48,12 @@ function AlbumList({ albums, start = 0 }: { albums: Album[]; start?: number }) {
 export default function MusicList({
   state,
   retry,
+  hideEmpty = false,
 }: {
   state: PersonalState<Album>;
   retry: () => void;
+  // A página já mostra outras seções (instrumentos…): sem discos, não repete "nenhum registrado".
+  hideEmpty?: boolean;
 }) {
   const p = usePersonalText();
   const text = p.music;
@@ -66,7 +69,7 @@ export default function MusicList({
             <PlaceholderBadge source={feed.source} />
             <StaleNotice stale={feed.stale} updatedAt={feed.updatedAt} />
             {feed.items.length === 0 ? (
-              <Empty>{text.empty}</Empty>
+              !hideEmpty && <Empty>{text.empty}</Empty>
             ) : (
               <>
                 {rotation.length > 0 && (

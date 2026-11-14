@@ -17,3 +17,6 @@ netlify/assistant/context.json
 
 # Arquivo compactado de variáveis: nunca versionar
 .env.zip
+
+# CSV bruto do Letterboxd (export oficial): nunca versionar; só o JSON gerado entra
+letterboxd-export/

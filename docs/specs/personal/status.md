@@ -4,10 +4,11 @@
 (ver `tasks.md`), na branch `feat/espaco-cultural`. Requisitos em `requirements.md`; decisões e
 viabilidade em `README.md`; plano em `design.md`.
 
-Tudo o que a interface mostra hoje vem de **dados fictícios** (selo `DADOS FICTÍCIOS` em cada
-página e item). As rotas são rascunho (`noindex`, fora do sitemap e da barra lateral) e o build de
-produção da Netlify recusa o modo mock. As Fases 2 a 5 (integrações reais, sincronização,
-publicação) **não foram começadas**.
+Em modo `mock` a interface mostra **dados fictícios** (selo `DADOS FICTÍCIOS`) e o build de produção
+da Netlify recusa esse modo. Em modo `live`, **Livros** (Hardcover) e **Filmes** (Letterboxd RSS + CSV +
+TMDB, `films.md`) já leem as funções do servidor, **ainda sem validação com as contas reais** (token do
+Hardcover, chave do TMDB e export do CSV pendentes). Música e Teatro seguem em rascunho; sincronização
+agendada e HTML estático (Fases 4 e 5) não foram começados.
 
 Legenda: ✅ feito e verificado · ◐ feito, com ressalva anotada · ❌ não começado (fase futura).
 
@@ -34,17 +35,17 @@ Legenda: ✅ feito e verificado · ◐ feito, com ressalva anotada · ❌ não c
 | CL-19 | Linguagem editorial | ✅ numeração 001–005, kickers, grade 7/5, `EditorialPage/Section/Divider`, `StatTile`, `BookCard`, `FilmPoster`, `DiaryEntry`, estados `Loading/Empty/ErrorState/StaleNotice` com a mesma geometria |
 | CL-20 | Hub | ✅ índice numerado, um destaque por seção, fontes e datas |
 | CL-21 | Livros | ✅ lendo, lidos por ano, pausados/abandonados, quero ler |
-| CL-22 | Filmes | ✅ diário por mês, nota acessível, marcas, sem data no fim, link ao Letterboxd |
-| CL-23 | Música | ✅ "Em rotação" e lista, nota curta, sem player nem iframe (teste) |
-| CL-24 | Teatro | ✅ linha do tempo por ano |
+| CL-22 | Filmes | ✅ diário por mês, nota acessível, marcas, sem data no fim, link ao Letterboxd; com dados reais: pôsteres, créditos TMDB, exibições por ano, aviso de spoiler (`films.test.tsx`) |
+| CL-23 | Música | ✅ instrumentos (dados dela), prática atual, artistas, músicas, "Em rotação" e discos, tudo opcional e vindo de `data/personal/music.ts`; sem player nem iframe (teste). Fora do rascunho |
+| CL-24 | Teatro | ✅ linha do tempo por ano, vivências, favoritas, observações e referências (`data/personal/theater.ts`, hoje vazio: segue rascunho) |
 | CL-25 | Resenhas | ✅ truncamento em ~400 com link canônico, expansão, `publish:false` fora do DOM |
 | CL-26 | Dois idiomas | ✅ paridade de chaves, tipos e textos em `i18n/personal.test.ts` (o `check-i18n.mjs` da skill **não carrega** o `ui.ts`, já na base: importa `./ws` sem extensão) |
-| CL-27 | Letterboxd RSS | ❌ Fase 2 |
-| CL-28 | TMDB | ❌ Fase 2 |
+| CL-27 | Letterboxd RSS | ✅ normalizador testado com o **feed real** (50 itens: 3 sem data, 5 sem nota, 1 série, 13 resenhas, 1 com spoiler); `netlify/personal/letterboxd.test.ts`. URL descoberta e conferida em 14/11/2026 |
+| CL-28 | TMDB | ◐ cliente, cache permanente por filme, limite por requisição e atribuição implementados e testados **sem rede**; **não validado com a chave real** (forma da resposta do TMDB assumida da documentação); falta confirmar termos e limites |
 | CL-29 | Hardcover | ◐ cliente, normalização, cache e página implementados e testados sem rede (`hardcover.md`); **não validado com o Hardcover real**: o esquema é assumido até rodar `npm run personal:probe` com o token. Listas, metas e favoritos nativos não feitos |
-| CL-30 | CSV do Letterboxd | ❌ Fase 3 |
-| CL-31 | Função e cache | ◐ `/api/personal/books` pronta (cache em Blobs, snapshot de reserva, retry, timeout, `Retry-After`); `/api/personal/films` ainda não (Fase 2). A função não foi executada na Netlify real |
-| CL-32 | Segredos | ◐ `.env.example` com nomes e descrições e teste (`scripts/envExample.test.ts`), `.env.zip` ignorado; falta o teste de "nada em `dist/`" com as integrações (Fase 2) |
+| CL-30 | CSV do Letterboxd | ◐ importador (`npm run personal:import-letterboxd`), deduplicação e `publish` testados com CSV **sintético**; **falta o export real** para confirmar as colunas. Watchlist e listas do CSV não importadas (`films.md`) |
+| CL-31 | Função e cache | ◐ `/api/personal/books` e `/api/personal/films` prontas (cache em Blobs, snapshot de reserva, 503 genérico); nenhuma foi executada na Netlify real |
+| CL-32 | Segredos | ◐ `.env.example` e teste; testes garantem que a chave do TMDB não aparece em resposta nem em log; falta o teste de "nada em `dist/`" (Fase 5) |
 | CL-33 | Atualização agendada | ❌ Fase 4 |
 | CL-34 | HTML estático | ❌ Fase 4 |
 | CL-35 | Verificação visual | ◐ Fase 1 verificada (abaixo); repetir na Fase 5 |

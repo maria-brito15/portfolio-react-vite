@@ -17,6 +17,13 @@ export default function DiaryEntry({ entry }: { entry: FilmDiaryEntry }) {
   const text = p.films;
   const day = entry.watchedDate ? formatDay(entry.watchedDate, lang) : '';
   const review = entry.publish === false ? undefined : entry.review;
+  const meta = entry.meta;
+  const credits = [
+    meta?.directors.length ? `${text.directedBy}: ${meta.directors.join(', ')}` : '',
+    meta?.genres[lang].join(', ') ?? '',
+    meta?.runtimeMin ? text.minutes(meta.runtimeMin) : '',
+  ].filter(Boolean);
+  const overview = meta?.overview?.[lang];
 
   return (
     <li className="pe-row">
@@ -38,9 +45,19 @@ export default function DiaryEntry({ entry }: { entry: FilmDiaryEntry }) {
           {entry.liked && <Chip accent="pink">♥ {text.liked}</Chip>}
           <SourceBadge provenance={entry.provenance} />
         </p>
+        {credits.length > 0 && <p className="pe-row-credits">{credits.join(' · ')}</p>}
+        {overview && (
+          <details className="pe-row-review">
+            <summary>{text.synopsis}</summary>
+            <p>{overview}</p>
+          </details>
+        )}
         {review && (
           <details className="pe-row-review">
-            <summary>{text.openReview}</summary>
+            <summary>
+              {text.openReview}
+              {entry.spoiler && ` (${text.spoiler})`}
+            </summary>
             <ReviewBlock review={review} url={entry.reviewUrl} />
           </details>
         )}
