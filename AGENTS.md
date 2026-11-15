@@ -17,4 +17,4 @@ Este projeto usa Spec-Driven Development. Cada feature tem uma spec em `.ai/sdd/
 - Conteúdo é dado tipado e validado, nunca texto fixo em componente. Nada de dado inventado.
 - Texto de interface em PT e EN. Sem segredo no cliente nem no repo.
 - Na dúvida se algo está no escopo, não está.
-- Sem `git push`: tudo fica local na `main` até a Duda pedir.
+- Git: o trabalho vive na branch `rebuild/sdd` (commits e push nela, quando a Duda pedir). Nunca `push` nem merge na `main` sem pedido explícito: o Netlify publica a partir dela.
