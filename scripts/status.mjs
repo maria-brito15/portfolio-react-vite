@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-// Gate SDD: lê e altera docs/specs/<feature>/.status. Única fonte de verdade da aprovação.
-// Nunca lê requirements.md / design.md / tasks.md. Regras em docs/specs/GATES.md.
+// Gate SDD: lê e altera .ai/sdd/specs/<feature>/.status. Única fonte de verdade da aprovação.
+// Nunca lê requirements.md / design.md / tasks.md. Regras em .ai/steering/conventions.md e AGENTS.md.
 import { readFileSync, writeFileSync, readdirSync, statSync, existsSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -38,7 +38,7 @@ export function parseStatus(raw) {
   return m && ORDER.includes(m[1]) ? m[1] : null
 }
 
-const SPECS_DIR = join(dirname(fileURLToPath(import.meta.url)), '..', 'docs', 'specs')
+const SPECS_DIR = join(dirname(fileURLToPath(import.meta.url)), '..', '.ai', 'sdd', 'specs')
 const statusPath = (feature) => join(SPECS_DIR, feature, '.status')
 
 function fail(code, msg) {
