@@ -28,6 +28,9 @@ import {
 import GlobalOverlays from './components/GlobalOverlays';
 import { Now, Uses } from './pages/InfoPages';
 import { WindowProvider } from './components/shell/windowManager';
+import OpeningCard from './components/notebook/OpeningCard';
+import CuttingRoomHost from './components/notebook/CuttingRoomHost';
+import { CADERNO_V2 } from './config';
 
 // `/r/<persona>`: a home com a persona do link já aplicada (PR-07). Grava a escolha,
 // então a pergunta não aparece e a lente vale nas próximas páginas.
@@ -100,6 +103,12 @@ export default function App() {
               <Page id={route?.id} persona={route?.persona} />
             </Suspense>
             <GlobalOverlays />
+            {CADERNO_V2 && (
+              <>
+                <OpeningCard />
+                <CuttingRoomHost />
+              </>
+            )}
             <TourHost />
             <SecretToast />
           </TerminalProvider>

@@ -168,3 +168,94 @@ describe('contraste AA dos tokens (ES-05)', () => {
     expect(ratio('#ffffff', '#000000')).toBeCloseTo(21, 0);
   });
 });
+
+// Caderno — Vol. XI (CD-04, CD-75): a serifa usa as mesmas cores dos tokens, então o contraste do
+// texto e do anel de foco (--accent) vale também sobre --bg e sobre a capa (--surface-2), nos cinco temas.
+describe('contraste do caderno (CD-75)', () => {
+  const notebook = readFileSync(join(process.cwd(), 'src/styles/notebook.css'), 'utf8');
+
+  it('os tokens editoriais existem com os valores do brief', () => {
+    expect(css).toContain("--font-serif: 'Fraunces'");
+    expect(css).toContain('--fs-hero: clamp(3rem, 6vw, 5rem)');
+    expect(css).toContain('--fs-chapter: clamp(2rem, 4vw, 3.4rem)');
+    expect(css).toContain('--fs-epigraph: clamp(1.1rem, 1.6vw, 1.4rem)');
+  });
+
+  it.each(themes)('tema %s: texto e foco (--accent) têm ≥ 4,5:1 sobre --bg', (_, theme) => {
+    for (const name of [...TEXTS, 'accent', 'ok']) {
+      const value = ratio(theme[name], theme.bg);
+
+      expect(value, `--${name} sobre --bg: ${value.toFixed(2)}:1`).toBeGreaterThanOrEqual(4.5);
+    }
+  });
+
+  it('notebook.css só usa cores dos tokens (nenhum hex) e nenhum degradê', () => {
+    expect(notebook).not.toMatch(/#[0-9a-f]{3,8}(?![0-9a-z-])/i);
+    expect(notebook).not.toMatch(/gradient\(/);
+  });
+});
+
+// Caderno, revisão R1: a paleta da biblioteca visual (bloco `@media screen` com `[data-caderno]`).
+// Mesma régua dos temas: acentos e textos AA sobre bg e superfícies, contorno 3:1, e a lógica fixa
+// (--accent quente, --ok verde de confirmação) nos cinco temas.
+describe('paleta do caderno (revisão R1)', () => {
+  const screenBlock = css.slice(css.indexOf('@media screen {'), css.indexOf('@media (max-width: 720px)'));
+  const block = (selector: string) => {
+    const at = screenBlock.indexOf(selector);
+    const body = screenBlock.slice(screenBlock.indexOf('{', at) + 1, screenBlock.indexOf('}', at));
+
+    return Object.fromEntries(
+      [...body.matchAll(/--([\w-]+):\s*(#[0-9a-fA-F]{3,6})\b/g)].map(([, name, hex]) => [name, hex]),
+    );
+  };
+  const base = Object.fromEntries(themes) as Record<string, Record<string, string>>;
+  const caderno: [string, Record<string, string>][] = [
+    ['escuro', { ...dark, ...block(":root[data-caderno][data-theme='dark']") }],
+    ['claro', { ...light, ...block(":root[data-caderno][data-theme='light']") }],
+    ['dracula', { ...base.dracula, ...block(":root[data-caderno][data-theme='dracula']") }],
+    ['solarized', { ...base.solarized, ...block(":root[data-caderno][data-theme='solarized']") }],
+    ['amber', { ...base.amber, ...block(":root[data-caderno][data-theme='amber']") }],
+  ];
+
+  it('só vale na tela, com a flag (data-caderno), e o escuro cobre também o <html> sem data-theme', () => {
+    expect(screenBlock).toContain(":root[data-caderno]:not([data-theme]),\n  :root[data-caderno][data-theme='dark']");
+    expect(screenBlock).not.toMatch(/gradient\(/);
+  });
+
+  it('escuro: fundo quase preto e frio (não #000), acento laranja e confirmação verde', () => {
+    const [, d] = caderno[0];
+    const rgb = (hex: string) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
+    const [r, , b] = rgb(d.bg);
+    const [ar, ag, ab] = rgb(d.accent);
+    const [or, og, ob] = rgb(d.ok);
+
+    expect(d.bg).not.toBe('#000000');
+    expect(luminance(d.bg)).toBeLessThan(0.01);
+    expect(b).toBeGreaterThanOrEqual(r); // frio
+    expect(ar > ag && ag > ab).toBe(true); // laranja
+    expect(og > or && og > ob).toBe(true); // verde
+  });
+
+  it.each(caderno)('tema %s: --accent e --ok têm ≥ 4,5:1 em bg e nas três superfícies', (_, theme) => {
+    for (const name of ['accent', 'ok']) {
+      for (const surface of ['bg', ...SURFACES]) {
+        const value = ratio(theme[name], theme[surface]);
+
+        expect(value, `--${name} sobre --${surface}: ${value.toFixed(2)}:1`).toBeGreaterThanOrEqual(4.5);
+      }
+    }
+  });
+
+  it.each(caderno)('tema %s: textos e demais acentos continuam AA; contorno ≥ 3:1', (_, theme) => {
+    for (const name of [...TEXTS, ...ACCENTS]) {
+      for (const surface of ['bg', ...SURFACES]) {
+        expect(ratio(theme[name], theme[surface]), `--${name}/--${surface}`).toBeGreaterThanOrEqual(4.5);
+      }
+    }
+
+    for (const surface of ['bg', ...SURFACES]) {
+      expect(ratio(theme['border-ui'], theme[surface]), `--border-ui/--${surface}`).toBeGreaterThanOrEqual(3);
+    }
+    expect(ratio(theme['on-accent'], theme.accent), 'on-accent').toBeGreaterThanOrEqual(4.5);
+  });
+});

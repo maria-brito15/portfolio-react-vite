@@ -21,6 +21,53 @@
     U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
+/* Fraunces (OFL, fonte variável, eixo de peso), hospedada no próprio site como a JetBrains Mono.
+   Escolhida entre as candidatas do brief porque é livre (OFL), variável (um arquivo por estilo)
+   e tem contraste e itálico editoriais; as outras (GT Alpina, Canela) são pagas.
+   Voz da autora: títulos, epígrafes, números de capítulo (spec caderno-vol-xi, CD-01 a CD-05). */
+@font-face {
+  font-family: 'Fraunces';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('/fonts/fraunces-latin-ext.woff2') format('woff2');
+  unicode-range:
+    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329,
+    U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F,
+    U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Fraunces';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('/fonts/fraunces-latin.woff2') format('woff2');
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Fraunces';
+  font-style: italic;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('/fonts/fraunces-italic-latin-ext.woff2') format('woff2');
+  unicode-range:
+    U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329,
+    U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F,
+    U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Fraunces';
+  font-style: italic;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('/fonts/fraunces-italic-latin.woff2') format('woff2');
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 /* Tokens de design: UM sistema só, o do terminal/IDE. Um nome por papel.
    Cor com significado fixo em todo o site, páginas e terminal:
      --accent (violeta) = primário: links, foco, ação principal · --accent-2 (rosa) = secundário
@@ -52,6 +99,11 @@
 
   /* Tipografia: uma voz só, JetBrains Mono. Hierarquia por peso e tamanho. */
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  /* Segunda voz, só do caderno (`.nb-*`): títulos editoriais, epígrafes, números de capítulo. */
+  --font-serif: 'Fraunces', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
+  --fs-hero: clamp(3rem, 6vw, 5rem);
+  --fs-chapter: clamp(2rem, 4vw, 3.4rem);
+  --fs-epigraph: clamp(1.1rem, 1.6vw, 1.4rem);
   --fs-chrome: 0.75rem; /* barra de título, breadcrumb, badges */
   --fs-body: 0.95rem;
   --fs-mono: 0.95rem; /* terminal e barra de comandos */
@@ -226,6 +278,58 @@
   --on-accent: #100b02;
   --nav-bg: rgba(10, 7, 0, 0.92);
   --grid-color: rgba(255, 194, 51, 0.04);
+}
+
+/* Caderno, revisão R1 (docs/specs/caderno-vol-xi/design.md §11): biblioteca visual. Só vale com a
+   flag CADERNO_V2 (o `index.html` põe `data-caderno` no <html>); sem ela, nada abaixo se aplica.
+   Lógica única nos cinco temas: --accent = acento quente (nota, ativo, hover, foco) e
+   --ok = confirmação (lido, assistido, concluído). O escuro ganha o fundo quase preto frio; os
+   outros temas mantêm o próprio fundo e só trocam os dois acentos pelo equivalente que combina.
+   Só na tela: a impressão continua com os tokens do tema claro (bloco `@media print` abaixo).
+   `contrast.test.ts` confere AA em todos. */
+@media screen {
+  :root[data-caderno]:not([data-theme]),
+  :root[data-caderno][data-theme='dark'] {
+    --bg: #0e1114;
+    --surface: #14181c;
+    --surface-2: #1b2027;
+    --surface-3: #242a32;
+    --border: rgba(160, 180, 200, 0.12);
+    --border-ui: #6b7684;
+    --text: #e3e7eb;
+    --text-2: #b0bac5;
+    --dim: #8f9aa7;
+    --accent: #ff8a2b;
+    --ok: #3ddc84;
+    --info: #40bcf4;
+    --on-accent: #0e1114;
+    --nav-bg: rgba(14, 17, 20, 0.92);
+    --win-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+  }
+
+  :root[data-caderno][data-theme='light'] {
+    --accent: #a3420a;
+    --ok: #0f6e51;
+    --on-accent: #ffffff;
+  }
+
+  :root[data-caderno][data-theme='dracula'] {
+    --accent: #ffb86c;
+    --ok: #50fa7b;
+    --on-accent: #282a36;
+  }
+
+  :root[data-caderno][data-theme='solarized'] {
+    --accent: #f5935a;
+    --ok: #a6bd2e;
+    --on-accent: #002b36;
+  }
+
+  :root[data-caderno][data-theme='amber'] {
+    --accent: #ff9d2e;
+    --ok: #a6e05a;
+    --on-accent: #100b02;
+  }
 }
 
 @media (max-width: 720px) {
