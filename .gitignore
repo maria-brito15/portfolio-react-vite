@@ -20,3 +20,9 @@ netlify/assistant/context.json
 
 # CSV bruto do Letterboxd (export oficial): nunca versionar; só o JSON gerado entra
 letterboxd-export/
+
+# arquivo da Duda
+src.zip
+
+# registro local de tempos do verify (T1.3)
+.verify/
