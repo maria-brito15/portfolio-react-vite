@@ -18,7 +18,6 @@ export type HomeBlockId =
   | 'projects'
   | 'quick'
   | 'github'
-  | 'interactive'
   // Experiências por persona (docs/specs/experiencias-persona/), carregadas sob demanda.
   | 'overview'
   | 'architecture'
@@ -71,7 +70,6 @@ export const DEFAULT_HOME: PersonaHome = {
     { id: 'intents' },
     { id: 'projects' },
     { id: 'github', half: true },
-    { id: 'interactive', half: true },
   ],
 };
 
@@ -181,18 +179,9 @@ export const personaHome: Record<PersonaId, PersonaHome> = {
       'Explore projects, interests and a few surprises.',
     ),
     secondary: [
-      { route: 'jogos', label: L('Jogar', 'Play') },
       { route: 'terminal', label: L('Abrir o terminal', 'Open the terminal') },
     ],
     blocks: [
-      {
-        id: 'interactive',
-        title: L('Para explorar', 'To explore'),
-        lead: L(
-          'Jogos, o terminal e comandos para descobrir. Tem mais coisas escondidas.',
-          'Games, the terminal and commands to discover. There is more hidden around.',
-        ),
-      },
       { id: 'explore' },
       {
         id: 'personal',

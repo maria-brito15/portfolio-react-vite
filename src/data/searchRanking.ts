@@ -15,7 +15,7 @@ export const personaTopics: Record<PersonaId, string[]> = {
   tech: ['project', 'case', 'github', 'habilidades', 'skill', 'curriculo'],
   professor: ['academico', 'project', 'experiencias', 'curriculo', 'sobre', 'pessoal'],
   cliente: ['servicos', 'case', 'contato', 'project', 'sobre'],
-  amigo: ['sobre', 'pessoal', 'project', 'jogos', 'game', 'terminal', 'command', 'agora'],
+  amigo: ['sobre', 'pessoal', 'project', 'terminal', 'command', 'agora'],
 };
 
 // Termos extras por página (id de `routes.ts`) e por tema.
@@ -46,10 +46,6 @@ export const topicKeywords: Record<string, Localized> = {
   ),
   contato: L('contato email mensagem falar orçamento', 'contact email message talk quote'),
   github: L('repositórios código open source', 'repositories code open source'),
-  jogos: L(
-    'jogar jogo diversão campo minado pessoal interativo',
-    'play game fun minesweeper personal interactive',
-  ),
   terminal: L(
     'comandos linha de comando shell interativo',
     'commands command line shell interactive',

@@ -44,7 +44,7 @@ describe('próximos passos ao fim das páginas', () => {
     ],
     ['professor', '/academico', 'Ver os projetos', '/projetos', 'Atividades e extensão'],
     ['cliente', '/servicos', 'Ver os cases', '/servicos#cases', 'Pedir orçamento'],
-    ['amigo', '/sobre', 'Ver os projetos', '/projetos', 'Jogar'],
+    ['amigo', '/sobre', 'Ver os projetos', '/projetos', 'Abrir o terminal'],
   ] as const)(
     '%s em %s: uma principal e uma secundária',
     (persona, path, primary, href, secondary) => {

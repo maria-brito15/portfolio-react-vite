@@ -3,7 +3,6 @@ import userEvent from '@testing-library/user-event';
 import { renderApp } from '../test/helpers';
 import { NAV_GROUPS, navRoutes, routes } from '../data/routes';
 import { projects } from '../data/projects';
-import { BEST_KEY } from '../terminal/games/bestTimes';
 import { CATEGORIES, categoryOf, commandCatalog } from '../terminal/catalog';
 import { commandInventory } from '../terminal/commands';
 
@@ -29,8 +28,7 @@ describe('barra lateral', () => {
     for (const id of ['sobre', 'projetos', 'habilidades', 'curriculo', 'academico', 'servicos'])
       expect(hrefs).toContain(routes.find((r) => r.id === id)!.path);
 
-    for (const path of ['/jogos', '/terminal', '/github', '/contato'])
-      expect(hrefs).toContain(path);
+    for (const path of ['/terminal', '/github', '/contato']) expect(hrefs).toContain(path);
 
     const current = within(sidebar()).getByRole('link', { current: 'page' });
 
@@ -54,7 +52,7 @@ describe('barra lateral', () => {
     await user.click(screen.getByRole('button', { name: /Switch to English/ }));
     expect(within(sidebar()).getByText('Portfolio')).toBeInTheDocument();
     expect(within(sidebar()).getByText('Development')).toBeInTheDocument();
-    expect(within(sidebar()).getByRole('link', { name: 'Games' })).toBeInTheDocument();
+    expect(within(sidebar()).getByRole('link', { name: 'Terminal' })).toBeInTheDocument();
     expect(sidebar().querySelectorAll('details')).toHaveLength(
       NAV_GROUPS.filter((g) => navRoutes(g).length).length,
     );
@@ -147,64 +145,14 @@ describe('painel inicial', () => {
     );
   });
 
-  it('mostra os recordes do campo minado salvos neste navegador, e só eles', () => {
-    localStorage.setItem(BEST_KEY, JSON.stringify({ easy: 42 }));
-    renderApp('/');
-    expect(screen.getByText(/melhor tempo: fácil 42 s/)).toBeInTheDocument();
-  });
-
   it('troca de idioma sem perder nada', async () => {
     const user = userEvent.setup();
 
     renderApp('/');
     await user.click(screen.getByRole('button', { name: /Switch to English/ }));
-    for (const name of ['Quick access', 'Featured projects', 'Interactive'])
+    for (const name of ['Quick access', 'Featured projects'])
       expect(screen.getByRole('heading', { level: 2, name })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'See projects' })).toBeInTheDocument();
-  });
-});
-
-describe('Game Center', () => {
-  it('lista os três níveis com o recorde real e abre o tabuleiro existente ao jogar', async () => {
-    const user = userEvent.setup();
-
-    localStorage.setItem(BEST_KEY, JSON.stringify({ medium: 77 }));
-    renderApp('/jogos');
-    expect(screen.getByRole('heading', { level: 1, name: 'Game Center' })).toBeInTheDocument();
-    expect(screen.getByText('9×9 · 10 minas')).toBeInTheDocument();
-    expect(screen.getByText('16×16 · 40 minas')).toBeInTheDocument();
-    expect(screen.getByText('30×16 · 99 minas')).toBeInTheDocument();
-    expect(screen.getByText('Melhor tempo: 77 s')).toBeInTheDocument();
-    expect(screen.getAllByText('Melhor tempo: sem recorde')).toHaveLength(2);
-
-    await user.click(screen.getByRole('button', { name: 'Jogar: Campo Minado, fácil' }));
-    expect(await screen.findAllByRole('button', { name: /^linha \d+, coluna \d+/ })).toHaveLength(
-      81,
-    );
-    await user.click(screen.getByRole('button', { name: /Encerrar partida/ }));
-    expect(screen.queryAllByRole('button', { name: /^linha \d+, coluna \d+/ })).toHaveLength(0);
-  });
-
-  it('os comandos extras rodam no terminal e levam até ele', async () => {
-    const user = userEvent.setup();
-
-    renderApp('/jogos');
-
-    const section = screen
-      .getByRole('heading', { level: 2, name: 'Experiências no terminal' })
-      .closest('section')!;
-
-    await user.click(within(section).getByRole('button', { name: 'jogos' }));
-    expect(window.location.pathname).toBe('/terminal');
-    expect(await screen.findByText(/jogos disponíveis/)).toBeInTheDocument();
-  });
-
-  it('ver no terminal leva ao comando jogos', () => {
-    renderApp('/jogos');
-    expect(screen.getByRole('link', { name: 'ver no terminal' })).toHaveAttribute(
-      'href',
-      '/terminal?cmd=jogos',
-    );
   });
 });
 
@@ -268,7 +216,7 @@ describe('catálogo de comandos do terminal', () => {
 });
 
 describe('paleta: destinos diretos', () => {
-  it('escolher o terminal, um jogo ou uma habilidade abre a página sem passar pelo interpretador', async () => {
+  it('escolher o terminal ou uma página abre o destino sem passar pelo interpretador', async () => {
     const user = userEvent.setup();
 
     renderApp('/sobre');
@@ -276,10 +224,10 @@ describe('paleta: destinos diretos', () => {
 
     const dialog = await screen.findByRole('dialog', { name: 'Paleta de comandos' });
 
-    await user.type(within(dialog).getByRole('combobox'), 'campo minado difícil');
-    expect(within(dialog).getByText('Jogos')).toBeInTheDocument();
+    await user.type(within(dialog).getByRole('combobox'), 'terminal');
+    expect(within(dialog).getByText('Páginas')).toBeInTheDocument();
     await user.keyboard('{Enter}');
-    expect(window.location.pathname).toBe('/jogos');
+    expect(window.location.pathname).toBe('/terminal');
   });
 
   it('o estado vazio sugere o que tentar', async () => {

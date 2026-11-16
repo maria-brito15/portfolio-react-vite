@@ -38,8 +38,6 @@ const CATEGORY_OF: Record<string, CommandCategory> = {
   tema: 'personalize',
   idioma: 'personalize',
   fortune: 'fun',
-  jogos: 'fun',
-  minas: 'fun',
 };
 
 export interface CatalogEntry {

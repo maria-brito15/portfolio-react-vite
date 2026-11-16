@@ -14,11 +14,11 @@ describe('trilhas como dado (TR-01, TR-02)', () => {
     expect(trailFor(undefined)).toBeUndefined();
   });
 
-  it('de 4 a 6 passos, e o último é uma ação', () => {
+  it('de 3 a 6 passos, e o último é uma ação', () => {
     for (const trail of trails) {
       const steps = stepsOf(trail);
 
-      expect(steps.length, trail.persona).toBeGreaterThanOrEqual(4);
+      expect(steps.length, trail.persona).toBeGreaterThanOrEqual(3);
       expect(steps.length, trail.persona).toBeLessThanOrEqual(6);
       expect(steps.at(-1)?.kind, trail.persona).toBe('agir');
     }
@@ -104,9 +104,9 @@ describe('gamificação graduada (TR-19)', () => {
 });
 
 describe('segredos do amigo (TR-20)', () => {
-  it('são 8, únicos, e todo comando citado existe', () => {
-    expect(secrets).toHaveLength(8);
-    expect(new Set(secrets.map((s) => s.id)).size).toBe(8);
+  it('são 7, únicos, e todo comando citado existe', () => {
+    expect(secrets).toHaveLength(7);
+    expect(new Set(secrets.map((s) => s.id)).size).toBe(7);
 
     for (const secret of secrets) {
       for (const lang of LANGS) expect(secret.label[lang].trim()).not.toBe('');

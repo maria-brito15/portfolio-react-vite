@@ -504,71 +504,6 @@
   }
 }
 
-/* ---------- Game Center ---------- */
-.games .game-card {
-  margin: var(--space-5) 0;
-}
-.game-card h2,
-.game-card h3 {
-  margin: 0 0 var(--space-2);
-}
-.game-levels {
-  display: grid;
-  gap: var(--space-2);
-  margin: var(--space-4) 0;
-  padding: 0;
-  list-style: none;
-}
-.game-levels li {
-  display: grid;
-  grid-template-columns: 6rem 1fr 1fr auto;
-  align-items: center;
-  gap: var(--space-3);
-}
-.game-level-name {
-  font-weight: 700;
-  color: var(--tone, var(--accent));
-}
-.game-card h2 {
-  color: var(--tone, var(--text));
-}
-.game-levels li {
-  padding: var(--space-2) var(--space-3);
-  background: var(--tone-bg, transparent);
-  border: 1px solid var(--tone-line, var(--border));
-  border-radius: var(--radius-sm);
-}
-.game-levels .run-btn:hover:not(:disabled) {
-  color: var(--tone);
-  border-color: var(--tone);
-}
-.game-levels .run-btn[aria-pressed='true'] {
-  color: var(--on-accent);
-  background: var(--tone);
-  border-color: var(--tone);
-}
-.game-board {
-  margin: var(--space-4) 0;
-  padding: var(--space-3);
-  overflow-x: auto;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-}
-@media (max-width: 720px) {
-  .game-levels li {
-    grid-template-columns: 1fr auto;
-  }
-  .game-levels li .game-level-name {
-    grid-column: 1;
-  }
-  .game-levels li button {
-    grid-column: 2;
-    grid-row: 1 / span 3;
-    min-height: 2.75rem;
-  }
-}
-
 /* ---------- Página do GitHub ---------- */
 .repo-list {
   display: grid;
@@ -680,10 +615,6 @@
 }
 .interactive-grid .run-btn {
   margin: 0 var(--space-2) var(--space-2) 0;
-}
-.game-levels .run-btn {
-  min-width: 5.5rem;
-  justify-content: center;
 }
 /* O resumo do GitHub e a página /github não repetem a margem e o filete de topo da seção Sobre. */
 .gh-summary,

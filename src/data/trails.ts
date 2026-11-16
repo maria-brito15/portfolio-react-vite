@@ -297,8 +297,8 @@ export const trails: Trail[] = [
     style: 'achievements',
     title: L('Caça aos segredos', 'Secret hunt'),
     intro: L(
-      'O site tem comandos escondidos e jogos. Quantos você acha?',
-      'The site has hidden commands and games. How many can you find?',
+      'O site tem comandos escondidos. Quantos você acha?',
+      'The site has hidden commands. How many can you find?',
     ),
     outro: (lang, found, total) =>
       lang === 'pt'
@@ -311,25 +311,6 @@ export const trails: Trail[] = [
         route: 'sobre',
         anchor: 'sobre',
         text: t('Comece conhecendo a Duda.', 'Start by getting to know Duda.'),
-      },
-      {
-        id: 'jogos',
-        kind: 'fazer',
-        route: 'terminal',
-        anchor: 'terminal',
-        command: 'jogos',
-        text: t(
-          'No terminal, `jogos` lista o que dá para jogar.',
-          'In the terminal, `games` lists what you can play.',
-        ),
-      },
-      {
-        id: 'minas',
-        kind: 'fazer',
-        route: 'terminal',
-        anchor: 'terminal',
-        command: 'minas facil',
-        text: t('Que tal uma partida de campo minado?', 'How about a round of minesweeper?'),
       },
       {
         id: 'segredo',
@@ -366,11 +347,6 @@ export const secrets: Secret[] = [
   { id: 'matrix', label: L('matrix', 'matrix'), trigger: { kind: 'command', name: 'matrix' } },
   { id: 'boot', label: L('boot', 'boot'), trigger: { kind: 'command', name: 'boot' } },
   { id: 'rm', label: L('rm', 'rm'), trigger: { kind: 'command', name: 'rm' } },
-  {
-    id: 'minas',
-    label: L('campo minado', 'minesweeper'),
-    trigger: { kind: 'command', name: 'minas' },
-  },
   { id: 'tema', label: L('tema', 'theme'), trigger: { kind: 'theme' } },
   { id: 'idioma', label: L('idioma', 'language'), trigger: { kind: 'lang' } },
 ];

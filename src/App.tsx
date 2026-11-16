@@ -12,7 +12,6 @@ import NotFound from './pages/NotFound';
 import {
   Academics,
   CaseStudy,
-  GameCenter,
   GithubPage,
   PersonalBooks,
   PersonalFilms,
@@ -63,8 +62,6 @@ function Page({ id, persona }: { id?: string; persona?: PersonaId }) {
       return <Academics />;
     case 'servicos':
       return <Services />;
-    case 'jogos':
-      return <GameCenter />;
     case 'terminal':
       return <TerminalPage />;
     case 'github':

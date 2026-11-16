@@ -365,10 +365,7 @@ export const projectPerspectives: Record<string, PerspectiveSet> = {
         'You are inside it right now: the home is a command line and each page is a window.',
       ),
       highlights: [
-        L(
-          'Tem campo minado e comandos para descobrir',
-          'It has Minesweeper and commands to discover',
-        ),
+        L('Tem comandos para descobrir', 'It has commands to discover'),
         L('Troca de tema e de idioma', 'Theme and language switching'),
       ],
     },

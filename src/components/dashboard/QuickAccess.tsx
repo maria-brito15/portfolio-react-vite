@@ -15,7 +15,6 @@ const QUICK = [
   'habilidades',
   'curriculo',
   'academico',
-  'jogos',
   'terminal',
   'pessoal',
   'contato',

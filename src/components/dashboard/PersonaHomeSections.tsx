@@ -5,7 +5,6 @@ import { homeFor, type HomeBlock } from '../../data/personaHome';
 import GithubStats from '../GithubStats';
 import QuickAccess from './QuickAccess';
 import FeaturedProjects from './FeaturedProjects';
-import InteractivePanel from './InteractivePanel';
 import ProfileSummary from './ProfileSummary';
 import StackOverview from './StackOverview';
 import AcademicSnapshot from './AcademicSnapshot';
@@ -55,8 +54,6 @@ export default function PersonaHomeSections() {
             <PersonalSpace {...text} />
           </Suspense>
         );
-      case 'interactive':
-        return <InteractivePanel {...text} />;
       case 'overview':
         return (
           <Suspense fallback={null}>

@@ -144,7 +144,7 @@ describe('amigo: modo explorar', () => {
     open('amigo');
     await screen.findByRole('heading', { level: 2, name: 'Modo explorar' });
 
-    expect(screen.getByText(/1 de 8 segredos achados/)).toBeInTheDocument();
+    expect(screen.getByText(/1 de 7 segredos achados/)).toBeInTheDocument();
     expect(screen.getByText(/Você achou “fortune”/)).toBeInTheDocument();
 
     await user.click(screen.getAllByRole('button', { name: 'Dica' })[0]);
@@ -153,7 +153,7 @@ describe('amigo: modo explorar', () => {
     expect(screen.queryAllByRole('button', { name: 'Mostrar como' })).toHaveLength(0);
 
     await user.click(screen.getByRole('button', { name: 'Recomeçar a exploração' }));
-    expect(screen.getByText(/0 de 8 segredos achados/)).toBeInTheDocument();
+    expect(screen.getByText(/0 de 7 segredos achados/)).toBeInTheDocument();
     expect(screen.queryByText(/Você achou “/)).toBeNull();
   });
 });

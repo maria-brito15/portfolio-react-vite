@@ -184,18 +184,6 @@ export const routes: Route[] = [
     desc: L('sites e landing pages', 'websites and landing pages'),
   },
   {
-    id: 'jogos',
-    kind: 'page',
-    path: '/jogos',
-    aliases: ['/games'],
-    name: 'jogos',
-    alias: 'games',
-    command: 'jogos',
-    group: 'interactive',
-    label: L('Jogos', 'Games'),
-    desc: L('campo minado e experiências interativas', 'minesweeper and interactive experiences'),
-  },
-  {
     // Sem `name`: não entra em `ls`/`cd` (a página já é o terminal).
     id: 'terminal',
     kind: 'page',

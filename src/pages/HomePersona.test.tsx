@@ -22,7 +22,7 @@ describe('home adaptativa', () => {
   it('sem persona: a composição de sempre, sem introdução de persona', () => {
     withPersona();
 
-    expect(h2s()).toEqual(['Acesso rápido', 'O que você procura?', 'Projetos em destaque', 'Interativo']);
+    expect(h2s()).toEqual(['Acesso rápido', 'O que você procura?', 'Projetos em destaque']);
     expect(document.querySelector('.dash-lens')).toBeNull();
     expect(screen.getByRole('link', { name: 'Ver projetos' })).toHaveClass('dash-btn--primary');
   });
@@ -32,7 +32,7 @@ describe('home adaptativa', () => {
     tech: 'Projetos técnicos',
     professor: 'Trajetória acadêmica',
     cliente: 'O que posso oferecer',
-    amigo: 'Para explorar',
+    amigo: 'Projetos pessoais',
   };
 
   it.each(PERSONA_IDS)('%s: abre pelo bloco da persona e mostra a introdução', (id) => {

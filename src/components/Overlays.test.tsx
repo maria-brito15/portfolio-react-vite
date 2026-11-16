@@ -49,11 +49,11 @@ describe('opções da paleta (JA-06)', () => {
     expect(filterItems(items, 'tema escuro').length).toBeGreaterThan(0);
   });
 
-  it('cobre páginas, seções, projetos, estudo de caso, jogos, habilidades e comandos, e agrupa nessa ordem', () => {
+  it('cobre páginas, seções, projetos, estudo de caso, habilidades e comandos, e agrupa nessa ordem', () => {
     const items = paletteItems('pt');
     const kinds = new Set(items.map((i) => i.kind));
 
-    expect([...kinds].sort()).toEqual(['command', 'game', 'page', 'project', 'section', 'skill']);
+    expect([...kinds].sort()).toEqual(['command', 'page', 'project', 'section', 'skill']);
     for (const p of projects) expect(items.map((i) => i.id)).toContain(`project:${p.id}`);
     expect(items.find((i) => i.id === 'case:whatsapp-dispatcher')?.to).toBe(
       '/estudos-de-caso/whatsapp-dispatcher',
@@ -73,7 +73,6 @@ describe('opções da paleta (JA-06)', () => {
     const items = paletteItems('pt');
 
     expect(filterItems(items, 'java').find((i) => i.kind === 'skill')?.label).toBe('Java');
-    expect(filterItems(items, 'minas').map((i) => i.kind)).toContain('game');
     expect(filterItems(items, 'github').map((i) => i.id)).toContain('page:github');
   });
 });

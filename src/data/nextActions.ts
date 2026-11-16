@@ -32,7 +32,7 @@ const to = (route: string, pt: string, en: string, anchor?: string): NextAction 
 const CONTACT = to('contato', 'Entrar em contato', 'Get in touch');
 const RESUME = to('curriculo', 'Ver o currículo', 'See the resume');
 const PROJECTS = to('projetos', 'Ver os projetos', 'See the projects');
-const GAMES = to('jogos', 'Jogar', 'Play');
+const TERMINAL = to('terminal', 'Abrir o terminal', 'Open the terminal');
 
 export const nextActions: Record<PersonaId, Record<string, NextRule>> = {
   rh: {
@@ -123,19 +123,15 @@ export const nextActions: Record<PersonaId, Record<string, NextRule>> = {
   amigo: {
     sobre: {
       primary: to('projetos', 'Ver os projetos', 'See the projects'),
-      secondary: GAMES,
+      secondary: TERMINAL,
     },
     projetos: {
-      primary: GAMES,
-      secondary: to('terminal', 'Abrir o terminal', 'Open the terminal'),
-    },
-    jogos: {
-      primary: to('terminal', 'Abrir o terminal', 'Open the terminal'),
+      primary: TERMINAL,
       secondary: to('sobre', 'Conhecer a Duda', 'Get to know Duda'),
     },
-    github: { primary: GAMES, secondary: to('sobre', 'Conhecer a Duda', 'Get to know Duda') },
-    agora: { primary: GAMES, secondary: to('sobre', 'Conhecer a Duda', 'Get to know Duda') },
-    contato: { primary: GAMES, secondary: to('sobre', 'Conhecer a Duda', 'Get to know Duda') },
+    github: { primary: TERMINAL, secondary: to('sobre', 'Conhecer a Duda', 'Get to know Duda') },
+    agora: { primary: TERMINAL, secondary: to('sobre', 'Conhecer a Duda', 'Get to know Duda') },
+    contato: { primary: TERMINAL, secondary: to('sobre', 'Conhecer a Duda', 'Get to know Duda') },
   },
 };
 

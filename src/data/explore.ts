@@ -16,7 +16,6 @@ export interface ExploreHint {
   next: { route: string; label: Localized };
 }
 
-const GAMES = { route: 'jogos', label: L('Ver os jogos', 'See the games') };
 const TERMINAL = { route: 'terminal', label: L('Voltar ao terminal', 'Back to the terminal') };
 const ABOUT = { route: 'sobre', label: L('Conhecer a Duda', 'Get to know Duda') };
 const PROJECTS = { route: 'projetos', label: L('Ver os projetos', 'See the projects') };
@@ -32,7 +31,7 @@ export const exploreHints: Record<string, ExploreHint> = {
     hint: L('Um animal fala pelo terminal.', 'An animal speaks through the terminal.'),
     how: L('Rode `cowsay` com uma frase.', 'Run `cowsay` with a phrase.'),
     command: 'cowsay oi',
-    next: GAMES,
+    next: TERMINAL,
   },
   matrix: {
     hint: L('Um filme de ficção científica virou comando.', 'A sci-fi movie became a command.'),
@@ -54,15 +53,6 @@ export const exploreHints: Record<string, ExploreHint> = {
     how: L('Rode `rm` com qualquer nome.', 'Run `rm` with any name.'),
     command: 'rm arquivo',
     next: TERMINAL,
-  },
-  minas: {
-    hint: L('Um clássico de lógica com bandeiras.', 'A logic classic with flags.'),
-    how: L(
-      'Rode `minas` no terminal ou abra os jogos.',
-      'Run `minas` in the terminal or open the games.',
-    ),
-    command: 'minas',
-    next: GAMES,
   },
   tema: {
     hint: L('O site pode mudar de aparência.', 'The site can change its look.'),

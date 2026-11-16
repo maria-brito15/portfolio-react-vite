@@ -4,11 +4,11 @@ import { renderApp } from './test/helpers';
 import { findPageByPath } from './data/routes';
 
 describe('página inicial', () => {
-  it('é o painel: apresentação, acesso rápido, projetos, GitHub e interativo, sem janela', () => {
+  it('é o painel: apresentação, acesso rápido, projetos e GitHub, sem janela', () => {
     renderApp('/');
 
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Duda Brito');
-    for (const name of ['Acesso rápido', 'Projetos em destaque', 'GitHub em números', 'Interativo'])
+    for (const name of ['Acesso rápido', 'Projetos em destaque', 'GitHub em números'])
       expect(screen.getByRole('heading', { level: 2, name })).toBeInTheDocument();
     expect(document.querySelectorAll('.win')).toHaveLength(0);
     expect(screen.queryByRole('textbox', { name: /Linha de comando do terminal/ })).toBeNull();

@@ -56,7 +56,6 @@ describe('busca por persona: só ordena, nunca esconde', () => {
     expect(ids('competencias', 'rh')).toContain('section:curriculo:competencias');
     expect(ids('disciplinas', 'professor')).toContain('section:academico:disciplinas');
     expect(ids('faq', 'cliente')).toContain('section:servicos:faq');
-    expect(ids('jogos', 'amigo')).toContain('page:jogos');
   });
 
   it('sem busca, a persona reordena os grupos sem tirar nada', () => {

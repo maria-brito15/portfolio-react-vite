@@ -62,13 +62,13 @@ export const personas: Persona[] = [
   {
     id: 'amigo',
     label: L('Amigo(a) / curioso(a)', 'Friend / curious'),
-    desc: L('sobre, jogos e projetos', 'about, games and projects'),
+    desc: L('sobre, terminal e projetos', 'about, terminal and projects'),
     aliases: ['amiga', 'curioso', 'curiosa', 'friend', 'curious'],
-    order: ['sobre', 'pessoal', 'jogos', 'projetos', 'agora'],
-    commands: ['sobre', 'jogos', 'projetos'],
+    order: ['sobre', 'pessoal', 'terminal', 'projetos', 'agora'],
+    commands: ['sobre', 'projetos'],
     cta: { route: 'sobre', label: L('Conhecer a Duda', 'Get to know Duda') },
     askHint:
-      'The visitor is a friend or a curious person. Use a relaxed, friendly tone and favor the about page, games and personal projects.',
+      'The visitor is a friend or a curious person. Use a relaxed, friendly tone and favor the about page and personal projects.',
   },
   {
     id: 'cliente',

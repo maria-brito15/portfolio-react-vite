@@ -1,26 +1,24 @@
 // Opções da paleta de comandos (Ctrl+K), montadas das fontes únicas do site:
 // `routes.ts` (páginas), `sections.ts` (projetos), `skillTimeline` (habilidades),
-// `games/mines` (jogos) e o inventário de comandos. Nada é repetido à mão.
+// e o inventário de comandos. Nada é repetido à mão.
 // Escolher uma opção ou roda o MESMO comando que o terminal rodaria (`run`) ou
 // vai direto a um destino (`to`): nenhum interpretador novo (JA-07).
 import type { Lang } from '../types';
 import { directories, fold, routeById, routes } from '../data/routes';
 import { sectionsOf } from '../data/sections';
 import { skillTimeline } from '../data/skillTimeline';
-import { LEVELS, LEVEL_NAMES, type Level } from '../terminal/games/mines';
 import { commandInventory } from '../terminal/commands';
 import { projects as projectData } from '../data/projects';
 import type { PersonaId } from '../data/personas';
 import { boostOf, techKeywords, topicKeywords } from '../data/searchRanking';
 
-export type PaletteKind = 'page' | 'section' | 'project' | 'game' | 'skill' | 'command';
+export type PaletteKind = 'page' | 'section' | 'project' | 'skill' | 'command';
 
 // Ordem dos grupos na lista.
 export const PALETTE_KINDS: PaletteKind[] = [
   'page',
   'project',
   'section',
-  'game',
   'skill',
   'command',
 ];
@@ -150,27 +148,6 @@ export function paletteItems(lang: Lang): PaletteItem[] {
       ),
     });
 
-  const games: PaletteItem[] = (Object.keys(LEVELS) as Level[]).map((level) => {
-    const { rows, cols, mines } = LEVELS[level];
-    const name = `${lang === 'pt' ? 'campo minado' : 'minesweeper'} · ${LEVEL_NAMES[level][lang]}`;
-
-    return {
-      id: `game:${level}`,
-      kind: 'game',
-      topic: 'game',
-      label: name,
-      hint: `${cols}×${rows} · ${mines}`,
-      to: routeById('jogos')?.path ?? '/jogos',
-      search: fold(
-        [
-          'minas minesweeper campo minado game jogo',
-          LEVEL_NAMES[level].pt,
-          LEVEL_NAMES[level].en,
-        ].join(' '),
-      ),
-    };
-  });
-
   const skills: PaletteItem[] = skillTimeline.flatMap((group) =>
     group.items.map((item) => ({
       id: `skill:${group.id}:${item.name}`,
@@ -231,7 +208,7 @@ export function paletteItems(lang: Lang): PaletteItem[] {
     },
   );
 
-  return [...pages, ...sections, ...projects, ...games, ...skills, ...commands];
+  return [...pages, ...sections, ...projects, ...skills, ...commands];
 }
 
 // Menor é melhor: 0 nome igual · 1 começa com o termo · 2 começa uma palavra ·

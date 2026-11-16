@@ -198,15 +198,6 @@ describe('conclusão dos passos por evento (TR-14 a TR-17)', () => {
     expect(result.current.trail.doneCount).toBe(0);
   });
 
-  it('"fazer" com argumentos: `minas facil` conclui com qualquer partida de minas', () => {
-    const { result } = setup('amigo');
-
-    goTo(result, 2);
-    expect(result.current.trail.step?.id).toBe('minas');
-    act(() => emitTrailEvent({ type: 'command', name: 'minas' }));
-    expect(result.current.trail.doneCount).toBe(1);
-  });
-
   it('"achar": conclui com qualquer segredo, inclusive troca de tema ou idioma', () => {
     for (const event of [
       { type: 'command', name: 'matrix' },
@@ -218,7 +209,7 @@ describe('conclusão dos passos por evento (TR-14 a TR-17)', () => {
 
       const { result } = setup('amigo');
 
-      goTo(result, 3);
+      goTo(result, 1);
       expect(result.current.trail.step?.kind).toBe('achar');
       act(() => emitTrailEvent(event));
       expect(result.current.trail.doneCount, JSON.stringify(event)).toBe(1);

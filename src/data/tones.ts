@@ -22,7 +22,6 @@ export const ROUTE_GLYPH: Record<string, string> = {
   habilidades: '[]',
   curriculo: 'cv',
   academico: '##',
-  jogos: ':)',
   terminal: '>_',
   contato: '@',
   pessoal: 'pe',

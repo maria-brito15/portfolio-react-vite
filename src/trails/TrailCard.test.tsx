@@ -158,7 +158,7 @@ describe('mensagem final (TR-21)', () => {
 
     const section = screen.getByRole('region', { name: 'Caça aos segredos' });
 
-    expect(section).toHaveTextContent('Você achou 3 de 8 segredos. Ainda dá para achar mais.');
+    expect(section).toHaveTextContent('Você achou 3 de 7 segredos. Ainda dá para achar mais.');
     expect(section).toHaveTextContent('Trilha concluída');
   });
 });

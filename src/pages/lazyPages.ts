@@ -9,7 +9,6 @@ export const CaseStudy = lazy(() => import('./CaseStudy'));
 export const Resume = lazy(() => import('./Resume'));
 export const Academics = lazy(() => import('./Academics'));
 export const SectionPage = lazy(() => import('./SectionPage'));
-export const GameCenter = lazy(() => import('./GameCenter'));
 export const GithubPage = lazy(() => import('./GithubPage'));
 export const TerminalPage = lazy(() => import('./TerminalPage'));
 export const PersonalHub = lazy(() => import('./personal/PersonalHub'));

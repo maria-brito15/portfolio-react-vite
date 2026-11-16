@@ -3,7 +3,7 @@ import { cleanup, configure } from '@testing-library/react';
 
 expect.extend(matchers);
 
-// Diálogos e jogos carregam por import() sob demanda; com a máquina ocupada o
+// Diálogos carregam por import() sob demanda; com a máquina ocupada o
 // padrão de 1 s das consultas assíncronas (findBy, waitFor) não basta.
 configure({ asyncUtilTimeout: 5000 });
 
@@ -14,7 +14,6 @@ vi.mock('../pages/lazyPages', async () => ({
   Resume: (await import('../pages/Resume')).default,
   Academics: (await import('../pages/Academics')).default,
   SectionPage: (await import('../pages/SectionPage')).default,
-  GameCenter: (await import('../pages/GameCenter')).default,
   GithubPage: (await import('../pages/GithubPage')).default,
   TerminalPage: (await import('../pages/TerminalPage')).default,
   PersonalHub: (await import('../pages/personal/PersonalHub')).default,
