@@ -5,6 +5,7 @@ import { assistantContextPlugin } from './scripts/assistantContext';
 import { buildInfo } from './scripts/buildInfo';
 import { personalGuardPlugin } from './scripts/personalGuard';
 import { contentGuardPlugin } from './scripts/contentGuard';
+import { secretGuardPlugin } from './scripts/secretGuard';
 
 export default defineConfig(({ command }) => ({
   plugins: [
@@ -13,6 +14,7 @@ export default defineConfig(({ command }) => ({
     assistantContextPlugin(),
     personalGuardPlugin(),
     contentGuardPlugin(),
+    secretGuardPlugin(),
   ],
   // Dados reais do build para o comando `stats` (src/data/build.ts).
   define: { __BUILD__: JSON.stringify(buildInfo(command)) },
