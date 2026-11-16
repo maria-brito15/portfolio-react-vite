@@ -1,7 +1,6 @@
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import { seoPlugin } from './scripts/seoPlugin';
-import { assistantContextPlugin } from './scripts/assistantContext';
 import { buildInfo } from './scripts/buildInfo';
 import { personalGuardPlugin } from './scripts/personalGuard';
 import { contentGuardPlugin } from './scripts/contentGuard';
@@ -11,7 +10,6 @@ export default defineConfig(({ command }) => ({
   plugins: [
     react(),
     seoPlugin(),
-    assistantContextPlugin(),
     personalGuardPlugin(),
     contentGuardPlugin(),
     secretGuardPlugin(),

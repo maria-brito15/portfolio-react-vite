@@ -26,8 +26,6 @@ export interface TrailStep {
   command?: string;
   // `agir`: o que o cartão do tour oferece.
   action?: TrailAction;
-  // Só entra quando o assistente de IA está publicado (TR-05).
-  when?: 'assistant';
   text: (lang: Lang) => string;
 }
 
@@ -162,18 +160,6 @@ export const trails: Trail[] = [
         text: t(
           'No terminal, rode `stats` para ver números do próprio site.',
           'In the terminal, run `stats` to see numbers about the site itself.',
-        ),
-      },
-      {
-        id: 'pergunte',
-        kind: 'fazer',
-        route: 'terminal',
-        anchor: 'terminal',
-        command: 'pergunte',
-        when: 'assistant',
-        text: t(
-          'Pergunte algo sobre a Duda: ele responde só com o que está no site.',
-          'Ask something about Duda: it answers only from what is on the site.',
         ),
       },
       {
@@ -392,12 +378,7 @@ export const secrets: Secret[] = [
 export const trailFor = (persona: PersonaId | undefined) =>
   persona ? trails.find((trail) => trail.persona === persona) : undefined;
 
-// O passo do assistente só entra quando ele está publicado: a Netlify define
-// `VITE_ASK_ENABLED=true` no deploy (ver docs/specs/assistente-ia/operacao.md).
-export const assistantAvailable = () => import.meta.env.VITE_ASK_ENABLED === 'true';
-
-export const stepsOf = (trail: Trail, assistant = assistantAvailable()) =>
-  trail.steps.filter((step) => step.when !== 'assistant' || assistant);
+export const stepsOf = (trail: Trail) => trail.steps;
 
 // Números que os textos podem conter: só os calculados dos dados (teste TR-03).
 export const dataNumbers = [projects.length, finalists, exp.count, exp.firstYear];

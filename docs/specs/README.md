@@ -1,6 +1,6 @@
 # Especificações por feature
 
-Cada pasta segue o fluxo PRD → especificação → plano → tarefas → verificação, em arquivos separados. Quinze features cobrem o site atual; o assistente de IA está implementado e testado sem rede, mas ainda não foi publicado (ver o estado dele).
+Cada pasta segue o fluxo PRD → especificação → plano → tarefas → verificação, em arquivos separados. Quinze features cobrem o site atual; o assistente de IA foi removido do código na spec 001 (onda 1, fora do MVP); o código está na marca `arquivo/pre-remocao-fora-do-mvp`.
 
 | Feature | Requisitos | Estado |
 | --- | --- | --- |

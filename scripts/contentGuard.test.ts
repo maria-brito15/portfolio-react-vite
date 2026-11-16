@@ -1,7 +1,9 @@
 import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { ESLint } from 'eslint';
+import { pathToFileURL } from 'node:url';
+import { Linter } from 'eslint';
+import tseslint from 'typescript-eslint';
 import type { Plugin } from 'vite';
 import { ExampleListSchema, makeExampleItems } from '../src/content/__fixtures__/example.fixture';
 import type { RegistryEntry } from '../src/content/registry';
@@ -97,11 +99,30 @@ describe('contentGuard: plugin do Vite', () => {
 });
 
 describe('regra de importação em *.content.ts', () => {
-  async function lint(code: string, filePath: string) {
-    const eslint = new ESLint({ cwd: process.cwd() });
-    const [result] = await eslint.lintText(code, { filePath });
+  // O `Linter` com o bloco REAL do eslint.config.js (nada copiado) e só o parser do TypeScript:
+  // o `ESLint` completo carrega todos os plugins e levava ~12 s, perto do limite de 20 s.
+  const contentBlock = (async () => {
+    const url = pathToFileURL(join(process.cwd(), 'eslint.config.js')).href;
+    const { default: config } = (await import(url)) as { default: { files?: string[] }[] };
+    const block = config.find((b) => b.files?.includes('src/content/**/*.content.ts'));
 
-    return result.messages.filter((m) => m.ruleId === 'no-restricted-syntax');
+    if (!block) throw new Error('bloco de *.content.ts não encontrado no eslint.config.js');
+
+    return block;
+  })();
+
+  async function lint(code: string, filePath: string) {
+    const linter = new Linter({ configType: 'flat' });
+    const messages = linter.verify(
+      code,
+      [
+        { files: ['**/*.ts'], languageOptions: { parser: tseslint.parser } },
+        (await contentBlock) as Linter.Config,
+      ],
+      { filename: filePath },
+    );
+
+    return messages.filter((m) => m.ruleId === 'no-restricted-syntax');
   }
 
   const file = join(process.cwd(), 'src', 'content', 'exemplo.content.ts');

@@ -14,23 +14,14 @@ describe('trilhas como dado (TR-01, TR-02)', () => {
     expect(trailFor(undefined)).toBeUndefined();
   });
 
-  it('de 4 a 6 passos, com ou sem o assistente, e o último é uma ação', () => {
-    for (const trail of trails)
-      for (const assistant of [false, true]) {
-        const steps = stepsOf(trail, assistant);
+  it('de 4 a 6 passos, e o último é uma ação', () => {
+    for (const trail of trails) {
+      const steps = stepsOf(trail);
 
-        expect(steps.length, `${trail.persona}/${assistant}`).toBeGreaterThanOrEqual(4);
-        expect(steps.length, `${trail.persona}/${assistant}`).toBeLessThanOrEqual(6);
-        expect(steps.at(-1)?.kind, trail.persona).toBe('agir');
-      }
-  });
-
-  it('o passo do assistente só entra quando ele está publicado (TR-05)', () => {
-    const tech = trailFor('tech') as Trail;
-
-    expect(stepsOf(tech, false).some((s) => s.command === 'pergunte')).toBe(false);
-    expect(stepsOf(tech, true).some((s) => s.command === 'pergunte')).toBe(true);
-    expect(stepsOf(tech, true).length - stepsOf(tech, false).length).toBe(1);
+      expect(steps.length, trail.persona).toBeGreaterThanOrEqual(4);
+      expect(steps.length, trail.persona).toBeLessThanOrEqual(6);
+      expect(steps.at(-1)?.kind, trail.persona).toBe('agir');
+    }
   });
 
   it('ids de passo únicos por trilha; rotas, comandos e ações existem', () => {
