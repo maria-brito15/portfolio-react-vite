@@ -118,4 +118,32 @@ export default [
       ],
     },
   },
+
+  // Conteúdo é dado puro (design TD-002): um `*.content.ts` só importa outro arquivo de conteúdo
+  // ou tipos (`import type`). Nada de função, componente nem biblioteca dentro do dado.
+  {
+    files: ['src/content/**/*.content.ts'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: "ImportDeclaration[importKind!='type'][source.value!=/[.]content$/]",
+          message: 'Arquivo de conteúdo só importa outro *.content ou usa `import type`.',
+        },
+        {
+          selector:
+            "ExportNamedDeclaration[source][exportKind!='type'][source.value!=/[.]content$/]",
+          message: 'Arquivo de conteúdo só reexporta de outro *.content ou usa `export type`.',
+        },
+        {
+          selector: "ExportAllDeclaration[exportKind!='type'][source.value!=/[.]content$/]",
+          message: 'Arquivo de conteúdo só reexporta de outro *.content ou usa `export type`.',
+        },
+        {
+          selector: 'ImportExpression',
+          message: 'Arquivo de conteúdo não usa import dinâmico.',
+        },
+      ],
+    },
+  },
 ];

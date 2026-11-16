@@ -4,9 +4,16 @@ import { seoPlugin } from './scripts/seoPlugin';
 import { assistantContextPlugin } from './scripts/assistantContext';
 import { buildInfo } from './scripts/buildInfo';
 import { personalGuardPlugin } from './scripts/personalGuard';
+import { contentGuardPlugin } from './scripts/contentGuard';
 
 export default defineConfig(({ command }) => ({
-  plugins: [react(), seoPlugin(), assistantContextPlugin(), personalGuardPlugin()],
+  plugins: [
+    react(),
+    seoPlugin(),
+    assistantContextPlugin(),
+    personalGuardPlugin(),
+    contentGuardPlugin(),
+  ],
   // Dados reais do build para o comando `stats` (src/data/build.ts).
   define: { __BUILD__: JSON.stringify(buildInfo(command)) },
   build: {
