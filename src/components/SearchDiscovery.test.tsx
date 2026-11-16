@@ -101,20 +101,3 @@ describe('"O que você procura?"', () => {
     await palette();
   });
 });
-
-describe('sugestões sem repetir', () => {
-  it('depois de visitar a página sugerida, ela não volta a ser sugerida', async () => {
-    localStorage.setItem(PERSONA_KEY, 'rh');
-    sessionStorage.setItem('portfolio-visited', JSON.stringify(['experiencias', 'contato']));
-    renderApp('/curriculo');
-
-    const nav = screen.getByRole('navigation', { name: /Para seguir|Keep exploring/ });
-    const hrefs = within(nav)
-      .getAllByRole('link')
-      .map((a) => a.getAttribute('href'));
-
-    expect(hrefs.length).toBeLessThanOrEqual(2);
-    expect(hrefs).not.toContain('/experiencias');
-    expect(hrefs).not.toContain('/contato');
-  });
-});

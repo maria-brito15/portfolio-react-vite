@@ -16,7 +16,6 @@ const ProfessionalOverview = lazy(() => import('../../experiences/recruiter/Prof
 const ArchitectureExplorer = lazy(() => import('../../experiences/tech/ArchitectureExplorer'));
 const AcademicTimeline = lazy(() => import('../../experiences/professor/AcademicTimeline'));
 const SolutionJourney = lazy(() => import('../../experiences/client/SolutionJourney'));
-const ExploreMode = lazy(() => import('../../experiences/explore/ExploreMode'));
 // O atalho do espaço pessoal só aparece para duas personas: também fica fora do JS inicial.
 const PersonalSpace = lazy(() => import('./PersonalSpace'));
 
@@ -76,12 +75,6 @@ export default function PersonaHomeSections() {
         return (
           <Suspense fallback={null}>
             <SolutionJourney {...text} />
-          </Suspense>
-        );
-      case 'explore':
-        return (
-          <Suspense fallback={null}>
-            <ExploreMode {...text} />
           </Suspense>
         );
     }

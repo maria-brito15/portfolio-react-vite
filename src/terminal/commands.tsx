@@ -31,7 +31,6 @@ import SectionView from './sectionViews';
 import { PageIndex, RunCommand, SectionNav } from './pageIndex';
 import { HIRE, extraCommands, hireResult, personaAnswer } from './extras';
 import type { Persona, PersonaId } from '../data/personas';
-import type { TrailValue } from '../trails/TrailProvider';
 
 const L = (pt: string, en: string): Localized => ({ pt, en });
 
@@ -57,8 +56,6 @@ export interface CommandContext {
   personaPending?: boolean;
   choosePersona?: (id: PersonaId) => void;
   clearPersona?: () => void;
-  // Estado das trilhas (comando `trilha`); só leitura e controles, sem efeito no replay.
-  trail?: TrailValue;
 }
 
 export interface CommandResult {

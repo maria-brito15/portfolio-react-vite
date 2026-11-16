@@ -4,9 +4,6 @@ import { findPageByPath } from './data/routes';
 import type { PersonaId } from './data/personas';
 import { TerminalProvider } from './terminal/TerminalSession';
 import { PersonaProvider, usePersona } from './hooks/usePersona';
-import { TrailProvider } from './trails/TrailProvider';
-import TourHost from './trails/TourHost';
-import SecretToast from './trails/SecretToast';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import {
@@ -91,16 +88,12 @@ export default function App() {
   return (
     <WindowProvider>
       <PersonaProvider>
-        <TrailProvider>
-          <TerminalProvider>
-            <Suspense fallback={null}>
-              <Page id={route?.id} persona={route?.persona} />
-            </Suspense>
-            <GlobalOverlays />
-            <TourHost />
-            <SecretToast />
-          </TerminalProvider>
-        </TrailProvider>
+        <TerminalProvider>
+          <Suspense fallback={null}>
+            <Page id={route?.id} persona={route?.persona} />
+          </Suspense>
+          <GlobalOverlays />
+        </TerminalProvider>
       </PersonaProvider>
     </WindowProvider>
   );

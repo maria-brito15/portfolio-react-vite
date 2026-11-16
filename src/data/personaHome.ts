@@ -23,7 +23,6 @@ export type HomeBlockId =
   | 'architecture'
   | 'timeline'
   | 'journey'
-  | 'explore'
   // "O que você procura?" (docs/specs/busca-contextual/): atalhos por intenção.
   | 'intents'
   // Espaço cultural (docs/specs/personal/): atalho para /pessoal, só quando a página não é rascunho.
@@ -182,7 +181,11 @@ export const personaHome: Record<PersonaId, PersonaHome> = {
       { route: 'terminal', label: L('Abrir o terminal', 'Open the terminal') },
     ],
     blocks: [
-      { id: 'explore' },
+      {
+        id: 'projects',
+        title: L('Projetos pessoais', 'Personal projects'),
+        projects: ['portfolio', 'planoriza', 'shorturl'],
+      },
       {
         id: 'personal',
         title: L('Pessoal', 'Personal'),
@@ -190,11 +193,6 @@ export const personaHome: Record<PersonaId, PersonaHome> = {
           'O que leio, assisto, ouço e vejo no palco, fora do código.',
           'What I read, watch, listen to and see on stage, beyond code.',
         ),
-      },
-      {
-        id: 'projects',
-        title: L('Projetos pessoais', 'Personal projects'),
-        projects: ['portfolio', 'planoriza', 'shorturl'],
       },
       { id: 'intents' },
       { id: 'quick', title: L('Todas as páginas', 'All pages') },

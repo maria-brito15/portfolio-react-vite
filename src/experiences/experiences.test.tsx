@@ -2,10 +2,7 @@ import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderApp } from '../test/helpers';
 import { PERSONA_KEY } from '../hooks/usePersona';
-import { TRAIL_KEY, resetTrailMemory } from '../trails/storage';
 import type { PersonaId } from '../data/personas';
-
-beforeEach(() => resetTrailMemory());
 
 const open = (id: PersonaId, lang?: 'en') => {
   localStorage.setItem(PERSONA_KEY, id);
@@ -133,27 +130,5 @@ describe('cliente: jornada de solução', () => {
     expect(document.getElementById('journey-result')).toHaveTextContent(
       'Ainda não há um exemplo publicado',
     );
-  });
-});
-
-describe('amigo: modo explorar', () => {
-  it('dicas em dois níveis, segredo achado e recomeço', async () => {
-    const user = userEvent.setup();
-
-    localStorage.setItem(TRAIL_KEY, JSON.stringify({ trails: {}, secrets: ['fortune'] }));
-    open('amigo');
-    await screen.findByRole('heading', { level: 2, name: 'Modo explorar' });
-
-    expect(screen.getByText(/1 de 7 segredos achados/)).toBeInTheDocument();
-    expect(screen.getByText(/Você achou “fortune”/)).toBeInTheDocument();
-
-    await user.click(screen.getAllByRole('button', { name: 'Dica' })[0]);
-    expect(screen.getAllByRole('button', { name: 'Mostrar como' })).toHaveLength(1);
-    await user.click(screen.getByRole('button', { name: 'Mostrar como' }));
-    expect(screen.queryAllByRole('button', { name: 'Mostrar como' })).toHaveLength(0);
-
-    await user.click(screen.getByRole('button', { name: 'Recomeçar a exploração' }));
-    expect(screen.getByText(/0 de 7 segredos achados/)).toBeInTheDocument();
-    expect(screen.queryByText(/Você achou “/)).toBeNull();
   });
 });

@@ -2,10 +2,8 @@ import { readFileSync } from 'node:fs';
 import { academics } from './academics';
 import { archEdges, archNodes, layers } from './architecture';
 import { clientNeeds } from './clientJourney';
-import { exploreHints } from './explore';
 import { routeById } from './routes';
 import { projects } from './projects';
-import { secrets } from './trails';
 import { services } from './services';
 import { experienceGroups } from './experiences';
 import { buildAcademicTimeline, filterActivities } from '../utils/academicTimeline';
@@ -74,18 +72,6 @@ describe('jornada do cliente', () => {
 
         for (const id of n.projects) expect(projects.map((p) => p.id)).toContain(id);
       }
-    }
-  });
-});
-
-describe('modo explorar', () => {
-  it('todo segredo da trilha tem dica, e os destinos existem', () => {
-    for (const s of secrets) {
-      const hint = exploreHints[s.id];
-
-      expect(hint, s.id).toBeDefined();
-      expect(hint.hint.pt && hint.hint.en && hint.how.pt && hint.how.en).toBeTruthy();
-      expect(routeById(hint.next.route), s.id).toBeDefined();
     }
   });
 });

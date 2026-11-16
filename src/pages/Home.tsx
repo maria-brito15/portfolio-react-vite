@@ -8,7 +8,6 @@ import { usePersona } from '../hooks/usePersona';
 import { useDocumentMeta } from '../hooks/useDocumentMeta';
 import SiteShell from '../components/shell/SiteShell';
 import PersonaPrompt from '../components/PersonaPrompt';
-import TrailCard from '../trails/TrailCard';
 import PersonaHomeSections from '../components/dashboard/PersonaHomeSections';
 
 // A home é o painel do workspace: apresentação, foco atual e os blocos da composição da
@@ -67,7 +66,6 @@ export default function Home({ routeId = 'home' }: { routeId?: string }) {
         </header>
 
         <PersonaPrompt />
-        <TrailCard />
         <PersonaHomeSections />
       </div>
     </SiteShell>

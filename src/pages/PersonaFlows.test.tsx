@@ -1,32 +1,12 @@
 import { screen } from '@testing-library/react';
 import { renderApp } from '../test/helpers';
 import { PERSONA_KEY } from '../hooks/usePersona';
-import { TRAIL_KEY, resetTrailMemory } from '../trails/storage';
 import { PERSONA_IDS } from '../data/personas';
 
 // Fluxos da Fase 6: trocar de persona sem perder progresso, rota direta e armazenamento
 // indisponível. O comportamento principal de cada persona tem seus testes (home, projetos,
 // próximos passos, experiências e busca); aqui ficam os que cruzam várias delas.
-const store = {
-  trails: { rh: { step: 2, done: ['resumo', 'competencias'], finished: false, dismissed: false } },
-  secrets: ['fortune'],
-};
-
-beforeEach(() => resetTrailMemory());
-
 describe('troca de persona', () => {
-  it('trocar e voltar não zera o progresso das trilhas nem os segredos achados', () => {
-    localStorage.setItem(TRAIL_KEY, JSON.stringify(store));
-
-    for (const persona of ['rh', 'tech', 'amigo', 'rh']) {
-      localStorage.setItem(PERSONA_KEY, persona);
-      renderApp('/').unmount();
-      resetTrailMemory();
-    }
-
-    expect(JSON.parse(localStorage.getItem(TRAIL_KEY)!)).toEqual(store);
-  });
-
   it.each(PERSONA_IDS)('/r/%s aplica a persona e a mantém ao abrir a home', (id) => {
     const view = renderApp(`/r/${id}`);
 

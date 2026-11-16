@@ -10,7 +10,6 @@ import Breadcrumb from './Breadcrumb';
 import ViewActions from './ViewActions';
 import Footer from './Footer';
 import Taskbar from './Taskbar';
-import PageNext from '../PageNext';
 
 // Propriedades do esqueleto das páginas.
 export interface SiteShellProps {
@@ -113,7 +112,6 @@ export default function SiteShell({
                   {children}
                 </Window>
                 {after}
-                {routeId && !terminal && <PageNext routeId={routeId} />}
               </>
             )}
           </section>

@@ -3,13 +3,11 @@ import {
   useContext,
   useEffect,
   useMemo,
-  useRef,
   useState,
   type ReactNode,
 } from 'react';
 import type { Lang } from '../types';
 import { ui } from './ui';
-import { emitTrailEvent } from '../trails/events';
 
 const STORAGE_KEY = 'portfolio-lang';
 interface LanguageValue {
@@ -36,13 +34,9 @@ function readStoredLanguage(): Lang {
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [lang, setLang] = useState<Lang>(readStoredLanguage);
-  const previous = useRef(lang);
 
   useEffect(() => {
     document.documentElement.lang = lang === 'pt' ? 'pt-BR' : 'en';
-    // Troca de idioma (não a carga inicial) conta como segredo achado nas trilhas.
-    if (previous.current !== lang) emitTrailEvent({ type: 'lang' });
-    previous.current = lang;
     try {
       localStorage.setItem(STORAGE_KEY, lang);
     } catch {
