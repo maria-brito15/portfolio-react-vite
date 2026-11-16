@@ -9,6 +9,7 @@
     "typecheck": "tsc --noEmit",
     "preview": "vite preview --host 0.0.0.0",
     "lint": "eslint .",
+    "verify": "node scripts/verify.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
     "ask:eval": "vitest run scripts/askEvals.live.test.ts",
