@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Acadêmico — tema escuro</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0E0E10;font-family:'IBM Plex Sans',system-ui,sans-serif}
+a{color:#8F98FF}a:hover{color:#ECECEE}
+</style>
+</helmet>
+<div style="background:#0E0E10;color:#ECECEE;font-family:'IBM Plex Sans',system-ui,sans-serif;min-height:2400px">
+  <div style="background:#ECECEE;color:#0E0E10;font-family:'IBM Plex Mono',monospace;font-size:12px;padding:8px 56px">MOCKUP · /academico · formação, atividades, disciplinas e notas como estão no site atual · você decide se mantém as notas visíveis</div>
+  <div aria-hidden="true" style="display:flex;height:6px"><span style="flex:1;background:#8F98FF"></span><span style="flex:1;background:#FF8FCB"></span><span style="flex:1;background:#4FD1D9"></span><span style="flex:1;background:#FFA36B"></span><span style="flex:1;background:#FFD84D"></span></div>
+
+  <header style="max-width:1280px;margin:0 auto;box-sizing:border-box;padding:20px 56px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid #2C2C32">
+    <a href="#" style="font-family:'IBM Plex Mono',monospace;font-weight:500;font-size:18px;color:#ECECEE;text-decoration:none;min-height:44px;display:inline-flex;align-items:center">duda<span style="color:{{accent}}">/</span>portfólio</a>
+    <nav aria-label="Principal" style="display:flex;flex-wrap:wrap;gap:4px">
+      <a href="#" style="color:#A3A3AC;text-decoration:none;padding:0 14px;min-height:44px;display:inline-flex;align-items:center">Projetos</a>
+      <a href="#" style="color:#A3A3AC;text-decoration:none;padding:0 14px;min-height:44px;display:inline-flex;align-items:center">Casos</a>
+      <a href="#" style="color:#A3A3AC;text-decoration:none;padding:0 14px;min-height:44px;display:inline-flex;align-items:center">Currículo</a>
+      <a href="#" aria-current="page" style="color:#ECECEE;text-decoration:none;font-weight:600;padding:0 14px;min-height:44px;display:inline-flex;align-items:center;border-bottom:2px solid {{accent}}">Acadêmico</a>
+      <a href="#" style="color:#A3A3AC;text-decoration:none;padding:0 14px;min-height:44px;display:inline-flex;align-items:center">Contato</a>
+      <a href="#" style="color:#A3A3AC;text-decoration:none;padding:0 14px;min-height:44px;display:inline-flex;align-items:center">Pessoal</a>
+    </nav>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button type="button" aria-label="Mudar para o tema claro" style="min-height:44px;min-width:44px;padding:0 14px;background:#17171A;color:#ECECEE;border:1px solid #7A7A84;border-radius:6px;font-family:'IBM Plex Mono',monospace;font-size:13px;cursor:pointer">Claro</button>
+      <div role="group" aria-label="Idioma" style="display:flex">
+        <button type="button" aria-pressed="true" style="min-height:44px;min-width:44px;background:#ECECEE;color:#0E0E10;border:1px solid #ECECEE;border-radius:6px 0 0 6px;font-family:'IBM Plex Mono',monospace;font-size:13px;cursor:pointer">PT</button>
+        <button type="button" aria-pressed="false" style="min-height:44px;min-width:44px;background:#17171A;color:#ECECEE;border:1px solid #7A7A84;border-left:0;border-radius:0 6px 6px 0;font-family:'IBM Plex Mono',monospace;font-size:13px;cursor:pointer">EN</button>
+      </div>
+    </div>
+  </header>
+
+  <main style="max-width:1280px;margin:0 auto;box-sizing:border-box;padding:0 56px 72px">
+    <section style="padding:48px 0 32px">
+      <h1 style="margin:0;font-size:48px;line-height:1.05;letter-spacing:-0.02em;font-weight:600">Acadêmico</h1>
+      <p style="margin:12px 0 0;font-size:18px;line-height:1.55;color:#A3A3AC;max-width:640px">A formação em ordem: o que estudo, o que fiz em cada ano e as disciplinas cursadas.</p>
+    </section>
+
+    <section aria-labelledby="form" style="margin-bottom:48px">
+      <h2 id="form" style="margin:0 0 16px;font-size:22px;font-weight:600">Formação</h2>
+      <ul style="list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px">
+        <sc-for list="{{programs}}" as="p" hint-placeholder-count="2">
+          <li style="background:#17171A;border:1px solid #2C2C32;border-top:4px solid {{p.color}};padding:20px 22px">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:{{p.color}}">{{p.state}}</div>
+            <div style="margin-top:6px;font-size:20px;font-weight:600;line-height:1.3">{{p.degree}}</div>
+            <div style="margin-top:6px;font-family:'IBM Plex Mono',monospace;font-size:13px;color:#A3A3AC">{{p.inst}} · {{p.years}}</div>
+          </li>
+        </sc-for>
+      </ul>
+      <ol style="list-style:none;margin:28px 0 0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border-top:2px solid #7A7A84">
+        <sc-for list="{{timeline}}" as="t" hint-placeholder-count="3">
+          <li style="padding:14px 16px 0 0;position:relative">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:500;color:{{accent}}">{{t.year}}</div>
+            <div style="margin-top:4px;font-size:15px;color:#ECECEE">{{t.label}}</div>
+          </li>
+        </sc-for>
+      </ol>
+    </section>
+
+    <section aria-labelledby="atv" style="margin-bottom:48px">
+      <h2 id="atv" style="margin:0 0 16px;font-size:22px;font-weight:600">O que fiz em cada ano</h2>
+      <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px">
+        <sc-for list="{{years}}" as="y" hint-placeholder-count="2">
+          <div style="border:1px solid #2C2C32;padding:20px 22px">
+            <h3 style="margin:0 0 12px;font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:500;color:{{accent}}">{{y.year}}</h3>
+            <ul style="list-style:none;margin:0;padding:0;display:grid;gap:10px">
+              <sc-for list="{{y.items}}" as="i" hint-placeholder-count="4">
+                <li style="display:grid;grid-template-columns:84px 1fr;gap:12px;align-items:baseline;font-size:15px;line-height:1.4">
+                  <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.06em;border:1px solid #7A7A84;padding:1px 6px;text-align:center">{{i.kind}}</span>
+                  <a href="#" style="color:#ECECEE">{{i.label}}</a>
+                </li>
+              </sc-for>
+            </ul>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <section aria-labelledby="disc">
+      <div style="display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:16px">
+        <h2 id="disc" style="margin:0;font-size:22px;font-weight:600">Disciplinas e notas</h2>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#A3A3AC">só disciplinas aprovadas · nota de 0 a 100 · carga horária e modalidade aparecem como — até você informar</span>
+      </div>
+      <div style="display:grid;gap:16px">
+        <sc-for list="{{semesters}}" as="s" hint-placeholder-count="4">
+          <article style="background:#17171A;border:1px solid #2C2C32;padding:20px 22px">
+            <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;align-items:baseline;margin-bottom:10px">
+              <h3 style="margin:0;font-size:17px;font-weight:600">{{s.label}} <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:400;color:#A3A3AC">· {{s.program}}</span></h3>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:{{accent}}">{{s.avg}}</span>
+            </div>
+            <table style="width:100%;border-collapse:collapse;font-size:14px;line-height:1.4">
+              <thead><tr>
+                <th scope="col" style="text-align:left;padding:8px 10px 8px 0;border-bottom:1px solid #7A7A84;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:500">Disciplina</th>
+                <th scope="col" style="text-align:right;padding:8px 10px;border-bottom:1px solid #7A7A84;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:500;width:80px">Horas</th>
+                <th scope="col" style="text-align:right;padding:8px 10px;border-bottom:1px solid #7A7A84;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:500;width:110px">Modalidade</th>
+                <th scope="col" style="text-align:right;padding:8px 0 8px 10px;border-bottom:1px solid #7A7A84;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:500;width:70px">Nota</th>
+              </tr></thead>
+              <tbody>
+                <sc-for list="{{s.courses}}" as="c" hint-placeholder-count="5">
+                  <tr>
+                    <th scope="row" style="text-align:left;font-weight:400;padding:9px 10px 9px 0;border-bottom:1px solid #2C2C32">{{c.name}}</th>
+                    <td style="text-align:right;padding:9px 10px;border-bottom:1px solid #2C2C32;font-family:'IBM Plex Mono',monospace;color:#A3A3AC">—</td>
+                    <td style="text-align:right;padding:9px 10px;border-bottom:1px solid #2C2C32;font-family:'IBM Plex Mono',monospace;color:#A3A3AC">—</td>
+                    <td style="text-align:right;padding:9px 0 9px 10px;border-bottom:1px solid #2C2C32;font-family:'IBM Plex Mono',monospace">{{c.grade}}</td>
+                  </tr>
+                </sc-for>
+              </tbody>
+            </table>
+            <p style="margin:10px 0 0;font-size:13px;color:#A3A3AC">{{s.foot}}</p>
+          </article>
+        </sc-for>
+      </div>
+    </section>
+  </main>
+
+  <footer style="max-width:1280px;margin:0 auto;box-sizing:border-box;padding:56px 56px 48px;border-top:2px solid #7A7A84;text-align:center;font-family:'IBM Plex Mono',monospace;color:#A3A3AC">
+    <div style="font-size:12px;letter-spacing:0.3em">UM PORTFÓLIO DE ENGENHARIA</div>
+    <div style="font-size:44px;font-weight:500;letter-spacing:0.18em;color:#ECECEE;margin:14px 0 22px;line-height:1.1">DIRECTED BY DUDA</div>
+    <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:6px 18px;max-width:640px;margin:0 auto;font-size:12px;letter-spacing:0.08em;line-height:1.7">
+      <span style="text-align:right">ROTEIRO E CÓDIGO</span><span style="text-align:left;color:#ECECEE">Duda</span>
+      <span style="text-align:right">ELENCO</span><span style="text-align:left;color:#ECECEE">React 19 · Vite 6 · TypeScript</span>
+      <span style="text-align:right">TRILHA SONORA</span><span style="text-align:left;color:#ECECEE">[sua playlist]</span>
+      <span style="text-align:right">FILMADO EM</span><span style="text-align:left;color:#ECECEE">Belo Horizonte, MG</span>
+    </div>
+    <div style="margin-top:26px;font-size:12px;letter-spacing:0.3em">FIM</div>
+    <div style="margin-top:18px;font-size:12px">© 2026 Duda · sem rastreadores · PT · EN</div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#8F98FF","options":["#8F98FF","#E58AC8","#5CC8D2","#F0A070"]},"$preview":{"width":1280,"height":2400}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const mk = (rows) => rows.map(([name, grade]) => ({ name, grade }));
+    return {
+      accent: this.props.accent ?? '#8F98FF',
+      programs: [
+        { state: 'CURSADO ATÉ 2026', color: '#FFA36B', degree: 'Bacharelado em Ciência da Computação', inst: 'PUC Minas', years: '2025–2026' },
+        { state: 'EM ANDAMENTO · PREVISÃO 2029', color: '#4FD1D9', degree: 'Bacharelado em Engenharia de Software', inst: 'PUC Minas', years: '2026–2029' }
+      ],
+      timeline: [
+        { year: '2025', label: 'Início em Ciência da Computação' },
+        { year: '2026', label: 'Engenharia de Software' },
+        { year: '2029', label: 'Previsão de conclusão' }
+      ],
+      years: [
+        { year: '2025', items: [
+          { kind: 'PROJETO', label: 'Planoriza' }, { kind: 'EXPERIÊNCIA', label: 'Palestrante de Computação · PUC Minas' },
+          { kind: 'PROJETO', label: 'EcoShop' }, { kind: 'EXPERIÊNCIA', label: 'Maratona de Programação · SBC — ICPC Brasil' } ] },
+        { year: '2026', items: [
+          { kind: 'EXPERIÊNCIA', label: 'Imersão — Análise de Dados com Python · Alura' }, { kind: 'EXPERIÊNCIA', label: 'Desenvolvimento Web · DevArt' },
+          { kind: 'EXPERIÊNCIA', label: 'Monitoria — Desenvolvimento de Interfaces Web' }, { kind: 'EXPERIÊNCIA', label: 'Projeto de Extensão · WebTech' } ] }
+      ],
+      semesters: [
+        { label: '01/2025', program: 'Ciência da Computação', avg: 'média 82,0 · 7 disciplinas', foot: '', courses: mk([
+          ['Algoritmos e Estruturas de Dados I', 75], ['Cálculo I', 60], ['Desenvolvimento de Interfaces Web', 99], ['Filosofia: Razão e Modernidade', 90],
+          ['Introdução à Computação', 73], ['Laboratório de Iniciação à Programação', 87], ['Trabalho Interdisciplinar I: Front-end', 90] ]) },
+        { label: '02/2025', program: 'Ciência da Computação', avg: 'média 85,4 · 5 disciplinas', foot: '', courses: mk([
+          ['Algoritmos e Estruturas de Dados II', 64], ['Cultura Religiosa: Fenômeno Religioso', 95], ['Engenharia de Software I', 86],
+          ['Gerenciamento de Projetos', 90], ['Trabalho Interdisciplinar II: Back-end', 92] ]) },
+        { label: '01/2026', program: 'Ciência da Computação', avg: 'média 71,8 · 5 disciplinas', foot: '', courses: mk([
+          ['Algoritmos e Estruturas de Dados III', 60], ['Banco de Dados', 62], ['Engenharia de Software II', 85],
+          ['Impactos Ambientais e Alterações Climáticas Globais', 83], ['Trabalho Interdisciplinar III: Pesquisa Aplicada', 69] ]) },
+        { label: '02/2026', program: 'Engenharia de Software · em andamento', avg: 'em andamento', foot: 'Nenhuma disciplina concluída ainda neste semestre.', courses: [] }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

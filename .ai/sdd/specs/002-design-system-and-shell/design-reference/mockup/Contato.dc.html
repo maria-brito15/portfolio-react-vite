@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Contato — tema claro</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'IBM Plex Sans',system-ui,sans-serif}
+a{color:#2B36D9}a:hover{color:#17171A}
+.cv{background:#FFD9C7}li:nth-child(6n+2) .cv{background:#E4E1FF}li:nth-child(6n+3) .cv{background:#C9EDD8}li:nth-child(6n+4) .cv{background:#FFEEA8}li:nth-child(6n+5) .cv{background:#CFE8FF}li:nth-child(6n+6) .cv{background:#FFD3E8}.c1{background:#E4E1FF}.c2{background:#FFD9C7}.c3{background:#C9EDD8}.c4{background:#FFEEA8}.ch li:nth-child(1) a{background:#FFD9C7}.ch li:nth-child(2) a{background:#E4E1FF}.ch li:nth-child(3) a{background:#C9EDD8}</style>
+</helmet>
+<div style="background:#FFF7EA;color:#17171A;font-family:'IBM Plex Sans',system-ui,sans-serif;min-height:1500px">
+  <div style="background:#17171A;color:#ECECEE;font-family:'IBM Plex Mono',monospace;font-size:12px;padding:8px 56px">MOCKUP · /contato · texto e canais reais do site atual · o formulário aparece com um erro de validação e o estado de sucesso, para revisar os dois</div>
+  <div aria-hidden="true" style="display:flex;height:6px"><span style="flex:1;background:#2B36D9"></span><span style="flex:1;background:#B4308A"></span><span style="flex:1;background:#0A6E78"></span><span style="flex:1;background:#B4410F"></span><span style="flex:1;background:#E0A800"></span></div>
+
+  <header style="max-width:1280px;margin:0 auto;box-sizing:border-box;padding:20px 56px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid #D9D9D4">
+    <a href="#" style="font-family:'IBM Plex Mono',monospace;font-weight:500;font-size:18px;color:#17171A;text-decoration:none;min-height:44px;display:inline-flex;align-items:center">duda<span style="color:{{accent}}">/</span>portfólio</a>
+    <nav aria-label="Principal" style="display:flex;flex-wrap:wrap;gap:4px">
+      <a href="#" style="color:#585861;text-decoration:none;padding:0 14px;min-height:44px;display:inline-flex;align-items:center">Projetos</a>
+      <a href="#" style="color:#585861;text-decoration:none;padding:0 14px;min-height:44px;display:inline-flex;align-items:center">Casos</a>
+      <a href="#" style="color:#585861;text-decoration:none;padding:0 14px;min-height:44px;display:inline-flex;align-items:center">Currículo</a>
+      <a href="#" style="color:#585861;text-decoration:none;padding:0 14px;min-height:44px;display:inline-flex;align-items:center">Acadêmico</a>
+      <a href="#" aria-current="page" style="color:#17171A;text-decoration:none;font-weight:600;padding:0 14px;min-height:44px;display:inline-flex;align-items:center;border-bottom:2px solid {{accent}}">Contato</a>
+      <a href="#" style="color:#585861;text-decoration:none;padding:0 14px;min-height:44px;display:inline-flex;align-items:center">Pessoal</a>
+    </nav>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button type="button" aria-label="Mudar para o tema escuro" style="min-height:44px;min-width:44px;padding:0 14px;background:#FFFFFF;color:#17171A;border:1px solid #77777F;border-radius:6px;font-family:'IBM Plex Mono',monospace;font-size:13px;cursor:pointer">Escuro</button>
+      <div role="group" aria-label="Idioma" style="display:flex">
+        <button type="button" aria-pressed="true" style="min-height:44px;min-width:44px;background:#17171A;color:#FFF7EA;border:1px solid #17171A;border-radius:6px 0 0 6px;font-family:'IBM Plex Mono',monospace;font-size:13px;cursor:pointer">PT</button>
+        <button type="button" aria-pressed="false" style="min-height:44px;min-width:44px;background:#FFFFFF;color:#17171A;border:1px solid #77777F;border-left:0;border-radius:0 6px 6px 0;font-family:'IBM Plex Mono',monospace;font-size:13px;cursor:pointer">EN</button>
+      </div>
+    </div>
+  </header>
+
+  <main style="max-width:1280px;margin:0 auto;box-sizing:border-box;padding:0 56px 72px">
+    <section style="padding:56px 0 40px;max-width:720px">
+      <p style="margin:0 0 8px;font-family:'IBM Plex Mono',monospace;font-size:13px;color:#585861">Contato</p>
+      <h1 style="margin:0;font-size:56px;line-height:1.05;letter-spacing:-0.025em;font-weight:600">Vamos <span style="color:{{accent}}">conversar?</span></h1>
+      <p style="margin:18px 0 0;font-size:20px;line-height:1.55;color:#585861">Se tiver alguma oportunidade, colaboração ou projeto que ache que combina comigo, me chama.</p>
+    </section>
+
+    <div style="display:flex;flex-wrap:wrap;gap:48px;align-items:flex-start">
+      <section aria-labelledby="canais" style="flex:1 1 300px;min-width:0">
+        <h2 id="canais" style="margin:0 0 14px;font-size:14px;letter-spacing:0.08em;font-family:'IBM Plex Mono',monospace;font-weight:500;color:#585861">CANAIS DIRETOS</h2>
+        <ul class="ch" style="list-style:none;margin:0;padding:0;display:grid;gap:12px">
+          <sc-for list="{{canais}}" as="c" hint-placeholder-count="3">
+            <li><a href="#" style="display:block;border:1px solid #D9D9D4;padding:16px 18px;text-decoration:none;color:#17171A;min-height:44px;box-sizing:border-box">
+              <span style="display:block;font-family:'IBM Plex Mono',monospace;font-size:12px;color:#585861">{{c.k}}</span>
+              <span style="display:block;margin-top:4px;font-size:16px;font-weight:600;overflow-wrap:anywhere">{{c.v}}</span>
+            </a></li>
+          </sc-for>
+        </ul>
+        <p style="margin:18px 0 0;font-size:14px;line-height:1.6;color:#585861">Respondo por e-mail. O formulário ao lado envia a mesma mensagem para a minha caixa de entrada.</p>
+      </section>
+
+      <section aria-labelledby="form" style="flex:2 1 520px;min-width:0;background:#FFFFFF;border:1px solid #D9D9D4;padding:28px 30px;max-width:720px">
+        <h2 id="form" style="margin:0 0 20px;font-size:22px;font-weight:600">Enviar uma mensagem</h2>
+        <form novalidate style="display:grid;gap:20px">
+          <div>
+            <label for="nome" style="display:block;font-weight:600;font-size:15px;margin-bottom:6px">Nome</label>
+            <input id="nome" name="nome" type="text" maxlength="100" required aria-required="true" value="Ana Souza" style="width:100%;box-sizing:border-box;min-height:48px;padding:0 14px;font-size:16px;font-family:'IBM Plex Sans',system-ui,sans-serif;background:#FFFFFF;color:#17171A;border:1px solid #77777F;border-radius:6px">
+          </div>
+          <div>
+            <label for="email" style="display:block;font-weight:600;font-size:15px;margin-bottom:6px">E-mail</label>
+            <input id="email" name="email" type="email" required aria-required="true" aria-invalid="true" aria-describedby="email-erro" value="ana.souza@" style="width:100%;box-sizing:border-box;min-height:48px;padding:0 14px;font-size:16px;font-family:'IBM Plex Sans',system-ui,sans-serif;background:#FFFFFF;color:#17171A;border:2px solid #B3261E;border-radius:6px">
+            <p id="email-erro" style="margin:6px 0 0;font-size:14px;color:#B3261E;font-weight:500"><span aria-hidden="true">⚠ </span>Esse e-mail parece incompleto. Confira se tem o @ e o domínio.</p>
+          </div>
+          <div>
+            <label for="msg" style="display:block;font-weight:600;font-size:15px;margin-bottom:6px">Mensagem</label>
+            <textarea id="msg" name="mensagem" maxlength="5000" required aria-required="true" aria-describedby="msg-ajuda" rows="6" style="width:100%;box-sizing:border-box;padding:12px 14px;font-size:16px;line-height:1.5;font-family:'IBM Plex Sans',system-ui,sans-serif;background:#FFFFFF;color:#17171A;border:1px solid #77777F;border-radius:6px;resize:vertical">Oi, Duda! Vi o seu estudo de caso do WhatsApp Dispatcher e gostaria de conversar sobre uma vaga de estágio.</textarea>
+            <p id="msg-ajuda" style="margin:6px 0 0;font-family:'IBM Plex Mono',monospace;font-size:12px;color:#585861;text-align:right">104 / 5000</p>
+          </div>
+          <div style="position:absolute;left:-9999px" aria-hidden="true"><label>Não preencha este campo <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+          <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:center">
+            <button type="submit" style="min-height:48px;padding:0 26px;background:{{accent}};color:#FFFFFF;border:0;border-radius:6px;font-weight:600;font-size:16px;font-family:'IBM Plex Sans',system-ui,sans-serif;cursor:pointer">Enviar mensagem</button>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#585861">Seus dados só servem para eu responder.</span>
+          </div>
+        </form>
+
+        <div role="status" style="margin-top:28px;border-top:1px dashed #77777F;padding-top:20px">
+          <p style="margin:0 0 8px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:#585861">ESTADO APÓS ENVIAR (exemplo)</p>
+          <div style="background:#FFF7EA;border:1px solid #D9D9D4;border-left:3px solid #1B6B3A;padding:14px 18px;font-size:15px;line-height:1.55"><span aria-hidden="true" style="color:#1B6B3A;font-weight:600">✓ </span><strong>Mensagem enviada.</strong> Obrigada! Respondo no e-mail que você informou.</div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer style="max-width:1280px;margin:0 auto;box-sizing:border-box;padding:56px 56px 48px;border-top:2px solid #17171A;text-align:center;font-family:'IBM Plex Mono',monospace;color:#585861">
+    <div style="font-size:12px;letter-spacing:0.3em">UM PORTFÓLIO DE ENGENHARIA</div>
+    <div style="font-size:44px;font-weight:500;letter-spacing:0.18em;color:#17171A;margin:14px 0 22px;line-height:1.1">DIRECTED BY DUDA</div>
+    <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:6px 18px;max-width:640px;margin:0 auto;font-size:12px;letter-spacing:0.08em;line-height:1.7">
+      <span style="text-align:right">ROTEIRO E CÓDIGO</span><span style="text-align:left;color:#17171A">Duda</span>
+      <span style="text-align:right">ELENCO</span><span style="text-align:left;color:#17171A">React 19 · Vite 6 · TypeScript</span>
+      <span style="text-align:right">TRILHA SONORA</span><span style="text-align:left;color:#17171A">[sua playlist]</span>
+      <span style="text-align:right">FILMADO EM</span><span style="text-align:left;color:#17171A">Belo Horizonte, MG</span>
+    </div>
+    <div style="margin-top:26px;font-size:12px;letter-spacing:0.3em">FIM</div>
+    <div style="margin-top:18px;font-size:12px">© 2026 Duda · sem rastreadores · PT · EN</div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#2B36D9","options":["#2B36D9","#B4308A","#0A6E78","#B4410F"]},"$preview":{"width":1280,"height":1500}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      accent: this.props.accent ?? '#2B36D9',
+      canais: [
+        { k: 'E-mail', v: 'mariaeduardadepaulabrito@gmail.com' },
+        { k: 'GitHub', v: 'github.com/maria-brito15' },
+        { k: 'LinkedIn', v: 'linkedin.com/in/maria-eduarda-brito-a18064358' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

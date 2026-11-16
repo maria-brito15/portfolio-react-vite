@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Filmes — Letterboxd</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'IBM Plex Sans',system-ui,sans-serif}
+a{color:#2B36D9}a:hover{color:#17171A}
+.cv{background:#FFD9C7}li:nth-child(6n+2) .cv{background:#E4E1FF}li:nth-child(6n+3) .cv{background:#C9EDD8}li:nth-child(6n+4) .cv{background:#FFEEA8}li:nth-child(6n+5) .cv{background:#CFE8FF}li:nth-child(6n+6) .cv{background:#FFD3E8}.c1{background:#E4E1FF}.c2{background:#FFD9C7}.c3{background:#C9EDD8}.c4{background:#FFEEA8}</style>
+</helmet>
+<div style="background:#FFF7EA;color:#17171A;font-family:'IBM Plex Sans',system-ui,sans-serif;min-height:1700px">
+  <div style="background:#17171A;color:#ECECEE;font-family:'IBM Plex Mono',monospace;font-size:12px;padding:8px 56px">MOCKUP · /pessoal/filmes · dados do Letterboxd (diário e avaliações) · títulos, notas e pôsteres são [exemplos] · fonte dos dados ainda a decidir (ver aviso)</div>
+  <div aria-hidden="true" style="display:flex;height:6px"><span style="flex:1;background:#2B36D9"></span><span style="flex:1;background:#B4308A"></span><span style="flex:1;background:#0A6E78"></span><span style="flex:1;background:#B4410F"></span><span style="flex:1;background:#E0A800"></span></div>
+
+  <header style="max-width:1280px;margin:0 auto;box-sizing:border-box;padding:20px 56px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid #D9D9D4">
+    <a href="#" style="font-family:'IBM Plex Mono',monospace;font-weight:500;font-size:18px;color:#17171A;text-decoration:none;min-height:44px;display:inline-flex;align-items:center">duda<span style="color:{{accent}}">/</span>portfólio</a>
+    <nav aria-label="Principal" style="display:flex;flex-wrap:wrap;gap:4px">
+      <a href="#" style="color:#585861;text-decoration:none;padding:0 14px;min-height:44px;display:inline-flex;align-items:center">Projetos</a>
+      <a href="#" style="color:#585861;text-decoration:none;padding:0 14px;min-height:44px;display:inline-flex;align-items:center">Casos</a>
+      <a href="#" style="color:#585861;text-decoration:none;padding:0 14px;min-height:44px;display:inline-flex;align-items:center">Currículo</a>
+      <a href="#" style="color:#585861;text-decoration:none;padding:0 14px;min-height:44px;display:inline-flex;align-items:center">Acadêmico</a>
+      <a href="#" style="color:#585861;text-decoration:none;padding:0 14px;min-height:44px;display:inline-flex;align-items:center">Contato</a>
+      <a href="#" aria-current="page" style="color:#17171A;text-decoration:none;font-weight:600;padding:0 14px;min-height:44px;display:inline-flex;align-items:center;border-bottom:2px solid {{accent}}">Pessoal</a>
+    </nav>
+    <div role="group" aria-label="Idioma" style="display:flex">
+      <button type="button" aria-pressed="true" style="min-height:44px;min-width:44px;background:#17171A;color:#FFF7EA;border:1px solid #17171A;border-radius:6px 0 0 6px;font-family:'IBM Plex Mono',monospace;font-size:13px;cursor:pointer">PT</button>
+      <button type="button" aria-pressed="false" style="min-height:44px;min-width:44px;background:#FFFFFF;color:#17171A;border:1px solid #77777F;border-left:0;border-radius:0 6px 6px 0;font-family:'IBM Plex Mono',monospace;font-size:13px;cursor:pointer">EN</button>
+    </div>
+  </header>
+
+  <main style="max-width:1280px;margin:0 auto;box-sizing:border-box;padding:0 56px 72px">
+    <nav aria-label="Pessoal" style="display:flex;flex-wrap:wrap;gap:8px;padding:28px 0 0">
+      <a href="#" style="min-height:44px;display:inline-flex;align-items:center;padding:0 18px;border:1px solid #77777F;color:#17171A;text-decoration:none;font-size:15px;border-radius:6px">Bastidores</a>
+      <a href="#" aria-current="page" style="min-height:44px;display:inline-flex;align-items:center;padding:0 18px;background:#17171A;color:#FFF7EA;text-decoration:none;font-size:15px;border-radius:6px">Filmes</a>
+      <a href="#" style="min-height:44px;display:inline-flex;align-items:center;padding:0 18px;border:1px solid #77777F;color:#17171A;text-decoration:none;font-size:15px;border-radius:6px">Livros</a>
+      <a href="#" style="min-height:44px;display:inline-flex;align-items:center;padding:0 18px;border:1px solid #77777F;color:#17171A;text-decoration:none;font-size:15px;border-radius:6px">Música</a>
+    </nav>
+
+    <section style="padding:32px 0 24px;display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;align-items:flex-end">
+      <div style="max-width:640px">
+        <h1 style="margin:0;font-size:48px;line-height:1.05;letter-spacing:-0.02em;font-weight:600">Filmes</h1>
+        <p style="margin:12px 0 0;font-size:18px;line-height:1.55;color:#585861">O que assisti e o que achei, direto do meu Letterboxd. Cada filme tem a nota que dei e a data em que vi.</p>
+      </div>
+      <a href="#" style="display:inline-flex;align-items:center;min-height:44px;font-family:'IBM Plex Mono',monospace;font-size:13px">Ver perfil no Letterboxd ↗</a>
+    </section>
+
+    <section aria-label="Resumo" style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:36px">
+      <sc-for list="{{stats}}" as="s" hint-placeholder-count="4">
+        <div class="{{s.c}}" style="border:1px solid #D9D9D4;padding:16px 18px">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:28px;font-weight:500">{{s.v}}</div>
+          <div style="margin-top:2px;font-size:13px;color:#585861">{{s.k}}</div>
+        </div>
+      </sc-for>
+    </section>
+
+    <section aria-labelledby="fav" style="margin-bottom:44px">
+      <h2 id="fav" style="margin:0 0 14px;font-size:14px;letter-spacing:0.08em;font-family:'IBM Plex Mono',monospace;font-weight:500;color:#585861">FILMES FAVORITOS</h2>
+      <ul style="list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px">
+        <sc-for list="{{fav}}" as="f" hint-placeholder-count="4">
+          <li>
+            <div class="cv" role="img" aria-label="Pôster de exemplo" style="aspect-ratio:2/3;border:1px solid #D9D9D4;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:12px;color:#585861;text-align:center;padding:8px">[pôster]</div>
+            <div style="margin-top:8px;font-weight:600;font-size:15px">{{f.t}}</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#585861">{{f.y}}</div>
+          </li>
+        </sc-for>
+      </ul>
+    </section>
+
+    <section aria-labelledby="diario">
+      <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:12px">
+        <h2 id="diario" style="margin:0;font-size:14px;letter-spacing:0.08em;font-family:'IBM Plex Mono',monospace;font-weight:500;color:#585861">DIÁRIO RECENTE</h2>
+        <button type="button" style="min-height:44px;padding:0 16px;background:#FFFFFF;color:#17171A;border:1px solid #77777F;border-radius:6px;font-family:'IBM Plex Mono',monospace;font-size:13px;cursor:pointer">Ordenar: mais recentes</button>
+      </div>
+      <table style="width:100%;border-collapse:collapse;background:#FFFFFF;border:1px solid #D9D9D4;font-size:15px">
+        <thead><tr>
+          <th scope="col" style="text-align:left;padding:12px 16px;border-bottom:1px solid #77777F;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:500;width:120px">Visto em</th>
+          <th scope="col" style="text-align:left;padding:12px 16px;border-bottom:1px solid #77777F;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:500">Filme</th>
+          <th scope="col" style="text-align:left;padding:12px 16px;border-bottom:1px solid #77777F;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:500;width:70px">Ano</th>
+          <th scope="col" style="text-align:left;padding:12px 16px;border-bottom:1px solid #77777F;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:500;width:170px">Minha nota</th>
+          <th scope="col" style="text-align:left;padding:12px 16px;border-bottom:1px solid #77777F;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:500;width:110px">Resenha</th>
+        </tr></thead>
+        <tbody>
+          <sc-for list="{{diary}}" as="d" hint-placeholder-count="8">
+            <tr>
+              <td style="padding:12px 16px;border-bottom:1px solid #D9D9D4;font-family:'IBM Plex Mono',monospace;font-size:13px;color:#585861">{{d.date}}</td>
+              <th scope="row" style="text-align:left;font-weight:600;padding:12px 16px;border-bottom:1px solid #D9D9D4">{{d.t}}</th>
+              <td style="padding:12px 16px;border-bottom:1px solid #D9D9D4;font-family:'IBM Plex Mono',monospace;font-size:13px;color:#585861">{{d.y}}</td>
+              <td style="padding:12px 16px;border-bottom:1px solid #D9D9D4"><span aria-label="{{d.label}}" style="font-family:'IBM Plex Mono',monospace;letter-spacing:2px;color:{{accent}}">{{d.stars}}</span> <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#585861">{{d.n}}</span></td>
+              <td style="padding:12px 16px;border-bottom:1px solid #D9D9D4"><a href="#" style="font-family:'IBM Plex Mono',monospace;font-size:13px">{{d.rev}}</a></td>
+            </tr>
+          </sc-for>
+        </tbody>
+      </table>
+      <p style="margin:12px 0 0;font-family:'IBM Plex Mono',monospace;font-size:12px;color:#585861">Atualizado em [data da última sincronização] · fonte: Letterboxd</p>
+    </section>
+
+    <aside style="margin-top:40px;background:#FFFFFF;border:1px solid #D9D9D4;border-left:3px solid #B4410F;padding:16px 20px;font-size:14px;line-height:1.6;max-width:760px">
+      <strong>Aviso de projeto (some do site final):</strong> o Letterboxd não oferece uma API pública aberta; o acesso é por pedido e costuma ser negado para projetos pessoais. Alternativas sem API: o feed RSS do seu perfil (traz os últimos filmes do diário) ou a exportação em CSV, importada de tempos em tempos. Escolher entre elas é uma pergunta aberta da spec 008.
+    </aside>
+  </main>
+
+  <footer style="max-width:1280px;margin:0 auto;box-sizing:border-box;padding:56px 56px 48px;border-top:2px solid #17171A;text-align:center;font-family:'IBM Plex Mono',monospace;color:#585861">
+    <div style="font-size:12px;letter-spacing:0.3em">UM PORTFÓLIO DE ENGENHARIA</div>
+    <div style="font-size:44px;font-weight:500;letter-spacing:0.18em;color:#17171A;margin:14px 0 22px;line-height:1.1">DIRECTED BY DUDA</div>
+    <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:6px 18px;max-width:640px;margin:0 auto;font-size:12px;letter-spacing:0.08em;line-height:1.7">
+      <span style="text-align:right">ROTEIRO E CÓDIGO</span><span style="text-align:left;color:#17171A">Duda</span>
+      <span style="text-align:right">ELENCO</span><span style="text-align:left;color:#17171A">React 19 · Vite 6 · TypeScript</span>
+      <span style="text-align:right">TRILHA SONORA</span><span style="text-align:left;color:#17171A">[sua playlist]</span>
+      <span style="text-align:right">FILMADO EM</span><span style="text-align:left;color:#17171A">Belo Horizonte, MG</span>
+    </div>
+    <div style="margin-top:26px;font-size:12px;letter-spacing:0.3em">FIM</div>
+    <div style="margin-top:18px;font-size:12px">© 2026 Duda · sem rastreadores · PT · EN</div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#2B36D9","options":["#2B36D9","#B4308A","#0A6E78","#B4410F"]},"$preview":{"width":1280,"height":1700}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const row = (date, t, y, stars, n, rev) => ({ date, t, y, stars, n, rev, label: 'nota ' + n + ' de 5' });
+    return {
+      accent: this.props.accent ?? '#2B36D9',
+      stats: [ { v: '[000]', k: 'filmes vistos', c: 'c1' }, { v: '[00]', k: 'neste ano', c: 'c2' }, { v: '[0,0]', k: 'nota média', c: 'c3' }, { v: '[00]', k: 'resenhas escritas', c: 'c4' } ],
+      fav: [ { t: '[Filme favorito 1]', y: '[ano]' }, { t: '[Filme favorito 2]', y: '[ano]' }, { t: '[Filme favorito 3]', y: '[ano]' }, { t: '[Filme favorito 4]', y: '[ano]' } ],
+      diary: [
+        row('[dd/mm/aaaa]', '[Filme de exemplo 01]', '[ano]', '★★★★★', '5', 'Ler resenha'),
+        row('[dd/mm/aaaa]', '[Filme de exemplo 02]', '[ano]', '★★★★☆', '4', 'Ler resenha'),
+        row('[dd/mm/aaaa]', '[Filme de exemplo 03]', '[ano]', '★★★☆☆', '3', '—'),
+        row('[dd/mm/aaaa]', '[Filme de exemplo 04]', '[ano]', '★★★★☆', '4', '—'),
+        row('[dd/mm/aaaa]', '[Filme de exemplo 05]', '[ano]', '★★★★★', '5', 'Ler resenha'),
+        row('[dd/mm/aaaa]', '[Filme de exemplo 06]', '[ano]', '★★☆☆☆', '2', '—'),
+        row('[dd/mm/aaaa]', '[Filme de exemplo 07]', '[ano]', '★★★★☆', '4', '—'),
+        row('[dd/mm/aaaa]', '[Filme de exemplo 08]', '[ano]', '★★★☆☆', '3', '—')
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

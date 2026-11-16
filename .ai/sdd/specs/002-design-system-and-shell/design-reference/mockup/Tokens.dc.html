@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Tokens propostos — claro e escuro</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>body{margin:0;font-family:'IBM Plex Sans',system-ui,sans-serif}</style>
+</helmet>
+<div style="background:#FFFFFF;color:#17171A;font-family:'IBM Plex Sans',system-ui,sans-serif;min-height:1560px;padding:56px;box-sizing:border-box;max-width:1280px;margin:0 auto">
+  <p style="margin:0 0 6px;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.06em;color:#585861">PROPOSTA PARA A SPEC 002 · D-004 · FR-001, FR-002, FR-007</p>
+  <h1 style="margin:0 0 8px;font-size:36px;letter-spacing:-0.02em;font-weight:600">Tokens: um conjunto, dois temas</h1>
+  <p style="margin:0 0 36px;font-size:17px;line-height:1.6;color:#585861;max-width:720px">Sans-serif legível para interface, uma mono para código e metadados, neutros quentes com um único acento, sem degradê. As razões de contraste foram calculadas, não estimadas. Os valores finais viram TD no design.</p>
+
+  <div style="display:flex;flex-wrap:wrap;gap:32px;align-items:flex-start">
+    <section aria-labelledby="claro" style="flex:1 1 520px;min-width:0;background:#F6F6F3;border:1px solid #D9D9D4;padding:24px">
+      <h2 id="claro" style="margin:0 0 16px;font-size:18px;font-weight:600">Tema claro</h2>
+      <ul style="list-style:none;margin:0;padding:0;display:grid;gap:10px">
+        <sc-for list="{{light}}" as="c" hint-placeholder-count="7">
+          <li style="display:grid;grid-template-columns:44px 1fr auto;gap:14px;align-items:center">
+            <span style="width:44px;height:44px;background:{{c.hex}};border:1px solid #D9D9D4;display:block"></span>
+            <span><span style="font-weight:600;font-size:15px">{{c.name}}</span><br><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#585861">{{c.hex}} · {{c.use}}</span></span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;text-align:right">{{c.ratio}}</span>
+          </li>
+        </sc-for>
+      </ul>
+    </section>
+
+    <section aria-labelledby="escuro" style="flex:1 1 520px;min-width:0;background:#0E0E10;color:#ECECEE;border:1px solid #2C2C32;padding:24px">
+      <h2 id="escuro" style="margin:0 0 16px;font-size:18px;font-weight:600">Tema escuro</h2>
+      <ul style="list-style:none;margin:0;padding:0;display:grid;gap:10px">
+        <sc-for list="{{dark}}" as="c" hint-placeholder-count="7">
+          <li style="display:grid;grid-template-columns:44px 1fr auto;gap:14px;align-items:center">
+            <span style="width:44px;height:44px;background:{{c.hex}};border:1px solid #2C2C32;display:block"></span>
+            <span><span style="font-weight:600;font-size:15px">{{c.name}}</span><br><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#A3A3AC">{{c.hex}} · {{c.use}}</span></span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;text-align:right">{{c.ratio}}</span>
+          </li>
+        </sc-for>
+      </ul>
+    </section>
+  </div>
+
+  <section aria-labelledby="tints" style="margin-top:40px">
+    <h2 id="tints" style="margin:0 0 6px;font-size:18px;font-weight:600">Tons de apoio (mais cor)</h2>
+    <p style="margin:0 0 14px;font-size:15px;line-height:1.55;color:#585861;max-width:720px">Seis tons pastel só como fundo de capas, números e cartões, sempre com o texto escuro #17171A (contraste de 13,4 a 15,4). O texto na cor de acento fica sobre o creme ou sobre esses tons (indigo: 6,1 a 6,9). Em fundo escuro, os mesmos tons viram versões escuras e saturadas com texto claro.</p>
+    <ul style="list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:12px">
+      <li style="width:140px"><span style="display:block;height:64px;background:#FFF7EA;border:1px solid #D9D9D4"></span><span style="font-family:'IBM Plex Mono',monospace;font-size:12px">creme #FFF7EA<br>fundo da página</span></li>
+      <li style="width:140px"><span style="display:block;height:64px;background:#FFD9C7;border:1px solid #D9D9D4"></span><span style="font-family:'IBM Plex Mono',monospace;font-size:12px">pêssego #FFD9C7<br>13,6</span></li>
+      <li style="width:140px"><span style="display:block;height:64px;background:#E4E1FF;border:1px solid #D9D9D4"></span><span style="font-family:'IBM Plex Mono',monospace;font-size:12px">lilás #E4E1FF<br>14,1</span></li>
+      <li style="width:140px"><span style="display:block;height:64px;background:#C9EDD8;border:1px solid #D9D9D4"></span><span style="font-family:'IBM Plex Mono',monospace;font-size:12px">menta #C9EDD8<br>14,1</span></li>
+      <li style="width:140px"><span style="display:block;height:64px;background:#FFEEA8;border:1px solid #D9D9D4"></span><span style="font-family:'IBM Plex Mono',monospace;font-size:12px">limão #FFEEA8<br>15,4</span></li>
+      <li style="width:140px"><span style="display:block;height:64px;background:#CFE8FF;border:1px solid #D9D9D4"></span><span style="font-family:'IBM Plex Mono',monospace;font-size:12px">céu #CFE8FF<br>14,2</span></li>
+      <li style="width:140px"><span style="display:block;height:64px;background:#FFD3E8;border:1px solid #D9D9D4"></span><span style="font-family:'IBM Plex Mono',monospace;font-size:12px">rosa #FFD3E8<br>13,4</span></li>
+    </ul>
+  </section>
+
+  <div style="display:flex;flex-wrap:wrap;gap:32px;margin-top:40px;align-items:flex-start">
+    <section aria-labelledby="tipo" style="flex:1 1 520px;min-width:0">
+      <h2 id="tipo" style="margin:0 0 12px;font-size:18px;font-weight:600">Tipografia (2 famílias, OFL)</h2>
+      <div style="border:1px solid #D9D9D4;padding:20px;display:grid;gap:14px">
+        <div><div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#585861">IBM Plex Sans 600 · 60/63 · títulos de página</div><div style="font-size:60px;line-height:1.05;letter-spacing:-0.025em;font-weight:600">Duda</div></div>
+        <div><div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#585861">IBM Plex Sans 600 · 22 · seções</div><div style="font-size:22px;font-weight:600">Quatro destaques</div></div>
+        <div><div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#585861">IBM Plex Sans 400 · 17/28 · texto corrido</div><div style="font-size:17px;line-height:1.65;max-width:520px">Texto corrido com linha confortável: até cerca de 70 caracteres e entrelinha de 1,6.</div></div>
+        <div><div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#585861">IBM Plex Mono 400 · 12–14 · metadados, datas, etiquetas</div><div style="font-family:'IBM Plex Mono',monospace;font-size:13px">mar/2026 · [stack] · 4,5 de 5</div></div>
+      </div>
+      <p style="margin:10px 0 0;font-family:'IBM Plex Mono',monospace;font-size:12px;color:#585861">Candidatas da DQ-003. A decisão fica para o design, depois do teste de peso de fonte (no máximo 4 arquivos na primeira pintura).</p>
+    </section>
+
+    <section aria-labelledby="comp" style="flex:1 1 400px;min-width:0">
+      <h2 id="comp" style="margin:0 0 12px;font-size:18px;font-weight:600">Componentes base</h2>
+      <div style="border:1px solid #D9D9D4;padding:20px;display:grid;gap:18px;background:#F6F6F3">
+        <div style="display:flex;flex-wrap:wrap;gap:12px">
+          <a href="#" style="min-height:48px;padding:0 22px;display:inline-flex;align-items:center;background:#2B36D9;color:#FFFFFF;text-decoration:none;font-weight:600;border-radius:6px">Primário</a>
+          <a href="#" style="min-height:48px;padding:0 22px;display:inline-flex;align-items:center;background:#FFFFFF;color:#17171A;text-decoration:none;font-weight:600;border-radius:6px;border:1px solid #77777F">Secundário</a>
+          <span style="min-height:48px;padding:0 22px;display:inline-flex;align-items:center;background:#FFFFFF;color:#17171A;font-weight:600;border-radius:6px;border:1px solid #77777F;outline:3px solid #2B36D9;outline-offset:2px">Com foco</span>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;border:1px solid #77777F;padding:4px 10px;border-radius:999px">[stack]</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.06em;border:1px solid #77777F;padding:2px 6px">PROJETO</span>
+          <span role="img" aria-label="4 e meia de 5 estrelas" style="color:#2B36D9;letter-spacing:3px;font-size:20px">★★★★½</span>
+        </div>
+        <ul style="list-style:none;margin:0;padding:0;display:grid;gap:6px;font-size:14px;line-height:1.5;color:#585861">
+          <li>Borda fina (1,3:1) é só decoração. Todo controle usa a borda forte (4,1:1 ou mais).</li>
+          <li>Alvo de toque mínimo de 44 × 44 px; foco com anel de 3 px no acento.</li>
+          <li>Estado nunca só por cor: a página atual também ganha sublinhado e peso.</li>
+          <li>Movimento: nenhuma animação essencial; tudo respeita prefers-reduced-motion.</li>
+        </ul>
+      </div>
+    </section>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1180}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      light: [
+        { name: 'fundo', hex: '#F6F6F3', use: 'página', ratio: 'base' },
+        { name: 'superfície', hex: '#FFFFFF', use: 'cartões', ratio: 'base' },
+        { name: 'texto', hex: '#17171A', use: 'corpo', ratio: '16,5:1 no fundo' },
+        { name: 'texto secundário', hex: '#585861', use: 'apoio', ratio: '6,5:1 no fundo' },
+        { name: 'acento', hex: '#2B36D9', use: 'links, nota', ratio: '7,4:1 no fundo' },
+        { name: 'texto sobre acento', hex: '#FFFFFF', use: 'botão primário', ratio: '8,0:1' },
+        { name: 'borda forte', hex: '#77777F', use: 'controles', ratio: '4,1:1 no fundo' },
+        { name: 'borda fina', hex: '#D9D9D4', use: 'só decoração', ratio: '1,3:1' }
+      ],
+      dark: [
+        { name: 'fundo', hex: '#0E0E10', use: 'página', ratio: 'base' },
+        { name: 'superfície', hex: '#17171A', use: 'cartões', ratio: 'base' },
+        { name: 'texto', hex: '#ECECEE', use: 'corpo', ratio: '16,4:1 no fundo' },
+        { name: 'texto secundário', hex: '#A3A3AC', use: 'apoio', ratio: '7,7:1 no fundo' },
+        { name: 'acento', hex: '#8F98FF', use: 'links, nota', ratio: '7,4:1 no fundo' },
+        { name: 'texto sobre acento', hex: '#0E0E10', use: 'botão primário', ratio: '7,4:1' },
+        { name: 'borda forte', hex: '#7A7A84', use: 'controles', ratio: '4,5:1 no fundo' },
+        { name: 'borda fina', hex: '#2C2C32', use: 'só decoração', ratio: '1,4:1' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

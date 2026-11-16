@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Terminal — tema escuro</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0E0E10;font-family:'IBM Plex Sans',system-ui,sans-serif}
+a{color:#8F98FF}a:hover{color:#ECECEE}
+</style>
+</helmet>
+<div style="background:#0E0E10;color:#ECECEE;min-height:1200px">
+  <div style="background:#ECECEE;color:#0E0E10;font-family:'IBM Plex Mono',monospace;font-size:12px;padding:8px 56px">MOCKUP · /terminal · fora do menu principal; é um extra, e toda a informação também existe nas páginas normais</div>
+  <div aria-hidden="true" style="display:flex;height:6px"><span style="flex:1;background:#8F98FF"></span><span style="flex:1;background:#FF8FCB"></span><span style="flex:1;background:#4FD1D9"></span><span style="flex:1;background:#FFA36B"></span><span style="flex:1;background:#FFD84D"></span></div>
+
+  <main style="max-width:1000px;margin:0 auto;box-sizing:border-box;padding:40px 56px 72px">
+    <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;margin-bottom:20px">
+      <a href="#" style="font-family:'IBM Plex Mono',monospace;font-size:14px;min-height:44px;display:inline-flex;align-items:center">← Sair do terminal</a>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#A3A3AC">dica: digite <strong style="color:#ECECEE">ajuda</strong></span>
+    </div>
+
+    <section aria-label="Terminal" style="background:#17171A;border:1px solid #7A7A84;border-radius:8px;padding:24px 26px;font-family:'IBM Plex Mono',monospace;font-size:15px;line-height:1.75">
+      <div style="color:#A3A3AC">duda@portfolio — digite “ajuda” para ver os comandos</div>
+
+      <div style="margin-top:14px"><span style="color:{{accent}}">$</span> ajuda</div>
+      <div style="color:#ECECEE;display:grid;grid-template-columns:160px 1fr;gap:0 16px;margin-top:4px">
+        <sc-for list="{{cmds}}" as="c" hint-placeholder-count="8">
+          <span style="color:{{accent}}">{{c.k}}</span><span style="color:#A3A3AC">{{c.v}}</span>
+        </sc-for>
+      </div>
+
+      <div style="margin-top:14px"><span style="color:{{accent}}">$</span> whoami</div>
+      <div>Maria Eduarda de Paula Brito</div>
+      <div style="color:#A3A3AC">Estágio em Engenharia de Software · Desenvolvimento e Testes de Software</div>
+
+      <div style="margin-top:14px"><span style="color:{{accent}}">$</span> projetos</div>
+      <div style="display:grid;gap:2px">
+        <sc-for list="{{projetos}}" as="p" hint-placeholder-count="4">
+          <div><span style="color:#A3A3AC">{{p.year}}</span>  {{p.name}}</div>
+        </sc-for>
+      </div>
+      <div style="color:#A3A3AC;margin-top:4px">Para ver os detalhes, abra /projetos.</div>
+
+      <div style="margin-top:14px"><span style="color:{{accent}}">$</span> abrir</div>
+      <div style="color:#E58A8A">bash: abrir: comando não encontrado. Digite “ajuda”.</div>
+
+      <div style="margin-top:14px;display:flex;align-items:center;gap:8px">
+        <label for="cmd" style="color:{{accent}}">$</label>
+        <input id="cmd" type="text" aria-label="Comando" autocomplete="off" spellcheck="false" style="flex:1;min-height:44px;background:#0E0E10;color:#ECECEE;border:1px solid #7A7A84;border-radius:4px;padding:0 12px;font-family:'IBM Plex Mono',monospace;font-size:15px">
+      </div>
+    </section>
+
+    <p style="margin:20px 0 0;font-size:14px;line-height:1.6;color:#A3A3AC;max-width:640px">Funciona só com teclado e leitor de tela: a saída fica numa região que é anunciada a cada comando, e o botão “Sair do terminal” é o primeiro item da página.</p>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#8F98FF","options":["#8F98FF","#E58AC8","#5CC8D2","#F0A070"]},"$preview":{"width":1280,"height":1200}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      accent: this.props.accent ?? '#8F98FF',
+      cmds: [
+        { k: 'ajuda', v: 'lista os comandos' },
+        { k: 'ls', v: 'lista as seções do site' },
+        { k: 'whoami', v: 'quem sou eu' },
+        { k: 'projetos', v: 'lista os projetos' },
+        { k: 'curriculo', v: 'resumo do currículo' },
+        { k: 'academico', v: 'formação e disciplinas' },
+        { k: 'contato', v: 'e-mail, GitHub e LinkedIn' },
+        { k: 'home', v: 'volta ao início' }
+      ],
+      projetos: [
+        { year: '2026', name: 'Portfólio' }, { year: '2026', name: 'WhatsApp Dispatcher' },
+        { year: '2026', name: 'ShortURL' }, { year: '2026', name: 'File Name Standardizer' },
+        { year: '2025', name: 'EcoShop' }, { year: '2025', name: 'Planoriza' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

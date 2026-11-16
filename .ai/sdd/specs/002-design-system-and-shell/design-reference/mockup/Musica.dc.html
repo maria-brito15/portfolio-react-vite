@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Música — Spotify</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'IBM Plex Sans',system-ui,sans-serif}
+a{color:#2B36D9}a:hover{color:#17171A}
+.cv{background:#FFD9C7}li:nth-child(6n+2) .cv{background:#E4E1FF}li:nth-child(6n+3) .cv{background:#C9EDD8}li:nth-child(6n+4) .cv{background:#FFEEA8}li:nth-child(6n+5) .cv{background:#CFE8FF}li:nth-child(6n+6) .cv{background:#FFD3E8}.c1{background:#E4E1FF}.c2{background:#FFD9C7}.c3{background:#C9EDD8}.c4{background:#FFEEA8}</style>
+</helmet>
+<div style="background:#FFF7EA;color:#17171A;font-family:'IBM Plex Sans',system-ui,sans-serif;min-height:1600px">
+  <div style="background:#17171A;color:#ECECEE;font-family:'IBM Plex Mono',monospace;font-size:12px;padding:8px 56px">MOCKUP · /pessoal/musica · dados do Spotify (Web API) · artistas, faixas e números são [exemplos]</div>
+  <div aria-hidden="true" style="display:flex;height:6px"><span style="flex:1;background:#2B36D9"></span><span style="flex:1;background:#B4308A"></span><span style="flex:1;background:#0A6E78"></span><span style="flex:1;background:#B4410F"></span><span style="flex:1;background:#E0A800"></span></div>
+
+  <header style="max-width:1280px;margin:0 auto;box-sizing:border-box;padding:20px 56px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid #D9D9D4">
+    <a href="#" style="font-family:'IBM Plex Mono',monospace;font-weight:500;font-size:18px;color:#17171A;text-decoration:none;min-height:44px;display:inline-flex;align-items:center">duda<span style="color:{{accent}}">/</span>portfólio</a>
+    <nav aria-label="Principal" style="display:flex;flex-wrap:wrap;gap:4px">
+      <a href="#" style="color:#585861;text-decoration:none;padding:0 14px;min-height:44px;display:inline-flex;align-items:center">Projetos</a>
+      <a href="#" style="color:#585861;text-decoration:none;padding:0 14px;min-height:44px;display:inline-flex;align-items:center">Casos</a>
+      <a href="#" style="color:#585861;text-decoration:none;padding:0 14px;min-height:44px;display:inline-flex;align-items:center">Currículo</a>
+      <a href="#" style="color:#585861;text-decoration:none;padding:0 14px;min-height:44px;display:inline-flex;align-items:center">Acadêmico</a>
+      <a href="#" style="color:#585861;text-decoration:none;padding:0 14px;min-height:44px;display:inline-flex;align-items:center">Contato</a>
+      <a href="#" aria-current="page" style="color:#17171A;text-decoration:none;font-weight:600;padding:0 14px;min-height:44px;display:inline-flex;align-items:center;border-bottom:2px solid {{accent}}">Pessoal</a>
+    </nav>
+    <div role="group" aria-label="Idioma" style="display:flex">
+      <button type="button" aria-pressed="true" style="min-height:44px;min-width:44px;background:#17171A;color:#FFF7EA;border:1px solid #17171A;border-radius:6px 0 0 6px;font-family:'IBM Plex Mono',monospace;font-size:13px;cursor:pointer">PT</button>
+      <button type="button" aria-pressed="false" style="min-height:44px;min-width:44px;background:#FFFFFF;color:#17171A;border:1px solid #77777F;border-left:0;border-radius:0 6px 6px 0;font-family:'IBM Plex Mono',monospace;font-size:13px;cursor:pointer">EN</button>
+    </div>
+  </header>
+
+  <main style="max-width:1280px;margin:0 auto;box-sizing:border-box;padding:0 56px 72px">
+    <nav aria-label="Pessoal" style="display:flex;flex-wrap:wrap;gap:8px;padding:28px 0 0">
+      <a href="#" style="min-height:44px;display:inline-flex;align-items:center;padding:0 18px;border:1px solid #77777F;color:#17171A;text-decoration:none;font-size:15px;border-radius:6px">Bastidores</a>
+      <a href="#" style="min-height:44px;display:inline-flex;align-items:center;padding:0 18px;border:1px solid #77777F;color:#17171A;text-decoration:none;font-size:15px;border-radius:6px">Filmes</a>
+      <a href="#" style="min-height:44px;display:inline-flex;align-items:center;padding:0 18px;border:1px solid #77777F;color:#17171A;text-decoration:none;font-size:15px;border-radius:6px">Livros</a>
+      <a href="#" aria-current="page" style="min-height:44px;display:inline-flex;align-items:center;padding:0 18px;background:#17171A;color:#FFF7EA;text-decoration:none;font-size:15px;border-radius:6px">Música</a>
+    </nav>
+
+    <section style="padding:32px 0 24px;display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;align-items:flex-end">
+      <div style="max-width:640px">
+        <h1 style="margin:0;font-size:48px;line-height:1.05;letter-spacing:-0.02em;font-weight:600">Música</h1>
+        <p style="margin:12px 0 0;font-size:18px;line-height:1.55;color:#585861">O que tenho ouvido, direto do meu Spotify.</p>
+      </div>
+      <a href="#" style="display:inline-flex;align-items:center;min-height:44px;font-family:'IBM Plex Mono',monospace;font-size:13px">Ver perfil no Spotify ↗</a>
+    </section>
+
+    <section aria-labelledby="agora" style="margin-bottom:40px">
+      <h2 id="agora" style="margin:0 0 14px;font-size:14px;letter-spacing:0.08em;font-family:'IBM Plex Mono',monospace;font-weight:500;color:#585861">OUVINDO AGORA / ÚLTIMA FAIXA</h2>
+      <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:center;background:#CFE8FF;border:1px solid #D9D9D4;padding:18px 20px">
+        <div class="cv" role="img" aria-label="Capa de exemplo" style="width:88px;height:88px;border:1px solid #D9D9D4;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:12px;color:#585861">[capa]</div>
+        <div style="flex:1 1 280px;min-width:0">
+          <div style="font-size:20px;font-weight:600">[Nome da faixa]</div>
+          <div style="margin-top:2px;color:#585861">[Artista] · [Álbum]</div>
+          <div style="margin-top:8px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:#585861">tocada há [00] min</div>
+        </div>
+      </div>
+    </section>
+
+    <div style="display:flex;flex-wrap:wrap;gap:40px;align-items:flex-start">
+      <section aria-labelledby="art" style="flex:1 1 420px;min-width:0">
+        <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:14px">
+          <h2 id="art" style="margin:0;font-size:14px;letter-spacing:0.08em;font-family:'IBM Plex Mono',monospace;font-weight:500;color:#585861">ARTISTAS MAIS OUVIDOS</h2>
+          <div role="group" aria-label="Período" style="display:flex">
+            <button type="button" aria-pressed="false" style="min-height:44px;padding:0 12px;background:#FFFFFF;color:#17171A;border:1px solid #77777F;border-radius:6px 0 0 6px;font-family:'IBM Plex Mono',monospace;font-size:12px;cursor:pointer">4 sem.</button>
+            <button type="button" aria-pressed="true" style="min-height:44px;padding:0 12px;background:#17171A;color:#FFF7EA;border:1px solid #17171A;font-family:'IBM Plex Mono',monospace;font-size:12px;cursor:pointer">6 meses</button>
+            <button type="button" aria-pressed="false" style="min-height:44px;padding:0 12px;background:#FFFFFF;color:#17171A;border:1px solid #77777F;border-left:0;border-radius:0 6px 6px 0;font-family:'IBM Plex Mono',monospace;font-size:12px;cursor:pointer">Sempre</button>
+          </div>
+        </div>
+        <ol style="list-style:none;margin:0;padding:0;display:grid;gap:10px">
+          <sc-for list="{{artists}}" as="a" hint-placeholder-count="5">
+            <li style="display:flex;align-items:center;gap:14px;background:#FFFFFF;border:1px solid #D9D9D4;padding:10px 14px">
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:{{accent}};width:24px">{{a.n}}</span>
+              <div class="cv" role="img" aria-label="Foto de exemplo" style="width:48px;height:48px;border-radius:50%;border:1px solid #D9D9D4"></div>
+              <div><div style="font-weight:600">{{a.name}}</div><div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#585861">[gênero]</div></div>
+            </li>
+          </sc-for>
+        </ol>
+      </section>
+
+      <section aria-labelledby="trk" style="flex:1 1 420px;min-width:0">
+        <h2 id="trk" style="margin:0 0 14px;font-size:14px;letter-spacing:0.08em;font-family:'IBM Plex Mono',monospace;font-weight:500;color:#585861;min-height:44px;display:flex;align-items:center">FAIXAS MAIS OUVIDAS</h2>
+        <ol style="list-style:none;margin:0;padding:0;display:grid;gap:10px">
+          <sc-for list="{{tracks}}" as="t" hint-placeholder-count="5">
+            <li style="display:flex;align-items:center;gap:14px;background:#FFFFFF;border:1px solid #D9D9D4;padding:10px 14px">
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:{{accent}};width:24px">{{t.n}}</span>
+              <div class="cv" role="img" aria-label="Capa de exemplo" style="width:48px;height:48px;border:1px solid #D9D9D4"></div>
+              <div><div style="font-weight:600">{{t.name}}</div><div style="font-size:13px;color:#585861">[Artista]</div></div>
+            </li>
+          </sc-for>
+        </ol>
+      </section>
+    </div>
+
+    <section aria-labelledby="pl" style="margin-top:44px">
+      <h2 id="pl" style="margin:0 0 14px;font-size:14px;letter-spacing:0.08em;font-family:'IBM Plex Mono',monospace;font-weight:500;color:#585861">PLAYLISTS PÚBLICAS</h2>
+      <ul style="list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px">
+        <sc-for list="{{lists}}" as="p" hint-placeholder-count="4">
+          <li>
+            <a href="#" style="display:block;text-decoration:none;color:#17171A">
+              <div class="cv" role="img" aria-label="Capa de exemplo" style="aspect-ratio:1/1;border:1px solid #D9D9D4;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:12px;color:#585861">[capa]</div>
+              <div style="margin-top:8px;font-weight:600;font-size:15px">{{p.name}}</div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#585861">[00] faixas</div>
+            </a>
+          </li>
+        </sc-for>
+      </ul>
+      <p style="margin:16px 0 0;font-family:'IBM Plex Mono',monospace;font-size:12px;color:#585861">Atualizado em [data da última sincronização] · fonte: Spotify</p>
+    </section>
+
+    <aside style="margin-top:40px;background:#FFFFFF;border:1px solid #D9D9D4;border-left:3px solid #B4410F;padding:16px 20px;font-size:14px;line-height:1.6;max-width:760px">
+      <strong>Aviso de projeto (some do site final):</strong> a Web API do Spotify exige um app registrado e autorização da sua conta (OAuth) para ler “mais ouvidos” e a última faixa. Como é o seu perfil e não o do visitante, o token de atualização fica só no servidor e o site mostra uma cópia em cache, sem pedir login a quem visita. As regras de uso e os limites da API mudam com frequência e ainda não foram verificados (spec 008).
+    </aside>
+  </main>
+
+  <footer style="max-width:1280px;margin:0 auto;box-sizing:border-box;padding:56px 56px 48px;border-top:2px solid #17171A;text-align:center;font-family:'IBM Plex Mono',monospace;color:#585861">
+    <div style="font-size:12px;letter-spacing:0.3em">UM PORTFÓLIO DE ENGENHARIA</div>
+    <div style="font-size:44px;font-weight:500;letter-spacing:0.18em;color:#17171A;margin:14px 0 22px;line-height:1.1">DIRECTED BY DUDA</div>
+    <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:6px 18px;max-width:640px;margin:0 auto;font-size:12px;letter-spacing:0.08em;line-height:1.7">
+      <span style="text-align:right">ROTEIRO E CÓDIGO</span><span style="text-align:left;color:#17171A">Duda</span>
+      <span style="text-align:right">ELENCO</span><span style="text-align:left;color:#17171A">React 19 · Vite 6 · TypeScript</span>
+      <span style="text-align:right">TRILHA SONORA</span><span style="text-align:left;color:#17171A">[sua playlist]</span>
+      <span style="text-align:right">FILMADO EM</span><span style="text-align:left;color:#17171A">Belo Horizonte, MG</span>
+    </div>
+    <div style="margin-top:26px;font-size:12px;letter-spacing:0.3em">FIM</div>
+    <div style="margin-top:18px;font-size:12px">© 2026 Duda · sem rastreadores · PT · EN</div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#2B36D9","options":["#2B36D9","#B4308A","#0A6E78","#B4410F"]},"$preview":{"width":1280,"height":1600}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const n = (k) => String(k).padStart(2, '0');
+    return {
+      accent: this.props.accent ?? '#2B36D9',
+      artists: [1,2,3,4,5].map(i => ({ n: n(i), name: '[Artista de exemplo ' + n(i) + ']' })),
+      tracks: [1,2,3,4,5].map(i => ({ n: n(i), name: '[Faixa de exemplo ' + n(i) + ']' })),
+      lists: [1,2,3,4].map(i => ({ name: '[Playlist de exemplo ' + n(i) + ']' }))
+    };
+  }
+}
+</script>
+</body>
+</html>

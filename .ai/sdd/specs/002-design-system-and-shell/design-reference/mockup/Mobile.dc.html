@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Home no celular — faixa de idioma e tema escuro</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0E0E10;font-family:'IBM Plex Sans',system-ui,sans-serif}
+a{color:#8F98FF}
+.t1{background:#5A2A4E}.t2{background:#1F5A62}.t3{background:#6B3A1E}.t4{background:#2F3A9E}
+</style>
+</helmet>
+<div style="width:390px;height:1500px;box-sizing:border-box;background:#0E0E10;color:#ECECEE;font-family:'IBM Plex Sans',system-ui,sans-serif;overflow:hidden">
+
+  <div role="region" aria-label="Idioma sugerido" style="background:#17171A;border-bottom:1px solid #2C2C32;padding:12px 16px;display:flex;align-items:center;gap:8px">
+    <p lang="en" style="margin:0;flex:1;font-size:14px;line-height:1.4">This site is also available in English.</p>
+    <a href="#" lang="en" style="min-height:44px;padding:0 12px;display:inline-flex;align-items:center;background:{{accent}};color:#0E0E10;text-decoration:none;font-weight:600;font-size:14px;border-radius:6px;white-space:nowrap">Read in English</a>
+    <button type="button" lang="en" aria-label="Dismiss" style="min-width:44px;min-height:44px;background:transparent;border:1px solid #7A7A84;border-radius:6px;color:#ECECEE;cursor:pointer;display:inline-flex;align-items:center;justify-content:center">
+      <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3l10 10M13 3L3 13" stroke="#ECECEE" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg>
+    </button>
+  </div>
+  <div style="padding:6px 16px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#A3A3AC;border-bottom:1px solid #2C2C32">mockup · faixa de idioma: oferece, não redireciona · conteúdo de exemplo</div>
+
+  <header style="padding:10px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #2C2C32">
+    <a href="#" style="font-family:'IBM Plex Mono',monospace;font-weight:500;font-size:16px;color:#ECECEE;text-decoration:none;min-height:44px;display:inline-flex;align-items:center">duda<span style="color:{{accent}}">/</span>portfólio</a>
+    <div style="display:flex;gap:8px">
+      <button type="button" aria-label="Mudar para o tema claro" style="min-height:44px;min-width:44px;background:#17171A;color:#ECECEE;border:1px solid #7A7A84;border-radius:6px;font-family:'IBM Plex Mono',monospace;font-size:12px;cursor:pointer">Claro</button>
+      <button type="button" aria-expanded="false" aria-label="Abrir menu" style="min-height:44px;min-width:44px;background:#17171A;border:1px solid #7A7A84;border-radius:6px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center">
+        <svg width="20" height="14" viewBox="0 0 20 14" aria-hidden="true"><path d="M1 1.5h18M1 7h18M1 12.5h18" stroke="#ECECEE" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main style="padding:0 16px 32px">
+    <section aria-labelledby="perfil" style="padding:28px 0 24px">
+      <div style="display:flex;gap:16px;align-items:center">
+        <div style="width:80px;height:80px;flex:none;background:#26262B;border:1px solid #2C2C32;display:flex;align-items:flex-end;padding:6px;box-sizing:border-box;font-family:'IBM Plex Mono',monospace;font-size:10px;color:#A3A3AC">[foto]</div>
+        <div>
+          <p style="margin:0 0 4px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#A3A3AC">Engenharia de software</p>
+          <h1 id="perfil" style="margin:0;font-size:38px;line-height:1.05;letter-spacing:-0.025em;font-weight:600">Duda</h1>
+        </div>
+      </div>
+      <p style="margin:16px 0 0;font-size:17px;line-height:1.5;color:#A3A3AC">[Uma frase sobre o que você constrói e que problema resolve.]</p>
+      <div style="display:flex;gap:10px;margin-top:20px">
+        <a href="#" style="flex:1;min-height:48px;display:inline-flex;align-items:center;justify-content:center;background:{{accent}};color:#0E0E10;text-decoration:none;font-weight:600;border-radius:6px">Ver currículo</a>
+        <a href="#" style="flex:1;min-height:48px;display:inline-flex;align-items:center;justify-content:center;background:#17171A;color:#ECECEE;text-decoration:none;font-weight:600;border-radius:6px;border:1px solid #7A7A84">Contato</a>
+      </div>
+      <dl style="margin:20px 0 0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:#2C2C32;border:1px solid #2C2C32">
+        <sc-for list="{{stats}}" as="s" hint-placeholder-count="4">
+          <div style="background:#17171A;padding:10px 8px"><dt style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#A3A3AC">{{s.label}}</dt><dd style="margin:2px 0 0;font-size:20px;font-weight:600">{{s.value}}</dd></div>
+        </sc-for>
+      </dl>
+    </section>
+
+    <section aria-labelledby="destaques">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid #2C2C32;padding-bottom:10px;margin-bottom:16px">
+        <h2 id="destaques" style="margin:0;font-size:19px;font-weight:600">Quatro destaques</h2>
+        <a href="#" style="font-family:'IBM Plex Mono',monospace;font-size:13px;min-height:44px;display:inline-flex;align-items:center">Todos →</a>
+      </div>
+      <ul style="list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px">
+        <sc-for list="{{featured}}" as="p" hint-placeholder-count="4">
+          <li>
+            <a href="#" style="display:block;text-decoration:none;color:#ECECEE">
+              <div class="{{p.tone}}" style="aspect-ratio:2/3;border:1px solid #2C2C32;padding:10px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:10px"><span>[capa]</span><span style="font-size:32px;font-weight:500;letter-spacing:-0.04em">{{p.n}}</span></div>
+              <div style="margin-top:8px;font-weight:600;font-size:14px;line-height:1.3">{{p.title}}</div>
+              <div style="display:flex;justify-content:space-between;margin-top:4px"><span role="img" aria-label="{{p.aria}}" style="color:{{accent}};letter-spacing:1px;font-size:13px">{{p.stars}}</span><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#A3A3AC">{{p.year}}</span></div>
+            </a>
+          </li>
+        </sc-for>
+      </ul>
+    </section>
+
+    <section aria-labelledby="atividade" style="margin-top:40px">
+      <div style="border-bottom:1px solid #2C2C32;padding-bottom:10px;margin-bottom:4px"><h2 id="atividade" style="margin:0;font-size:19px;font-weight:600">Atividade recente</h2></div>
+      <ul style="list-style:none;margin:0;padding:0">
+        <sc-for list="{{activity}}" as="a" hint-placeholder-count="4">
+          <li style="padding:12px 0;border-bottom:1px solid #2C2C32">
+            <div style="display:flex;gap:10px;align-items:center;margin-bottom:4px"><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.06em;border:1px solid #7A7A84;padding:1px 6px">{{a.kind}}</span><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#A3A3AC">{{a.date}}</span></div>
+            <a href="#" style="color:#ECECEE;font-size:15px;line-height:1.4">{{a.title}}</a>
+          </li>
+        </sc-for>
+      </ul>
+    </section>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#8F98FF","options":["#8F98FF","#E58AC8","#5CC8D2","#F0A070"]},"$preview":{"width":390,"height":1500}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      accent: this.props.accent ?? '#8F98FF',
+      stats: [
+        { label: 'Projetos', value: '08' },
+        { label: 'Casos', value: '03' },
+        { label: 'Filmes', value: '120' },
+        { label: 'Livros', value: '40' }
+      ],
+      featured: [
+        { n: '01', tone: 't2', title: '[Projeto de exemplo 01]', stars: '★★★★½', aria: '4 e meia de 5 estrelas', year: '2026' },
+        { n: '02', tone: 't1', title: '[Projeto de exemplo 02]', stars: '★★★★☆', aria: '4 de 5 estrelas', year: 'mar/2026' },
+        { n: '03', tone: 't4', title: '[Projeto de exemplo 03]', stars: '★★★★☆', aria: '4 de 5 estrelas', year: '2025' },
+        { n: '04', tone: 't3', title: '[Projeto de exemplo 04]', stars: '★★★½☆', aria: '3 e meia de 5 estrelas', year: 'out/2025' }
+      ],
+      activity: [
+        { kind: 'PROJETO', date: 'nov/2026', title: '[Projeto de exemplo 01] entrou como destaque' },
+        { kind: 'CASO', date: 'out/2026', title: 'Estudo de caso: [decisão de exemplo]' },
+        { kind: 'FILME', date: 'out/2026', title: '[Filme de exemplo] — nota e resenha' },
+        { kind: 'PROJETO', date: '2025', title: '[Projeto de exemplo 03] (só o ano)' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

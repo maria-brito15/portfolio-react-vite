@@ -1,7 +1,19 @@
 # 001 Engineering baseline, Requirements
-**Status:** draft   **Version:** 1.2   **Author:** Claude (rascunho para a Duda)   **Date:** 2026-11-15
+**Status:** draft (v1.3 aguarda aprovação; a v1.2 foi a aprovada)   **Version:** 1.3   **Author:** Claude (rascunho para a Duda)   **Date:** 2026-11-15
 
 ## Changes since first draft
+### Versão 1.3 (a pedido da Duda; aplica só L-001, L-002, L-003, L-004, L-005, L-007, L-008 e L-012 do `design.md`)
+1. **L-001, FR-009:** o caminho da imagem precisa ser local (começar com uma única `/`); endereço externo é recusado (princípio 5, sem hotlink).
+2. **L-002, FR-011:** o hífen do identificador da etiqueta só separa partes: não abre, não fecha nem se repete.
+3. **L-003, FR-010:** também são recusados `mailto:` com parâmetros (`?subject=`, que a Duda decidiu não aceitar nesta versão), `https` com usuário e senha, e `/\host`.
+4. **L-004, FR-015:** reescrito para ser testável: a falta de um idioma fica impossível em produção, e nenhuma função de leitura de texto localizado devolve a chave nem o outro idioma.
+5. **L-005, FR-016:** "variável exposta ao navegador" substitui "variável exposta ao público". A lista de padrões, o prefixo `VITE_` e as exceções (EmailJS) ficam no design, não no requisito.
+6. **L-007, FR-004:** a suíte completa passa **três vezes seguidas**.
+7. **L-008, FR-001:** a validação de conteúdo e a varredura de segredos rodam **dentro** da etapa de testes e da de geração do site, não como etapas à parte.
+8. **L-012, FR-018 (novo):** nota de 0,5 a 5 em passos de 0,5; "sem nota" é ausência de valor, nunca 0.
+9. **Não aplicadas, por decisão da Duda:** L-006 (o NFR-001 continua como está), L-009 e L-010 (só ratificadas no design, sem editar o requisito) e L-011 (steering, depois de aprovar o design).
+10. **Estado:** esta v1.3 é rascunho; o `.status` da spec **não foi alterado** (ver a pergunta na resposta ao fim da rodada).
+
 ### Versão 1.2
 1. **NFR-001:** o custo de 5 s da validação passou a ser medido com conteúdo de exemplo (a migração é a spec 003, que herda a medição com o conteúdo real).
 2. **FR-010 e a tabela de links:** `//host` (sem protocolo) é recusado e `mailto:` é aceito (decisão da Duda), com linhas novas na tabela e uma entrada na FAQ.
@@ -43,7 +55,7 @@ A base de engenharia é o que garante que o resto do site seja construído sobre
 ### US-001: Adicionar conteúdo sem medo
 **As a** Duda, **I want to** que a verificação recuse conteúdo errado, **so that** nada inválido chegue ao ar.
 **Acceptance criteria:**
-- [ ] Uma data com mês 13, uma imagem sem `alt` ou um texto sem PT ou EN fazem a verificação falhar.
+- [ ] Uma data com mês 13, uma imagem sem `alt` ou com caminho externo, um texto sem PT ou EN, ou uma nota de 4,3 fazem a verificação falhar.
 - [ ] A mensagem de erro diz o arquivo, o campo e o motivo.
 - [ ] Conteúdo válido passa sem erro.
 
@@ -69,7 +81,7 @@ A base de engenharia é o que garante que o resto do site seja construído sobre
 
 ## Functional Requirements
 ### FR-001: Comando único de verificação (Must Have) — US-002
-THE SYSTEM SHALL oferecer um único comando de verificação que executa, nesta ordem: checagem de formatação, lint com zero avisos, verificação estrita de tipos, testes e geração do site.
+THE SYSTEM SHALL oferecer um único comando de verificação que executa, nesta ordem: checagem de formatação, lint com zero avisos, verificação estrita de tipos, testes e geração do site. A validação de conteúdo (FR-007 a FR-012, FR-018) e a varredura de segredos (FR-016) rodam dentro da etapa de testes e da etapa de geração do site, e não como etapas à parte.
 
 ### FR-002: Parada na primeira falha (Must Have) — US-002
 WHEN qualquer etapa do comando de verificação falhar, THE SYSTEM SHALL parar, indicar qual etapa falhou e sair com código diferente de 0.
@@ -78,7 +90,7 @@ WHEN qualquer etapa do comando de verificação falhar, THE SYSTEM SHALL parar, 
 WHEN todas as etapas passarem, THE SYSTEM SHALL sair com código 0.
 
 ### FR-004: Suíte sem falhas (Must Have) — US-004
-THE SYSTEM SHALL ter uma suíte de testes em que nenhum teste falha, e cada teste que falha hoje SHALL ser corrigido ou removido conforme o FR-006. Esta spec é a dona dessa limpeza, inclusive da remoção do código fora do MVP (trilhas, personas, jogos e assistente de IA), nos termos do FR-006.
+THE SYSTEM SHALL ter uma suíte de testes em que nenhum teste falha: a suíte completa SHALL passar três vezes seguidas, e cada teste que falha hoje SHALL ser corrigido ou removido conforme o FR-006. Esta spec é a dona dessa limpeza, inclusive da remoção do código fora do MVP (trilhas, personas, jogos e assistente de IA), nos termos do FR-006.
 
 ### FR-005: Orçamento de tempo (Must Have) — US-004
 THE SYSTEM SHALL executar a suíte completa em até 60 s e o comando de verificação completo em até 120 s, medidos com a máquina sem outros processos pesados.
@@ -97,13 +109,13 @@ THE SYSTEM SHALL validar todo texto de conteúdo com versão em PT e em EN, amba
 THE SYSTEM SHALL validar toda data com ano obrigatório de 4 dígitos e mês opcional entre 1 e 12.
 
 ### FR-009: Imagem (Must Have) — US-001
-THE SYSTEM SHALL validar toda imagem com caminho, texto alternativo em PT e em EN (não vazios), largura e altura em pixels (inteiros positivos), e o arquivo da imagem SHALL existir no caminho informado; sem isso a página mostraria uma imagem quebrada.
+THE SYSTEM SHALL validar toda imagem com caminho, texto alternativo em PT e em EN (não vazios), largura e altura em pixels (inteiros positivos), e o arquivo da imagem SHALL existir no caminho informado; sem isso a página mostraria uma imagem quebrada. O caminho SHALL ser local (começar com uma única `/`); endereço externo é recusado.
 
 ### FR-010: Link (Must Have) — US-001
-THE SYSTEM SHALL validar todo link como um destes três formatos: endereço absoluto `https`; caminho interno que começa com uma única `/`; ou `mailto:` seguido de um endereço de e-mail de formato válido. THE SYSTEM SHALL recusar endereço sem protocolo (`//host`), `http`, `javascript:`, `tel:` e qualquer outro formato.
+THE SYSTEM SHALL validar todo link como um destes três formatos: endereço absoluto `https`; caminho interno que começa com uma única `/`; ou `mailto:` seguido de um endereço de e-mail de formato válido. THE SYSTEM SHALL recusar endereço sem protocolo (`//host`), `http`, `javascript:`, `tel:` e qualquer outro formato. THE SYSTEM SHALL recusar também `mailto:` com parâmetros (por exemplo `?subject=`), `https` com usuário e senha (`https://usuario:senha@host`) e a forma `/\host`.
 
 ### FR-011: Etiqueta (Must Have) — US-001
-THE SYSTEM SHALL validar toda etiqueta (tag) com identificador em minúsculas, números e hífen e rótulo localizado, e o identificador SHALL ser único no conjunto de etiquetas.
+THE SYSTEM SHALL validar toda etiqueta (tag) com identificador em minúsculas, números e hífen e rótulo localizado, e o identificador SHALL ser único no conjunto de etiquetas. O hífen só separa partes: o identificador não pode começar com hífen, terminar com hífen nem ter dois hífens seguidos.
 
 ### FR-012: Falha de validação (Must Have) — US-001
 IF um conteúdo violar qualquer regra dos FR-007 a FR-011, THE SYSTEM SHALL falhar a verificação e a geração do site, com a mensagem indicando arquivo, campo e motivo.
@@ -116,13 +128,16 @@ THE SYSTEM SHALL expor, para cada par de itens do mesmo ano, se a ordem entre el
 IF uma chave de texto de interface ou de conteúdo existir em só um idioma, THE SYSTEM SHALL falhar a verificação indicando a chave e o idioma que faltam.
 
 ### FR-015: Sem texto de reserva (Must Have) — US-003
-THE SYSTEM SHALL NOT mostrar a chave crua nem o texto do outro idioma como reserva em produção.
+THE SYSTEM SHALL tornar impossível, em produção, a falta de um idioma (FR-007, FR-012 e FR-014), e SHALL NOT devolver, em nenhuma função de leitura de texto localizado, a chave crua nem o texto do outro idioma como reserva.
 
 ### FR-016: Varredura de segredos (Must Have) — US-002
-WHEN o comando de verificação rodar, THE SYSTEM SHALL falhar se encontrar padrão de segredo em arquivo rastreado ou em variável de ambiente exposta ao público.
+WHEN o comando de verificação rodar, THE SYSTEM SHALL falhar se encontrar padrão de segredo em arquivo rastreado ou em variável exposta ao navegador. A lista de padrões, o critério de "variável exposta ao navegador" e as exceções são definidos no design.
 
 ### FR-017: Integração contínua (Won't nesta spec)
 THE SYSTEM WON'T rodar a verificação em integração contínua nesta spec; vai para a 010.
+
+### FR-018: Nota (Must Have) — US-001
+THE SYSTEM SHALL validar toda nota como número de 0,5 a 5 em passos de 0,5 (0,5; 1; 1,5; … 5). A nota ausente SHALL significar "sem nota" e SHALL NOT ser tratada como 0; o valor 0 e qualquer valor fora do passo de 0,5 ou do intervalo são recusados.
 
 ## Non-Functional Requirements
 ### NFR-001: Performance
@@ -131,7 +146,7 @@ THE SYSTEM WON'T rodar a verificação em integração contínua nesta spec; vai
 - O tempo é registrado a cada execução do comando de verificação, para a regressão aparecer.
 
 ### NFR-002: Segurança
-- Nenhum segredo no código rastreado nem em variável com prefixo público (FR-016).
+- Nenhum segredo no código rastreado nem em variável exposta ao navegador (FR-016).
 - Nenhum dado de teste contém credencial real.
 - Os pacotes de produção não têm vulnerabilidade conhecida reportada pela ferramenta de auditoria de dependências (hoje: 0).
 
@@ -199,6 +214,15 @@ A Duda decidiu mover o CI para a spec 010 (D-002).
 **Q:** Um link é `//exemplo.com`, `mailto:` sem endereço ou `tel:123`?
 **A:** Os três são erros de verificação (FR-010). `mailto:` com e-mail de formato válido é aceito.
 
+**Q:** Uma imagem aponta para `https://...` (hotlink)?
+**A:** A verificação falha: o caminho precisa ser local (FR-009, princípio 5 do steering).
+
+**Q:** Um item não tem nota, ou tem nota 0?
+**A:** Sem nota é ausência de valor e mostra sem estrelas. Nota 0 é erro, porque o intervalo vai de 0,5 a 5 em passos de 0,5 (FR-018). A média de vários critérios (a nota de um projeto) é calculada pela spec dona do catálogo (005), que decide o arredondamento; esta spec só valida as notas informadas.
+
+**Q:** A suíte passa uma vez e falha na segunda por carga?
+**A:** Conta como falha: a suíte completa precisa passar três vezes seguidas (FR-004).
+
 **Q:** O caminho de uma imagem está certo mas o arquivo foi renomeado ou apagado?
 **A:** A verificação falha com "arquivo não encontrado" (FR-009), em vez de publicar uma imagem quebrada.
 
@@ -213,7 +237,7 @@ A Duda decidiu mover o CI para a spec 010 (D-002).
 
 ## Success Metrics
 - [ ] O comando de verificação sai com 0 numa máquina limpa, em até 120 s.
-- [ ] A suíte termina com 0 falhas em até 60 s.
+- [ ] A suíte completa termina com 0 falhas, três vezes seguidas, em até 60 s (meta; o tempo aprovado pelo design é registrado no design).
 - [ ] Uma data inválida, uma imagem sem `alt` ou com arquivo inexistente, um link `//host`, uma tradução removida e uma etiqueta repetida quebram a verificação, cada uma com mensagem de arquivo, campo e motivo (testado).
 - [ ] O código fora do MVP (trilhas, personas, jogos, assistente de IA) foi removido na lista aprovada pela Duda, e a geração e a suíte passam.
 - [ ] O tempo de cada execução fica registrado.
@@ -247,11 +271,16 @@ A Duda decidiu mover o CI para a spec 010 (D-002).
 | Imagem | alt EN vazio | erro: texto alternativo |
 | Imagem | largura 0 ou 12,5 | erro: dimensão |
 | Imagem | caminho que não existe no disco | erro: arquivo não encontrado |
+| Imagem | caminho `https://exemplo.com/x.png` | erro: caminho externo (precisa ser local) |
+| Imagem | caminho `//cdn.exemplo.com/x.png` | erro: caminho externo (precisa ser local) |
 | Link | `https://exemplo.com/a` | válido |
 | Link | `/projetos` | válido |
 | Link | `mailto:contato@exemplo.com` | válido |
 | Link | `mailto:` (sem endereço) | erro: e-mail ausente |
 | Link | `mailto:semarroba` | erro: formato do e-mail |
+| Link | `mailto:contato@exemplo.com?subject=oi` | erro: `mailto:` com parâmetros |
+| Link | `https://usuario:senha@exemplo.com` | erro: `https` com usuário e senha |
+| Link | `/\exemplo.com` | erro: forma `/\host` |
 | Link | `//exemplo.com/a` | erro: endereço sem protocolo |
 | Link | `http://exemplo.com` | erro: precisa de `https` |
 | Link | `javascript:alert(1)` | erro: formato não aceito |
@@ -259,6 +288,16 @@ A Duda decidiu mover o CI para a spec 010 (D-002).
 | Link | `exemplo.com` | erro: formato |
 | Etiqueta | `react-19` | válida |
 | Etiqueta | `Meu Tema 19` | erro: formato do identificador |
+| Etiqueta | `-react` | erro: hífen no início |
+| Etiqueta | `react-` | erro: hífen no fim |
+| Etiqueta | `react--19` | erro: dois hífens seguidos |
+| Nota | `4,5` | válida |
+| Nota | `0,5` e `5` | válidas (limites) |
+| Nota | ausente | válida: "sem nota" (nunca 0) |
+| Nota | `0` | erro: fora do intervalo (0,5 a 5) |
+| Nota | `4,3` | erro: fora do passo de 0,5 |
+| Nota | `5,5` | erro: fora do intervalo |
+| Nota | `"4,5"` (texto) | erro: não é número |
 | Etiqueta | `react` duas vezes | erro: identificador repetido |
 
 ## Exibição de data
@@ -284,7 +323,15 @@ A Duda decidiu mover o CI para a spec 010 (D-002).
 | US-003 (parte da paridade) | US-003 |
 | FR-017 | FR-001, FR-002, FR-003 |
 | FR-018 | FR-004, FR-005, FR-006 (v1.2: a 001 é dona da remoção fora do MVP, D-004) |
-| FR-016 (varredura de segredos, nasceu na divisão como Should) | FR-016 (v1.2: Must, D-005) |
+| FR-016 (varredura de segredos, nasceu na divisão como Should) | FR-016 (v1.2: Must, D-005; v1.3: "variável exposta ao navegador", L-005) |
+| (v1.3, L-001) | FR-009 (caminho local) |
+| (v1.3, L-002) | FR-011 (hífen) |
+| (v1.3, L-003) | FR-010 (`mailto:` com parâmetros, `https` com credenciais, `/\host`) |
+| (v1.3, L-004) | FR-015 (testável) |
+| (v1.3, L-007) | FR-004 (três vezes seguidas) |
+| (v1.3, L-008) | FR-001 (validação e varredura dentro das etapas) |
+| (v1.3, L-012) | FR-018 (novo: nota de 0,5 a 5 em passos de 0,5) |
+| L-006, L-009, L-010, L-011 | Não aplicadas ao requisito por decisão da Duda (ver "Versão 1.3"); L-009 e L-010 são ratificadas no design |
 | FR-012 | FR-007 a FR-012 |
 | FR-013 | FR-013 |
 | FR-011 | FR-014, FR-015 |

@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>404 — tema escuro</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0E0E10;font-family:'IBM Plex Sans',system-ui,sans-serif}
+a{color:#8F98FF}a:hover{color:#ECECEE}
+.sg li:nth-child(1) a{border-left:6px solid #FFA36B}.sg li:nth-child(2) a{border-left:6px solid #FF8FCB}.sg li:nth-child(3) a{border-left:6px solid #4FD1D9}</style>
+</helmet>
+<div style="background:#0E0E10;color:#ECECEE;font-family:'IBM Plex Sans',system-ui,sans-serif;min-height:1000px">
+  <div style="background:#ECECEE;color:#0E0E10;font-family:'IBM Plex Mono',monospace;font-size:12px;padding:8px 56px">MOCKUP · página 404 · mantém a ideia do site atual (terminal “cd”), com sugestões de rotas reais · responde com status HTTP 404</div>
+  <div aria-hidden="true" style="display:flex;height:6px"><span style="flex:1;background:#8F98FF"></span><span style="flex:1;background:#FF8FCB"></span><span style="flex:1;background:#4FD1D9"></span><span style="flex:1;background:#FFA36B"></span><span style="flex:1;background:#FFD84D"></span></div>
+
+  <header style="max-width:1280px;margin:0 auto;box-sizing:border-box;padding:20px 56px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid #2C2C32">
+    <a href="#" style="font-family:'IBM Plex Mono',monospace;font-weight:500;font-size:18px;color:#ECECEE;text-decoration:none;min-height:44px;display:inline-flex;align-items:center">duda<span style="color:{{accent}}">/</span>portfólio</a>
+    <nav aria-label="Principal" style="display:flex;flex-wrap:wrap;gap:4px">
+      <a href="#" style="color:#A3A3AC;text-decoration:none;padding:0 14px;min-height:44px;display:inline-flex;align-items:center">Projetos</a>
+      <a href="#" style="color:#A3A3AC;text-decoration:none;padding:0 14px;min-height:44px;display:inline-flex;align-items:center">Casos</a>
+      <a href="#" style="color:#A3A3AC;text-decoration:none;padding:0 14px;min-height:44px;display:inline-flex;align-items:center">Currículo</a>
+      <a href="#" style="color:#A3A3AC;text-decoration:none;padding:0 14px;min-height:44px;display:inline-flex;align-items:center">Acadêmico</a>
+      <a href="#" style="color:#A3A3AC;text-decoration:none;padding:0 14px;min-height:44px;display:inline-flex;align-items:center">Contato</a>
+      <a href="#" style="color:#A3A3AC;text-decoration:none;padding:0 14px;min-height:44px;display:inline-flex;align-items:center">Pessoal</a>
+    </nav>
+    <div role="group" aria-label="Idioma" style="display:flex">
+      <button type="button" aria-pressed="true" style="min-height:44px;min-width:44px;background:#ECECEE;color:#0E0E10;border:1px solid #ECECEE;border-radius:6px 0 0 6px;font-family:'IBM Plex Mono',monospace;font-size:13px;cursor:pointer">PT</button>
+      <button type="button" aria-pressed="false" style="min-height:44px;min-width:44px;background:#17171A;color:#ECECEE;border:1px solid #7A7A84;border-left:0;border-radius:0 6px 6px 0;font-family:'IBM Plex Mono',monospace;font-size:13px;cursor:pointer">EN</button>
+    </div>
+  </header>
+
+  <main style="max-width:1280px;margin:0 auto;box-sizing:border-box;padding:72px 56px">
+    <p style="margin:0;font-family:'IBM Plex Mono',monospace;font-size:96px;line-height:1;font-weight:500"><span style="color:#FFA36B">4</span><span style="color:#FF8FCB">0</span><span style="color:#4FD1D9">4</span></p>
+    <h1 style="margin:16px 0 0;font-size:40px;line-height:1.15;font-weight:600;letter-spacing:-0.02em">Essa página não existe.</h1>
+    <p style="margin:12px 0 0;font-size:18px;line-height:1.55;color:#A3A3AC;max-width:560px">O endereço pode ter mudado ou ter sido digitado errado. Veja abaixo onde você pode querer ir.</p>
+
+    <div style="margin-top:32px;background:#17171A;border:1px solid #2C2C32;padding:20px 24px;font-family:'IBM Plex Mono',monospace;font-size:15px;line-height:1.8;max-width:640px">
+      <div><span style="color:{{accent}}">$</span> cd /curriculos</div>
+      <div style="color:#A3A3AC">bash: cd: /curriculos: 404</div>
+    </div>
+
+    <section aria-labelledby="sug" style="margin-top:40px;max-width:640px">
+      <h2 id="sug" style="margin:0 0 12px;font-size:14px;letter-spacing:0.08em;font-family:'IBM Plex Mono',monospace;font-weight:500;color:#A3A3AC">VOCÊ QUIS DIZER…</h2>
+      <ul class="sg" style="list-style:none;margin:0;padding:0;display:grid;gap:10px">
+        <sc-for list="{{sugestoes}}" as="s" hint-placeholder-count="3">
+          <li><a href="#" style="display:flex;justify-content:space-between;align-items:center;min-height:48px;box-sizing:border-box;padding:0 18px;border:1px solid #7A7A84;text-decoration:none;color:#ECECEE;font-family:'IBM Plex Mono',monospace;font-size:15px"><span>{{s.path}}</span><span style="color:#A3A3AC;font-size:13px">{{s.label}}</span></a></li>
+        </sc-for>
+      </ul>
+    </section>
+
+    <a href="#" style="display:inline-flex;align-items:center;justify-content:center;margin-top:32px;min-height:48px;padding:0 26px;background:{{accent}};color:#0E0E10;border-radius:6px;font-weight:600;font-size:16px;text-decoration:none">Voltar ao início</a>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#8F98FF","options":["#8F98FF","#E58AC8","#5CC8D2","#F0A070"]},"$preview":{"width":1280,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      accent: this.props.accent ?? '#8F98FF',
+      sugestoes: [
+        { path: '/curriculo', label: 'Currículo' },
+        { path: '/projetos', label: 'Projetos' },
+        { path: '/contato', label: 'Contato' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

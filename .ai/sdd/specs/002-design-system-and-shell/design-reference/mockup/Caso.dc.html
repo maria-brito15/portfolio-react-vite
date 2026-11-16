@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Estudo de caso — WhatsApp Dispatcher, tema escuro</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0E0E10;font-family:'IBM Plex Sans',system-ui,sans-serif}
+a{color:#8F98FF}a:hover{color:#ECECEE}
+</style>
+</helmet>
+<div style="background:#0E0E10;color:#ECECEE;font-family:'IBM Plex Sans',system-ui,sans-serif;min-height:2500px">
+  <div style="background:#ECECEE;color:#0E0E10;font-family:'IBM Plex Mono',monospace;font-size:12px;padding:8px 56px">MOCKUP · estudo de caso real migrado da página atual · trechos longos aparecem resumidos com [...] · o texto completo entra na spec de estudos de caso</div>
+  <div aria-hidden="true" style="display:flex;height:6px"><span style="flex:1;background:#8F98FF"></span><span style="flex:1;background:#FF8FCB"></span><span style="flex:1;background:#4FD1D9"></span><span style="flex:1;background:#FFA36B"></span><span style="flex:1;background:#FFD84D"></span></div>
+
+  <header style="max-width:1280px;margin:0 auto;box-sizing:border-box;padding:20px 56px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid #2C2C32">
+    <a href="#" style="font-family:'IBM Plex Mono',monospace;font-weight:500;font-size:18px;color:#ECECEE;text-decoration:none;min-height:44px;display:inline-flex;align-items:center">duda<span style="color:{{accent}}">/</span>portfólio</a>
+    <nav aria-label="Principal" style="display:flex;flex-wrap:wrap;gap:4px">
+      <a href="#" style="color:#A3A3AC;text-decoration:none;padding:0 14px;min-height:44px;display:inline-flex;align-items:center">Projetos</a>
+      <a href="#" aria-current="page" style="color:#ECECEE;text-decoration:none;font-weight:600;padding:0 14px;min-height:44px;display:inline-flex;align-items:center;border-bottom:2px solid {{accent}}">Casos</a>
+      <a href="#" style="color:#A3A3AC;text-decoration:none;padding:0 14px;min-height:44px;display:inline-flex;align-items:center">Currículo</a>
+      <a href="#" style="color:#A3A3AC;text-decoration:none;padding:0 14px;min-height:44px;display:inline-flex;align-items:center">Acadêmico</a>
+      <a href="#" style="color:#A3A3AC;text-decoration:none;padding:0 14px;min-height:44px;display:inline-flex;align-items:center">Contato</a>
+      <a href="#" style="color:#A3A3AC;text-decoration:none;padding:0 14px;min-height:44px;display:inline-flex;align-items:center">Pessoal</a>
+    </nav>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button type="button" aria-label="Mudar para o tema claro" style="min-height:44px;min-width:44px;padding:0 14px;background:#17171A;color:#ECECEE;border:1px solid #7A7A84;border-radius:6px;font-family:'IBM Plex Mono',monospace;font-size:13px;cursor:pointer">Claro</button>
+      <div role="group" aria-label="Idioma" style="display:flex">
+        <button type="button" aria-pressed="true" style="min-height:44px;min-width:44px;background:#ECECEE;color:#0E0E10;border:1px solid #ECECEE;border-radius:6px 0 0 6px;font-family:'IBM Plex Mono',monospace;font-size:13px;cursor:pointer">PT</button>
+        <button type="button" aria-pressed="false" style="min-height:44px;min-width:44px;background:#17171A;color:#ECECEE;border:1px solid #7A7A84;border-left:0;border-radius:0 6px 6px 0;font-family:'IBM Plex Mono',monospace;font-size:13px;cursor:pointer">EN</button>
+      </div>
+    </div>
+  </header>
+
+  <main style="max-width:1280px;margin:0 auto;box-sizing:border-box;padding:0 56px 72px">
+    <div style="padding:24px 0 8px"><a href="#" style="font-family:'IBM Plex Mono',monospace;font-size:13px;min-height:44px;display:inline-flex;align-items:center">← Voltar aos projetos</a></div>
+
+    <section style="padding:8px 0 40px;max-width:860px">
+      <span style="display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.06em;color:{{accent}};border:1px solid {{accent}};padding:3px 10px">ESTUDO DE CASO · DESAFIO TÉCNICO DE ESTÁGIO</span>
+      <h1 style="margin:16px 0 0;font-size:56px;line-height:1.05;letter-spacing:-0.025em;font-weight:600">WhatsApp Dispatcher</h1>
+      <p style="margin:20px 0 0;font-size:19px;line-height:1.6;color:#A3A3AC">Registro do raciocínio de arquitetura por trás de um sistema de disparo de mensagens no WhatsApp, campanhas e fluxos automatizados. O foco está nas decisões: por que cada parte do sistema existe, o problema específico que resolve e o que foi deixado de fora de propósito, e não na implementação em si, que é parcial.</p>
+      <ul style="list-style:none;margin:20px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:8px">
+        <sc-for list="{{tags}}" as="t" hint-placeholder-count="5">
+          <li style="font-family:'IBM Plex Mono',monospace;font-size:12px;border:1px solid #7A7A84;padding:4px 10px;border-radius:999px">{{t}}</li>
+        </sc-for>
+      </ul>
+    </section>
+
+    <aside aria-labelledby="escopo" style="background:#17171A;border:1px solid #2C2C32;padding:22px 24px;margin-bottom:48px">
+      <h2 id="escopo" style="margin:0 0 14px;font-size:16px;font-weight:600">Escopo deste material</h2>
+      <dl style="margin:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;font-size:14px;line-height:1.55">
+        <sc-for list="{{escopo}}" as="e" hint-placeholder-count="3">
+          <div><dt style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:{{accent}};margin-bottom:6px">{{e.k}}</dt><dd style="margin:0;color:#A3A3AC">{{e.v}}</dd></div>
+        </sc-for>
+      </dl>
+    </aside>
+
+    <div style="display:flex;flex-wrap:wrap;gap:56px;align-items:flex-start;border-top:1px solid #2C2C32;padding-top:40px">
+      <nav aria-labelledby="toc" style="flex:0 0 250px;position:static">
+        <h2 id="toc" style="margin:0 0 12px;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.06em;font-weight:500;color:#A3A3AC">NESTA PÁGINA</h2>
+        <ol style="list-style:none;margin:0;padding:0;border-left:1px solid #2C2C32">
+          <sc-for list="{{toc}}" as="s" hint-placeholder-count="14">
+            <li><a href="#" style="display:block;padding:6px 0 6px 14px;margin-left:-1px;border-left:2px solid {{s.bar}};color:{{s.color}};text-decoration:none;font-size:14px;line-height:1.35">{{s.label}}</a></li>
+          </sc-for>
+        </ol>
+      </nav>
+
+      <article style="flex:1 1 560px;min-width:0;max-width:740px;font-size:17px;line-height:1.7;color:#A3A3AC">
+        <h2 style="margin:0 0 14px;font-size:28px;line-height:1.2;letter-spacing:-0.015em;font-weight:600;color:#ECECEE">Contexto e escopo</h2>
+        <p style="margin:0 0 16px">O projeto parte de um problema deliberadamente pequeno: um disparador de mensagens no WhatsApp, do tipo usado para campanhas de marketing ou sequências automáticas de mensagens, como um lembrete de pagamento ou um "sentimos sua falta" alguns dias depois de um cliente sumir.</p>
+        <p style="margin:0 0 20px">Apesar do tamanho pequeno, o domínio concentra uma complexidade real: muitas mensagens saindo ao mesmo tempo, falhas parciais esperadas como parte normal da operação, e a exigência de que o sistema permaneça consistente mesmo quando alguma parte falha no meio do caminho.</p>
+        <div style="background:#17171A;border:1px solid #2C2C32;border-left:3px solid {{accent}};padding:16px 20px;margin:0 0 40px;font-size:16px;color:#ECECEE">O objetivo deste documento é registrar decisões de arquitetura: quais problemas cada uma resolve, quais alternativas foram descartadas e por quê, e onde o escopo foi conscientemente limitado.</div>
+
+        <h2 style="margin:0 0 14px;font-size:28px;line-height:1.2;letter-spacing:-0.015em;font-weight:600;color:#ECECEE">O problema real</h2>
+        <p style="margin:0 0 16px">[...] explicação em linguagem simples, como no texto atual.</p>
+        <div style="background:#17171A;border:1px solid #2C2C32;padding:14px 18px;margin:0 0 40px;font-size:15px">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:{{accent}};margin-bottom:6px">EM TERMOS TÉCNICOS</div>
+          [...] o bloco técnico com os termos e padrões formais por trás da decisão (cada seção tem um).
+        </div>
+
+        <h2 style="margin:0 0 14px;font-size:28px;line-height:1.2;letter-spacing:-0.015em;font-weight:600;color:#ECECEE">Os três processos que fazem o trabalho pesado</h2>
+        <ul style="list-style:none;margin:0 0 40px;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px">
+          <sc-for list="{{workers}}" as="w" hint-placeholder-count="3">
+            <li style="background:#17171A;border:1px solid #2C2C32;padding:16px">
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:{{accent}}">{{w.en}}</div>
+              <div style="margin-top:4px;font-weight:600;font-size:17px;color:#ECECEE">{{w.pt}}</div>
+              <p style="margin:6px 0 0;font-size:14px;line-height:1.5">[...]</p>
+            </li>
+          </sc-for>
+        </ul>
+
+        <h2 style="margin:0 0 14px;font-size:28px;line-height:1.2;letter-spacing:-0.015em;font-weight:600;color:#ECECEE">O que foi ganho e o que foi cedido em cada escolha</h2>
+        <p style="margin:0 0 16px">Nenhuma decisão de arquitetura é gratuita: toda escolha resolve um problema e introduz outro, geralmente menor.</p>
+        <div style="overflow-x:auto;margin:0 0 40px">
+          <table style="width:100%;border-collapse:collapse;font-size:14px;line-height:1.5;min-width:560px">
+            <thead><tr>
+              <th scope="col" style="text-align:left;padding:10px 12px;border-bottom:1px solid #7A7A84;font-family:'IBM Plex Mono',monospace;font-size:12px;color:#ECECEE;width:30%">Decisão</th>
+              <th scope="col" style="text-align:left;padding:10px 12px;border-bottom:1px solid #7A7A84;font-family:'IBM Plex Mono',monospace;font-size:12px;color:#ECECEE;width:35%">Ganho</th>
+              <th scope="col" style="text-align:left;padding:10px 12px;border-bottom:1px solid #7A7A84;font-family:'IBM Plex Mono',monospace;font-size:12px;color:#ECECEE">Custo aceito</th>
+            </tr></thead>
+            <tbody>
+              <sc-for list="{{tradeoffs}}" as="r" hint-placeholder-count="4">
+                <tr>
+                  <th scope="row" style="text-align:left;font-weight:600;padding:12px;border-bottom:1px solid #2C2C32;color:#ECECEE;vertical-align:top">{{r.d}}</th>
+                  <td style="padding:12px;border-bottom:1px solid #2C2C32;vertical-align:top">{{r.g}}</td>
+                  <td style="padding:12px;border-bottom:1px solid #2C2C32;vertical-align:top">{{r.c}}</td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 style="margin:0 0 14px;font-size:28px;line-height:1.2;letter-spacing:-0.015em;font-weight:600;color:#ECECEE">O que mudaria para um cenário real de produção</h2>
+        <p style="margin:0 0 40px">[...] seção atual, migrada como está.</p>
+
+        <h2 style="margin:0 0 14px;font-size:28px;line-height:1.2;letter-spacing:-0.015em;font-weight:600;color:#ECECEE">Glossário</h2>
+        <p style="margin:0">[...] termos do domínio e padrões formais, como no texto atual.</p>
+      </article>
+    </div>
+
+    <nav aria-label="Casos" style="margin-top:64px;border-top:1px solid #2C2C32;padding-top:24px;display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center">
+      <a href="#" style="font-family:'IBM Plex Mono',monospace;font-size:14px;min-height:44px;display:inline-flex;align-items:center">← Voltar aos projetos</a>
+      <a href="#" style="min-height:48px;padding:0 22px;display:inline-flex;align-items:center;background:{{accent}};color:#0E0E10;text-decoration:none;font-weight:600;border-radius:6px">Conversar sobre este caso</a>
+    </nav>
+  </main>
+
+  <footer style="max-width:1280px;margin:0 auto;box-sizing:border-box;padding:56px 56px 48px;border-top:2px solid #7A7A84;text-align:center;font-family:'IBM Plex Mono',monospace;color:#A3A3AC">
+    <div style="font-size:12px;letter-spacing:0.3em">UM PORTFÓLIO DE ENGENHARIA</div>
+    <div style="font-size:44px;font-weight:500;letter-spacing:0.18em;color:#ECECEE;margin:14px 0 22px;line-height:1.1">DIRECTED BY DUDA</div>
+    <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:6px 18px;max-width:640px;margin:0 auto;font-size:12px;letter-spacing:0.08em;line-height:1.7">
+      <span style="text-align:right">ROTEIRO E CÓDIGO</span><span style="text-align:left;color:#ECECEE">Duda</span>
+      <span style="text-align:right">ELENCO</span><span style="text-align:left;color:#ECECEE">React 19 · Vite 6 · TypeScript</span>
+      <span style="text-align:right">TRILHA SONORA</span><span style="text-align:left;color:#ECECEE">[sua playlist]</span>
+      <span style="text-align:right">FILMADO EM</span><span style="text-align:left;color:#ECECEE">Belo Horizonte, MG</span>
+    </div>
+    <div style="margin-top:26px;font-size:12px;letter-spacing:0.3em">FIM</div>
+    <div style="margin-top:18px;font-size:12px">© 2026 Duda · sem rastreadores · PT · EN</div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#8F98FF","options":["#8F98FF","#E58AC8","#5CC8D2","#F0A070"]},"$preview":{"width":1280,"height":2500}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const sections = ['Contexto e escopo', 'O problema real', 'Linguagem do domínio', 'Campanha vs. Fluxo, na prática', 'Como uma execução se comporta', 'Por que separar o sistema em camadas', 'Por que usar uma fila de processamento', 'Os três processos que fazem o trabalho pesado', 'Garantindo que ninguém recebe a mesma mensagem duas vezes', 'Duas outras funções de uma mesma ferramenta', 'Como os dados são guardados', 'O que foi ganho e o que foi cedido', 'O que mudaria em produção', 'Glossário'];
+    return {
+      accent: this.props.accent ?? '#8F98FF',
+      tags: ['BullMQ', 'Redis', 'PostgreSQL', 'Prisma', 'DDD', 'Clean Architecture'],
+      escopo: [
+        { k: 'Implementação original', v: 'Resposta a um desafio técnico de estágio. A implementação é parcial e é a única parte que existe como código.' },
+        { k: 'Análises posteriores', v: 'O raciocínio de arquitetura desta página foi escrito depois, sobre o que foi feito e o que ficou de fora.' },
+        { k: 'Possíveis evoluções', v: 'Spec-Driven Development, desenvolvimento agêntico ou n8n poderiam ser explorados. Nenhum foi implementado.' }
+      ],
+      toc: sections.map((label, i) => ({ label, bar: i === 0 ? '#8F98FF' : 'transparent', color: i === 0 ? '#ECECEE' : '#A3A3AC' })),
+      workers: [
+        { en: 'scheduler', pt: 'O organizador' },
+        { en: 'sender', pt: 'O remetente' },
+        { en: 'reconciliation', pt: 'O corretor' }
+      ],
+      tradeoffs: [
+        { d: 'Separar o sistema em camadas', g: 'Testabilidade isolada das regras de negócio e substituição de ferramentas técnicas sem afetá-las', c: 'Mais partes e mais organização do que um sistema simples exigiria' },
+        { d: 'Os três processos rodam juntos, no mesmo projeto', g: 'Menos custo e complexidade de manutenção nesta fase', c: 'Cada processo ainda não escala de forma totalmente independente dos outros' },
+        { d: 'O corretor verifica problemas em intervalos, não em tempo real', g: 'Mais simples de construir e de entender', c: 'Um problema pode demorar um pouco para ser percebido e corrigido, em vez de instantâneo' },
+        { d: 'Formato único de registro de auditoria para todo tipo de evento', g: 'Menos estrutura para manter', c: 'Consulta ao histórico de um tipo específico de evento é um pouco menos otimizada' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

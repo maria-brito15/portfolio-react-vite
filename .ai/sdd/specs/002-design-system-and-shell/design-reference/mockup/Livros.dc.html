@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Livros — Hardcover</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'IBM Plex Sans',system-ui,sans-serif}
+a{color:#2B36D9}a:hover{color:#17171A}
+.cv{background:#FFD9C7}li:nth-child(6n+2) .cv{background:#E4E1FF}li:nth-child(6n+3) .cv{background:#C9EDD8}li:nth-child(6n+4) .cv{background:#FFEEA8}li:nth-child(6n+5) .cv{background:#CFE8FF}li:nth-child(6n+6) .cv{background:#FFD3E8}.c1{background:#E4E1FF}.c2{background:#FFD9C7}.c3{background:#C9EDD8}.c4{background:#FFEEA8}</style>
+</helmet>
+<div style="background:#FFF7EA;color:#17171A;font-family:'IBM Plex Sans',system-ui,sans-serif;min-height:1700px">
+  <div style="background:#17171A;color:#ECECEE;font-family:'IBM Plex Mono',monospace;font-size:12px;padding:8px 56px">MOCKUP · /pessoal/livros · dados do Hardcover (API GraphQL) · títulos, capas e notas são [exemplos]</div>
+  <div aria-hidden="true" style="display:flex;height:6px"><span style="flex:1;background:#2B36D9"></span><span style="flex:1;background:#B4308A"></span><span style="flex:1;background:#0A6E78"></span><span style="flex:1;background:#B4410F"></span><span style="flex:1;background:#E0A800"></span></div>
+
+  <header style="max-width:1280px;margin:0 auto;box-sizing:border-box;padding:20px 56px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid #D9D9D4">
+    <a href="#" style="font-family:'IBM Plex Mono',monospace;font-weight:500;font-size:18px;color:#17171A;text-decoration:none;min-height:44px;display:inline-flex;align-items:center">duda<span style="color:{{accent}}">/</span>portfólio</a>
+    <nav aria-label="Principal" style="display:flex;flex-wrap:wrap;gap:4px">
+      <a href="#" style="color:#585861;text-decoration:none;padding:0 14px;min-height:44px;display:inline-flex;align-items:center">Projetos</a>
+      <a href="#" style="color:#585861;text-decoration:none;padding:0 14px;min-height:44px;display:inline-flex;align-items:center">Casos</a>
+      <a href="#" style="color:#585861;text-decoration:none;padding:0 14px;min-height:44px;display:inline-flex;align-items:center">Currículo</a>
+      <a href="#" style="color:#585861;text-decoration:none;padding:0 14px;min-height:44px;display:inline-flex;align-items:center">Acadêmico</a>
+      <a href="#" style="color:#585861;text-decoration:none;padding:0 14px;min-height:44px;display:inline-flex;align-items:center">Contato</a>
+      <a href="#" aria-current="page" style="color:#17171A;text-decoration:none;font-weight:600;padding:0 14px;min-height:44px;display:inline-flex;align-items:center;border-bottom:2px solid {{accent}}">Pessoal</a>
+    </nav>
+    <div role="group" aria-label="Idioma" style="display:flex">
+      <button type="button" aria-pressed="true" style="min-height:44px;min-width:44px;background:#17171A;color:#FFF7EA;border:1px solid #17171A;border-radius:6px 0 0 6px;font-family:'IBM Plex Mono',monospace;font-size:13px;cursor:pointer">PT</button>
+      <button type="button" aria-pressed="false" style="min-height:44px;min-width:44px;background:#FFFFFF;color:#17171A;border:1px solid #77777F;border-left:0;border-radius:0 6px 6px 0;font-family:'IBM Plex Mono',monospace;font-size:13px;cursor:pointer">EN</button>
+    </div>
+  </header>
+
+  <main style="max-width:1280px;margin:0 auto;box-sizing:border-box;padding:0 56px 72px">
+    <nav aria-label="Pessoal" style="display:flex;flex-wrap:wrap;gap:8px;padding:28px 0 0">
+      <a href="#" style="min-height:44px;display:inline-flex;align-items:center;padding:0 18px;border:1px solid #77777F;color:#17171A;text-decoration:none;font-size:15px;border-radius:6px">Bastidores</a>
+      <a href="#" style="min-height:44px;display:inline-flex;align-items:center;padding:0 18px;border:1px solid #77777F;color:#17171A;text-decoration:none;font-size:15px;border-radius:6px">Filmes</a>
+      <a href="#" aria-current="page" style="min-height:44px;display:inline-flex;align-items:center;padding:0 18px;background:#17171A;color:#FFF7EA;text-decoration:none;font-size:15px;border-radius:6px">Livros</a>
+      <a href="#" style="min-height:44px;display:inline-flex;align-items:center;padding:0 18px;border:1px solid #77777F;color:#17171A;text-decoration:none;font-size:15px;border-radius:6px">Música</a>
+    </nav>
+
+    <section style="padding:32px 0 24px;display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;align-items:flex-end">
+      <div style="max-width:640px">
+        <h1 style="margin:0;font-size:48px;line-height:1.05;letter-spacing:-0.02em;font-weight:600">Livros</h1>
+        <p style="margin:12px 0 0;font-size:18px;line-height:1.55;color:#585861">Minha estante do Hardcover: o que estou lendo, o que já li e o que quero ler.</p>
+      </div>
+      <a href="#" style="display:inline-flex;align-items:center;min-height:44px;font-family:'IBM Plex Mono',monospace;font-size:13px">Ver perfil no Hardcover ↗</a>
+    </section>
+
+    <section aria-label="Resumo" style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:36px">
+      <sc-for list="{{stats}}" as="s" hint-placeholder-count="4">
+        <div class="{{s.c}}" style="border:1px solid #D9D9D4;padding:16px 18px">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:28px;font-weight:500">{{s.v}}</div>
+          <div style="margin-top:2px;font-size:13px;color:#585861">{{s.k}}</div>
+        </div>
+      </sc-for>
+    </section>
+
+    <section aria-labelledby="lendo" style="margin-bottom:44px">
+      <h2 id="lendo" style="margin:0 0 14px;font-size:14px;letter-spacing:0.08em;font-family:'IBM Plex Mono',monospace;font-weight:500;color:#585861">LENDO AGORA</h2>
+      <div style="display:flex;flex-wrap:wrap;gap:24px;background:#FFFFFF;border:1px solid #D9D9D4;padding:20px">
+        <div class="cv" role="img" aria-label="Capa de exemplo" style="width:120px;aspect-ratio:2/3;border:1px solid #D9D9D4;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:12px;color:#585861">[capa]</div>
+        <div style="flex:1 1 320px;min-width:0">
+          <div style="font-size:22px;font-weight:600">[Título do livro atual]</div>
+          <div style="margin-top:4px;color:#585861">[Autor(a)]</div>
+          <div style="margin-top:18px;font-family:'IBM Plex Mono',monospace;font-size:13px;color:#585861">Página [000] de [000] · [00]%</div>
+          <div role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="42" aria-label="Progresso de leitura (exemplo)" style="margin-top:8px;height:10px;background:#E6E6E1;border:1px solid #77777F;max-width:420px"><div style="width:42%;height:100%;background:{{accent}}"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="lidos" style="margin-bottom:44px">
+      <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:14px">
+        <h2 id="lidos" style="margin:0;font-size:14px;letter-spacing:0.08em;font-family:'IBM Plex Mono',monospace;font-weight:500;color:#585861">LIDOS</h2>
+        <div role="group" aria-label="Filtrar por estante" style="display:flex;flex-wrap:wrap;gap:8px">
+          <button type="button" aria-pressed="true" style="min-height:44px;padding:0 16px;background:#17171A;color:#FFF7EA;border:1px solid #17171A;border-radius:6px;font-family:'IBM Plex Mono',monospace;font-size:13px;cursor:pointer">Lidos</button>
+          <button type="button" aria-pressed="false" style="min-height:44px;padding:0 16px;background:#FFFFFF;color:#17171A;border:1px solid #77777F;border-radius:6px;font-family:'IBM Plex Mono',monospace;font-size:13px;cursor:pointer">Quero ler</button>
+          <button type="button" aria-pressed="false" style="min-height:44px;padding:0 16px;background:#FFFFFF;color:#17171A;border:1px solid #77777F;border-radius:6px;font-family:'IBM Plex Mono',monospace;font-size:13px;cursor:pointer">Abandonados</button>
+        </div>
+      </div>
+      <ul style="list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:16px">
+        <sc-for list="{{books}}" as="b" hint-placeholder-count="10">
+          <li>
+            <div class="cv" role="img" aria-label="Capa de exemplo" style="aspect-ratio:2/3;border:1px solid #D9D9D4;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:12px;color:#585861">[capa]</div>
+            <div style="margin-top:8px;font-weight:600;font-size:15px;line-height:1.3">{{b.t}}</div>
+            <div style="font-size:13px;color:#585861">{{b.a}}</div>
+            <div aria-label="{{b.label}}" style="margin-top:2px;font-family:'IBM Plex Mono',monospace;letter-spacing:2px;color:{{accent}}">{{b.stars}}</div>
+          </li>
+        </sc-for>
+      </ul>
+      <p style="margin:16px 0 0;font-family:'IBM Plex Mono',monospace;font-size:12px;color:#585861">Atualizado em [data da última sincronização] · fonte: Hardcover</p>
+    </section>
+
+    <aside style="background:#FFFFFF;border:1px solid #D9D9D4;border-left:3px solid #B4410F;padding:16px 20px;font-size:14px;line-height:1.6;max-width:760px">
+      <strong>Aviso de projeto (some do site final):</strong> a API do Hardcover é GraphQL e exige um token pessoal. Esse token precisa ficar só no servidor (função do Netlify), nunca no código do navegador, e a resposta deve ser guardada em cache para o site não depender da API a cada visita. Os termos de uso e os limites de requisições ainda não foram verificados (spec 008).
+    </aside>
+  </main>
+
+  <footer style="max-width:1280px;margin:0 auto;box-sizing:border-box;padding:56px 56px 48px;border-top:2px solid #17171A;text-align:center;font-family:'IBM Plex Mono',monospace;color:#585861">
+    <div style="font-size:12px;letter-spacing:0.3em">UM PORTFÓLIO DE ENGENHARIA</div>
+    <div style="font-size:44px;font-weight:500;letter-spacing:0.18em;color:#17171A;margin:14px 0 22px;line-height:1.1">DIRECTED BY DUDA</div>
+    <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:6px 18px;max-width:640px;margin:0 auto;font-size:12px;letter-spacing:0.08em;line-height:1.7">
+      <span style="text-align:right">ROTEIRO E CÓDIGO</span><span style="text-align:left;color:#17171A">Duda</span>
+      <span style="text-align:right">ELENCO</span><span style="text-align:left;color:#17171A">React 19 · Vite 6 · TypeScript</span>
+      <span style="text-align:right">TRILHA SONORA</span><span style="text-align:left;color:#17171A">[sua playlist]</span>
+      <span style="text-align:right">FILMADO EM</span><span style="text-align:left;color:#17171A">Belo Horizonte, MG</span>
+    </div>
+    <div style="margin-top:26px;font-size:12px;letter-spacing:0.3em">FIM</div>
+    <div style="margin-top:18px;font-size:12px">© 2026 Duda · sem rastreadores · PT · EN</div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#2B36D9","options":["#2B36D9","#B4308A","#0A6E78","#B4410F"]},"$preview":{"width":1280,"height":1700}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const mk = (i, stars, n) => ({ t: '[Livro de exemplo ' + i + ']', a: '[Autor(a)]', stars, label: 'nota ' + n + ' de 5' });
+    return {
+      accent: this.props.accent ?? '#2B36D9',
+      stats: [ { v: '[00]', k: 'livros lidos', c: 'c1' }, { v: '[00]', k: 'neste ano', c: 'c2' }, { v: '[0,0]', k: 'nota média', c: 'c3' }, { v: '[0000]', k: 'páginas lidas', c: 'c4' } ],
+      books: [ mk('01','★★★★★','5'), mk('02','★★★★☆','4'), mk('03','★★★☆☆','3'), mk('04','★★★★☆','4'), mk('05','★★★★★','5'),
+               mk('06','★★★☆☆','3'), mk('07','★★★★☆','4'), mk('08','★★☆☆☆','2'), mk('09','★★★★☆','4'), mk('10','★★★★★','5') ]
+    };
+  }
+}
+</script>
+</body>
+</html>

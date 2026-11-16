@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Projeto e estudo de caso — tema escuro</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0E0E10;font-family:'IBM Plex Sans',system-ui,sans-serif}
+a{color:#8F98FF}a:hover{color:#ECECEE}
+.t1{background:#5A2A4E}.t2{background:#1F5A62}.t3{background:#6B3A1E}.t4{background:#2F3A9E}
+</style>
+</helmet>
+<div style="background:#0E0E10;color:#ECECEE;font-family:'IBM Plex Sans',system-ui,sans-serif;min-height:1820px">
+  <div style="background:#ECECEE;color:#0E0E10;font-family:'IBM Plex Mono',monospace;font-size:12px;padding:8px 56px">MOCKUP · tema escuro · todo texto, número e capa aqui é exemplo, não dado real</div>
+  <div aria-hidden="true" style="display:flex;height:6px"><span style="flex:1;background:#8F98FF"></span><span style="flex:1;background:#FF8FCB"></span><span style="flex:1;background:#4FD1D9"></span><span style="flex:1;background:#FFA36B"></span><span style="flex:1;background:#FFD84D"></span></div>
+
+  <header style="max-width:1280px;margin:0 auto;box-sizing:border-box;padding:20px 56px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid #2C2C32">
+    <a href="#" style="font-family:'IBM Plex Mono',monospace;font-weight:500;font-size:18px;color:#ECECEE;text-decoration:none;min-height:44px;display:inline-flex;align-items:center">duda<span style="color:{{accent}}">/</span>portfólio</a>
+    <nav aria-label="Principal" style="display:flex;flex-wrap:wrap;gap:4px">
+      <a href="#" aria-current="page" style="color:#ECECEE;text-decoration:none;font-weight:600;padding:0 14px;min-height:44px;display:inline-flex;align-items:center;border-bottom:2px solid {{accent}}">Projetos</a>
+      <a href="#" style="color:#A3A3AC;text-decoration:none;padding:0 14px;min-height:44px;display:inline-flex;align-items:center">Casos</a>
+      <a href="#" style="color:#A3A3AC;text-decoration:none;padding:0 14px;min-height:44px;display:inline-flex;align-items:center">Currículo</a>
+      <a href="#" style="color:#A3A3AC;text-decoration:none;padding:0 14px;min-height:44px;display:inline-flex;align-items:center">Acadêmico</a>
+      <a href="#" style="color:#A3A3AC;text-decoration:none;padding:0 14px;min-height:44px;display:inline-flex;align-items:center">Contato</a>
+      <a href="#" style="color:#A3A3AC;text-decoration:none;padding:0 14px;min-height:44px;display:inline-flex;align-items:center">Pessoal</a>
+    </nav>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button type="button" aria-label="Mudar para o tema claro" style="min-height:44px;min-width:44px;padding:0 14px;background:#17171A;color:#ECECEE;border:1px solid #7A7A84;border-radius:6px;font-family:'IBM Plex Mono',monospace;font-size:13px;cursor:pointer">Claro</button>
+      <div role="group" aria-label="Idioma" style="display:flex">
+        <button type="button" aria-pressed="true" style="min-height:44px;min-width:44px;background:#ECECEE;color:#0E0E10;border:1px solid #ECECEE;border-radius:6px 0 0 6px;font-family:'IBM Plex Mono',monospace;font-size:13px;cursor:pointer">PT</button>
+        <button type="button" aria-pressed="false" style="min-height:44px;min-width:44px;background:#17171A;color:#ECECEE;border:1px solid #7A7A84;border-left:0;border-radius:0 6px 6px 0;font-family:'IBM Plex Mono',monospace;font-size:13px;cursor:pointer">EN</button>
+      </div>
+    </div>
+  </header>
+
+  <main style="max-width:1280px;margin:0 auto;box-sizing:border-box;padding:0 56px 72px">
+    <nav aria-label="Trilha" style="padding:24px 0 8px;font-family:'IBM Plex Mono',monospace;font-size:13px;color:#A3A3AC"><a href="#">Projetos</a> / <span aria-current="page" style="color:#ECECEE">[Projeto de exemplo 01]</span></nav>
+
+    <section aria-labelledby="titulo" style="display:flex;flex-wrap:wrap;gap:40px;padding:24px 0 48px;align-items:flex-start">
+      <div class="t2" style="width:260px;flex:none;aspect-ratio:2/3;border:1px solid #2C2C32;padding:16px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:12px;color:#ECECEE">
+        <span>[capa de exemplo]</span>
+        <span style="font-size:64px;font-weight:500;letter-spacing:-0.04em">01</span>
+      </div>
+
+      <div style="flex:999 1 420px;min-width:0">
+        <p style="margin:0 0 8px;font-family:'IBM Plex Mono',monospace;font-size:13px;color:#A3A3AC">2026 · [papel] · concluído</p>
+        <h1 id="titulo" style="margin:0;font-size:48px;line-height:1.08;letter-spacing:-0.02em;font-weight:600">[Projeto de exemplo 01]</h1>
+        <div style="display:flex;align-items:center;gap:14px;margin-top:18px">
+          <span role="img" aria-label="4 e meia de 5 estrelas" style="color:{{accent}};letter-spacing:3px;font-size:24px">★★★★½</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#A3A3AC">4,5 · média de 4 critérios públicos</span>
+        </div>
+        <p style="margin:22px 0 0;font-size:19px;line-height:1.6;color:#A3A3AC;max-width:680px">[Resumo em duas frases: o problema, para quem, e o resultado mais concreto que você consegue provar.]</p>
+        <ul style="list-style:none;margin:22px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:8px">
+          <sc-for list="{{tags}}" as="t" hint-placeholder-count="5">
+            <li style="font-family:'IBM Plex Mono',monospace;font-size:12px;border:1px solid #7A7A84;padding:4px 10px;border-radius:999px">{{t}}</li>
+          </sc-for>
+        </ul>
+        <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:28px">
+          <a href="#" style="min-height:48px;padding:0 22px;display:inline-flex;align-items:center;background:{{accent}};color:#0E0E10;text-decoration:none;font-weight:600;border-radius:6px">Ver demonstração</a>
+          <a href="#" style="min-height:48px;padding:0 22px;display:inline-flex;align-items:center;background:#17171A;color:#ECECEE;text-decoration:none;font-weight:600;border-radius:6px;border:1px solid #7A7A84">Código no repositório</a>
+        </div>
+      </div>
+
+      <aside aria-labelledby="ficha" style="flex:1 1 260px;background:#17171A;border:1px solid #2C2C32;padding:20px">
+        <h2 id="ficha" style="margin:0 0 14px;font-size:16px;font-weight:600">Ficha técnica</h2>
+        <dl style="margin:0;display:grid;gap:12px;font-size:14px">
+          <sc-for list="{{ficha}}" as="f" hint-placeholder-count="5">
+            <div style="display:grid;grid-template-columns:84px 1fr;gap:10px"><dt style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#A3A3AC">{{f.k}}</dt><dd style="margin:0">{{f.v}}</dd></div>
+          </sc-for>
+        </dl>
+      </aside>
+    </section>
+
+    <div style="display:flex;flex-wrap:wrap;gap:56px;align-items:flex-start;border-top:1px solid #2C2C32;padding-top:40px">
+      <article aria-labelledby="caso" style="flex:2 1 560px;min-width:0;max-width:760px">
+        <p style="margin:0 0 6px;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.06em;color:{{accent}}">ESTUDO DE CASO</p>
+        <h2 id="caso" style="margin:0 0 20px;font-size:30px;line-height:1.2;letter-spacing:-0.015em;font-weight:600">[Título do caso: a decisão central, em uma linha]</h2>
+
+        <h3 style="margin:28px 0 8px;font-size:19px;font-weight:600">Problema</h3>
+        <p style="margin:0;font-size:17px;line-height:1.65;color:#A3A3AC">[Três a cinco linhas sobre o contexto e o que estava quebrado ou faltando. Sem adjetivos: números e fatos que você consegue mostrar.]</p>
+
+        <h3 style="margin:32px 0 12px;font-size:19px;font-weight:600">Decisões, com o motivo</h3>
+        <ol style="list-style:none;margin:0;padding:0;display:grid;gap:12px">
+          <sc-for list="{{decisoes}}" as="d" hint-placeholder-count="3">
+            <li style="background:#17171A;border:1px solid #2C2C32;padding:16px 18px">
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:{{accent}}">{{d.id}}</div>
+              <div style="margin-top:4px;font-weight:600;font-size:16px">{{d.title}}</div>
+              <p style="margin:6px 0 0;font-size:15px;line-height:1.55;color:#A3A3AC">{{d.why}}</p>
+            </li>
+          </sc-for>
+        </ol>
+
+        <h3 style="margin:32px 0 8px;font-size:19px;font-weight:600">Trade-offs</h3>
+        <p style="margin:0;font-size:17px;line-height:1.65;color:#A3A3AC">[O que você deixou de fora de propósito e por quê. É aqui que quem recruta enxerga critério.]</p>
+
+        <h3 style="margin:32px 0 12px;font-size:19px;font-weight:600">Resultado</h3>
+        <ul style="list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px">
+          <sc-for list="{{metricas}}" as="m" hint-placeholder-count="3">
+            <li style="border:1px solid #2C2C32;padding:16px">
+              <div style="font-size:30px;font-weight:600;letter-spacing:-0.02em">{{m.v}}</div>
+              <div style="margin-top:4px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:#A3A3AC">{{m.l}}</div>
+            </li>
+          </sc-for>
+        </ul>
+      </article>
+
+      <div style="flex:1 1 300px;min-width:0;display:grid;gap:24px">
+        <section aria-labelledby="criterios" style="background:#17171A;border:1px solid #2C2C32;padding:20px">
+          <h2 id="criterios" style="margin:0 0 14px;font-size:16px;font-weight:600">Nota por critério</h2>
+          <ul style="list-style:none;margin:0;padding:0;display:grid;gap:12px">
+            <sc-for list="{{rubric}}" as="r" hint-placeholder-count="4">
+              <li style="display:grid;grid-template-columns:1fr 70px 28px;gap:10px;align-items:center;font-size:14px">
+                <span>{{r.label}}</span>
+                <span style="height:6px;background:#2C2C32;display:block"><span style="display:block;height:6px;width:{{r.pct}};background:{{accent}}"></span></span>
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;text-align:right">{{r.score}}</span>
+              </li>
+            </sc-for>
+          </ul>
+        </section>
+        <section aria-labelledby="moldado" style="background:#17171A;border:1px solid #2C2C32;padding:20px">
+          <h2 id="moldado" style="margin:0 0 4px;font-size:16px;font-weight:600">Moldado por</h2>
+          <p style="margin:0 0 14px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:#A3A3AC">ligação entre projeto, filme e livro — fora do MVP</p>
+          <div style="display:flex;gap:12px">
+            <a href="#" style="flex:1;text-decoration:none;color:#ECECEE;font-size:13px"><div class="t4" style="aspect-ratio:2/3;border:1px solid #2C2C32;margin-bottom:6px;padding:8px;box-sizing:border-box;font-family:'IBM Plex Mono',monospace;font-size:10px;display:flex;align-items:flex-end">[filme]</div>[Filme de exemplo]</a>
+            <a href="#" style="flex:1;text-decoration:none;color:#ECECEE;font-size:13px"><div class="t1" style="aspect-ratio:2/3;border:1px solid #2C2C32;margin-bottom:6px;padding:8px;box-sizing:border-box;font-family:'IBM Plex Mono',monospace;font-size:10px;display:flex;align-items:flex-end">[livro]</div>[Livro de exemplo]</a>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer style="max-width:1280px;margin:0 auto;box-sizing:border-box;padding:56px 56px 48px;border-top:2px solid #7A7A84;text-align:center;font-family:'IBM Plex Mono',monospace;color:#A3A3AC">
+    <div style="font-size:12px;letter-spacing:0.3em">UM PORTFÓLIO DE ENGENHARIA</div>
+    <div style="font-size:44px;font-weight:500;letter-spacing:0.18em;color:#ECECEE;margin:14px 0 22px;line-height:1.1">DIRECTED BY DUDA</div>
+    <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:6px 18px;max-width:640px;margin:0 auto;font-size:12px;letter-spacing:0.08em;line-height:1.7">
+      <span style="text-align:right">ROTEIRO E CÓDIGO</span><span style="text-align:left;color:#ECECEE">Duda</span>
+      <span style="text-align:right">ELENCO</span><span style="text-align:left;color:#ECECEE">React 19 · Vite 6 · TypeScript</span>
+      <span style="text-align:right">TRILHA SONORA</span><span style="text-align:left;color:#ECECEE">[sua playlist]</span>
+      <span style="text-align:right">FILMADO EM</span><span style="text-align:left;color:#ECECEE">Belo Horizonte, MG</span>
+    </div>
+    <div style="margin-top:26px;font-size:12px;letter-spacing:0.3em">FIM</div>
+    <div style="margin-top:18px;font-size:12px">© 2026 Duda · sem rastreadores · PT · EN</div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#8F98FF","options":["#8F98FF","#E58AC8","#5CC8D2","#F0A070"]},"$preview":{"width":1280,"height":1820}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      accent: this.props.accent ?? '#8F98FF',
+      tags: ['[linguagem]', '[framework]', '[banco de dados]', '[hospedagem]', '[domínio]'],
+      ficha: [
+        { k: 'Stack', v: '[tecnologias principais]' },
+        { k: 'Período', v: '[mês/ano] – [mês/ano]' },
+        { k: 'Papel', v: '[o que você fez]' },
+        { k: 'Equipe', v: '[sozinha / n pessoas]' },
+        { k: 'Estado', v: '[em produção / arquivado]' }
+      ],
+      decisoes: [
+        { id: 'TD-001', title: '[Decisão de exemplo 1]', why: '[Escolhi X porque Y. Alternativas descartadas: Z.]' },
+        { id: 'TD-002', title: '[Decisão de exemplo 2]', why: '[Escolhi X porque Y. Alternativas descartadas: Z.]' },
+        { id: 'TD-003', title: '[Decisão de exemplo 3]', why: '[Escolhi X porque Y. Alternativas descartadas: Z.]' }
+      ],
+      metricas: [
+        { v: '[00 ms]', l: '[métrica de exemplo]' },
+        { v: '[00%]', l: '[métrica de exemplo]' },
+        { v: '[000]', l: '[métrica de exemplo]' }
+      ],
+      rubric: [
+        { label: 'Clareza do código', pct: '90%', score: '4,5' },
+        { label: 'Testes e verificação', pct: '80%', score: '4,0' },
+        { label: 'Acessibilidade e desempenho', pct: '100%', score: '5,0' },
+        { label: 'Uso real / impacto', pct: '70%', score: '3,5' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,7 +1,10 @@
 # PLAN — Portfólio da Duda
-**Estado:** `plan:approved` (ver `.ai/sdd/.status`) · Fontes: `ideas/001`, `ideas/002`, `steering/`
+**Estado:** `plan:draft` (rebaixado a pedido da Duda em 2026-11-15 até ela aprovar as alterações marcadas [proposta 2026-11-15]; ver `.ai/sdd/.status`) · Fontes: `ideas/001`, `ideas/002`, `steering/`
+
+> **ALTERAÇÃO PENDENTE DE APROVAÇÃO (2026-11-15) — o `.status` voltou para `plan:draft` a pedido da Duda:** as marcas "[proposta 2026-11-15]" abaixo (linha da 008, specs 011 e 012, dependências e P-Q-003) foram aplicadas como **rascunho**, a pedido da Duda, para ela ler o resultado. **Ela decide se aprova estas alterações**; só ela promove de volta para `plan:approved`. Origem: `.ai/sdd/PROPOSTA-pessoal-conteudo-curado.md` e `.ai/sdd/PLAN-proposta-musica-bastidores.md`.
 
 ## Mudanças desde o plano aprovado (a pedido da Duda)
+- **[proposta 2026-11-15]** Letterboxd, Hardcover e Spotify são preenchidos **manualmente** (sem API): a 008 vira "filmes e livros como conteúdo curado", entram as specs 011 (música) e 012 (bastidores) depois do MVP, e a P-Q-003 é encerrada.
 - A spec 001 foi **dividida**: `001-engineering-baseline` (vem primeiro) e `002-design-system-and-shell`. As demais specs foram renumeradas (+1).
 - IDs: as decisões da visão passaram a `V-D-NNN` e as perguntas deste plano a `P-Q-NNN`, para não colidir com os `D-` e `Q-` locais de cada spec.
 - A integração contínua (antigo FR-020 da 001) foi para `010-quality-and-launch`.
@@ -26,16 +29,22 @@
 | 005 | projects-catalog | Grade de capas, filtros (stack, domínio, ano, nota), detalhe, nota por critérios públicos | Alto |
 | 006 | case-studies | Estudos de caso (decisões, trade-offs, resultado); migra os 3 casos existentes | Médio |
 | 007 | resume-academic-contact | Currículo (inclui impressão), acadêmico, sobre, contato com formulário | Baixo |
-| 008 | films-and-books | `/pessoal`: filmes e livros, notas e resenhas; verificar os termos de TMDB, Hardcover e Letterboxd; atribuição | Alto |
+| 008 | films-and-books | **[proposta 2026-11-15]** `/pessoal`: filmes e livros como **conteúdo curado** (`*.content.ts`, validado pelos schemas da 001), com nota decimal de 0,5 a 5; remove o código de API do `/pessoal` e reescreve as páginas juntos; importador offline do CSV do Letterboxd em `scripts/`. Sem API, token, cache de servidor nem Function. Antes: "verificar os termos de TMDB, Hardcover e Letterboxd; atribuição" | Médio (antes: Alto) |
 | 009 | terminal | `/terminal` fora do menu principal, funcionando na casca nova | Baixo |
 | 010 | quality-and-launch | SEO por idioma, OG, analytics sem cookies, integração contínua, auditorias de desempenho e acessibilidade, redirecionamento das URLs antigas, deploy | Alto |
+
+### Depois do MVP (specs propostas, fora do MVP até a Duda dizer o contrário)
+| # | Spec | Cobre | Risco |
+|---|---|---|---|
+| 011 | music | **[proposta 2026-11-15]** `/pessoal/musica`: artistas, faixas e playlists como conteúdo curado, com links `https`. Sem "ouvindo agora" (dado ao vivo). Desbloqueada: sem API | Baixo |
+| 012 | bastidores | **[proposta 2026-11-15]** `/pessoal/bastidores`: a arte na sua vida (paixões, ponte para a engenharia, três atos, trecho de roteiro). Só texto da Duda; frases "sugestão… confirme" só entram se forem verdade | Baixo |
 
 ## Dependências e paralelismo
 ```
 001 ──► 002 ──► 003 ──┬─► 004 ─────────────┐
                       ├─► 005 ──► 006 ─────┤
                       └─► 007 ─────────────┼─► 010
-              002 ──► 008 (também depende da verificação dos termos de API) ─┤
+              002 ──► 008 (conteúdo curado; usa os schemas da 001) ─┤
               002 ──► 009 ───────────────────────────────┘
 ```
 - **001 vai primeiro:** não depende da identidade visual e os schemas, o `verify` e a suíte verde são a base de todas as outras. Pode ser construída enquanto a 002 amadurece o design.
@@ -54,5 +63,5 @@
 ## Perguntas do plano
 - **P-Q-001 (respondida):** a reconstrução **substitui o código antigo no lugar**, na mesma branch. Consequência: cada spec lista, no `design.md`, os arquivos antigos que remove, e a remoção acontece dentro das tarefas dela. A suíte antiga pode ficar parcialmente quebrada durante a transição; a 001 define como isso é tratado.
 - **P-Q-002 (aberta):** ferramenta de analytics sem cookies e o custo (spec 010). Pode ficar para quando a 010 chegar.
-- **P-Q-003 (aberta):** termos de TMDB, Hardcover e Letterboxd (spec 008). Eu verifico, a decisão é sua.
+- **P-Q-003 (encerrada, [proposta 2026-11-15]):** termos de TMDB, Hardcover e Letterboxd. **Não aplicável**: o preenchimento é manual, sem API. Fica a regra de que imagem de terceiros exige licença registrada na spec.
 - **P-Q-004 (respondida):** nenhum dado do currículo e do acadêmico está desatualizado; a Duda atualiza ao longo do tempo se precisar. A 003 migra o conteúdo como está.
