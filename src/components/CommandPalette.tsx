@@ -17,7 +17,6 @@ import { useRouter } from '../router';
 import { useTerminalSession } from '../terminal/sessionContext';
 import { showCommandOutput } from './shell/commandBarEvents';
 import { filterItems, matchRanges, paletteItems, type PaletteItem } from './paletteItems';
-import { usePersona } from '../hooks/usePersona';
 import Overlay from './Overlay';
 
 // Destaca no nome o que a busca casou (sem acento nem caixa).
@@ -40,13 +39,12 @@ export default function CommandPalette({ onClose }: { onClose: () => void }) {
   const { lang, t } = useLanguage();
   const session = useTerminalSession();
   const { navigate } = useRouter();
-  const { persona } = usePersona();
   const listId = useId();
   const [query, setQuery] = useState('');
   const [active, setActive] = useState(0);
 
   const items = useMemo(() => paletteItems(lang), [lang]);
-  const results = useMemo(() => filterItems(items, query, persona?.id), [items, query, persona]);
+  const results = useMemo(() => filterItems(items, query), [items, query]);
   const current = Math.min(active, results.length - 1);
   const optionId = (item: PaletteItem) => `${listId}-${item.id}`;
 
@@ -126,9 +124,6 @@ export default function CommandPalette({ onClose }: { onClose: () => void }) {
         <p className="palette-foot t-dim" role="status">
           {results.length ? t.overlay.results(results.length) : t.overlay.none}
           {!results.length && <span> · {t.ws.palette.emptyHint}</span>}
-          {persona && results.length > 0 && (
-            <span> · {t.ws.palette.sortedFor(persona.label[lang])}</span>
-          )}
           <span aria-hidden="true"> · {t.overlay.paletteHint}</span>
         </p>
       </div>

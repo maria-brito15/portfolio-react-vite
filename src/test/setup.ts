@@ -23,11 +23,9 @@ vi.mock('../pages/lazyPages', async () => ({
   PersonalTheater: (await import('../pages/personal/Theater')).default,
 }));
 
-// O boot da primeira visita e a pergunta de persona ficam desligados nos testes
-// (quem os testa limpa a marca).
+// O boot da primeira visita fica desligado nos testes (quem os testa limpa a marca).
 beforeEach(() => {
   localStorage.setItem('portfolio-booted', '1');
-  localStorage.setItem('portfolio-persona-asked', '1');
 });
 
 afterEach(() => {

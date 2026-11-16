@@ -1,14 +1,10 @@
 import { screen } from '@testing-library/react';
 import { filterItems, paletteItems } from '../components/paletteItems';
-import { PERSONA_KEY } from '../hooks/usePersona';
 import { renderApp } from '../test/helpers';
-import { PERSONA_IDS, isPick, personaById, type PersonaId } from './personas';
-import { DEFAULT_HOME, personaHome } from './personaHome';
+import { HOME } from './homeLayout';
 import { routeById, routes } from './routes';
-import { personaTopics, topicKeywords } from './searchRanking';
+import { topicKeywords } from './searchRanking';
 
-const HIGHLIGHT: PersonaId[] = ['amigo', 'professor'];
-const MENU_ONLY = PERSONA_IDS.filter((id) => !HIGHLIGHT.includes(id));
 const PAGE_IDS = [
   'pessoal',
   'pessoal-livros',
@@ -17,56 +13,13 @@ const PAGE_IDS = [
   'pessoal-teatro',
 ];
 
-describe('personas: quem destaca o espaço (D6, CL-06)', () => {
-  it.each(HIGHLIGHT)('%s tem o espaço na ordem de destaque', (id) => {
-    expect(personaById(id)!.order).toContain('pessoal');
-    expect(isPick(personaById(id), 'pessoal')).toBe(true);
-  });
-
-  it.each(MENU_ONLY)('%s não o promove', (id) => {
-    expect(personaById(id)!.order).not.toContain('pessoal');
-    expect(isPick(personaById(id), 'pessoal')).toBe(false);
-  });
-
-  it('o amigo o põe logo depois de "sobre"; o professor, depois da trajetória acadêmica', () => {
-    const amigo = personaById('amigo')!.order;
-    const professor = personaById('professor')!.order;
-
-    expect(amigo.indexOf('pessoal')).toBe(amigo.indexOf('sobre') + 1);
-    expect(professor.indexOf('pessoal')).toBeGreaterThan(professor.indexOf('academico'));
-  });
-
-  it('a rota existe e o destaque não muda o chamado (cta) de nenhuma persona', () => {
+describe('o espaço pessoal (D6, CL-06)', () => {
+  it('a rota existe', () => {
     expect(routeById('pessoal')).toBeDefined();
-
-    for (const id of PERSONA_IDS) expect(personaById(id)!.cta.route).not.toBe('pessoal');
-  });
-});
-
-describe('composição da home (D6)', () => {
-  const hasBlock = (blocks: { id: string }[]) => blocks.some((b) => b.id === 'personal');
-
-  it.each(HIGHLIGHT)('%s traz o bloco do espaço pessoal, com textos em PT e EN', (id) => {
-    const block = personaHome[id].blocks.find((b) => b.id === 'personal')!;
-
-    expect(block).toBeDefined();
-    for (const text of [block.title, block.lead]) {
-      expect(text!.pt.trim()).not.toBe('');
-      expect(text!.en.trim()).not.toBe('');
-    }
   });
 
-  it.each(MENU_ONLY)('%s não traz o bloco, mas mantém todos os atalhos', (id) => {
-    expect(hasBlock(personaHome[id].blocks)).toBe(false);
-    expect(personaHome[id].blocks.map((b) => b.id)).toContain('quick');
-  });
-
-  it('a composição padrão (sem persona) não o promove', () => {
-    expect(hasBlock(DEFAULT_HOME.blocks)).toBe(false);
-  });
-
-  it('o bloco vem depois do conteúdo principal da persona, nunca na frente', () => {
-    for (const id of HIGHLIGHT) expect(personaHome[id].blocks[0].id).not.toBe('personal');
+  it('a composição da home não promove o espaço: ele nunca disputa a atenção da home', () => {
+    expect(HOME.blocks.map((b) => b.id)).not.toContain('personal');
   });
 });
 
@@ -79,7 +32,6 @@ describe('home com o espaço no ar (CL-02, CL-06)', () => {
   afterEach(() => {
     pages.forEach((r, i) => (r.draft = original[i]));
     hub.showInNav = originalShowInNav;
-    localStorage.removeItem(PERSONA_KEY);
   });
 
   // "No ar": nenhuma rota é rascunho e o hub deixa de depender do `showInNav` da prévia.
@@ -91,70 +43,12 @@ describe('home com o espaço no ar (CL-02, CL-06)', () => {
   const personalLinks = () =>
     screen.queryAllByRole('link').filter((a) => a.getAttribute('href') === '/pessoal');
 
-  it('na prévia com dados fictícios (mock) o atalho aparece para todos; o bloco, só para amigo e professor', async () => {
-    for (const id of PERSONA_IDS) {
-      localStorage.setItem(PERSONA_KEY, id);
-
-      const { unmount } = renderApp('/');
-
-      expect(personalLinks().length, id).toBeGreaterThan(0);
-      // o bloco é carregado sob demanda: espera quando deve existir; ausente nunca é renderizado
-      if (HIGHLIGHT.includes(id)) await vi.waitFor(() => expect(block(), id).not.toBeNull());
-      else expect(block(), id).toBeNull();
-      unmount();
-    }
-  });
-
-  it('na prévia, o bloco mostra o hub e as quatro seções, mesmo sendo rascunho', async () => {
-    localStorage.setItem(PERSONA_KEY, 'amigo');
-    renderApp('/');
-    await vi.waitFor(() => expect(block()).not.toBeNull());
-
-    for (const path of [
-      '/pessoal',
-      '/pessoal/livros',
-      '/pessoal/filmes',
-      '/pessoal/musica',
-      '/pessoal/teatro',
-    ])
-      expect(block()!.querySelector(`a[href="${path}"]`), path).not.toBeNull();
-  });
-
-  it.each(HIGHLIGHT)('no ar, %s vê o bloco com o hub e as seções com conteúdo', async (id) => {
-    publish();
-    localStorage.setItem(PERSONA_KEY, id);
+  it('na prévia com dados fictícios (mock) o atalho aparece nos acessos rápidos', () => {
     renderApp('/');
 
-    await vi.waitFor(() => expect(block()).not.toBeNull());
-    expect(block()!.querySelector('a[href="/pessoal"]')).not.toBeNull();
-    expect(block()!.querySelector('a[href="/pessoal/livros"]')).not.toBeNull();
-    expect(block()!.querySelector('a[href="/pessoal/teatro"]')).not.toBeNull();
+    expect(personalLinks().length).toBeGreaterThan(0);
+    expect(block()).toBeNull();
   });
-
-  it('o bloco só lista seções que não são rascunho (música e teatro vazios ficam de fora)', async () => {
-    publish();
-    routeById('pessoal-musica')!.draft = true;
-    routeById('pessoal-teatro')!.draft = true;
-    localStorage.setItem(PERSONA_KEY, 'amigo');
-    renderApp('/');
-    await vi.waitFor(() => expect(block()).not.toBeNull());
-
-    expect(block()!.querySelector('a[href="/pessoal/livros"]')).not.toBeNull();
-    expect(block()!.querySelector('a[href="/pessoal/musica"]')).toBeNull();
-    expect(block()!.querySelector('a[href="/pessoal/teatro"]')).toBeNull();
-  });
-
-  it.each(MENU_ONLY)(
-    'no ar, %s não vê o bloco, mas o atalho continua nos acessos rápidos',
-    (id) => {
-      publish();
-      localStorage.setItem(PERSONA_KEY, id);
-      renderApp('/');
-
-      expect(block()).toBeNull();
-      expect(personalLinks().length).toBeGreaterThan(0);
-    },
-  );
 
   it('sem persona, no ar, o atalho existe e o bloco não', () => {
     publish();
@@ -165,16 +59,9 @@ describe('home com o espaço no ar (CL-02, CL-06)', () => {
   });
 });
 
-describe('busca (CL-06): só ordena, nunca esconde', () => {
+describe('busca (CL-06)', () => {
   const items = paletteItems('pt');
-  const ids = (query: string, persona?: PersonaId, list = items) =>
-    filterItems(list, query, persona).map((i) => i.id);
-
-  it('amigo e professor priorizam o espaço pessoal; os outros não', () => {
-    for (const id of HIGHLIGHT) expect(personaTopics[id]).toContain('pessoal');
-
-    for (const id of MENU_ONLY) expect(personaTopics[id]).not.toContain('pessoal');
-  });
+  const ids = (query: string, list = items) => filterItems(list, query).map((i) => i.id);
 
   it('as cinco páginas têm palavras-chave em PT e EN', () => {
     for (const id of PAGE_IDS) {
@@ -214,17 +101,8 @@ describe('busca (CL-06): só ordena, nunca esconde', () => {
     expect(ids('books')).toContain('page:pessoal-livros');
   });
 
-  it.each(['pessoal', 'livros', 'cinema', 'music', 'teatro', 'personal'])(
-    'mesmo conjunto de resultados com e sem persona para "%s"',
-    (query) => {
-      const plain = ids(query).sort();
-
-      for (const persona of PERSONA_IDS) expect(ids(query, persona).sort()).toEqual(plain);
-    },
-  );
-
-  it('nenhuma persona perde o acesso: o hub sempre aparece na busca por "pessoal"', () => {
-    for (const persona of PERSONA_IDS) expect(ids('pessoal', persona)).toContain('page:pessoal');
+  it('o hub aparece na busca por "pessoal"', () => {
+    expect(ids('pessoal')).toContain('page:pessoal');
   });
 
   it('a busca por um tema pessoal não confunde com projetos nem com o terminal', () => {

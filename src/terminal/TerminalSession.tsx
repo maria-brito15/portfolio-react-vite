@@ -4,7 +4,6 @@ import { useLanguage } from '../i18n/LanguageContext';
 import { useTheme } from '../hooks/useTheme';
 import { TERMINAL_PATH, normalizePath, routes } from '../data/routes';
 import { prefersReducedMotion } from '../utils/env';
-import { usePersona } from '../hooks/usePersona';
 import {
   contextAfter,
   contextOfHistory,
@@ -82,7 +81,6 @@ export function TerminalProvider({ children }: { children: ReactNode }) {
   const { lang, toggleLang } = useLanguage();
   const [theme, toggleTheme, setTheme] = useTheme();
   const { path, search, navigate } = useRouter();
-  const { persona, asked, choose, skip, clear } = usePersona();
 
   const [inputs, setInputs] = useState<string[]>(readStored);
   const [entry, setEntry] = useState<Entry | null>(() => {
@@ -97,7 +95,6 @@ export function TerminalProvider({ children }: { children: ReactNode }) {
           toggleTheme,
           setTheme,
           replay: true,
-          persona,
         })
       : null;
   });
@@ -198,12 +195,7 @@ export function TerminalProvider({ children }: { children: ReactNode }) {
       const input = raw.trim();
 
       if (loadingRef.current) return false;
-      if (!input) {
-        // Enter vazio com a pergunta de persona pendente = pular.
-        if (!asked) skip();
-
-        return false;
-      }
+      if (!input) return false;
 
       const history = [...inputs, input].slice(-MAX_INPUTS);
 
@@ -220,14 +212,8 @@ export function TerminalProvider({ children }: { children: ReactNode }) {
         toggleTheme,
         setTheme,
         replay: false,
-        persona,
-        personaPending: !asked,
-        choosePersona: choose,
-        clearPersona: clear,
       });
 
-      // Qualquer comando dispensa a pergunta de persona (responder já a encerrou).
-      if (!asked) skip();
       setContext(contextAfter(input, context));
 
       setEntry(next);
@@ -256,11 +242,6 @@ export function TerminalProvider({ children }: { children: ReactNode }) {
       startRedirect,
       navigate,
       path,
-      persona,
-      asked,
-      choose,
-      skip,
-      clear,
     ],
   );
 

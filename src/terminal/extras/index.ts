@@ -7,15 +7,12 @@ import { gitlog } from './gitlog';
 import { agora, setup } from './pages';
 import { pessoal } from './personal';
 import { stats } from './stats';
-import { visitante } from './persona';
 
 export { HIRE, hireResult } from './fun';
-export { personaAnswer } from './persona';
 
 export const extraCommands: Command[] = [
   agora,
   pessoal,
-  visitante,
   setup,
   neofetch,
   gitlog,

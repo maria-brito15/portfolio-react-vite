@@ -7,7 +7,7 @@ import type { BlockProps } from './blockProps';
 
 // Atalho da home para o espaço cultural (/pessoal): o hub e as seções que já têm conteúdo.
 // Só aparece quando a página pode ser listada (`isListed`): no ar, ou em rascunho com dados
-// fictícios (prévia); sem conteúdo nenhum, a home não o anuncia. O texto vem de `personaHome.ts` e de `routes.ts`.
+// fictícios (prévia); sem conteúdo nenhum, a home não o anuncia. O texto vem do bloco de `homeLayout.ts` e de `routes.ts`.
 export default function PersonalSpace({ heading, lead }: BlockProps) {
   const { lang } = useLanguage();
   const hub = routeById('pessoal');

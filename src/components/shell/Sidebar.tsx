@@ -2,8 +2,6 @@ import { useEffect, useRef } from 'react';
 import { Link, useRouter } from '../../router';
 import { useLanguage } from '../../i18n/LanguageContext';
 import { NAV_GROUPS, findPageByPath, navRoutes } from '../../data/routes';
-import { byPersona, isPick } from '../../data/personas';
-import { usePersona } from '../../hooks/usePersona';
 import { GROUP_TONE } from '../../data/tones';
 import { openShortcuts } from './commandBarEvents';
 
@@ -23,10 +21,9 @@ export default function Sidebar({
   const { lang, t } = useLanguage();
   const { path } = useRouter();
   const ref = useRef<HTMLElement>(null);
-  const { persona } = usePersona();
   const page = findPageByPath(path);
-  // O estudo de caso (rota oculta) ilumina "Projetos", a rota-mãe; `/r/<persona>` é a home.
-  const activeId = page?.persona ? 'home' : (page?.parent ?? page?.id);
+  // O estudo de caso (rota oculta) ilumina "Projetos", a rota-mãe.
+  const activeId = page?.parent ?? page?.id;
 
   // Gaveta aberta: o foco vai para o primeiro link, Tab circula só dentro dela, Esc fecha
   // e o foco volta ao botão que a abriu.
@@ -80,8 +77,7 @@ export default function Sidebar({
         aria-label={t.ws.sidebar.label}
       >
         {NAV_GROUPS.map((group) => {
-          // A lente da persona só reordena dentro do grupo e marca; nada some.
-          const items = byPersona(navRoutes(group), persona, (r) => r.id);
+          const items = navRoutes(group);
 
           if (!items.length) return null;
 
@@ -96,12 +92,8 @@ export default function Sidebar({
                       className={`sidebar-link${r.id === activeId ? ' is-active' : ''}`}
                       aria-current={r.id === activeId ? 'page' : undefined}
                       title={r.desc?.[lang]}
-                      data-pick={isPick(persona, r.id) || undefined}
                     >
                       {r.label[lang]}
-                      {isPick(persona, r.id) && (
-                        <span className="sr-only"> ({t.persona.highlight})</span>
-                      )}
                     </Link>
                   </li>
                 ))}

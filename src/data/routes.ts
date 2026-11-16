@@ -16,7 +16,6 @@ import { integrated } from './personal/integrations';
 import { musicHasContent } from './personal/music';
 import { theaterHasContent } from './personal/theater';
 import { now } from './now';
-import { personas, type PersonaId } from './personas';
 import { uses } from './uses';
 
 const L = (pt: string, en: string): Localized => ({ pt, en });
@@ -56,9 +55,6 @@ export interface Route {
   // enquanto usa dados fictícios: o rascunho continua tirando a página do sitemap e do índice dos
   // buscadores, e a trava de build (scripts/personalGuard.ts) impede que isso chegue à produção.
   showInNav?: boolean;
-  // Link direto com persona (`/r/tech`): mostra a home com a lente aplicada. Fica
-  // fora do sitemap e do índice; o canonical aponta para `/`.
-  persona?: PersonaId;
 }
 
 export interface Crumb {
@@ -286,15 +282,6 @@ export const routes: Route[] = [
     label: L('Estudo de caso', 'Case study'),
     hidden: true,
   },
-  // `/r/<persona>`: uma rota por persona, geradas de `personas.ts` (PR-08).
-  ...personas.map((p): Route => ({
-    id: `persona-${p.id}`,
-    kind: 'page',
-    path: `/r/${p.id}`,
-    label: p.label,
-    hidden: true,
-    persona: p.id,
-  })),
 ];
 
 export const routeById = (id: string) => routes.find((r) => r.id === id);

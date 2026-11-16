@@ -6,20 +6,14 @@ import { PROJECT_TONE, techTone } from '../../data/tones';
 import Card from '../ui/Card';
 import Chip from '../ui/Chip';
 import SectionTitle from '../ui/SectionTitle';
-import { usePersona } from '../../hooks/usePersona';
-import { usePerspectives } from '../../hooks/usePerspectives';
-import ProjectLens from '../ProjectLens';
 import type { BlockProps } from './blockProps';
 
 // Sem lista, em destaque = os projetos que têm selo (reconhecimento, estudo de caso ou "este
-// site"): se o selo mudar nos dados, a lista muda junto. Com `ids` (a composição da persona,
-// `personaHome.ts`), vale a lista na ordem dada; id que não existe é ignorado.
+// site"): se o selo mudar nos dados, a lista muda junto. Com `ids` (a composição da home,
+// `homeLayout.ts`), vale a lista na ordem dada; id que não existe é ignorado.
 export default function FeaturedProjects({ heading, lead, ids }: BlockProps & { ids?: string[] }) {
   const { lang, t } = useLanguage();
   const h = t.ws.home;
-  const { persona } = usePersona();
-  const perspectives = usePerspectives(Boolean(persona));
-  const lensOf = (id: string) => perspectives?.perspectiveFor(id, persona?.id);
   const page = routeById('projetos')?.path ?? '/projetos';
   const featured: Project[] = ids
     ? ids.flatMap((id) => projects.filter((p) => p.id === id))
@@ -51,11 +45,7 @@ export default function FeaturedProjects({ heading, lead, ids }: BlockProps & { 
                   <Chip tone="live">{p[lang].badge}</Chip>
                 </p>
               )}
-              {lensOf(p.id) ? (
-                <ProjectLens projectId={p.id} />
-              ) : (
-                <div className="featured-desc">{p[lang].description}</div>
-              )}
+              <div className="featured-desc">{p[lang].description}</div>
               <p className="featured-tech">
                 {p.tech.slice(0, 4).map((tech) => (
                   <Chip key={tech} accent={techTone(tech)}>
@@ -65,12 +55,7 @@ export default function FeaturedProjects({ heading, lead, ids }: BlockProps & { 
               </p>
               <p className="featured-links">
                 {p.caseStudy && (
-                  <Link
-                    to={p.caseStudy}
-                    data-primary={lensOf(p.id)?.action === 'caseStudy' || undefined}
-                  >
-                    {h.caseStudy}
-                  </Link>
+                  <Link to={p.caseStudy}>{h.caseStudy}</Link>
                 )}
                 <Link to={`${page}#projeto-${p.id}`}>{h.details}</Link>
                 {p.repo && (
@@ -78,7 +63,6 @@ export default function FeaturedProjects({ heading, lead, ids }: BlockProps & { 
                     href={p.repo}
                     target="_blank"
                     rel="noopener noreferrer"
-                    data-primary={lensOf(p.id)?.action === 'repo' || undefined}
                   >
                     {h.repo}
                   </a>

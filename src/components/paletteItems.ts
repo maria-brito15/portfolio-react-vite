@@ -9,8 +9,7 @@ import { sectionsOf } from '../data/sections';
 import { skillTimeline } from '../data/skillTimeline';
 import { commandInventory } from '../terminal/commands';
 import { projects as projectData } from '../data/projects';
-import type { PersonaId } from '../data/personas';
-import { boostOf, techKeywords, topicKeywords } from '../data/searchRanking';
+import { techKeywords, topicKeywords } from '../data/searchRanking';
 
 export type PaletteKind = 'page' | 'section' | 'project' | 'skill' | 'command';
 
@@ -29,7 +28,7 @@ const TYPED_ONLY: PaletteKind[] = ['skill', 'section'];
 export interface PaletteItem {
   id: string;
   kind: PaletteKind;
-  // Tema para a ordenação por persona (`searchRanking.ts`): id de página ou tipo genérico.
+  // Tema (`searchRanking.ts`): id de página ou tipo genérico.
   topic: string;
   label: string;
   hint: string;
@@ -229,14 +228,8 @@ function rank(item: PaletteItem, terms: string[]) {
 
 // Todos os termos digitados precisam aparecer (em qualquer ordem). Sem busca, a lista é curta
 // (habilidades e seções só aparecem quando se digita). Os grupos seguem a ordem de PALETTE_KINDS e,
-// dentro deles, o melhor casamento vem primeiro. Com persona, o favorecimento dela
-// (`boostOf`) desconta da nota: os grupos passam a seguir o melhor item de cada um e os itens
-// favorecidos sobem, mas o conjunto de resultados é exatamente o mesmo.
-export function filterItems(
-  items: PaletteItem[],
-  query: string,
-  persona?: PersonaId,
-): PaletteItem[] {
+// dentro deles, o melhor casamento vem primeiro.
+export function filterItems(items: PaletteItem[], query: string): PaletteItem[] {
   const terms = fold(query).split(/\s+/).filter(Boolean);
   const pool = terms.length
     ? items.filter((item) => terms.every((term) => item.search.includes(term)))
@@ -244,19 +237,12 @@ export function filterItems(
   const scored = pool.map((item, order) => ({
     item,
     order,
-    score: (terms.length ? rank(item, terms) : 0) - boostOf(persona, item.topic, item.id),
+    score: terms.length ? rank(item, terms) : 0,
   }));
-  const best = new Map<PaletteKind, number>();
-
-  for (const { item, score } of scored)
-    best.set(item.kind, Math.min(best.get(item.kind) ?? Infinity, score));
-
-  const groupKey = (kind: PaletteKind) => (persona ? (best.get(kind) ?? 0) : 0);
 
   return scored
     .sort(
       (a, b) =>
-        groupKey(a.item.kind) - groupKey(b.item.kind) ||
         PALETTE_KINDS.indexOf(a.item.kind) - PALETTE_KINDS.indexOf(b.item.kind) ||
         a.score - b.score ||
         a.order - b.order,

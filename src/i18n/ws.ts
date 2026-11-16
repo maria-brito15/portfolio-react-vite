@@ -78,7 +78,6 @@ export const wsPt = {
       command: 'Comandos',
     },
     emptyHint: 'Tente: projetos, github, tema',
-    sortedFor: (name: string) => `Ordenado para o perfil ${name}; nada é escondido`,
   },
 };
 
@@ -158,6 +157,5 @@ export const wsEn: typeof wsPt = {
       command: 'Commands',
     },
     emptyHint: 'Try: projects, github, theme',
-    sortedFor: (name: string) => `Sorted for the ${name} profile; nothing is hidden`,
   },
 };

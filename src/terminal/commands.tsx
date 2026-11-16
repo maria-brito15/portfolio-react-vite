@@ -29,8 +29,7 @@ import { ActionLine, Cmd, Ext, TermLink } from './outputs';
 import { AcademicsView, ResumeView, ServicesView } from './views';
 import SectionView from './sectionViews';
 import { PageIndex, RunCommand, SectionNav } from './pageIndex';
-import { HIRE, extraCommands, hireResult, personaAnswer } from './extras';
-import type { Persona, PersonaId } from '../data/personas';
+import { HIRE, extraCommands, hireResult } from './extras';
 
 const L = (pt: string, en: string): Localized => ({ pt, en });
 
@@ -50,12 +49,6 @@ export interface CommandContext {
   toggleTheme: () => void;
   setTheme: (theme: Theme) => void;
   replay: boolean;
-  // Persona do visitante (ver `data/personas.ts`). `personaPending`: a pergunta da
-  // primeira visita ainda não foi respondida nem pulada.
-  persona?: Persona;
-  personaPending?: boolean;
-  choosePersona?: (id: PersonaId) => void;
-  clearPersona?: () => void;
 }
 
 export interface CommandResult {
@@ -785,13 +778,8 @@ export function runCommand(input: string, ctx: CommandContext): CommandResult {
   const { name, args } = parseCommand(input);
 
   if (!name) return { output: () => null };
-  // `2` sozinho abre a seção 2 da última página aberta; com a pergunta de persona
-  // pendente (ainda não há página aberta), `1`–`5` respondem a ela.
+  // `2` sozinho abre a seção 2 da última página aberta.
   if (/^\d+$/.test(name) && !args.length) {
-    const answer = personaAnswer(name, ctx);
-
-    if (answer) return answer;
-
     return ctx.context
       ? runSection(pageCommand(ctx.context.routeId), [name])
       : { output: (lang) => errorLine(ui[lang].term.nav.noContext) };
@@ -800,11 +788,6 @@ export function runCommand(input: string, ctx: CommandContext): CommandResult {
   const command = findCommand(name);
 
   if (!command) {
-    // O nome de uma persona, dito sozinho, também responde à pergunta pendente.
-    const answer = args.length ? undefined : personaAnswer(name, ctx);
-
-    if (answer) return answer;
-
     return {
       output: (lang) => (
         <p className="t-err">

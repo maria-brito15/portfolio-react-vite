@@ -5,7 +5,6 @@ import { Link } from '../../router';
 import { useLanguage } from '../../i18n/LanguageContext';
 import { formatProjectDate, projectPeriod } from '../../utils/projectDate';
 import ProjectMedia from './ProjectMedia';
-import ProjectLens from '../../components/ProjectLens';
 import Card from '../../components/ui/Card';
 import { PROJECT_TONE, techTone } from '../../data/tones';
 
@@ -51,7 +50,6 @@ function Featured({ project, copy }: VariantProps) {
         <span className="proj-bdg case">{copy.badge}</span>
       </div>
       <h2>{project.name}</h2>
-      <ProjectLens projectId={project.id} />
       <p>{copy.description}</p>
       <Stack tech={project.tech} />
       <div className="project-actions">
@@ -76,7 +74,6 @@ function Evolution({ project, copy }: VariantProps) {
           <span className="proj-bdg award">{copy.badge}</span>
         </div>
         <h2 className="ecoshop-title">{project.name}</h2>
-        <ProjectLens projectId={project.id} />
         <p className="ecoshop-desc">{copy.description}</p>
         <div className="evo-grid">
           {(copy.versions ?? []).map((version, i) => (
@@ -121,7 +118,6 @@ function Standard({ project, copy }: VariantProps) {
         <span className="proj-bdg award">{copy.badge}</span>
       </div>
       <h2>{project.name}</h2>
-      <ProjectLens projectId={project.id} />
       <p>{copy.description}</p>
       <Stack tech={project.tech} />
       <ProjectMedia project={project} />

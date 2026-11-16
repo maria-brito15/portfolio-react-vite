@@ -21,8 +21,8 @@ describe('pele única', () => {
     }
   });
 
-  // Duas vozes com papéis fixos (CD-01/CD-02): mono = sistema, Fraunces = caderno. Nenhuma terceira,
-  // e a serifa só aparece nas folhas do caderno.
+  // Uma voz só nas folhas: o mono dos tokens. Os tokens ainda declaram a serifa do antigo Caderno
+  // (a limpeza é da T5.8); nenhuma outra família.
   it('as únicas famílias declaradas são o mono e a serifa dos tokens', () => {
     for (const [name, css] of sheets) {
       const families = [...css.matchAll(/font-family:\s*([^;]+);/g)].map((m) => m[1].trim());
@@ -31,8 +31,7 @@ describe('pele única', () => {
         const ok =
           name === 'tokens.css'
             ? /JetBrains Mono|Fraunces/.test(family)
-            : family === 'var(--font-mono)' ||
-              (family === 'var(--font-serif)' && name === 'notebook.css');
+            : family === 'var(--font-mono)';
 
         expect(ok, `${name}: ${family}`).toBe(true);
       }

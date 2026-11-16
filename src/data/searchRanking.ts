@@ -1,22 +1,9 @@
-// Regras de relevância da busca (paleta Ctrl+K) por persona (docs/specs/busca-contextual/).
-// Só prioriza: a persona muda a ORDEM dos resultados, nunca quais aparecem. Sem persona, vale a
-// ordem de sempre. Os "temas" (`topic`) são ids de página de `routes.ts` mais quatro genéricos
-// (`project`, `case`, `game`, `skill`, `command`); a lista de cada persona vai do mais ao menos
-// importante, seguindo o roadmap (Passo 17). As palavras-chave só ajudam a achar (sinônimos e
-// termos em PT e EN que o texto da página não traz); não são conteúdo mostrado ao visitante.
+// Palavras-chave da busca (paleta Ctrl+K): sinônimos e termos em PT e EN que o texto da página
+// não traz. Só ajudam a achar; não são conteúdo mostrado ao visitante. Os "temas" (`topic`) são ids
+// de página de `routes.ts` mais os genéricos (`project`, `case`, `skill`, `command`).
 import type { Localized } from '../types';
-import type { PersonaId } from './personas';
-import { homeFor } from './personaHome';
 
 const L = (pt: string, en: string): Localized => ({ pt, en });
-
-export const personaTopics: Record<PersonaId, string[]> = {
-  rh: ['sobre', 'curriculo', 'experiencias', 'habilidades', 'skill', 'project'],
-  tech: ['project', 'case', 'github', 'habilidades', 'skill', 'curriculo'],
-  professor: ['academico', 'project', 'experiencias', 'curriculo', 'sobre', 'pessoal'],
-  cliente: ['servicos', 'case', 'contato', 'project', 'sobre'],
-  amigo: ['sobre', 'pessoal', 'project', 'terminal', 'command', 'agora'],
-};
 
 // Termos extras por página (id de `routes.ts`) e por tema.
 export const topicKeywords: Record<string, Localized> = {
@@ -94,17 +81,4 @@ export function techKeywords(tech: string[]) {
     ...tech,
     ...AREAS.filter(([pattern]) => tech.some((t) => pattern.test(t))).map(([, words]) => words),
   ].join(' ');
-}
-
-// Quanto a persona favorece um tema: 2 nos três primeiros, 1 nos três seguintes, 0 no resto.
-// Um projeto que a home da persona já destaca (`personaHome.ts`) ganha mais 1.
-export function boostOf(persona: PersonaId | undefined, topic: string, itemId = '') {
-  if (!persona) return 0;
-
-  const index = personaTopics[persona].indexOf(topic);
-  const base = index < 0 ? 0 : index < 3 ? 2 : 1;
-  const featured = homeFor(persona).blocks.find((b) => b.id === 'projects')?.projects ?? [];
-  const pinned = itemId.startsWith('project:') && featured.includes(itemId.slice(8)) ? 1 : 0;
-
-  return base + pinned;
 }

@@ -3,35 +3,28 @@ import { useLanguage } from '../i18n/LanguageContext';
 import { portfolio } from '../data/portfolio';
 import { now } from '../data/now';
 import { routeById } from '../data/routes';
-import { homeFor, primaryAction, type HomeAction } from '../data/personaHome';
-import { usePersona } from '../hooks/usePersona';
+import { HOME, type HomeAction } from '../data/homeLayout';
 import { useDocumentMeta } from '../hooks/useDocumentMeta';
 import SiteShell from '../components/shell/SiteShell';
-import PersonaPrompt from '../components/PersonaPrompt';
-import PersonaHomeSections from '../components/dashboard/PersonaHomeSections';
+import HomeSections from '../components/dashboard/HomeSections';
 
-// A home é o painel do workspace: apresentação, foco atual e os blocos da composição da
-// persona (`personaHome.ts`; sem persona, a padrão). O terminal continua a um clique
-// (/terminal), mas não é mais o único caminho.
-// `routeId` só muda para as rotas de persona (`/r/tech`), que mostram esta mesma
-// página mas ficam fora do índice dos buscadores (meta em `seo.ts`).
-export default function Home({ routeId = 'home' }: { routeId?: string }) {
+// A home é o painel do workspace: apresentação, foco atual e os blocos da composição
+// (`homeLayout.ts`). O terminal continua a um clique (/terminal), mas não é mais o único caminho.
+export default function Home() {
   const { lang, t } = useLanguage();
-  const { persona } = usePersona();
   const c = portfolio[lang];
   const h = t.ws.home;
   const focus = now.items[0];
-  const home = homeFor(persona?.id);
   const actions: [HomeAction, 'primary' | 'plain'][] = [
-    [primaryAction(persona?.id), 'primary'],
-    ...home.secondary.map((a): [HomeAction, 'plain'] => [a, 'plain']),
+    [HOME.primary, 'primary'],
+    ...HOME.secondary.map((a): [HomeAction, 'plain'] => [a, 'plain']),
   ];
 
-  useDocumentMeta(routeId);
+  useDocumentMeta('home');
 
   return (
     <SiteShell routeId="home">
-      <div className="dash" data-persona={persona?.id} data-tone={home.tone}>
+      <div className="dash">
         <header className="dash-hero" id="inicio">
           <p className="t-dim">{c.hero.tag}</p>
           <h1 id="inicio-title">
@@ -40,7 +33,6 @@ export default function Home({ routeId = 'home' }: { routeId?: string }) {
           </h1>
           <p className="dash-roles">{c.hero.terminal.roles.join(' · ')}</p>
           <p className="dash-sub">{c.hero.sub}</p>
-          {persona && home.intro && <p className="dash-lens">{home.intro[lang]}</p>}
           {focus && (
             <p className="dash-focus">
               <strong>{h.focus}:</strong> {focus.text[lang]}
@@ -65,8 +57,7 @@ export default function Home({ routeId = 'home' }: { routeId?: string }) {
           </p>
         </header>
 
-        <PersonaPrompt />
-        <PersonaHomeSections />
+        <HomeSections />
       </div>
     </SiteShell>
   );

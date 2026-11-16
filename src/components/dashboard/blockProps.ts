@@ -1,4 +1,4 @@
-// Props comuns dos blocos da home: título e texto de apoio vindos de `personaHome.ts`
+// Props comuns dos blocos da home: título e texto de apoio vindos de `homeLayout.ts`
 // (sem eles, vale o texto padrão do bloco).
 export interface BlockProps {
   heading?: string;
