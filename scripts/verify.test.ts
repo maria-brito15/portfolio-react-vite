@@ -1,9 +1,9 @@
 import { EventEmitter } from 'node:events';
-import { mkdtempSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { defaultSteps, runVerify, type VerifyStep } from './verify.mjs';
+import { defaultSteps, runVerify, type RunVerifyOptions, type VerifyStep } from './verify.mjs';
 
 // Etapas falsas: `node -e` que grava a própria ordem num arquivo e sai com o código pedido.
 function fakeSteps(codes: number[], log: string): VerifyStep[] {
@@ -31,10 +31,33 @@ function tempLog() {
   return log;
 }
 
-async function run(steps: VerifyStep[], argv: string[] = []) {
+// Cada teste grava num `times.jsonl` temporário: o `.verify/` real não muda.
+function tempTimes() {
+  return join(mkdtempSync(join(tmpdir(), 'verify-times-')), '.verify', 'times.jsonl');
+}
+
+// Relógio falso: devolve os instantes (em ms) na ordem das chamadas de `now`.
+function clock(...instants: number[]) {
+  let i = 0;
+
+  return () => instants[Math.min(i++, instants.length - 1)];
+}
+
+async function run(
+  steps: VerifyStep[],
+  argv: string[] = [],
+  extra: Partial<RunVerifyOptions> = {},
+) {
   const stdout = capture();
   const stderr = capture();
-  const code = await runVerify({ steps, argv, stdout, stderr });
+  const code = await runVerify({
+    steps,
+    argv,
+    stdout,
+    stderr,
+    timesFile: tempTimes(),
+    ...extra,
+  });
 
   return { code, stdout: stdout.text(), stderr: stderr.text() };
 }
@@ -111,7 +134,13 @@ describe('verify: runner das 5 etapas', () => {
       label: 'dorme',
       argv: ['-e', 'setTimeout(() => {}, 30000)'],
     };
-    const pending = runVerify({ steps: [step], stdout, stderr: capture(), signals });
+    const pending = runVerify({
+      steps: [step],
+      stdout,
+      stderr: capture(),
+      signals,
+      timesFile: tempTimes(),
+    });
 
     await new Promise((r) => setTimeout(r, 500));
     signals.emit('SIGINT');
@@ -130,5 +159,77 @@ describe('verify: runner das 5 etapas', () => {
     for (const nome of ['formatação', 'lint', 'tipos', 'testes', 'geração']) {
       expect(result.stdout).toContain(nome);
     }
+  });
+
+  describe('tempo, registro e orçamento', () => {
+    const one = (name: string, code = 0): VerifyStep => ({
+      name,
+      label: name,
+      argv: ['-e', `process.exit(${code})`],
+    });
+    const budget = { suite: 90, total: 180 };
+
+    it('registro: acrescenta uma linha de JSON com os campos e ok', async () => {
+      const timesFile = tempTimes();
+
+      await run([one('a'), one('b')], [], { timesFile, now: clock(0, 0, 2000, 2000, 5000, 5000) });
+      await run([one('a'), one('b', 1)], [], { timesFile });
+
+      const lines = readFileSync(timesFile, 'utf8')
+        .trim()
+        .split('\n')
+        .map((l) => JSON.parse(l));
+
+      expect(lines).toHaveLength(2);
+      expect(lines[0]).toMatchObject({ etapas: { a: 2, b: 3 }, total: 5, ok: true });
+      expect(Object.keys(lines[0]).sort()).toEqual([
+        'em',
+        'etapas',
+        'node',
+        'ok',
+        'sistema',
+        'total',
+      ]);
+      expect(lines[1].ok).toBe(false);
+    });
+
+    it('pasta ausente: cria .verify/ ao gravar; o dry-run não grava', async () => {
+      const timesFile = tempTimes();
+
+      await run([one('a')], ['--dry-run'], { timesFile });
+      expect(existsSync(timesFile)).toBe(false);
+      await run([one('a')], [], { timesFile });
+      expect(existsSync(timesFile)).toBe(true);
+    });
+
+    it('regressão: avisa AUMENTO de N % quando uma etapa piora mais de 25 %', async () => {
+      const timesFile = tempTimes();
+
+      await run([one('a')], [], { timesFile, now: clock(0, 0, 10_000, 10_000) });
+
+      const slower = await run([one('a')], [], { timesFile, now: clock(0, 0, 13_000, 13_000) });
+      const same = await run([one('a')], [], { timesFile, now: clock(0, 0, 14_000, 14_000) });
+
+      expect(slower.stdout).toContain('AUMENTO de 30 %');
+      expect(same.stdout).not.toContain('AUMENTO');
+    });
+
+    it('orçamento: por padrão só avisa; --enforce-budget sai 1', async () => {
+      const slow = clock(0, 0, 100_000, 100_000);
+      const warn = await run([one('testes')], [], { budget, now: slow });
+      const enforced = await run([one('testes')], ['--enforce-budget'], {
+        budget,
+        now: clock(0, 0, 100_000, 100_000),
+      });
+      const within = await run([one('testes')], ['--enforce-budget'], {
+        budget,
+        now: clock(0, 0, 5000, 5000),
+      });
+
+      expect(warn.code).toBe(0);
+      expect(warn.stdout).toContain('ORÇAMENTO excedido: suíte');
+      expect(enforced.code).toBe(1);
+      expect(within.code).toBe(0);
+    });
   });
 });
