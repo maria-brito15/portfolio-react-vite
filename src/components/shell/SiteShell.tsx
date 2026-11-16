@@ -1,4 +1,4 @@
-import { useCallback, useId, useState } from 'react';
+import { useCallback, useId, useState, type ReactNode } from 'react';
 import { useLanguage } from '../../i18n/LanguageContext';
 import { useRouter } from '../../router';
 import { crumbsFor, routeById, terminalUrl, windowPath } from '../../data/routes';
@@ -11,9 +11,16 @@ import ViewActions from './ViewActions';
 import Footer from './Footer';
 import Taskbar from './Taskbar';
 import PageNext from '../PageNext';
-import { CADERNO_V2 } from '../../config';
-import NotebookShell from '../notebook/NotebookShell';
-import type { SiteShellProps } from './shellProps';
+
+// Propriedades do esqueleto das páginas.
+export interface SiteShellProps {
+  routeId?: string;
+  missingPath?: string;
+  badge?: ReactNode;
+  variant?: string;
+  after?: ReactNode;
+  children?: ReactNode;
+}
 
 // Esqueleto único de todas as páginas:
 //   Header → barra de comandos → Sidebar + [voltar + breadcrumb] → Window → próximos passos → Footer
@@ -25,13 +32,7 @@ import type { SiteShellProps } from './shellProps';
 //   conteúdo ocupa a área toda (as janelas são só das páginas e do terminal);
 // - `badge` é o selo à direita da barra de título;
 // - `after` vai logo abaixo da Window (ex.: o catálogo de comandos do terminal).
-// Com `CADERNO_V2` ligada (src/config.ts), o esqueleto é o do caderno (components/notebook/NotebookShell);
-// desligada, é este, sem alteração (docs/specs/caderno-vol-xi, CD-61).
-export default function SiteShell(props: SiteShellProps) {
-  return CADERNO_V2 ? <NotebookShell {...props} /> : <LegacyShell {...props} />;
-}
-
-function LegacyShell({
+export default function SiteShell({
   routeId,
   missingPath,
   badge,

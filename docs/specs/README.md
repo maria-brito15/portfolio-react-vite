@@ -25,7 +25,7 @@ Cada pasta segue o fluxo PRD → especificação → plano → tarefas → verif
 | [Qualidade das personas (Fase 6)](qualidade-personas/status.md) | QA-xx | ✅ 10 · ◐ 2 · ❌ 0 · ❔ 1 |
 | [Trilhas por persona (percurso guiado e gamificado)](trilhas/status.md) | TR-xx | ✅ 21 · ◐ 5 · ❌ 1 · ❔ 0 (TR-27: peso acima do teto, decisão pendente) |
 | [Espaço cultural `/pessoal` (livros, filmes, música, teatro)](personal/status.md) | CL-xx | ✅ 25 · ◐ 10 · ❌ 3 · ❔ 0 (Fase 1 com dados fictícios concluída; livros e filmes reais implementados, ainda sem validar com as contas;  [plano](personal/README.md), [checklist](personal/CHECKLIST.md)) |
-| [Caderno — Vol. XI / 2026 (redesenho editorial, atrás de `CADERNO_V2`)](caderno-vol-xi/status.md) | CD-xx | 55 requisitos; implementado atrás da flag; pendências da Duda em status.md ([PRD](caderno-vol-xi/prd.md), [substitui](caderno-vol-xi/supersedes.md)) |
-| [Assistente de IA no terminal](assistente-ia/status.md) | IA-xx | ✅ 17 · ◐ 8 · ❌ 0 · ❔ 0 (código pronto; falta chave, deploy e avaliação com o modelo real) |
+| [Caderno — Vol. XI / 2026 (redesenho editorial)](caderno-vol-xi/status.md) | CD-xx | código removido do site na spec 001 (onda 2b, DQ-001); guardado na marca `arquivo/pre-remocao-fora-do-mvp` e na branch `archive/fora-do-mvp` |
+| [Assistente de IA no terminal](assistente-ia/status.md) | IA-xx | código removido do site na spec 001 (onda 1); guardado na marca `arquivo/pre-remocao-fora-do-mvp` e na branch `archive/fora-do-mvp` |
 
 Spec geral e análise de lacunas originais: `docs/sdd-terminal-v2/`. Estilo de escrita: skill `technical-writing`. Fluxo: skill `spec-driven-development`.

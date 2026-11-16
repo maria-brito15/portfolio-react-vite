@@ -10,8 +10,6 @@ import SiteShell from '../components/shell/SiteShell';
 import PersonaPrompt from '../components/PersonaPrompt';
 import TrailCard from '../trails/TrailCard';
 import PersonaHomeSections from '../components/dashboard/PersonaHomeSections';
-import NotebookHome from '../components/notebook/NotebookHome';
-import { CADERNO_V2 } from '../config';
 
 // A home é o painel do workspace: apresentação, foco atual e os blocos da composição da
 // persona (`personaHome.ts`; sem persona, a padrão). O terminal continua a um clique
@@ -31,15 +29,6 @@ export default function Home({ routeId = 'home' }: { routeId?: string }) {
   ];
 
   useDocumentMeta(routeId);
-
-  // Caderno (CD-10): capa + sommaire no lugar do painel; o painel abaixo fica como está com a flag desligada.
-  if (CADERNO_V2) {
-    return (
-      <SiteShell routeId="home">
-        <NotebookHome />
-      </SiteShell>
-    );
-  }
 
   return (
     <SiteShell routeId="home">

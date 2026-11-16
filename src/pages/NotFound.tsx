@@ -4,7 +4,6 @@ import { useDocumentMeta } from '../hooks/useDocumentMeta';
 import { suggestPages } from '../utils/suggest';
 import SiteShell from '../components/shell/SiteShell';
 import Prompt from '../terminal/Prompt';
-import { CADERNO_V2 } from '../config';
 
 export default function NotFound() {
   const { lang, t } = useLanguage();
@@ -16,18 +15,12 @@ export default function NotFound() {
   return (
     <SiteShell missingPath={path}>
       <div className="not-found">
-        {CADERNO_V2 ? (
-          <p className="nb-kicker">{t.nb.notFound.line}</p>
-        ) : (
-          <>
-            <p className="term-line not-found-cmd">
-              <Prompt />
-              <span className="t-input">cd {path}</span>
-            </p>
-            <p className="not-found-cmd t-err">bash: cd: {path}: 404</p>
-          </>
-        )}
-        <h1>{CADERNO_V2 ? t.nb.notFound.title : t.notFound.title}</h1>
+        <p className="term-line not-found-cmd">
+          <Prompt />
+          <span className="t-input">cd {path}</span>
+        </p>
+        <p className="not-found-cmd t-err">bash: cd: {path}: 404</p>
+        <h1>{t.notFound.title}</h1>
         <p>{t.notFound.text}</p>
         {suggestions.length > 0 && (
           <div className="not-found-suggest">

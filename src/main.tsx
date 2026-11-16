@@ -16,15 +16,9 @@ import './styles/workspace.css';
 import './styles/experiences.css';
 import './styles/personal.css';
 import './styles/resume.css';
-import './styles/notebook.css';
 import { announceInConsole } from './utils/consoleMessage';
-import { CADERNO_V2 } from './config';
 
 announceInConsole();
-
-// Paleta do caderno (tokens.css, revisão R1). O `index.html` já marca antes do primeiro desenho;
-// aqui é a garantia para builds em que o marcador do Vite não foi substituído.
-if (CADERNO_V2) document.documentElement.setAttribute('data-caderno', '');
 
 createRoot(document.getElementById('root') as HTMLElement).render(
   <StrictMode>

@@ -35,9 +35,6 @@
           document.documentElement.setAttribute('data-theme', theme);
         if (localStorage.getItem('portfolio-lang') === 'en') document.documentElement.lang = 'en';
       } catch (e) {}
-      // Caderno (VITE_CADERNO_V2): paleta própria em tokens.css. Sem a variável, o Vite não substitui
-      // o marcador e a comparação é falsa.
-      if ('%VITE_CADERNO_V2%' === 'true') document.documentElement.setAttribute('data-caderno', '');
     </script>
   </head>
   <body>
