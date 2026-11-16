@@ -8,3 +8,4 @@ export {
   type ContentProblem,
 } from './errors';
 export { ContentDateSchema, type ContentDate } from './date';
+export { LinkSchema, linkProblem, type ContentLink } from './link';
