@@ -36,6 +36,12 @@ export function textProblem(value: unknown): string | null {
 // Escrito à mão (e não com `z.object`) porque o zod só roda a checagem de chaves extras quando
 // as chaves obrigatórias passam, e aqui `{pt, em}` precisa acusar as duas coisas de uma vez.
 export const LocalizedTextSchema = z.unknown().superRefine((value, ctx) => {
+  if (value === undefined) {
+    ctx.addIssue({ code: 'custom', message: 'texto ausente' });
+
+    return;
+  }
+
   if (typeof value !== 'object' || value === null || Array.isArray(value)) {
     ctx.addIssue({
       code: 'custom',
