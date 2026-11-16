@@ -28,6 +28,9 @@ export default defineConfig(({ command }) => ({
     globals: true,
     setupFiles: './src/test/setup.js',
     css: false,
+    // Cada arquivo roda numa VM dentro de um worker: bem mais rápido que `forks` com a suíte de
+    // jsdom (medição E5: 91 a 112 s, 0 falhas). Plano B se algo quebrar: `forks` com `isolate`.
+    pool: 'vmThreads',
     // As páginas renderizam o site inteiro (jsdom); em máquinas lentas 5 s não bastam.
     testTimeout: 20000,
     exclude: ['node_modules', 'dist', 'e2e'],
