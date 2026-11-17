@@ -241,3 +241,10 @@ A falha das rodadas 1 e 3 é sempre `src/pages/HomePersona.test.tsx › ação p
 - [x] **Varredura de segredos acha credencial plantada e passa sem ela.** `scripts/secretScan.test.ts › uma credencial plantada num arquivo temporário é achada e mascarada` e `› sem a credencial, passa`; `› os arquivos rastreados reais passam (linha de base 0, E12)`; e `npm audit` 0.
 **Pendências da Duda (não resolvidas por mim):** ver a lista no fim da sessão.
 **Verdict:** PASS
+
+### Adendo à T6.7 (depois do aceite)
+**Claim:** depois do aceite, só documentação e referências mudaram; nenhum código.
+**Command:** `git log --oneline -4` · `git status --short` · `git push origin refs/tags/arquivo/pre-remocao-fora-do-mvp refs/heads/archive/fora-do-mvp` · `git grep -n -i -E "\bpersonas?\b|/r/|/jogos|/trail|GameCenter" -- docs/specs/README.md`
+**Exit code:** 0 · 0 (árvore limpa) · 0 · 1 (nenhuma linha)
+**Summary:** `f5f6650` commitou os 12 arquivos `.ai/` que a Duda já tinha aprovado e modificado (aprovações de 2026-11-15, regra de branch, steering); `3dc85fa` trocou `docs/specs/README.md` por um apontador para `.ai/sdd/INDEX.md` (as 22 pastas que ele listava não existem) e criou `.ai/sdd/pendencias.md` (PEND-001 a PEND-005). Com o README novo, a exceção dele na V-06 cai: sobra só `scripts/status.mjs`. A tag `arquivo/pre-remocao-fora-do-mvp` e a branch `archive/fora-do-mvp` foram para o GitHub por autorização da Duda; `main` e `rebuild/sdd` não receberam push. A Duda pediu `sdd-review` (revisão em contexto novo) antes de promover o `.status`.
+**Verdict:** PASS
