@@ -255,3 +255,10 @@ A falha das rodadas 1 e 3 é sempre `src/pages/HomePersona.test.tsx › ação p
 **Exit code:** 0 referências nos 5 · 1 (vazio) · 0 · 0 ocorrências
 **Summary:** apagados `PersonalSpace`, `ProfileSummary`, `StackOverview`, `AcademicSnapshot` e `ServicesPreview` (`.tsx`) e as 4 fontes (`fraunces-latin`, `-latin-ext`, `-italic-latin`, `-italic-latin-ext`), cerca de 156 kB em `public/fonts`; `index.html` perdeu o bloco `<link rel="preload" ... fraunces-latin.woff2>` (sobra só o preload do JetBrains Mono). `dist/fonts` ficou só com `jetbrains-mono-*`. `verify` exit 0 em 64,7 s (formatação, lint, tipos 7,3 s, testes 39,2 s, geração 3,3 s); a suíte não perdeu teste (os 5 componentes não tinham teste). As referências antigas em `.ai/` e `docs/` são texto histórico e ficam.
 **Verdict:** PASS
+
+## T7.2 `secretGuard` com o `loadEnv` real (PEND-004)
+**Claim:** `scripts/secretGuard.test.ts` não usa mais `vi.mock('vite')`: o arquivo roda em ambiente `node` (`// @vitest-environment node`) e o `loadEnv` é o do `vite` real; um caso novo prova a leitura de um `.env` de verdade.
+**Command:** `git grep -n "vi.mock('vite'" -- scripts` · `npx vitest run scripts/secretGuard.test.ts` · `npm run verify`
+**Exit code:** 1 (vazio) · 0 · 0
+**Summary:** o `vite` real carregou o esbuild no ambiente `node` sem problema, então a saída de reserva (propor outra à Duda) não foi necessária. `secretGuard.test.ts`: 13 → 14 casos. O caso novo cria uma pasta temporária com `.env.production` contendo `HARDCOVER_API_TOKEN=<valor montado em tempo de execução>`, aponta `envDir` para ela e confirma que o valor no bundle falha com `valor da variável secreta HARDCOVER_API_TOKEN apareceu no bundle`; o valor não está em `process.env`, então o caso só passa se o `loadEnv` real leu o arquivo. Os demais casos do plugin agora usam um `envDir` temporário vazio, para o teste não ler o `.env` da máquina de quem roda. Nenhum segredo escrito em arquivo do repositório. Suíte: 85 arquivos, 1147 → 1148 testes, 0 falhas. `verify` exit 0 (formatação 4,2 s, lint 11,0 s, tipos 7,6 s, testes 42,3 s, geração 3,4 s).
+**Verdict:** PASS

@@ -1,8 +1,10 @@
+// @vitest-environment node
+// Ambiente `node` (não jsdom) para o `vite` real carregar o esbuild: o `loadEnv` abaixo é o de verdade.
+import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import type { OutputBundle } from 'rollup';
 import type { ResolvedConfig } from 'vite';
-// O `vite` real carrega o esbuild, que não funciona dentro do jsdom da suíte; aqui só o `loadEnv`
-// (leitura de arquivos `.env`) é trocado. O `vite build` real, que o exercita, é parte da verificação.
-vi.mock('vite', () => ({ loadEnv: () => ({}) }));
 
 import { assertNoSecrets, guardProblems, secretGuardPlugin, secretValues } from './secretGuard';
 
@@ -84,18 +86,21 @@ describe('guardProblems (função pura)', () => {
 
 describe('plugin secretGuard (no molde do personalGuard)', () => {
   const plugin = secretGuardPlugin();
-  const resolve = (env: Record<string, string>) =>
+  // `envDir` é uma pasta temporária vazia: o `loadEnv` real não lê o `.env` da máquina de quem roda.
+  const envDir = mkdtempSync(join(tmpdir(), 'secret-guard-'));
+  const resolve = (env: Record<string, string>, dir = envDir) =>
     (plugin.configResolved as (config: ResolvedConfig) => void)({
       env,
       mode: 'production',
-      root: process.cwd(),
-      envDir: process.cwd(),
+      root: dir,
+      envDir: dir,
       build: { outDir: 'dist' },
     } as unknown as ResolvedConfig);
   const generate = (bundle: Record<string, unknown>) =>
     (plugin.generateBundle as (o: unknown, b: OutputBundle) => void)({}, bundle as OutputBundle);
 
   afterEach(() => vi.unstubAllEnvs());
+  afterAll(() => rmSync(envDir, { recursive: true, force: true }));
 
   it('só roda no build', () => {
     expect(plugin.apply).toBe('build');
@@ -141,5 +146,20 @@ describe('plugin secretGuard (no molde do personalGuard)', () => {
     expect(() =>
       generate({ a: { type: 'chunk', fileName: 'static/a.js', code: `x("${fakeToken}")` } }),
     ).toThrow(/valor da variável secreta PERSONAL_API_TOKEN apareceu no bundle/);
+  });
+
+  it('o valor de uma variável secreta lida de um arquivo .env de verdade (loadEnv real) no bundle falha', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'secret-guard-env-'));
+
+    try {
+      writeFileSync(join(dir, '.env.production'), `HARDCOVER_API_TOKEN=${fakeToken}\n`);
+      resolve({}, dir);
+
+      expect(() =>
+        generate({ a: { type: 'chunk', fileName: 'static/a.js', code: `x("${fakeToken}")` } }),
+      ).toThrow(/valor da variável secreta HARDCOVER_API_TOKEN apareceu no bundle/);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
   });
 });
