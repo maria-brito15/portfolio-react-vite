@@ -57,3 +57,28 @@ Exit code: 0
 Summary:   OK em 84,8 s (formatação 6,7; lint 19,7; tipos 13,3; testes 40,5; geração 4,5). Uma execução anterior marcou 370,7 s com o lint em 306,8 s (exit 0); `npx eslint . --max-warnings 0` isolado levou 23,3 s e a repetição do verify deu 84,8 s: foi carga da máquina, não do código
 Verdict:   PASS
 ```
+
+## T1.2 Só dois temas no código (TD-011, D-002)
+**Entregue:** `Theme = 'light' | 'dark'` (`src/types.ts`); `src/data/themes.ts` com 2 temas e `DEFAULT_THEME = 'light'` (por ora; a T1.3 passa a resolver pelo sistema); lista de ids do script inline do `index.html` reduzida a `['dark', 'light']`; `themes.test.tsx` ajustado. O tom `amber` de componente (`tones.ts`, `Chip`) não é tema e ficou. O seletor do cabeçalho e o comando `tema` passam a listar só os dois temas (leem `themes`).
+
+```
+Claim:     nenhuma referência aos 3 temas extras em themes.ts, types.ts, tokens.css e index.html
+Command:   git grep -n -i -E "dracula|solarized|'amber'" -- src/data/themes.ts src/types.ts src/styles/tokens.css index.html
+Exit code: 1 (nenhuma ocorrência)
+Summary:   limpo nos 4 arquivos
+Verdict:   PASS
+```
+```
+Claim:     o comando `tema` e o seletor oferecem só os dois temas; valor antigo (`dracula`) no localStorage é ignorado
+Command:   npx vitest run src/data/themes.test.tsx
+Exit code: 0
+Summary:   13 testes: tabela com 2 temas; `dracula`/`solarized`/`amber`/`ambar` não são tema nem são achados por `findTheme`; o script inline do index.html, executado, ignora `dracula` salvo e aplica `light`; `tema dracula` dá "tema não encontrado" e lista 2; seletor com 2 opções; `data-theme` desconhecido cai em DEFAULT_THEME
+Verdict:   PASS
+```
+```
+Claim:     o gate passa
+Command:   npm run verify
+Exit code: 0
+Summary:   OK em 86,0 s (orçamento 180 s): formatação 3,8; lint 10,9; tipos 7,1; testes 61,2; geração 2,9
+Verdict:   PASS
+```

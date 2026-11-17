@@ -24,7 +24,7 @@
       try {
         var theme = localStorage.getItem('portfolio-theme');
         // Mesmos ids de src/data/themes.ts (um teste confere).
-        if (['dark', 'light', 'dracula', 'solarized', 'amber'].indexOf(theme) !== -1)
+        if (['dark', 'light'].indexOf(theme) !== -1)
           document.documentElement.setAttribute('data-theme', theme);
         if (localStorage.getItem('portfolio-lang') === 'en') document.documentElement.lang = 'en';
       } catch (e) {}

@@ -22,13 +22,36 @@ beforeEach(() => {
 
 describe('tabela de temas', () => {
   it('encontra por id e por nome em PT/EN, sem acento e sem caixa', () => {
-    expect(findTheme('ÂMBAR')?.id).toBe('amber');
-    expect(findTheme('Amber')?.id).toBe('amber');
-    expect(findTheme('escuro')?.id).toBe('dark');
+    expect(findTheme('ESCURO')?.id).toBe('dark');
+    expect(findTheme('Dark')?.id).toBe('dark');
+    expect(findTheme('claro')?.id).toBe('light');
     expect(findTheme('light')?.id).toBe('light');
     expect(findTheme('nada')).toBeUndefined();
-    expect(isTheme('dracula')).toBe(true);
+    expect(isTheme('dark')).toBe(true);
     expect(isTheme('rosa')).toBe(false);
+  });
+
+  it('só existem dois temas, e os três extras antigos não são mais temas (D-002)', () => {
+    expect(themes.map((t) => t.id).sort()).toEqual(['dark', 'light']);
+    for (const old of ['dracula', 'solarized', 'amber', 'ambar']) {
+      expect(isTheme(old), old).toBe(false);
+      expect(findTheme(old), old).toBeUndefined();
+    }
+    expect(DEFAULT_THEME).toBe('light');
+  });
+
+  it('o script do index.html ignora um tema antigo salvo e aplica um válido', () => {
+    const html = readFileSync(join(process.cwd(), 'index.html'), 'utf8');
+    const script = html.match(/<script>([\s\S]*?)<\/script>/)?.[1] ?? '';
+
+    expect(script).toContain('portfolio-theme');
+    document.documentElement.removeAttribute('data-theme');
+    localStorage.setItem('portfolio-theme', 'dracula');
+    new Function(script)();
+    expect(attr()).toBeNull();
+    localStorage.setItem('portfolio-theme', 'light');
+    new Function(script)();
+    expect(attr()).toBe('light');
   });
 
   it('o script do index.html conhece exatamente os mesmos ids (TB-03)', () => {
@@ -45,9 +68,9 @@ describe('tabela de temas', () => {
     expect(() => themeName('rosa' as never, 'pt')).toThrow('tema desconhecido: rosa');
   });
 
-  it('os temas extras são escuros', () => {
-    for (const t of themes.filter((x) => !['dark', 'light'].includes(x.id)))
-      expect(t.scheme, t.id).toBe('dark');
+  it('cada tema declara o esquema de cor certo', () => {
+    expect(themes.find((t) => t.id === 'dark')?.scheme).toBe('dark');
+    expect(themes.find((t) => t.id === 'light')?.scheme).toBe('light');
   });
 });
 
@@ -66,16 +89,16 @@ describe('comando tema (TB-01, TB-02, TB-03)', () => {
     const user = userEvent.setup();
 
     renderApp();
-    await run(user, 'tema dracula');
-    expect(attr()).toBe('dracula');
-    expect(localStorage.getItem('portfolio-theme')).toBe('dracula');
-    expect(log()).toHaveTextContent('tema: dracula');
-    await run(user, 'theme ambar');
-    expect(attr()).toBe('amber');
-    expect(localStorage.getItem('portfolio-theme')).toBe('amber');
+    await run(user, 'tema claro');
+    expect(attr()).toBe('light');
+    expect(localStorage.getItem('portfolio-theme')).toBe('light');
+    expect(log()).toHaveTextContent('tema: claro');
+    await run(user, 'theme dark');
+    expect(attr()).toBe('dark');
+    expect(localStorage.getItem('portfolio-theme')).toBe('dark');
   });
 
-  it('nome inválido não muda o tema e lista os válidos (erro que reensina)', async () => {
+  it('nome inválido não muda o tema e lista só os dois válidos (erro que reensina)', async () => {
     const user = userEvent.setup();
 
     renderApp();
@@ -83,35 +106,38 @@ describe('comando tema (TB-01, TB-02, TB-03)', () => {
     expect(attr()).toBe('dark');
     expect(log()).toHaveTextContent('tema: rosa: tema não encontrado');
     for (const t of themes) expect(within(log()).getByText(t.names.pt)).toBeInTheDocument();
-    await run(user, 'tema dracula solarized');
+    expect(log().querySelectorAll('.t-index-list li')).toHaveLength(2);
+    await run(user, 'tema dracula');
     expect(attr()).toBe('dark');
+    expect(log()).toHaveTextContent('tema: dracula: tema não encontrado');
   });
 
   it('tema ls lista com o atual marcado, e cada nome é um botão que aplica', async () => {
     const user = userEvent.setup();
 
     renderApp();
-    await run(user, 'tema dracula');
+    await run(user, 'tema claro');
     await run(user, 'tema ls');
 
     const items = [...log().querySelectorAll('.t-index-list li')];
 
     expect(items).toHaveLength(themes.length);
-    expect(log().querySelector('.t-index-list li:nth-child(3)')).toHaveTextContent(/●\s*dracula/);
+    expect(items).toHaveLength(2);
+    expect(log().querySelector('.t-index-list li:nth-child(2)')).toHaveTextContent(/●\s*claro/);
     expect(log()).toHaveTextContent('atual');
-    await user.click(within(log()).getByRole('button', { name: /solarized/ }));
-    expect(attr()).toBe('solarized');
+    await user.click(within(log()).getByRole('button', { name: /escuro/ }));
+    expect(attr()).toBe('dark');
   });
 
   it('o replay do histórico não reaplica o tema', () => {
-    sessionStorage.setItem('portfolio-terminal', JSON.stringify(['tema amber']));
+    sessionStorage.setItem('portfolio-terminal', JSON.stringify(['tema claro']));
     renderApp();
     expect(attr()).toBe('dark');
   });
 });
 
 describe('botão do cabeçalho (TB-05) e persistência (TB-03)', () => {
-  it('o seletor do cabeçalho lista os cinco temas, reflete o comando tema e aplica a escolha', async () => {
+  it('o seletor do cabeçalho lista os dois temas, reflete o comando tema e aplica a escolha', async () => {
     const user = userEvent.setup();
 
     renderApp();
@@ -121,19 +147,22 @@ describe('botão do cabeçalho (TB-05) e persistência (TB-03)', () => {
     expect([...select.querySelectorAll('option')].map((o) => o.value)).toEqual(
       themes.map((t) => t.id),
     );
-    await run(user, 'tema solarized');
-    expect(attr()).toBe('solarized');
-    expect(select).toHaveValue('solarized');
+    expect(select.querySelectorAll('option')).toHaveLength(2);
+    await run(user, 'tema claro');
+    expect(attr()).toBe('light');
+    expect(select).toHaveValue('light');
+    await user.selectOptions(select, 'dark');
+    expect(attr()).toBe('dark');
     await user.selectOptions(select, DEFAULT_THEME);
     expect(attr()).toBe(DEFAULT_THEME);
-    await user.selectOptions(select, 'light');
-    expect(attr()).toBe('light');
-    expect(localStorage.getItem('portfolio-theme')).toBe('light');
+    expect(localStorage.getItem('portfolio-theme')).toBe(DEFAULT_THEME);
   });
 
-  it('um valor salvo desconhecido cai no tema padrão', () => {
-    document.documentElement.setAttribute('data-theme', 'rosa');
-    renderApp();
-    expect(attr()).toBe('dark');
+  it('um valor desconhecido (inclusive um tema antigo) cai no tema padrão', () => {
+    for (const unknown of ['rosa', 'dracula']) {
+      document.documentElement.setAttribute('data-theme', unknown);
+      renderApp();
+      expect(attr()).toBe(DEFAULT_THEME);
+    }
   });
 });

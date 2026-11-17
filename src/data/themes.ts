@@ -1,4 +1,4 @@
-// Tabela única de temas. O `id` é o valor de `data-theme` (e o que fica salvo
+// Tabela única de temas (claro e escuro). O `id` é o valor de `data-theme` (e o que fica salvo
 // em `localStorage`); cada tema é só um bloco de tokens em `tokens.css`.
 // O script inline do `index.html` repete os ids (não pode importar este
 // arquivo); um teste confere que as duas listas não divergem.
@@ -10,19 +10,18 @@ const L = (pt: string, en: string): Localized => ({ pt, en });
 export interface ThemeInfo {
   id: Theme;
   names: Localized;
-  // Esquema de cor de base: os temas novos são todos escuros.
   scheme: 'dark' | 'light';
 }
 
+// Dois temas só (spec 002, D-002): claro e escuro.
 export const themes: ThemeInfo[] = [
   { id: 'dark', names: L('escuro', 'dark'), scheme: 'dark' },
   { id: 'light', names: L('claro', 'light'), scheme: 'light' },
-  { id: 'dracula', names: L('dracula', 'dracula'), scheme: 'dark' },
-  { id: 'solarized', names: L('solarized', 'solarized'), scheme: 'dark' },
-  { id: 'amber', names: L('ambar', 'amber'), scheme: 'dark' },
 ];
 
-export const DEFAULT_THEME: Theme = 'dark';
+// Reserva quando nenhum tema foi aplicado ainda. A T1.3 passa a resolver pelo sistema
+// (`resolveTheme`, no módulo de boot); até lá, claro, que é o `:root` de tokens.css.
+export const DEFAULT_THEME: Theme = 'light';
 
 export const isTheme = (value: unknown): value is Theme =>
   themes.some((theme) => theme.id === value);
