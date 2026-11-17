@@ -23,7 +23,7 @@ const ready = <T,>(items: T[]): PersonalState<T> => ({
   feed: { items, updatedAt: MOCK_FETCHED_AT, stale: false, source: 'mock' },
 });
 
-afterEach(() => localStorage.removeItem('portfolio-lang'));
+afterEach(() => window.history.replaceState(null, '', '/'));
 
 describe('destaques do hub', () => {
   it('recentFilms: só com data, do mais recente ao mais antigo, no máximo 3', () => {
@@ -91,7 +91,7 @@ describe('HubIndex: cartões', () => {
   });
 
   it('em inglês', () => {
-    localStorage.setItem('portfolio-lang', 'en');
+    window.history.replaceState(null, '', '/en');
     render(<HubIndex {...mocks} />, { wrapper });
 
     expect(screen.getByText('Last finished')).toBeInTheDocument();

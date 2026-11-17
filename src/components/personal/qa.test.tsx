@@ -18,9 +18,7 @@ afterEach(() => {
 
 const RAW_KEY = /\b[a-z]+(\.[a-zA-Z]+){2,}\b/;
 
-async function open(path: string, lang: 'pt' | 'en') {
-  localStorage.setItem('portfolio-lang', lang);
-
+async function open(path: string) {
   const view = renderApp(path);
 
   await waitFor(() => expect(screen.getByRole('heading', { level: 1 })).toBeTruthy(), {
@@ -65,7 +63,7 @@ describe.each(PAGES)('QA de %s', (pt, en) => {
     ['pt', pt],
     ['en', en],
   ] as const)('estrutura e idioma em %s', async (lang, path) => {
-    const { container } = await open(path, lang);
+    const { container } = await open(path);
 
     audit(container);
     expect(document.documentElement.lang.slice(0, 2)).toBe(lang);
@@ -79,7 +77,7 @@ describe('nada escondido e nenhuma página quebrada', () => {
     const seen: string[] = [];
 
     for (const [pt] of PAGES) {
-      const { container, unmount } = await open(pt, 'pt');
+      const { container, unmount } = await open(pt);
 
       audit(container);
       seen.push(container.querySelector('h1')?.textContent ?? '');

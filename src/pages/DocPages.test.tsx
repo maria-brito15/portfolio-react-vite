@@ -28,11 +28,8 @@ describe('currículo', () => {
     print.mockRestore();
   });
 
-  it('funciona em inglês e pela rota /resume', async () => {
-    const user = userEvent.setup();
-
+  it('funciona em inglês e pelo endereço /en/resume', () => {
     renderApp('/en/resume');
-    await user.click(screen.getByRole('button', { name: /Switch to English/ }));
     expect(screen.getByRole('heading', { level: 2, name: /Technical skills/ })).toBeInTheDocument();
   });
 });

@@ -53,7 +53,7 @@ const book = (over: Partial<Book> = {}): Book => ({
   ...over,
 });
 
-afterEach(() => localStorage.removeItem('portfolio-lang'));
+afterEach(() => window.history.replaceState(null, '', '/'));
 
 describe('FilmsDiary com o mock (CL-22, CL-25, CL-13)', () => {
   const noop = () => {};
@@ -76,7 +76,7 @@ describe('FilmsDiary com o mock (CL-22, CL-25, CL-13)', () => {
   });
 
   it('em inglês, meses e rótulos no idioma', () => {
-    localStorage.setItem('portfolio-lang', 'en');
+    window.history.replaceState(null, '', '/en');
     render(<FilmsDiary state={ready(mockFilms)} retry={noop} />, { wrapper });
 
     expect(screen.getByRole('heading', { name: 'November 2026' })).toBeInTheDocument();
@@ -393,7 +393,7 @@ describe('páginas inteiras, com o mock real (CL-03, CL-20)', () => {
   });
 
   it('/personal/books em inglês', async () => {
-    localStorage.setItem('portfolio-lang', 'en');
+    window.history.replaceState(null, '', '/en');
     renderApp('/en/personal/books');
 
     expect(await screen.findByRole('heading', { name: 'Reading now' })).toBeInTheDocument();

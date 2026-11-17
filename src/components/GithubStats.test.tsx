@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { LanguageProvider } from '../i18n/LanguageContext';
+import { RouterProvider } from '../router';
 import GithubStats from './GithubStats';
 import { summarize } from '../services/github';
 
@@ -40,9 +41,11 @@ function mockApi(contrib: unknown = { total: { lastYear: 420 } }) {
 
 const ui = (compact = false) =>
   render(
-    <LanguageProvider>
-      <GithubStats compact={compact} />
-    </LanguageProvider>,
+    <RouterProvider>
+      <LanguageProvider>
+        <GithubStats compact={compact} />
+      </LanguageProvider>
+    </RouterProvider>,
   );
 
 describe('summarize', () => {

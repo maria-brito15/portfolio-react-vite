@@ -58,11 +58,8 @@ describe('/setup em construção', () => {
     );
   });
 
-  it('o apelido em inglês abre a mesma página e o aviso troca de idioma', async () => {
-    const user = userEvent.setup();
-
+  it('o endereço em inglês abre a mesma página, no idioma do endereço', () => {
     renderApp('/en/uses');
-    await user.click(screen.getByRole('button', { name: /Switch to English/ }));
     expect(screen.getByRole('heading', { level: 1, name: 'Setup' })).toBeInTheDocument();
     expect(screen.getByText('Under construction.')).toBeInTheDocument();
   });
@@ -91,11 +88,8 @@ describe('/agora com conteúdo (CE-06)', () => {
     );
   });
 
-  it('troca de idioma e o apelido /now abre a mesma página', async () => {
-    const user = userEvent.setup();
-
+  it('o endereço /en/now abre a mesma página, no idioma do endereço', () => {
     renderApp('/en/now');
-    await user.click(screen.getByRole('button', { name: /Switch to English/ }));
     expect(screen.getByRole('heading', { level: 1, name: 'Now' })).toBeInTheDocument();
     expect(screen.getByText('Focus')).toBeInTheDocument();
     expect(screen.getByText(/updated on 2026-11-11/)).toBeInTheDocument();

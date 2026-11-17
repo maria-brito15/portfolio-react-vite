@@ -286,3 +286,30 @@ Exit code: 0
 Summary:   OK em 144,3 s (orçamento 180 s): formatação 8,4; lint 27,2; tipos 22,9; testes 79,8; geração 6,0. A primeira execução falhou no lint (react/no-children-prop em router.test.ts), corrigida com um cast do provedor; a máquina estava mais lenta nesta rodada
 Verdict:   PASS
 ```
+
+## T2.5 Idioma pela URL e gravação só por escolha (TD-007, design-review S-04)
+**Entregue:** `LanguageProvider` deriva o idioma do **endereço** (`langOfPath`; `/en` e `/en/...` = EN) e **não consulta mais o `localStorage`**; `portfolio-lang` só é gravado numa escolha explícita (`setLang`/`toggleLang`), nunca ao montar; `toggleLang` e o novo `setLang` **navegam à página equivalente** (`equivalentPath`; uma rota desconhecida/404 vai para a home do outro idioma: `/en` ou `/`), então o comando `idioma` do terminal e o botão do cabeçalho seguem funcionando (o botão agora leva a `/en/...`); `lang` do `<html>` acompanha o endereço; `useDocumentMeta` passou a atualizar também o `lang` (título, descrição, canonical e os 3 `hreflang` já vinham do `headTags`). O armazenamento bloqueado não gera erro.
+
+**Mudança de comportamento por desenho (FR-021, avisar):** antes, o idioma era um estado separado do endereço (um endereço em inglês podia mostrar texto em português). Agora o endereço manda; por isso, **em testes da 008 e de páginas, 3 asserções mudaram de idioma esperado, junto com o endereço**: `personalRoutes.test.tsx` ("páginas abrem pelos dois caminhos": o endereço em inglês agora espera o título em inglês, `h1[1]`), e `InfoPages.test.tsx`/`DocPages.test.tsx` (abrem `/en/...` direto em vez de abrir em PT e clicar em "Switch to English"). Os demais testes só trocaram a forma de pedir inglês (`localStorage.setItem('portfolio-lang','en')` → abrir um endereço `/en/...`); `GithubStats.test.tsx` e `badges.test.tsx` ganharam um `RouterProvider` (o provedor de idioma passa a depender do roteador). Arquivos da 008 tocados: `components/personal/{badges,books,curated,editorial,films,foundation,hub,hubCards,pages,qa}.test.tsx`, `data/personalRoutes.test.tsx`, `terminal/extras/personal.test.tsx` (só teste, dentro da exceção estreita do tasks.md v1.1).
+
+```
+Claim:     abrir /en/about mostra EN mesmo com portfolio-lang=pt; montar sem clicar não grava; clique grava; bloqueado sem erro
+Command:   npx vitest run src/i18n/LanguageContext.test.tsx src/hooks/useDocumentMeta.test.tsx src/App.test.tsx
+Exit code: 0
+Summary:   LanguageContext.test.tsx (10): idioma pelo endereço (/en/about=en com pt gravado; /sobre=pt com en gravado; /en e /en/ = en); textos de interface seguem o endereço; montar não chama setItem; alternar de /sobre vai a /en/about e grava en, volta a /sobre e grava pt; setLang; home <-> /en; 404 (/xyz <-> /en, /en/xyz <-> /); setItem lançando erro não quebra. useDocumentMeta: lang, canonical (/en/about), 3 hreflang e og:locale na troca. App.test: a troca de idioma agora termina em /en/about e grava en
+Verdict:   PASS
+```
+```
+Claim:     nenhum teste depende mais de portfolio-lang para escolher o idioma
+Command:   git grep -n "setItem('portfolio-lang'" -- src
+Exit code: 1 (nenhuma ocorrência no código rastreado; o único uso, em LanguageContext.test.tsx, é o cenário "gravado = pt/en mas o endereço manda")
+Summary:   os 14 arquivos de teste que usavam localStorage para pedir inglês passaram a abrir um endereço /en/...; a suíte inteira (91 arquivos, 1246+ testes) passa
+Verdict:   PASS
+```
+```
+Claim:     o gate passa
+Command:   npm run verify
+Exit code: 0
+Summary:   OK em 121,3 s (orçamento 180 s): formatação 8,5; lint 29,3; tipos 22,2; testes 56,3; geração 5,0. A primeira execução falhou no lint (parâmetro `lang` sem uso em qa.test.tsx), corrigida
+Verdict:   PASS
+```

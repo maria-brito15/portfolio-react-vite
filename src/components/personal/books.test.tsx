@@ -39,7 +39,7 @@ const book = (over: Partial<Book> = {}): Book => ({
   ...over,
 });
 
-afterEach(() => localStorage.removeItem('portfolio-lang'));
+afterEach(() => window.history.replaceState(null, '', '/'));
 
 describe('readingActivity e favoriteBooks (funções puras)', () => {
   it('atividade: livros terminados por mês, do mais recente ao mais antigo, com as páginas', () => {
@@ -201,7 +201,7 @@ describe('BooksShelves: favoritos, atividade e perfil', () => {
   });
 
   it('em inglês: rótulos e contagem no singular e plural', () => {
-    localStorage.setItem('portfolio-lang', 'en');
+    window.history.replaceState(null, '', '/en');
     render(
       <BooksShelves
         state={ready([

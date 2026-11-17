@@ -19,7 +19,7 @@ const wrapper = ({ children }: { children: ReactNode }) => (
   </RouterProvider>
 );
 
-afterEach(() => localStorage.removeItem('portfolio-lang'));
+afterEach(() => window.history.replaceState(null, '', '/'));
 
 describe('EditorialHeader (CL-19)', () => {
   it('kicker, título (h1) e linha de apoio', () => {
@@ -131,7 +131,7 @@ describe('RatingStars (CL-22, CL-37)', () => {
   });
 
   it('em inglês', () => {
-    localStorage.setItem('portfolio-lang', 'en');
+    window.history.replaceState(null, '', '/en');
     render(<RatingStars rating={4} />, { wrapper });
 
     expect(screen.getByRole('img', { name: '4 out of 5' })).toHaveTextContent('★★★★');

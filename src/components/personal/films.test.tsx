@@ -45,7 +45,7 @@ const meta = {
   overview: { pt: 'Sinopse em português.', en: 'Synopsis in English.' },
 };
 
-afterEach(() => localStorage.removeItem('portfolio-lang'));
+afterEach(() => window.history.replaceState(null, '', '/'));
 
 describe('estatísticas e parede de pôsteres (funções puras)', () => {
   it('exibições por ano: do mais recente ao mais antigo, sem as entradas sem data', () => {
@@ -148,7 +148,7 @@ describe('página de filmes com dados reais', () => {
   });
 
   it('sinopse e gêneros seguem o idioma', () => {
-    localStorage.setItem('portfolio-lang', 'en');
+    window.history.replaceState(null, '', '/en');
     render(<FilmsDiary state={ready([film({ meta })])} retry={() => {}} />, { wrapper });
 
     const row = screen.getByText('Filme de teste').closest('li')!;

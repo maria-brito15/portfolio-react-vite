@@ -1,16 +1,19 @@
 import { render, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { LanguageProvider } from '../../i18n/LanguageContext';
+import { RouterProvider } from '../../router';
 import { personalEn, personalPt } from '../../i18n/personal';
 import { mockProvenance } from '../../services/integrations/source';
 import PlaceholderBadge from './PlaceholderBadge';
 import SourceBadge from './SourceBadge';
 
 const wrapper = ({ children }: { children: ReactNode }) => (
-  <LanguageProvider>{children}</LanguageProvider>
+  <RouterProvider>
+    <LanguageProvider>{children}</LanguageProvider>
+  </RouterProvider>
 );
 
-afterEach(() => localStorage.removeItem('portfolio-lang'));
+afterEach(() => window.history.replaceState(null, '', '/'));
 
 describe('textos do selo (CL-13, CL-26)', () => {
   it('PT e EN completos, com os rótulos do PRD', () => {
@@ -32,7 +35,7 @@ describe('PlaceholderBadge (CL-13)', () => {
   });
 
   it('feed mock em inglês', () => {
-    localStorage.setItem('portfolio-lang', 'en');
+    window.history.replaceState(null, '', '/en');
     render(<PlaceholderBadge source="mock" />, { wrapper });
 
     expect(screen.getByRole('note')).toHaveTextContent('PLACEHOLDER DATA');

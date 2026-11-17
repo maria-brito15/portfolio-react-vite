@@ -86,7 +86,7 @@ describe('página inicial', () => {
     expect(screen.getByRole('heading', { name: /About me/ })).toBeInTheDocument();
     expect(document.documentElement.lang).toBe('en');
     expect(localStorage.getItem('portfolio-lang')).toBe('en');
-    expect(window.location.pathname).toBe('/sobre');
+    expect(window.location.pathname).toBe('/en/about');
   });
 
   it('alterna o tema e persiste no localStorage', async () => {

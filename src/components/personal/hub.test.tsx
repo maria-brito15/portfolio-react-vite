@@ -37,7 +37,7 @@ const ready = <T,>(
 const noop = () => {};
 const loading = { status: 'loading' } as const;
 
-afterEach(() => localStorage.removeItem('portfolio-lang'));
+afterEach(() => window.history.replaceState(null, '', '/'));
 
 describe('MusicList (CL-23)', () => {
   it('"Em rotação" primeiro e, depois, discos e artistas; sem repetir', () => {
@@ -151,7 +151,7 @@ describe('TheaterTimeline (CL-24)', () => {
   });
 
   it('em inglês', () => {
-    localStorage.setItem('portfolio-lang', 'en');
+    window.history.replaceState(null, '', '/en');
     render(<TheaterTimeline state={ready(mockVisits)} retry={noop} />, { wrapper });
 
     expect(screen.getByRole('heading', { name: 'No date' })).toBeInTheDocument();
@@ -395,7 +395,7 @@ describe('páginas inteiras, com o mock real (CL-03, CL-20, CL-23, CL-24)', () =
   });
 
   it('/personal/theater em inglês', async () => {
-    localStorage.setItem('portfolio-lang', 'en');
+    window.history.replaceState(null, '', '/en');
     renderApp('/en/personal/theater');
 
     expect(await screen.findByRole('heading', { name: '2026' })).toBeInTheDocument();

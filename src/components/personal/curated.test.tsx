@@ -31,7 +31,7 @@ const emptyTheater: TheaterData = {
   references: [],
 };
 
-afterEach(() => localStorage.removeItem('portfolio-lang'));
+afterEach(() => window.history.replaceState(null, '', '/'));
 
 describe('MusicProfile', () => {
   it('os seis instrumentos informados, sem nível nem ano inventados', () => {
@@ -51,7 +51,7 @@ describe('MusicProfile', () => {
   });
 
   it('em inglês, nomes no idioma', () => {
-    localStorage.setItem('portfolio-lang', 'en');
+    window.history.replaceState(null, '', '/en');
     render(<MusicProfile data={music} />, { wrapper });
 
     expect(screen.getByText('Acoustic guitar')).toBeInTheDocument();

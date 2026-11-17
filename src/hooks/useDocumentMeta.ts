@@ -4,7 +4,7 @@ import type { Lang } from '../types';
 
 const JSON_LD_ID = 'ld-json';
 
-// Atualiza o <head> (título, descrição, canonical, Open Graph, Twitter e JSON-LD)
+// Atualiza o <head> (`lang`, título, descrição, canonical, `hreflang`, Open Graph, Twitter e JSON-LD)
 // conforme a página e o idioma. Os valores vêm de src/data/seo.ts e seoHead.ts, os mesmos módulos
 // que gera o HTML estático no build; aqui só se corrige o que já veio da rota. O módulo
 // (~10 kB) é carregado sob demanda: o HTML de cada rota já nasce com o <head> certo, então a
@@ -37,6 +37,7 @@ function apply(
   const { title, tags } = headTags(routeId, lang);
 
   document.title = title;
+  document.documentElement.lang = lang === 'pt' ? 'pt-BR' : 'en';
 
   for (const tag of tags) {
     let el = document.head.querySelector(tagSelector(tag));

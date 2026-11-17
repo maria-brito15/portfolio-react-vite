@@ -142,7 +142,7 @@ describe('SEO por rota (CL-04)', () => {
 });
 
 describe('páginas abrem pelos dois caminhos (CL-03)', () => {
-  it.each(PAGES.flatMap((p) => [[p.id, p.pt, p.h1[0]] as const, [p.id, p.en, p.h1[0]] as const]))(
+  it.each(PAGES.flatMap((p) => [[p.id, p.pt, p.h1[0]] as const, [p.id, p.en, p.h1[1]] as const]))(
     '%s em %s',
     (_id, path, h1) => {
       renderApp(path);
@@ -152,8 +152,7 @@ describe('páginas abrem pelos dois caminhos (CL-03)', () => {
   );
 
   it('em inglês, o título vem do idioma', () => {
-    localStorage.setItem('portfolio-lang', 'en');
-    renderApp('/pessoal/livros');
+    renderApp('/en/personal/books');
 
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Books');
   });

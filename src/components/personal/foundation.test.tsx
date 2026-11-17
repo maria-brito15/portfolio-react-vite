@@ -32,7 +32,7 @@ const ready = <T,>(items: T[]): PersonalState<T> => ({
   feed: { items, updatedAt: MOCK_FETCHED_AT, stale: false, source: 'mock' },
 });
 
-afterEach(() => localStorage.removeItem('portfolio-lang'));
+afterEach(() => window.history.replaceState(null, '', '/'));
 
 describe('os quatro estados, com a mesma aparência', () => {
   it('carregando, vazio, erro e vencido usam a mesma base visual (pe-state / pe-stale)', () => {
@@ -84,7 +84,7 @@ describe('os quatro estados, com a mesma aparência', () => {
   });
 
   it('em inglês', () => {
-    localStorage.setItem('portfolio-lang', 'en');
+    window.history.replaceState(null, '', '/en');
     render(
       <>
         <Loading />
@@ -277,7 +277,7 @@ describe('estatísticas nas páginas (ReadingStats, FilmStats)', () => {
   });
 
   it('em inglês: rótulos e média com ponto', () => {
-    localStorage.setItem('portfolio-lang', 'en');
+    window.history.replaceState(null, '', '/en');
 
     const { container } = render(<FilmsDiary state={ready(mockFilms)} retry={() => {}} />, {
       wrapper,
@@ -351,7 +351,7 @@ describe('entrada no menu, nos dois idiomas (Navegação)', () => {
   });
 
   it('EN: "Personal" aparece no menu lateral', () => {
-    localStorage.setItem('portfolio-lang', 'en');
+    window.history.replaceState(null, '', '/en');
     renderApp('/en/about');
 
     expect(sidebarLink().some((text) => /Personal/.test(text ?? ''))).toBe(true);

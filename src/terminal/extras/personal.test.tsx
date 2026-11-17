@@ -152,11 +152,9 @@ describe('saída do terminal (CL-05)', () => {
   });
 
   it('em inglês: nome do comando, seções e textos no idioma', async () => {
-    localStorage.setItem('portfolio-lang', 'en');
-
     const user = userEvent.setup();
 
-    renderApp();
+    renderApp('/en/terminal');
     await run(user, 'personal films');
 
     expect(await screen.findByText(/Filme de exemplo 1/)).toBeInTheDocument();
