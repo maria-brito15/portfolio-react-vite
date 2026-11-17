@@ -1,7 +1,7 @@
 # 001 Engineering baseline, Tasks
 **Status:** approved (aprovado pela Duda em 2026-11-15, fase por fase; ver `.status`) · **Versão:** 1.0 · **Autor:** Claude (rascunho para a Duda) · **Data:** 2026-11-15
 **Entrada:** `requirements.md` v1.3 (aprovada), `design.md` v1.0 (aprovado, 13 respostas DQ registradas), `design.anexo-evidencias.md`, `design.anexo-fora-do-mvp.md` (lista de remoção aprovada, com a correção de `/pessoal` curado)
-**Versão 1.1 (2026-11-17):** a Duda aprovou a Fase 7 (T7.1 a T7.3, +4 h, limpeza pós-aceite); a Fase 7 vem depois da revisão. As 29 tarefas e 86 h abaixo são das fases 1 a 6.
+**Versão 1.1 (2026-11-17):** a Duda aprovou a Fase 7 (T7.1 a T7.3, +4 h, limpeza pós-aceite); a Fase 7 vem depois da revisão. **Versão 1.2 (2026-11-17):** a Duda aprovou a T7.4 e a T7.5 (+3 h), vindas da revisão (G-1 e G-5). As 29 tarefas e 86 h abaixo são das fases 1 a 6.
 **Estimativa total:** 29 tarefas, **86 h** (1 a 4 h cada), em 6 fases. A "Ação da Duda" (fora da contagem) está no fim da Fase 5.
 
 ## Como ler
@@ -429,7 +429,24 @@ A T6.7 fechou o aceite. Estas 3 tarefas tratam as pendências PEND-001 a PEND-00
 - **Arquivos prováveis:** os dois testes
 - **Verificação:** `git grep` acima (exit 1); `npx vitest run src/components/personal/qa.test.tsx src/data/personalDiscovery.test.tsx` (exit 0); `npm run verify` (exit 0)
 
-Cobertura da Fase 7: FR-006 → T7.1, T7.3 · FR-016, NFR-002 → T7.2. Dependência: **revisão (`sdd-review`) primeiro**; as três são independentes entre si.
+### T7.4 Sem `id` cru como texto de reserva (PEND-006, revisão G-1)
+- **Requisito:** FR-015 · **Prioridade:** P2 · **Estimativa:** 2 h · **Dependências:** T7.3
+- **Trabalho:** o guarda de `src/content/pick.test.ts` só varre `src/content` e `src/i18n`; cinco pontos de `src/` ainda devolvem o `id` cru quando falta o texto: `src/components/paletteItems.ts` (`r.segment?.[lang] ?? r.id`), `src/data/routes.ts` (`crumbsFor`: `name`/`alias` e `parent.segment` com `?? ...id`), `src/terminal/commands.tsx` e `src/terminal/extras/neofetch.tsx` (nome do tema: `names[lang] ?? id`) e `src/terminal/extras/personalView.tsx` (`route.segment?.[lang] ?? route.id`). (1) Em `src/data/routes.ts`, criar `routeSegment(route, lang)` e `routeName(route, lang)` que **lançam** `rota <id>: <campo> sem <lang>` se faltar, e usá-los nos três pontos de rota; (2) em `src/data/themes.ts`, criar `themeName(id, lang)` que lança para id desconhecido, e usá-lo nos dois pontos de tema; (3) estender o guarda de `pick.test.ts` a `src/data`, `src/components`, `src/terminal` e `src/pages`, com um padrão a mais para `?? <algo>.id` e `?? id`; (4) se aparecer outra ocorrência além das cinco, corrigir; se uma rota **legitimamente** não tiver `name`, `alias` ou `segment`, **parar e perguntar à Duda** (não relaxar o guarda nem silenciar).
+- **Testes:** `routes.test.ts` (toda rota usada em breadcrumb, paleta ou terminal tem nome e segmento nos dois idiomas; `routeSegment` lança quando falta), `themes.test.tsx` (`themeName` lança para id desconhecido) e o guarda estendido de `pick.test.ts`.
+- **Critérios de aceitação:** `git grep -n -E "\[lang\] *(\?\?|\|\|)|\?\? *([A-Za-z_]+\.)?id\b" -- src/data src/components src/terminal src/pages` vazio (exit 1), excluindo os testes que montam amostras em tempo de execução; suíte e `verify` passam.
+- **Arquivos prováveis:** `src/data/routes.ts`, `src/data/themes.ts`, `src/components/paletteItems.ts`, `src/terminal/commands.tsx`, `src/terminal/extras/{neofetch,personalView}.tsx`, `src/content/pick.test.ts`, `src/data/routes.test.ts`, `src/data/themes.test.tsx`
+- **Verificação:** o `git grep` acima (exit 1); `npx vitest run src/content/pick.test.ts src/data/routes.test.ts src/data/themes.test.tsx` (exit 0); `npm run verify` (exit 0)
+
+### T7.5 Teste de execuções simultâneas do `verify` (PEND-007, revisão G-5)
+- **Requisito:** FR-005, EC-17 do design (execuções simultâneas anexam uma linha cada, sem se corromper; os tempos delas não valem como medição) · **Prioridade:** P2 · **Estimativa:** 1 h · **Dependências:** T7.3
+- **Observação:** EC-17 **não pede bloqueio**: o design da 001 aceita execuções simultâneas. Esta tarefa só prova que o registro em `.verify/times.jsonl` aguenta isso.
+- **Trabalho:** exportar `appendRecord` de `scripts/verify.mjs` (só a palavra `export`) e acrescentar a `scripts/verify.test.ts` um caso que dispara 4 processos `node` ao mesmo tempo, cada um chamando `appendRecord` 25 vezes no mesmo arquivo temporário, e confere: 100 linhas, todas JSON válido com os campos do registro, nenhuma linha partida ou misturada. Se falhar, **a causa é spec ou design errados**: parar e propor a correção à Duda (não remendar o teste).
+- **Testes:** o caso novo de `scripts/verify.test.ts`.
+- **Critérios de aceitação:** o caso passa 3 vezes seguidas; a suíte continua dentro do orçamento; `scripts/verify.mjs` só ganhou `export`.
+- **Arquivos prováveis:** `scripts/verify.mjs`, `scripts/verify.test.ts`
+- **Verificação:** `npx vitest run scripts/verify.test.ts` (exit 0, 3 vezes); `git diff --stat -- scripts/verify.mjs` (1 linha); `npm run verify` (exit 0)
+
+Cobertura da Fase 7: FR-006 → T7.1, T7.3 · FR-016, NFR-002 → T7.2 · FR-015 → T7.4 · FR-005 (EC-17) → T7.5. Dependência: **revisão (`sdd-review`) primeiro**; as cinco são independentes entre si (T7.4 e T7.5 dependem só da T7.3).
 
 ---
 
