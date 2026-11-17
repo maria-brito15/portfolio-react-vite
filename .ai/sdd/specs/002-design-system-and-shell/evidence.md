@@ -115,3 +115,46 @@ Exit code: 0
 Summary:   OK em 80,7 s (orçamento 180 s): formatação 4,0; lint 11,7; tipos 8,2; testes 53,5; geração 3,3
 Verdict:   PASS
 ```
+
+## T1.4 Fontes IBM Plex, licença e teste de peso (TD-016, DQ-003)
+**Entregue:** 3 WOFF2 em `public/fonts/` (Plex Sans 400 e 600, Plex Mono 400, subconjunto Latin1 oficial da IBM) e `public/fonts/LICENSE-IBM-Plex.txt` (autor, OFL 1.1 completa, origem, data, versões e SHA-256 parcial); `@font-face` em `tokens.css` com `font-display: swap` e o `unicode-range` do subconjunto oficial; duas fontes reservas com métricas ajustadas (`size-adjust`); `--font-sans` e `--font-mono` trocados; `jetbrains-mono-*.woff2` removidos; os `preload` do `index.html` passaram para as 3 fontes novas (a T1.5 só confere e acrescenta o resto do `<head>`); `scripts/assets.test.ts` novo; `styles.test.ts` ajustado (duas famílias).
+
+**Origem oficial:** pacotes npm da IBM (`@ibm/plex-sans` 1.1.0 e `@ibm/plex-mono` 2.5.0, licença OFL-1.1, repositório `github.com/ibm/plex`), baixados com `npm pack` em pasta nova e vazia do scratchpad em 2026-11-17; arquivos copiados sem modificação (a OFL proíbe vender sozinhos e exige manter a licença). As duas `LICENSE.txt` são idênticas (conferido com `cmp`).
+
+**Teste de peso (DQ-003):**
+| Arquivo | Bytes |
+| --- | --- |
+| `ibm-plex-sans-latin-400.woff2` | 20.984 |
+| `ibm-plex-sans-latin-600.woff2` | 22.260 |
+| `ibm-plex-mono-latin-400.woff2` | 17.544 |
+| **Total (3 arquivos)** | **60.788** (59,4 KB) |
+Antes: `jetbrains-mono-latin.woff2` 31.432 + `-latin-ext` 11.624 = 43.056 bytes. Passou de 4 arquivos? **Não** (3). Compromete o LCP? **Não medido ainda**: o LCP real em celular é da T5.3 (Lighthouse). O que dá para dizer agora: +17.732 bytes no total, os 3 arquivos entram por `preload` e a troca (`swap`) tem reserva ajustada. **Plano B (fonte do sistema) não foi acionado.** Se a T5.3 mostrar LCP acima de 2,5 s por causa das fontes, volta à Duda.
+
+**Fontes reservas (cálculo):** a partir das métricas dos arquivos: largura média de a-z em em/em de 0,5050 (Plex Sans) contra 0,4895 (Arial) dá `size-adjust` 103,15% (ascendente 99,4%, descendente 26,7%); Plex Mono 0,6000 contra Courier New 0,6001 dá 99,98%. É uma aproximação por letras minúsculas; o CLS real é medido na T5.3.
+
+**Pontos para a Duda conferir:**
+- O subconjunto Latin1 cobre português e os sinais de pontuação comuns, mas **não** cobre setas, símbolos de caixa nem `●`; as páginas antigas que os usam caem na fonte do sistema. (O JetBrains tinha só `↑ ↓` entre eles.)
+- O peso 500 do mockup não existe: o design manda usar 400 ou 600.
+- As páginas antigas continuam usando só `--font-mono`, agora Plex Mono (efeito visual: outra fonte mono, mesmas medidas aproximadas).
+
+```
+Claim:     fontes só do próprio site, no máximo 2 famílias e 4 arquivos, swap, licença e atribuição presentes
+Command:   npx vitest run scripts/assets.test.ts src/styles
+Exit code: 0
+Summary:   37 testes (assets 10 + styles 27): 2 famílias (IBM Plex Mono e IBM Plex Sans) e 3 arquivos; swap em todo @font-face com arquivo; url() só em /fonts/*.woff2 existentes; todo arquivo de fonte é usado; fontes reservas só com local(); nenhuma URL externa em CSS nem no index.html; preloads = as 3 fontes; licença com autor, OFL 1.1, origem, data, versões e tamanho real de cada arquivo
+Verdict:   PASS
+```
+```
+Claim:     nenhum jetbrains-mono no repositório (src, index.html, public)
+Command:   git grep -n -i "jetbrains" -- src index.html public
+Exit code: 1 (nenhuma ocorrência)
+Summary:   os 2 arquivos foram removidos (git rm); sem referência em CSS, HTML nem testes
+Verdict:   PASS
+```
+```
+Claim:     o gate passa e o build leva as fontes novas
+Command:   npm run verify ; ls -l dist/fonts
+Exit code: 0 ; 0
+Summary:   OK em 69,1 s (orçamento 180 s): formatação 4,4; lint 11,2; tipos 7,4; testes 42,5; geração 3,7; dist/fonts com os 3 WOFF2 e a licença
+Verdict:   PASS
+```

@@ -89,14 +89,17 @@ describe('pele única', () => {
     }
   });
 
-  // Uma voz só: JetBrains Mono. Nenhuma outra família.
-  it('a única família declarada é o mono dos tokens', () => {
+  // Duas famílias (IBM Plex Sans e IBM Plex Mono, T1.4): só tokens.css as nomeia; o resto usa os
+  // tokens `--font-sans` ou `--font-mono` (as páginas antigas ainda só o mono).
+  it('as famílias vêm dos tokens: fora de tokens.css só var(--font-sans) ou var(--font-mono)', () => {
     for (const [name, css] of sheets) {
       const families = [...css.matchAll(/font-family:\s*([^;]+);/g)].map((m) => m[1].trim());
 
       for (const family of families) {
         const ok =
-          name === 'tokens.css' ? /JetBrains Mono/.test(family) : family === 'var(--font-mono)';
+          name === 'tokens.css'
+            ? /IBM Plex (Sans|Mono)/.test(family)
+            : family === 'var(--font-mono)' || family === 'var(--font-sans)';
 
         expect(ok, `${name}: ${family}`).toBe(true);
       }
