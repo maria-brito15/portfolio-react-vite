@@ -1,6 +1,6 @@
 # 002 Design system and shell, Design
 **Status:** draft (completo, aguarda aprovação da Duda; ver `.status`) · **Versão:** 2.0 · **Autor:** Claude (rascunho para a Duda) · **Data:** 2026-11-17
-**Entrada:** `requirements.md` v1.4 (aprovada em 2026-11-17), `spike-001.md` (medição do `dist`), `design-reference/README.md` e `telas-e-requisitos.md` (referência visual, não é especificação) e as telas `mockup/Tokens`, `Mobile`, `NotFound` e `Projetos` (lidas em 2026-11-17; ver "Divergências entre o mockup e este design"), `.ai/steering/*` e o design da 001 (`review:done`).
+**Entrada:** `requirements.md` v1.5 (aprovada em 2026-11-17), `spike-001.md` (medição do `dist`), `design-reference/README.md` e `telas-e-requisitos.md` (referência visual, não é especificação) e as telas `mockup/Tokens`, `Mobile`, `NotFound` e `Projetos` (lidas em 2026-11-17; ver "Divergências entre o mockup e este design"), `.ai/steering/*` e o design da 001 (`review:done`).
 
 ## Executive Summary
 A casca nova substitui no lugar a casca "terminal/IDE" de hoje (cabeçalho, barra de comandos, barra lateral, janela, barra de tarefas). Ela entrega, em toda página: link "ir para o conteúdo", cabeçalho com menu lido da tabela de rotas, seletor de tema (claro e escuro) e de idioma (PT na raiz, EN sob `/en/`), `main` e rodapé. Seis decisões sustentam o resto:
@@ -51,11 +51,16 @@ Nada aqui foi aprovado. Onde há escolha que é da Duda, está marcada como `DQ-
 | FR-033 Terminal e CI (Won't) | fora (specs 009 e 010) | — |
 | FR-034 Dispensar a faixa | TD-012 | V-08 |
 | FR-035 Quando a faixa não aparece | TD-012 | V-08 |
+| FR-036 Rodapé de créditos | TD-020, Interface Contract | V-14 |
+| FR-037 Elenco de uma única fonte | TD-020 | V-14 |
+| FR-038 Faixa decorativa | TD-021, tokens `--deco-1` a `--deco-5` | V-14 |
+| FR-039 Sugestões na 404 | TD-022 | V-14 |
+| FR-040 Estado nunca só por cor | TD-023 | V-14 |
 | NFR-001 Performance | TD-009, TD-019 | V-13 |
 | NFR-002 Segurança | TD-015 | V-10, V-11 |
 | NFR-003 Acessibilidade | TD-004, TD-010, TD-019 | V-01, V-07, V-13 |
 
-Todo FR e NFR tem casa. Os itens P-002-a a P-002-e (rodapé de créditos, "elenco" lido de uma fonte, faixa decorativa, sugestões na 404, estado nunca só por cor) **não são requisitos aprovados**: este design não os implementa, exceto o rodapé mínimo do Interface Contract e a regra de TD-004 (estado nunca só por cor), que já decorre do WCAG.
+Todo FR e NFR tem casa. Os itens P-002-a a P-002-e viraram FR-036 a FR-040 na v1.5 do requirements (aprovados pela Duda em 2026-11-17). **Ficam de fora**, por decisão dela: a linha "trilha sonora" do rodapé (depende da Música e de uma playlist) e o motivo "cd /curriculos" da 404.
 
 ## Tokens propostos
 Valores da seção 3 do README de referência. Razões de contraste **calculadas** com a fórmula WCAG (script de conferência, 2026-11-15). Os valores concretos entram em `src/styles/tokens.css` na tarefa (TD-017).
@@ -102,7 +107,7 @@ Valores da seção 3 do README de referência. Razões de contraste **calculadas
 | `#2F3A9E` | 8,02 | 3,65 | 2,23 |
 
 ### Decoração sem texto
-Faixa de cinco cores no topo (`aria-hidden`), bordas laterais da 404 e chips de estado do Acadêmico usam magenta, laranja e azul-petróleo (`#FF8FCB`, `#FFA36B`, `#4FD1D9` no mockup). **Só como detalhe sem texto**: o estado sempre também traz texto (ex.: "CURSADO ATÉ 2026"). Dependem de P-002-c e da DQ-008, ainda não aprovadas.
+Faixa de cinco cores no topo de toda página (`aria-hidden`, 6 px de altura, sem texto, FR-038). Valores lidos do mockup, um conjunto por tema, só decoração (sem requisito de contraste): **claro** `#2B36D9`, `#B4308A`, `#0A6E78`, `#B4410F`, `#E0A800`; **escuro** `#8F98FF`, `#FF8FCB`, `#4FD1D9`, `#FFA36B`, `#FFD84D`. Viram os tokens `--deco-1` a `--deco-5`. Bordas laterais da 404 e chips de estado do Acadêmico (magenta, laranja, azul-petróleo) são das specs 007 e seguintes; o estado sempre também traz texto (ex.: "CURSADO ATÉ 2026").
 
 ## Achados da conferência (o que o README não diz ou diz diferente)
 1. **Fundo do tema claro conflita.** O README e a faixa "tons de apoio" da tela Tokens dizem `#FFF7EA`, mas a lista de tokens do tema claro na mesma tela usa `#F6F6F3` (texto 16,52; acento 7,37; borda 4,10). Resolvido pela DQ-004: creme `#FFF7EA`.
@@ -163,11 +168,12 @@ Os campos do terminal (`name`, `alias`, `command`, `group`, `hidden`, `showInNav
 **`SiteShell`** (substitui o atual no mesmo arquivo, `src/components/shell/SiteShell.tsx`): `({ routeId?, children }) => JSX`. Os atributos antigos `badge`, `variant`, `after`, `missingPath` saem; as páginas que ainda os passam (`DocPage`, `EditorialPage`, `CaseStudy`, `GithubPage`, `Home`, `InfoPages`, `NotFound`, `SectionPage`, `Services`, `TerminalPage`) recebem **só o ajuste mecânico** de parar de passá-los (sem mexer no conteúdo; D-001).
 
 **Ordem do DOM da casca (é a ordem do foco, FR-016):**
+0. faixa decorativa de cinco cores (`aria-hidden`, não focável), antes de tudo, sem alterar a ordem do foco (FR-038);
 1. link "ir para o conteúdo" (`<a href="#conteudo">`);
 2. faixa de idioma (só quando visível, FR-016; entra no DOM depois do carregamento, sem roubar o foco);
 3. `<header>`: marca do site → `<nav aria-label>` com os itens do menu na ordem de `order` → seletor de tema → seletor de idioma;
 4. `<main id="conteudo" tabindex="-1">` (o conteúdo da página);
-5. `<footer>`: texto "sem cookies" / "no cookies" (DQ-007 respondida) e o link para a home.
+5. `<footer>` (rodapé de créditos, FR-036): título do portfólio, "directed by", roteiro e código, elenco, local e "fim", o texto "sem cookies" / "no cookies" (DQ-007) e **um único link**, para a home (FR-016 prevê um só link de rodapé).
 Só há um `header`, um `nav` principal, um `main` e um `footer` por página (NFR-003). A rota `/_prova` renderiza dentro do `main` o conteúdo da definição do requirements (h1, h2, h3, 3 parágrafos de exemplo, link de texto, botão principal e secundário, figura com `alt` e dimensões, 5 etiquetas).
 
 **Seletor de tema:** um `<button type="button" aria-pressed>` com **nome acessível fixo** "Alternar tema" / "Switch theme" (igual no servidor e no cliente: sem divergência na hidratação). O texto visível mostra o tema de destino como no mockup ("Claro" quando o tema é escuro): o HTML traz as duas palavras e o CSS esconde uma por `[data-theme]`. `aria-pressed` é atualizado depois da montagem.
@@ -218,7 +224,7 @@ Só há um `header`, um `nav` principal, um `main` e um `footer` por página (NF
 **Decision:** dois temas, `light` e `dark` (`dracula`, `solarized`, `amber` saem, D-002). O `data-theme` é aplicado por um **script de boot inline no `<head>`**, gerado de **uma única função TypeScript** (`scripts/themeBoot.ts`) e injetada no `index.html` pelo plugin: o mesmo código é importado pelo teste (acaba o "teste que confere duas listas copiadas"). O script lê `portfolio-theme`, valida contra `['light','dark']`, senão usa `matchMedia('(prefers-color-scheme: dark)')`, define `data-theme`, a classe `js` e `style.colorScheme`; tudo em `try/catch` (FR-006). Em CSS, `:root:not([data-theme])` com `@media (prefers-color-scheme: dark)` cobre quem desliga o JavaScript (FR-003 sem JavaScript). `ThemeProvider` inicia pelo `data-theme` já aplicado e grava a escolha manual. **Rationale:** FR-002 a FR-006. **Alternatives:** classe no `body` por React (flash do tema errado); manter 5 temas (rejeitado, D-002).
 
 ### TD-012: Faixa de idioma (DQ-002) e a regra de não deslocar
-**Decision:** componente `LanguageOffer`, **só no cliente** (entra depois da montagem), que chama `languageOffer(...)`; lê `navigator.languages` (o que o navegador envia em `Accept-Language`; o site é estático, não há servidor para ler o cabeçalho). Posição: **`position: fixed` na parte de baixo da janela**, por cima do conteúdo, com `role="region"` e nome acessível; **não** entra no fluxo do documento, então CLS = 0 (FR-035). No DOM ela vem logo depois do link "ir para o conteúdo" (ordem do foco, FR-016), sem `autofocus` e sem `aria-live` agressivo. Dois controles: um link "Read this page in English" para o `enPath` da rota atual (grava `portfolio-lang=en`, FR-022) e um botão "Dispensar" (grava `portfolio-lang-offer=dismissed`, FR-034). **Rationale:** FR-025, FR-026, FR-034, FR-035. **Alternatives:** faixa no topo, em fluxo (desloca o conteúdo: CLS); redirecionamento (rejeitado pela Duda); modal (rouba o foco). **DQ-012 (reaberta em 2026-11-17):** a Duda escolheu "fixa embaixo" **antes** de eu ler o mockup. O mockup (`Mobile`) põe a faixa **no topo, em fluxo**, antes do cabeçalho (`display:flex`, fundo de superfície, borda inferior): ela empurra o cabeçalho e o conteúdo para baixo, e o FR-035 proíbe deslocar o conteúdo. Opções: (a) **fixa embaixo** (o design, CLS 0); (b) **fixa no topo, por cima do cabeçalho** (visual do mockup, mas cobre a marca até ser dispensada); (c) **no topo, em fluxo, como o mockup**, e o CLS medido com a faixa (NFR-001) decide se cabe, o que provavelmente falha o FR-035.
+**Decision:** componente `LanguageOffer`, **só no cliente** (entra depois da montagem), que chama `languageOffer(...)`; lê `navigator.languages` (o que o navegador envia em `Accept-Language`; o site é estático, não há servidor para ler o cabeçalho). Posição (**DQ-012, resposta (b) da Duda em 2026-11-17**): **`position: fixed; top: 0`, largura total, por cima do cabeçalho**, com `role="region"` e nome acessível; **não** entra no fluxo do documento, então não desloca o conteúdo e o CLS é 0 (FR-035). O visual segue o mockup (`Mobile`: fundo de superfície, borda inferior, texto de 14 px, botão de 44 px de altura). No DOM ela vem logo depois do link "ir para o conteúdo" (ordem do foco, FR-016), sem `autofocus` e sem `aria-live` agressivo. Dois controles: um link "Read this page in English" para o `enPath` da rota atual (grava `portfolio-lang=en`, FR-022) e um botão "Dispensar" (grava `portfolio-lang-offer=dismissed`, FR-034). **Rationale:** FR-025, FR-026, FR-034, FR-035. **Alternatives:** faixa no topo, em fluxo, como o mockup (desloca o conteúdo: CLS e FR-035); fixa embaixo (descartada pela Duda); redirecionamento (rejeitado pela Duda); modal (rouba o foco). **Consequência a decidir (DQ-015):** enquanto a faixa estiver visível ela **cobre a marca e os controles do cabeçalho**, e o foco do teclado passa por eles depois dos controles da faixa: o foco ficaria encoberto. Mitigações candidatas: **(M1, recomendada)** o script de boot do `<head>`, que já roda antes do primeiro desenho, calcula a mesma regra da faixa e marca `<html data-lang-offer>`; o CSS então reserva o espaço da faixa no topo **desde o primeiro desenho** (sem deslocamento depois, CLS 0) e a faixa, quando montada, ocupa esse espaço, que some quando ela é dispensada (mudança causada pelo visitante); **(M2)** a faixa cobre só uma parte do cabeçalho; **(M3)** a faixa vai por último na ordem do foco (contraria o FR-016, que a põe depois do link "ir para o conteúdo").
 
 ### TD-013: `lang` e `hreflang`
 **Decision:** cada HTML pré-renderizado tem `<html lang="pt-BR">` ou `<html lang="en">`; `seo.ts` ganha, em `headTags`, três `<link rel="alternate">`: `hreflang="pt-BR"`, `hreflang="en"` e `hreflang="x-default"` (aponta para o PT). O comentário de `seo.ts` que diz "não há hreflang" é corrigido. O script de boot deixa de definir `lang` pelo `localStorage` (a URL decide). Sitemap, Open Graph e JSON-LD são da spec 010. **Rationale:** FR-023, FR-024; endereço próprio por idioma já existe pelo TD-007. **Alternatives:** `lang` só no cliente (o HTML estático ficaria no idioma errado).
@@ -248,6 +254,18 @@ Só há um `header`, um `nav` principal, um `main` e um `footer` por página (NF
 **DQ-010 (respondida pela Duda, 2026-11-17: sim):** Lighthouse e axe **não estão** nas `devDependencies`. Adicionar `@axe-core/playwright` e `lighthouse` (só desenvolvimento, nunca no cliente). Alternativa: rodá-los uma vez, à mão, com `npx` e registrar o resultado na evidência (sem dependência nova, sem teste repetível). **Rationale:** NFR-001 e NFR-003 pedem números; o SPIKE-001 mostrou o piso do React (67,5 KB gzip). **Alternatives:** medir só tamanho (não cobre LCP/INP/CLS pedidos).
 **Como cumprir os 100 KB:** o terminal (`src/terminal`, 87 KB renderizados) e `src/data` (76 KB) saem do chunk de entrada (divisão por rota com `React.lazy`/`import()`): a casca carrega só tabela de rotas, tokens, i18n da casca e o componente da rota atual. O SPIKE-001 não mediu o ganho isolado; **a conferência é a medição da tarefa**, e se não couber a Duda decide (subir a meta ou cortar escopo da casca), sem editar o número em silêncio.
 
+### TD-020: Rodapé de créditos e elenco de uma única fonte (FR-036, FR-037)
+**Decision:** `Footer.tsx` renderiza, nesta ordem: "UM PORTFÓLIO DE ENGENHARIA", "DIRECTED BY DUDA", e uma lista de definição com **roteiro e código**, **elenco**, **filmado em** e **fim**, mais "sem cookies" e o link para a home. A linha "trilha sonora" do mockup **não entra** (Música e playlist, fora do MVP). Os rótulos ficam em `src/i18n/ui.ts` (PT e EN, paridade da 001); os valores sobre a Duda (nome, local) ficam em `src/content/credits.content.ts`, validados por schema, **conteúdo vindo do mockup, que a Duda confirma na tarefa** (nada é inventado: se ela não confirmar, o campo sai). O **elenco** é lido de uma lista de nomes (`react`, `vite`, `typescript`) cuja **versão maior** vem do `package.json` no build (no molde de `__BUILD__` em `vite.config.ts`: `define`), então "React 19 · Vite 6 · TypeScript 6" nunca fica desatualizado (steering: versões só como major). **Rationale:** FR-036, FR-037. **Alternatives:** texto fixo no componente (viola "conteúdo é dado" e envelhece); ler do `package-lock.json` (mais pesado, sem ganho).
+
+### TD-021: Faixa decorativa (FR-038)
+**Decision:** um `<div aria-hidden="true">` de 6 px de altura com cinco `<span>` de largura igual, fundo `var(--deco-1)` a `var(--deco-5)`, no topo do `body`; sem texto, sem foco, sem `role`. Nenhum dado é passado por cor. **Rationale:** FR-038 e o mockup. **Alternatives:** imagem ou SVG (peso e requisição a mais).
+
+### TD-022: Sugestões na 404 (FR-039)
+**Decision:** `suggestRoutes(path, lang)` (função pura) pontua as rotas com `menu: true` pela semelhança entre o caminho digitado e o caminho da rota (distância de edição sobre o último segmento) e devolve até 3, desempatando pela ordem do menu; sem nenhuma semelhança, as 3 primeiras do menu. O HTML estático da 404 (`dist/404.html`, que não sabe o caminho digitado) traz as 3 primeiras do menu; o cliente troca pela lista pontuada **depois da hidratação** (mesmo HTML no primeiro desenho, sem divergência). O status 404 e os links para a home e para o menu (TD-014) não mudam. O motivo "cd /curriculos" do mockup **não** entra (pergunta aberta). **Rationale:** FR-039 e FR-027. **Alternatives:** sugestão calculada no build (não conhece o caminho digitado); sem pontuação (perde o "você quis dizer").
+
+### TD-023: Estado nunca só por cor (FR-040)
+**Decision:** a página atual do menu usa `aria-current="page"` e o CSS dá sublinhado e peso a `[aria-current]`; o idioma selecionado no controle PT | EN usa `aria-current="true"` com o mesmo tratamento. Um teste (`src/styles/state.test.ts`) lê o CSS e falha se uma regra de estado (`[aria-current]`, `[aria-pressed="true"]`, `[aria-expanded="true"]`) mudar só `color` ou `background` sem `text-decoration` ou `font-weight`. **Rationale:** FR-040, TD-004 e o WCAG 1.4.1. **Alternatives:** só conferir à mão (não protege contra regressão).
+
 ## Verification Strategy
 Cada FR vira um teste automatizado ou um comando com exit code. Os testes ficam dentro de cada tarefa (convenção da 001) e passam em `npm run verify`, exceto V-07, V-13 e as checagens de `dist` (`npm run prova` e comandos de aceite, como o `npm audit` da 001).
 | ID | Cobre | Comando | Passa quando |
@@ -265,6 +283,7 @@ Cada FR vira um teste automatizado ou um comando com exit code. Os testes ficam 
 | V-11 | FR-029, FR-030 | `npx vitest run scripts/assets.test.ts` e o e2e da V-07 (`page.on('request')`) | ≤ 2 famílias, só `/fonts/` do próprio site, `swap`; toda requisição do carregamento é da mesma origem |
 | V-12 | FR-032, TD-009 | `grep -r "_prova" dist` (exit 1) e `git grep -n -E "WindowProvider\|Taskbar\|CommandBar" -- src` (só os arquivos mantidos por outra spec) | `/_prova` fora do publicado; peças antigas fora do código |
 | V-13 | NFR-001, NFR-003 | `npm run prova` | JS ≤ 100 KB e CSS ≤ 20 KB (gzip); LCP ≤ 2,5 s, CLS ≤ 0,1 (também com a faixa), INP ≤ 200 ms; axe 0; notas ≥ 95 |
+| V-14 | FR-036 a FR-040 | `npx vitest run src/components/shell/Footer.test.tsx src/pages/NotFound.test.tsx src/data/suggestRoutes.test.ts src/styles/state.test.ts` | rodapé com as 4 seções, "sem cookies" e um único link; elenco = versões maiores do `package.json`; faixa `aria-hidden` com 5 cores e sem texto; 404 sugere até 3 rotas do menu e mantém os links; regra de estado com sublinhado ou peso |
 Nenhum teste pode ser pulado (`skip`/`todo`) e a suíte continua dentro do orçamento de 90 s (001).
 
 ## Arquivos que esta spec remove ou substitui (FR-032)
@@ -284,15 +303,15 @@ Nenhum teste pode ser pulado (`skip`/`todo`) e a suíte continua dentro do orça
 O mockup (`design-reference/mockup/*.dc.html`) é só referência visual. Li `Tokens`, `Mobile`, `NotFound` e `Projetos` (cabeçalho, faixa, 404, rodapé) e `telas-e-requisitos.md` inteiro em 2026-11-17. **Não li** `Academico`, `Bastidores`, `Caso`, `Contato`, `Curriculo`, `Filmes`, `Livros`, `Musica`, `Pessoal`, `Projeto`, `Terminal` (telas de conteúdo, das specs 004 a 009) nem `termos-de-uso-apis.md` (spec 008, superado pela decisão de conteúdo curado).
 | # | O mockup mostra | Este design | Por quê / pergunta |
 | --- | --- | --- | --- |
-| 1 | Faixa de idioma no **topo, em fluxo**, antes do cabeçalho (`Mobile`) | Fixa embaixo, só no cliente | FR-035 proíbe deslocar o conteúdo. **DQ-012 reaberta.** |
-| 2 | No celular: botão de tema ao lado do botão do menu; **sem seletor de idioma** na barra | Tema e idioma dentro do painel do menu | FR-016 (ordem do foco) e FR-008 (seletor no cabeçalho). **DQ-013.** |
+| 1 | Faixa de idioma no **topo, em fluxo**, antes do cabeçalho (`Mobile`) | **Fixa no topo, por cima do cabeçalho** (DQ-012 (b), escolha da Duda) | O visual é o do mockup; não entra no fluxo (FR-035). **Consequência: cobre o cabeçalho; ver DQ-015.** |
+| 2 | No celular: botão de tema ao lado do botão do menu; **sem seletor de idioma** na barra | Tema e idioma dentro do painel do menu | **DQ-013 respondida pela Duda:** dentro do painel (mantém a ordem do FR-016 e o seletor de idioma no cabeçalho). |
 | 3 | Seletor de idioma como dois botões `aria-pressed` (PT, EN) | Dois links PT \| EN com `aria-current` | Precisa funcionar sem JavaScript e ter `hreflang` (FR-021, FR-024) |
 | 4 | Botão de tema com rótulo que muda ("Mudar para o tema claro") | Nome acessível fixo "Alternar tema"; texto visível do tema de destino por CSS | Hidratação sem divergência (TD-008) |
 | 5 | Sem link "ir para o conteúdo" | Primeiro item focável | FR-008, FR-016, US-004 |
 | 6 | Fontes pelo Google Fonts (`fonts.googleapis.com`) | Fontes do próprio site | FR-029, FR-030; o mockup é só visual |
 | 7 | Plex Sans 400/500/600 e Plex Mono 400/500 | Sans 400 e 600, Mono 400 | NFR-001 (≤ 4 arquivos); a tabela de tipografia do próprio mockup só lista 400 e 600 (Sans) e 400 (Mono) |
 | 8 | Menu com 6 itens: Projetos, **Casos**, Currículo, Acadêmico, Contato, Pessoal | 5 itens, sem Casos | **DQ-011 respondida pela Duda** (Casos não tem página-índice) |
-| 9 | 404 com sugestões de rotas e o motivo "cd /curriculos", faixa decorativa de 5 cores, rodapé de créditos ("elenco", "trilha sonora") | Nada disso | São P-002-a a P-002-e, **não aprovados**. **DQ-014.** O rodapé do design traz só "sem cookies" e o link para a home |
+| 9 | 404 com sugestões de rotas e o motivo "cd /curriculos", faixa decorativa de 5 cores, rodapé de créditos ("elenco", "trilha sonora") | Sugestões, faixa e rodapé **implementados** (FR-036 a FR-039); **sem** "trilha sonora" e **sem** "cd /curriculos" | **DQ-014 respondida pela Duda** (v1.5 do requirements). |
 | 10 | Rodapé: "sem rastreadores" | "sem cookies" | DQ-007 respondida pela Duda |
 | 11 | Dois quadros fixos (1280 e 390 px), **sem ponto de quebra** | Ponto de quebra 1024 px (estimado; a tarefa mede) | O mockup não define; ver TD-010 |
 | 12 | Título de página 60/63 px em Plex Sans 600 | Preload da Sans 600 e da 400 | Candidato ao LCP; ver TD-016 |
@@ -311,22 +330,24 @@ O que o design **acertou**: tokens e contrastes (igual à seção 3 do README e 
 | R-008 | Regra de status 404 por idioma só se confirma no deploy | Média | Baixo | cobertura de arquivo hoje; confirmação na spec 010; nada é publicado antes (D-001) |
 | R-009 | Plex Sans pesa mais do que o previsto e estoura o LCP | Baixa | Médio | DQ-003: o teste de peso decide; plano B: fonte do sistema |
 | R-010 | O tom `amber` de `Chip` (tom de componente) é confundido com o tema `amber` | Baixa | Baixo | V-02 olha só `themes.ts`, o `Theme` e o CSS de tema; o tom `amber` de componente não é tema e fica |
+| R-011 | A faixa de idioma, fixa no topo por cima do cabeçalho, encobre controles que recebem foco (marca, menu, seletores) | Alta | Médio | DQ-015: reservar o espaço desde o primeiro desenho pelo script de boot (M1, recomendada); teste de foco com a faixa visível |
 
 ## Perguntas deste design
 - **DQ-001 (respondida pelo design, aguarda aprovação):** CSP não nesta spec (TD-015).
 - **DQ-002 (respondida pelo design, aguarda aprovação):** menu a 1024 px (TD-010); faixa de idioma fixa embaixo, só no cliente, via `navigator.languages` (TD-012); sem JavaScript o seletor de idioma é um link (Interface Contract).
 - **DQ-003 (aberta):** famílias e pesos de fonte, depois do teste de peso (TD-016).
 - **DQ-004 a DQ-007, DQ-009 (respondidas pela Duda):** creme `#FFF7EA`; paleta colorida nos dois temas; piso de 3:1 sobre os pastéis; "sem cookies"; regra de branch.
-- **DQ-008 (aberta):** qual cor decorativa (magenta, laranja, azul-petróleo) entra de fato; só detalhes sem texto. Sem a faixa decorativa aprovada (P-002-c), nenhuma entra.
+- **DQ-008 (resolvida):** as cinco cores da faixa decorativa vêm do mockup, nos dois temas (Tokens, "Decoração sem texto"); a faixa entrou como FR-038.
 - **DQ-010 (respondida pela Duda, 2026-11-17: sim):** adicionar `@axe-core/playwright` e `lighthouse` como `devDependencies` (TD-019), recomendado.
 - **DQ-011 (respondida pela Duda, 2026-11-17):** quais itens são do menu. Escolha da Duda (2026-11-17), com as rotas que existem hoje: **Projetos, Currículo, Acadêmico, Contato, Pessoal**. "Casos" do mockup não tem página-índice (os casos são por projeto); pergunta herdada de `telas-e-requisitos.md`. As rotas de projetos, currículo e contato só viram `menu: true` quando as specs 005 e 007 chegarem (US-001).
-- **DQ-012 (reaberta):** a Duda escolheu "fixa embaixo" sem ter visto que o mockup põe a faixa no topo, em fluxo. Confirmar entre (a) fixa embaixo, (b) fixa no topo por cima do cabeçalho, (c) no topo em fluxo (TD-012).
-- **DQ-013 (aberta):** no celular, onde ficam o tema e o idioma: dentro do painel do menu (o design, mantém a ordem do FR-016) ou na barra ao lado do botão do menu como no mockup (TD-010). O mockup não mostra o painel aberto nem o seletor de idioma no celular, e o FR-008 exige o seletor no cabeçalho de toda página.
-- **DQ-014 (aberta):** aprovar ou não os itens P-002-a a P-002-e (rodapé de créditos, "elenco" lido de uma fonte, faixa decorativa de cinco cores, sugestões de rotas na 404, estado nunca só por cor) para entrarem no `requirements.md`. O mockup os mostra; o design não os implementa enquanto não forem requisitos.
+- **DQ-012 (respondida pela Duda, 2026-11-17, na reabertura):** faixa de idioma **fixa no topo, por cima do cabeçalho** (opção (b), TD-012). Resolve o desvio do mockup sem deslocar o conteúdo, e abre a DQ-015.
+- **DQ-013 (respondida pela Duda, 2026-11-17):** no celular, tema e idioma ficam **dentro do painel do menu** (TD-010).
+- **DQ-014 (respondida pela Duda, 2026-11-17):** os cinco itens P-002-a a P-002-e viraram FR-036 a FR-040 (requirements v1.5).
+- **DQ-015 (aberta):** a faixa fixa no topo encobre o cabeçalho e o foco do teclado passa por controles encobertos. Escolher a mitigação do TD-012: **M1** (recomendada), reservar o espaço no primeiro desenho pelo script de boot; **M2** a faixa cobre só parte do cabeçalho; **M3** a faixa vai por último na ordem do foco (muda o FR-016).
 
 ## Confirm before building
 Antes de qualquer tarefa de implementação, o implementador restata, com as próprias palavras, e espera o OK da Duda:
-1. **FRs (resumo):** casca com skip link, cabeçalho, menu pela tabela de rotas, tema claro/escuro sem flash, idioma por URL (PT na raiz, EN em `/en/`) com faixa de oferta sem redirecionar, 404 por idioma, HTML por rota com conteúdo sem JavaScript, fontes próprias, cabeçalhos de segurança, medição num build de prova.
+1. **FRs (resumo):** casca com skip link, cabeçalho, menu pela tabela de rotas, tema claro/escuro sem flash, idioma por URL (PT na raiz, EN em `/en/`) com faixa de oferta sem redirecionar, 404 por idioma com sugestões, HTML por rota com conteúdo sem JavaScript, rodapé de créditos com elenco lido do `package.json`, faixa decorativa, estado nunca só por cor, fontes próprias, cabeçalhos de segurança, medição num build de prova.
 2. **Restrições:** branch `rebuild/sdd`, nenhum `git push`, nada na `main`; nada da 008 (`netlify/personal/`, `personal-*.mts`, integrações, `@netlify/blobs`, `[functions]`); `src.zip` intacto; cada tarefa com `verify` verde e bloco de evidência; a página `/_prova` nunca no build publicado.
-3. **Perguntas abertas:** DQ-003 (teste de peso das fontes) e DQ-008 (cor decorativa, depende de P-002-c) respondidas ou adiadas antes das tarefas que dependem delas. DQ-010 e DQ-011 foram respondidas; **DQ-012 (reaberta), DQ-013 e DQ-014 estão abertas** e devem ser respondidas antes das tarefas da casca e da faixa.
+3. **Perguntas abertas:** DQ-003 (teste de peso das fontes) e **DQ-015** (mitigação do foco encoberto pela faixa de idioma) respondidas ou adiadas antes das tarefas que dependem delas. DQ-008, DQ-010, DQ-011, DQ-012, DQ-013 e DQ-014 foram respondidas.
 4. **Estado:** o gate da implementação é `tasks:approved`; este documento é `design:draft`.
