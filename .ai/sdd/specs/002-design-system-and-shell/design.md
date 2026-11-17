@@ -1,5 +1,5 @@
 # 002 Design system and shell, Design
-**Status:** draft (completo, aguarda aprovação da Duda; ver `.status`) · **Versão:** 2.2 (com as duas revisões em contexto novo, `design-review.md` e `design-review-2.md`, aplicadas) · **Autor:** Claude (rascunho para a Duda) · **Data:** 2026-11-17
+**Status:** approved (aprovado pela Duda em 2026-11-17; ver `.status`) · **Versão:** 2.2 (com as duas revisões em contexto novo, `design-review.md` e `design-review-2.md`, aplicadas) · **Autor:** Claude (rascunho para a Duda) · **Data:** 2026-11-17
 **Entrada:** `requirements.md` v1.6 (aprovada em 2026-11-17), `spike-001.md` (medição do `dist`), `design-reference/README.md` e `telas-e-requisitos.md` (referência visual, não é especificação) e as telas `mockup/Tokens`, `Mobile`, `NotFound`, `Projetos` e `Terminal` (lidas em 2026-11-17; ver "Divergências entre o mockup e este design"), `.ai/steering/*` e o design da 001 (`review:done`).
 
 ## Executive Summary
