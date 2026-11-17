@@ -185,3 +185,42 @@ Exit code: 0
 Summary:   OK em 87,0 s (orçamento 180 s): formatação 7,1; lint 16,9; tipos 9,2; testes 50,2; geração 3,6
 Verdict:   PASS
 ```
+
+## T2.1 Extrair o cálculo de `draft` de `routes.ts` (TD-025 (b), DQ-017)
+**Entregue:** `src/data/routeStatus.ts` (`routeStatus`, `isDraft`, `isListed`, `navRoutes`: o cálculo de `draft` e `showInNav` que usava `now`, `uses`, `data/personal/*` e `services/integrations/mode`, idêntico ao de antes). `routes.ts` perdeu esses imports, os campos `draft`/`showInNav`, `hasNoContent`, `isListed` e `navRoutes`; agora só importa `../types`. `seo.ts` foi dividido: `seo.ts` (constantes, `pageMeta`, `metaFor`, `absoluteUrl`; sem `draft`) e `seoHead.ts` (`headTags`, `tagSelector`, `jsonLdFor`, lendo `isDraft` para o `noindex`). Consumidores trocados: `scripts/seoPlugin.ts`, `useDocumentMeta` (import sob demanda de `seoHead`), `HubIndex`, `QuickAccess`, `Sidebar`. O comportamento observável (rotas, `noindex`, sitemap, barra) não mudou.
+
+**Toques na 008 (dentro da exceção DQ-017 e da exceção estreita do tasks.md v1.1):** `src/components/personal/HubIndex.tsx` (lê `routeStatus` em vez de `route.draft`) e os testes `hub.test.tsx`, `personalRoutes.test.tsx`, `personalDiscovery.test.tsx` (mesmas asserções, novo ponto de leitura: `routeStatus(id).draft`). Também ajustados, fora da 008: `routes.test.ts`, `seo.test.ts`, `InfoPages.test.tsx`, `Workspace.test.tsx`, `seoPlugin.test.ts`. **Nada** em `netlify/`, `scripts/personalGuard*`, `src/services`, `src/data/personal` nem `.env.example`.
+
+**Notas:**
+- O `grep` do critério (`personal/` em `routes.ts`) acha 2 falsos positivos: um comentário ("docs/specs/personal/") e o alias `/personal/<en>`. A prova de verdade é o teste novo: os imports de `routes.ts` são exatamente `['../types']`.
+- `src/services/integrations/mode.ts` (008, intocado) ainda tem um comentário que diz que o `seoPlugin` importa `routes.ts` "que decide `draft`"; agora quem decide é `routeStatus.ts`. Não editei (arquivo da 008); fica para a Duda decidir.
+- Ressalva do SPIKE-002 (3): o plugin (Node) e o cliente leem `VITE_PERSONAL_SOURCE` por `process.env` e `import.meta.env`; os testes `live` (que usam `vi.stubEnv` e recarregam os módulos) cobrem o modo `live` pelo mesmo `routeStatus`.
+
+```
+Claim:     routes.ts não importa mais dados da 008 nem o modo de integração, e não declara draft/showInNav
+Command:   npx vitest run src/data/routes.test.ts (teste novo "routes.ts sem dados da 008")
+Exit code: 0
+Summary:   imports de routes.ts == ['../types']; nenhuma rota tem as chaves draft/showInNav; routeStatus: home e notFound não são rascunho, pessoal = { draft: true, showInNav: true } no mock, pessoal-livros fora da lista, navRoutes('personal') inclui 'pessoal'
+Verdict:   PASS
+```
+```
+Claim:     a suíte passa sem mudar asserção de comportamento (só o ponto de leitura)
+Command:   npx vitest run src/data src/components/personal src/pages scripts/seoPlugin.test.ts src/hooks
+Exit code: 0
+Summary:   30 arquivos, 379 testes verdes (inclui personalRoutes live: só o teatro segue em rascunho; seo: noindex só nos rascunhos; HubIndex; InfoPages: agora/setup por conteúdo)
+Verdict:   PASS
+```
+```
+Claim:     nada da 008 foi tocado além do que a exceção permite
+Command:   git diff --stat -- netlify scripts/personalGuard.ts scripts/personalGuard.test.ts src/services src/data/personal .env.example
+Exit code: 0 (saída vazia)
+Summary:   diff vazio na lista fechada; em src/components/personal só HubIndex.tsx e hub.test.tsx mudaram
+Verdict:   PASS
+```
+```
+Claim:     o gate passa
+Command:   npm run verify
+Exit code: 0
+Summary:   OK em 111,0 s (orçamento 180 s): formatação 6,3; lint 17,2; tipos 11,7; testes 69,7; geração 6,0
+Verdict:   PASS
+```

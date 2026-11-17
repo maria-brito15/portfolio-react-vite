@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import { bootSource } from '../src/boot/boot';
 import { seoPlugin } from './seoPlugin';
 import { routes } from '../src/data/routes';
+import { isDraft } from '../src/data/routeStatus';
 import { metaFor } from '../src/data/seo';
 
 const template = readFileSync('index.html', 'utf8');
@@ -21,11 +22,11 @@ describe('plugin de SEO estático', () => {
     expect(html).toContain('application/ld+json');
     expect(html).toContain('<noscript>');
 
-    for (const r of routes.filter((r) => r.id !== 'home' && !r.hidden && !r.draft))
+    for (const r of routes.filter((r) => r.id !== 'home' && !r.hidden && !isDraft(r.id)))
       expect(html, r.path).toContain(`<a href="${r.path}">`);
 
     // páginas em construção não são anunciadas
-    for (const r of routes.filter((r) => r.draft))
+    for (const r of routes.filter((r) => isDraft(r.id)))
       expect(html, r.path).not.toContain(`href="${r.path}"`);
   });
 

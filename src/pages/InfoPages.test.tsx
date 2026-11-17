@@ -1,7 +1,8 @@
 import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderApp } from '../test/helpers';
-import { directories, findPageByPath, routeById } from '../data/routes';
+import { directories, findPageByPath } from '../data/routes';
+import { routeStatus } from '../data/routeStatus';
 import { now } from '../data/now';
 import { uses } from '../data/uses';
 import { commandInventory, findCommand } from '../terminal/commands';
@@ -17,8 +18,8 @@ describe('rotas /agora e /setup (CE-06, CE-07)', () => {
     expect(findPageByPath('/now')?.id).toBe('agora');
     expect(findPageByPath('/setup')?.id).toBe('setup');
     expect(findPageByPath('/uses')?.id).toBe('setup');
-    expect(routeById('agora')?.draft).toBe(now.items.length === 0);
-    expect(routeById('setup')?.draft).toBe(uses.groups.length === 0);
+    expect(routeStatus('agora').draft).toBe(now.items.length === 0);
+    expect(routeStatus('setup').draft).toBe(uses.groups.length === 0);
     expect(directories.map((d) => d.name)).toEqual(expect.arrayContaining(['agora', 'setup']));
   });
 

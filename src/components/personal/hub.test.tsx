@@ -362,14 +362,14 @@ describe('modo live de música e teatro (D4, CL-02)', () => {
     vi.stubEnv('VITE_PERSONAL_SOURCE', 'live');
     vi.resetModules();
 
-    const live = await import('../../data/routes');
+    const live = await import('../../data/routeStatus');
 
-    expect(live.routeById('pessoal-musica')?.draft).toBe(false);
-    expect(live.routeById('pessoal-teatro')?.draft).toBe(true);
-    expect(live.routeById('pessoal-livros')?.draft).toBe(false);
+    expect(live.routeStatus('pessoal-musica').draft).toBe(false);
+    expect(live.routeStatus('pessoal-teatro').draft).toBe(true);
+    expect(live.routeStatus('pessoal-livros').draft).toBe(false);
     // Letterboxd + TMDB integrados (data/personal/integrations.ts)
-    expect(live.routeById('pessoal-filmes')?.draft).toBe(false);
-    expect(live.routeById('pessoal')?.draft).toBe(false);
+    expect(live.routeStatus('pessoal-filmes').draft).toBe(false);
+    expect(live.routeStatus('pessoal').draft).toBe(false);
   });
 });
 

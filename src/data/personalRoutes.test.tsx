@@ -1,15 +1,9 @@
 import { screen } from '@testing-library/react';
 import { renderApp } from '../test/helpers';
-import {
-  crumbsFor,
-  directories,
-  findPageByPath,
-  navRoutes,
-  routeById,
-  routes,
-  windowPath,
-} from './routes';
-import { SITE_URL, headTags, metaFor } from './seo';
+import { crumbsFor, directories, findPageByPath, routeById, routes, windowPath } from './routes';
+import { navRoutes, routeStatus } from './routeStatus';
+import { SITE_URL, metaFor } from './seo';
+import { headTags } from './seoHead';
 
 const PAGES = [
   { id: 'pessoal', pt: '/pessoal', en: '/personal', h1: ['Pessoal', 'Personal'] },
@@ -64,10 +58,10 @@ describe('rotas do espaço cultural (CL-01)', () => {
 
 describe('rascunho enquanto houver mock (CL-02)', () => {
   it('nos testes (modo mock) as cinco rotas são rascunho, mas só o hub aparece no menu', () => {
-    for (const p of PAGES) expect(routeById(p.id)?.draft, p.id).toBe(true);
+    for (const p of PAGES) expect(routeStatus(p.id).draft, p.id).toBe(true);
 
     // o hub tem `showInNav`: entra na barra lateral mesmo como rascunho (prévia com dados fictícios)
-    expect(routeById('pessoal')?.showInNav).toBe(true);
+    expect(routeStatus('pessoal').showInNav).toBe(true);
     expect(navRoutes('personal').map((r) => r.id)).toContain('pessoal');
     // as subpáginas são ocultas: nunca entram na barra
     expect(navRoutes('personal').some((r) => r.id.startsWith('pessoal-'))).toBe(false);
@@ -87,13 +81,13 @@ describe('rascunho enquanto houver mock (CL-02)', () => {
     vi.stubEnv('VITE_PERSONAL_SOURCE', 'live');
     vi.resetModules();
 
-    const live = await import('./routes');
+    const live = await import('./routeStatus');
 
     // teatro é curadoria manual da Duda: sem itens, continua em construção; a música já tem os instrumentos
     // manual e vazio (teatro): segue em rascunho
     const manual = ['pessoal-teatro'];
 
-    for (const p of PAGES) expect(live.routeById(p.id)?.draft, p.id).toBe(manual.includes(p.id));
+    for (const p of PAGES) expect(live.routeStatus(p.id).draft, p.id).toBe(manual.includes(p.id));
     expect(live.navRoutes('personal').map((r) => r.id)).toContain('pessoal');
     expect(live.navRoutes('personal').some((r) => r.id.startsWith('pessoal-'))).toBe(false);
   });

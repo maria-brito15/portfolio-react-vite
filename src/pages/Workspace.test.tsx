@@ -1,7 +1,8 @@
 import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderApp } from '../test/helpers';
-import { NAV_GROUPS, navRoutes, routes } from '../data/routes';
+import { NAV_GROUPS, routes } from '../data/routes';
+import { navRoutes } from '../data/routeStatus';
 import { projects } from '../data/projects';
 import { CATEGORIES, categoryOf, commandCatalog } from '../terminal/catalog';
 import { commandInventory } from '../terminal/commands';

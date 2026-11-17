@@ -1,7 +1,9 @@
 import { routes } from './routes';
 import { projects } from './projects';
 import { profile } from './profile';
-import { NOT_FOUND_ID, SITE_URL, absoluteUrl, headTags, jsonLdFor, metaFor, pageMeta } from './seo';
+import { NOT_FOUND_ID, SITE_URL, absoluteUrl, metaFor, pageMeta } from './seo';
+import { headTags, jsonLdFor } from './seoHead';
+import { isDraft } from './routeStatus';
 import type { Lang } from '../types';
 
 const LANGS: Lang[] = ['pt', 'en'];
@@ -86,12 +88,12 @@ describe('tags do <head>', () => {
     // fora o 404, só as páginas em construção (draft) ficam de fora do índice
     for (const r of routes)
       expect(find(headTags(r.id, 'pt').tags, 'robots')?.attrs.content, r.id).toContain(
-        r.draft ? 'noindex' : 'index, follow',
+        isDraft(r.id) ? 'noindex' : 'index, follow',
       );
   });
 
   it('páginas em construção têm metadados, mas não entram no sitemap', () => {
-    const drafts = routes.filter((r) => r.draft);
+    const drafts = routes.filter((r) => isDraft(r.id));
 
     // só as páginas sem conteúdo (hoje /setup; /agora já tem texto da Duda) e, enquanto a fonte
     // for mock, o espaço cultural (docs/specs/personal/, CL-02)

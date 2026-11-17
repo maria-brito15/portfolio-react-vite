@@ -8,6 +8,7 @@ import {
   recentFilms,
 } from '../../data/personal/highlights';
 import { routeById } from '../../data/routes';
+import { routeStatus } from '../../data/routeStatus';
 import type { Tone } from '../../data/tones';
 import type { PersonalState } from '../../hooks/usePersonal';
 import { useLanguage } from '../../i18n/LanguageContext';
@@ -61,7 +62,7 @@ export default function HubIndex({
     // Fora do índice: curadoria manual vazia e, no ar, seção em rascunho (sem conteúdo ou sem
     // integração). Na prévia com dados fictícios (`showInNav` do hub), todas aparecem.
     if (isEmptyManual(state)) return undefined;
-    if (route.draft && !routeById('pessoal')?.showInNav) return undefined;
+    if (routeStatus(routeId).draft && !routeStatus('pessoal').showInNav) return undefined;
 
     const feed = state.status === 'ready' ? state.feed : undefined;
 

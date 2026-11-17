@@ -3,6 +3,7 @@ import { filterItems, paletteItems } from '../components/paletteItems';
 import { renderApp } from '../test/helpers';
 import { HOME } from './homeLayout';
 import { routeById, routes } from './routes';
+import { routeStatus } from './routeStatus';
 import { topicKeywords } from './searchRanking';
 
 const PAGE_IDS = [
@@ -24,9 +25,9 @@ describe('o espaço pessoal (D6, CL-06)', () => {
 });
 
 describe('home com o espaço no ar (CL-02, CL-06)', () => {
-  const pages = PAGE_IDS.map((id) => routeById(id)!);
+  const pages = PAGE_IDS.map((id) => routeStatus(id));
   const original = pages.map((r) => r.draft);
-  const hub = routeById('pessoal')!;
+  const hub = routeStatus('pessoal');
   const originalShowInNav = hub.showInNav;
 
   afterEach(() => {

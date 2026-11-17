@@ -14,15 +14,9 @@ import { dirname, join } from 'node:path';
 import type { Plugin } from 'vite';
 import { bootSource } from '../src/boot/boot';
 import { routes } from '../src/data/routes';
-import {
-  NOT_FOUND_ID,
-  SITE_URL,
-  absoluteUrl,
-  headTags,
-  jsonLdFor,
-  metaFor,
-  type HeadTag,
-} from '../src/data/seo';
+import { NOT_FOUND_ID, SITE_URL, absoluteUrl, metaFor } from '../src/data/seo';
+import { headTags, jsonLdFor, type HeadTag } from '../src/data/seoHead';
+import { isDraft } from '../src/data/routeStatus';
 
 const HEAD = /<!-- seo:head -->[\s\S]*?<!-- \/seo:head -->/;
 const BODY = /<!-- seo:body -->[\s\S]*?<!-- \/seo:body -->/;
@@ -54,7 +48,7 @@ function headBlock(routeId: string) {
 function bodyBlock(routeId: string) {
   const { title, description } = metaFor(routeId, 'pt');
   const links = routes
-    .filter((r) => r.id !== 'home' && !r.hidden && !r.draft)
+    .filter((r) => r.id !== 'home' && !r.hidden && !isDraft(r.id))
     .map((r) => `<li><a href="${r.path}">${escapeHtml(r.label.pt)}</a></li>`)
     .join('');
 
@@ -108,7 +102,7 @@ export function seoPlugin(): Plugin {
 
       // Páginas em construção não entram no sitemap (o HTML delas sai com noindex).
       const urls = routes
-        .filter((r) => !r.draft)
+        .filter((r) => !isDraft(r.id))
         .map((r) => `  <url><loc>${absoluteUrl(r.path)}</loc></url>`);
 
       write(

@@ -1,6 +1,7 @@
 import { Link } from '../../router';
 import { useLanguage } from '../../i18n/LanguageContext';
-import { isListed, routeById } from '../../data/routes';
+import { routeById } from '../../data/routes';
+import { isListed } from '../../data/routeStatus';
 import { GROUP_TONE, ROUTE_GLYPH } from '../../data/tones';
 import SectionTitle from '../ui/SectionTitle';
 import type { BlockProps } from './blockProps';

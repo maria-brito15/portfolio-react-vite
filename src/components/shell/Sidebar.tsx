@@ -1,7 +1,8 @@
 import { useEffect, useRef } from 'react';
 import { Link, useRouter } from '../../router';
 import { useLanguage } from '../../i18n/LanguageContext';
-import { NAV_GROUPS, findPageByPath, navRoutes } from '../../data/routes';
+import { NAV_GROUPS, findPageByPath } from '../../data/routes';
+import { navRoutes } from '../../data/routeStatus';
 import { GROUP_TONE } from '../../data/tones';
 import { openShortcuts } from './commandBarEvents';
 

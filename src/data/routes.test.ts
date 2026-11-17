@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import {
   crumbsFor,
   directories,
@@ -81,5 +83,30 @@ describe('tabela de rotas', () => {
   it('"ver no terminal" aponta para o terminal com o comando da página', () => {
     expect(terminalUrl(routeById('academico')!)).toBe('/terminal?cmd=academico');
     expect(terminalUrl(routeById('whatsapp-dispatcher')!)).toBe('/terminal?cmd=projetos');
+  });
+});
+
+// T2.1 (TD-025 (b), DQ-017): a tabela de rotas não importa dados da 008 nem o modo de integração;
+// o estado de rascunho mora em routeStatus.ts.
+describe('routes.ts sem dados da 008 (TD-025 (b))', () => {
+  it('não importa now, uses, personal/* nem integrations/mode, e não declara draft', () => {
+    const source = readFileSync(join(process.cwd(), 'src/data/routes.ts'), 'utf8');
+    const imports = [...source.matchAll(/^import .*from '([^']+)';/gm)].map((m) => m[1]);
+
+    expect(imports).toEqual(['../types']);
+    expect(source).not.toMatch(/\bdraft\s*:/);
+    expect(source).not.toMatch(/\bshowInNav\s*:/);
+    expect(routes.every((r) => !('draft' in r) && !('showInNav' in r))).toBe(true);
+  });
+
+  it('o estado de rascunho sai de routeStatus: agora/setup por conteúdo, pessoal por dado fictício', async () => {
+    const { routeStatus, isDraft, isListed, navRoutes } = await import('./routeStatus');
+
+    expect(isDraft('home')).toBe(false);
+    expect(isDraft('notFound')).toBe(false);
+    expect(routeStatus('pessoal')).toEqual({ draft: true, showInNav: true });
+    expect(isListed(routeById('pessoal')!)).toBe(true);
+    expect(isListed(routeById('pessoal-livros')!)).toBe(false);
+    expect(navRoutes('personal').map((r) => r.id)).toContain('pessoal');
   });
 });

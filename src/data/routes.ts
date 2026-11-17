@@ -10,13 +10,10 @@
 // - `command`: comando que mostra a visão em terminal (`/terminal?cmd=<command>`);
 // - `parent`: id da rota-mãe no breadcrumb.
 
+// O estado de rascunho (`draft`) e `showInNav` não vivem aqui: ficam em `routeStatus.ts`, para esta
+// tabela não importar dados da 008 nem do modo de integração (TD-025 (b)).
+
 import type { Lang, Localized } from '../types';
-import { personalMode } from '../services/integrations/mode';
-import { integrated } from './personal/integrations';
-import { musicHasContent } from './personal/music';
-import { theaterHasContent } from './personal/theater';
-import { now } from './now';
-import { uses } from './uses';
 
 const L = (pt: string, en: string): Localized => ({ pt, en });
 
@@ -48,28 +45,12 @@ export interface Route {
   group?: NavGroup;
   segment?: Localized;
   hidden?: boolean;
-  // Página em construção (sem conteúdo): existe e abre, mas não entra no
-  // sitemap nem no índice dos buscadores.
-  draft?: boolean;
-  // Aparece na barra lateral e nos atalhos da home mesmo sendo rascunho. Só o espaço cultural
-  // enquanto usa dados fictícios: o rascunho continua tirando a página do sitemap e do índice dos
-  // buscadores, e a trava de build (scripts/personalGuard.ts) impede que isso chegue à produção.
-  showInNav?: boolean;
 }
 
 export interface Crumb {
   label: string;
   to: string;
 }
-
-// Páginas de curadoria manual ainda sem nenhum item (ver data/personal/music.ts e theater.ts).
-const hasNoContent: Record<string, boolean> = {
-  musica: !musicHasContent(),
-  teatro: !theaterHasContent(),
-  // Fontes ainda sem integração real (data/personal/integrations.ts).
-  livros: !integrated.books,
-  filmes: !integrated.films,
-};
 
 export const routes: Route[] = [
   {
@@ -204,7 +185,7 @@ export const routes: Route[] = [
     desc: L('números e repositórios', 'numbers and repositories'),
   },
   {
-    // Em construção (sem conteúdo em data/now.ts): fora do sitemap e do índice.
+    // Em construção quando data/now.ts está vazio: ver routeStatus.ts.
     id: 'agora',
     kind: 'page',
     group: 'personal',
@@ -215,10 +196,9 @@ export const routes: Route[] = [
     command: 'agora',
     label: L('Agora', 'Now'),
     desc: L('no que estou focada agora', 'what I am focused on now'),
-    draft: now.items.length === 0,
   },
   {
-    // Em construção (sem conteúdo em data/uses.ts): fora do sitemap e do índice.
+    // Em construção quando data/uses.ts está vazio: ver routeStatus.ts.
     id: 'setup',
     kind: 'page',
     group: 'personal',
@@ -229,11 +209,9 @@ export const routes: Route[] = [
     command: 'setup',
     label: L('Setup', 'Setup'),
     desc: L('ferramentas do dia a dia', 'everyday tools'),
-    draft: uses.groups.length === 0,
   },
-  // Espaço cultural (docs/specs/personal/). Enquanto a fonte estiver em mock (dados fictícios),
-  // as cinco rotas abrem mas ficam fora do sitemap, da barra lateral e do índice (CL-02). Só o
-  // hub entra na barra; as subpáginas são "hidden" e vivem dentro dele, como o estudo de caso.
+  // Espaço cultural (docs/specs/personal/). Rascunho e `showInNav` vêm de routeStatus.ts. Só o hub
+  // entra na barra; as subpáginas são "hidden" e vivem dentro dele, como o estudo de caso.
   {
     id: 'pessoal',
     kind: 'page',
@@ -244,10 +222,8 @@ export const routes: Route[] = [
     name: 'pessoal',
     alias: 'personal',
     command: 'pessoal',
-    showInNav: personalMode === 'mock',
     label: L('Pessoal', 'Personal'),
     desc: L('livros, filmes, música e teatro', 'books, films, music and theater'),
-    draft: personalMode === 'mock',
   },
   ...(
     [
@@ -268,9 +244,6 @@ export const routes: Route[] = [
     label: L(labelPt, labelEn),
     desc: L(descPt, descEn),
     hidden: true,
-    // Em construção no modo `live` enquanto não há conteúdo: curadoria manual vazia (música e
-    // teatro) ou fonte sem integração (data/personal/integrations.ts).
-    draft: personalMode === 'mock' || hasNoContent[pt] === true,
   })),
   {
     // Fora do `ls`: é uma página dentro de "projetos".
@@ -361,12 +334,8 @@ export function windowPath(route: Route | undefined | null, lang: Lang) {
 export const terminalUrl = (route: Route, command = route.command) =>
   `${TERMINAL_PATH}?cmd=${encodeURIComponent(command ?? route.id)}`;
 
-// Rotas da barra lateral de um grupo, sem rascunhos.
-// Rota que a navegação pode mostrar: sem rascunho, ou rascunho marcado com `showInNav`.
-export const isListed = (r: Route) => !r.draft || Boolean(r.showInNav);
-
-export const navRoutes = (group: NavGroup) =>
-  routes.filter((r) => r.group === group && !r.hidden && isListed(r));
+// `isListed` e `navRoutes` (rotas da barra lateral, sem rascunhos) dependem do estado de rascunho e
+// ficam em routeStatus.ts.
 
 // Âncoras da home antiga (`/#projetos`…) → página própria equivalente (SH-10).
 // A home virou só o terminal; links publicados antes disso (LinkedIn, currículo,
