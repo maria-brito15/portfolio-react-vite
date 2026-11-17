@@ -1,7 +1,10 @@
 # 002 Design system and shell, Requirements
-**Status:** approved (v1.4 aprovada pela Duda em 2026-11-17)   **Version:** 1.4   **Author:** Claude (rascunho para a Duda)   **Date:** 2026-11-17   **Depende de:** 001-engineering-baseline
+**Status:** approved (v1.5 aprovada pela Duda em 2026-11-17)   **Version:** 1.5   **Author:** Claude (rascunho para a Duda)   **Date:** 2026-11-17   **Depende de:** 001-engineering-baseline
 
 ## Changes since first draft
+### Versão 1.5 (2026-11-17, aprovada pela Duda)
+A Duda aprovou como requisitos os cinco itens P-002-a a P-002-e de `design-reference/telas-e-requisitos.md`, que o mockup mostra: rodapé de créditos (FR-036), "elenco" lido de uma fonte (FR-037), faixa decorativa de cinco cores (FR-038), sugestões de rotas na 404 (FR-039) e estado nunca só por cor (FR-040). **Ficam de fora:** a linha "trilha sonora" do rodapé (depende da Música e de uma playlist escolhida por ela, fora do MVP) e o motivo "cd /curriculos" da 404 (a pergunta sobre ser decorativo ou funcional segue aberta). As prioridades (Must e Should) são minhas e a Duda pode mudá-las. Nenhum requisito anterior mudou.
+
 ### Versão 1.4 (2026-11-17, aprovada pela Duda junto com as v1.1 a v1.3)
 Pelo SPIKE-001 (`spike-001.md`): o JavaScript do 1º acesso hoje mede 118,2 KB em gzip e o piso do React sozinho é 67,5 KB. A Duda decidiu que a compressão que vale é **gzip** e que a meta de JavaScript passa de 90 KB para **100 KB**. O CSS segue em 20 KB (hoje 16,1 KB). Mudam a meta da seção de objetivos, o NFR-001, a FAQ, os Riscos e as Success Metrics. A referência a "143 KB" (medida antiga) foi trocada pela medição do SPIKE-001. Nenhum outro requisito mudou.
 
@@ -189,6 +192,21 @@ WHEN o visitante dispensar a faixa de idioma, THE SYSTEM SHALL gravar a dispensa
 ### FR-035: Quando a faixa não aparece (Must Have) — US-003
 IF o endereço estiver sob `/en/`, ou houver escolha de idioma gravada, ou a faixa já tiver sido dispensada, THE SYSTEM SHALL NOT mostrar a faixa. A faixa tem nome acessível, não rouba o foco ao aparecer e não desloca o conteúdo da página.
 
+### FR-036: Rodapé de créditos (Must Have) — US-001
+THE SYSTEM SHALL exibir, em toda página, um rodapé de créditos com: o título do portfólio, "directed by", roteiro e código, elenco (stack), local e "fim", o texto "sem cookies" (em inglês, "no cookies") e um link para a home. Os textos do rodapé são dado, nos dois idiomas, com paridade verificada (spec 001).
+
+### FR-037: Elenco lido de uma única fonte (Must Have) — US-001
+THE SYSTEM SHALL ler o "elenco" (as tecnologias do rodapé) de uma única fonte, derivada do projeto, de modo que não possa divergir do que o site realmente usa.
+
+### FR-038: Faixa decorativa (Should) — US-001
+THE SYSTEM SHOULD exibir no topo de toda página uma faixa decorativa de cinco cores, oculta para leitores de tecnologia assistiva, sem texto e sem função, usando cores definidas nos tokens para cada tema.
+
+### FR-039: Sugestões na 404 (Should) — US-001
+IF o endereço não existir, THE SYSTEM SHOULD mostrar, na página 404, até três rotas reais do menu como sugestão, mantendo o status HTTP 404 e os links para a home e para o menu (estende o FR-027).
+
+### FR-040: Estado nunca só por cor (Must Have) — US-004
+WHERE um estado da interface depender de cor (por exemplo, a página atual no menu ou o idioma selecionado), THE SYSTEM SHALL acompanhá-lo de sublinhado, peso ou texto, e SHALL ter teste automatizado que falha se um estado só mudar a cor.
+
 ## Non-Functional Requirements
 ### NFR-001: Performance
 - Todas as medições abaixo são feitas na página de prova do **build de prova** (otimizado como o de produção, ver Definições), nunca no servidor de desenvolvimento.
@@ -287,6 +305,9 @@ A Duda confirmou PT na raiz e EN sob `/en/`, com `hreflang` (D-005).
 - [ ] Os testes de contraste, de ordem de foco e de cabeçalhos de segurança passam.
 - [ ] Cada rota da tabela existe nos dois idiomas, com `hreflang` recíproco.
 - [ ] A faixa de idioma aparece só nos casos da tabela de idioma, e nunca há redirecionamento.
+- [ ] O rodapé de créditos aparece em toda página, com o elenco lido de uma única fonte (FR-036, FR-037).
+- [ ] A 404 sugere até três rotas reais do menu e continua respondendo 404 (FR-039).
+- [ ] Um estado que só muda de cor falha o teste (FR-040).
 
 ## Risks
 | Risk | Likelihood | Impact | Mitigation |
