@@ -22,7 +22,7 @@ Um portfólio que funciona como o Letterboxd, mas para o trabalho de engenharia 
 | V-D-012 | Nota dos projetos | Estrelas por critérios públicos, com regra visível | Evita autoelogio e número sem origem |
 | V-D-013 | Hospedagem | Netlify atual, mesmo endereço; URLs antigas redirecionam | Reusa Functions, Blobs e variáveis |
 | V-D-014 | Stack | A atual (React 19, Vite 6, TypeScript estrito, Vitest, Playwright) | Escolha dela |
-| V-D-015 | Onde mora | Na mesma branch (`main`), sem `git push` | Escolha dela |
+| V-D-015 | Onde mora | **Corrigida em 2026-11-15:** na branch `rebuild/sdd`, com `git push` só quando a Duda pedir; merge na `main` só no lançamento (spec 010), porque o Netlify publica a partir dela. (Antes: "na mesma branch (`main`), sem `git push`") | Escolha dela |
 | V-D-016 | Prazo e rigor | Sem prazo fixo; spec proporcional ao risco | Recomendação aceita |
 | V-D-017 | Arquivos de entrada | `AGENTS.md` substitui `CLAUDE.md`; `.ai/sdd/` substitui `docs/specs/`; remoções só na Fase 2, com lista confirmada | Escolha dela |
 

@@ -1,7 +1,10 @@
 # 002 Design system and shell, Requirements
-**Status:** draft   **Version:** 1.2   **Author:** Claude (rascunho para a Duda)   **Date:** 2026-11-15   **Depende de:** 001-engineering-baseline
+**Status:** draft   **Version:** 1.3   **Author:** Claude (rascunho para a Duda)   **Date:** 2026-11-15   **Depende de:** 001-engineering-baseline
 
 ## Changes since first draft
+### Versão 1.3 (correção só das Constraints, autorizada pela Duda em 2026-11-15)
+A regra de branch passou de "`main`, sem push" para "branch `rebuild/sdd`, push só quando a Duda pedir, merge na `main` no lançamento" (V-D-015 corrigida). Nenhum requisito funcional mudou.
+
 ### Versão 1.2
 1. **Build de prova:** as metas de tamanho e desempenho agora se medem num build de prova otimizado como o de produção, com `/_prova` habilitada; o build publicado continua sem `/_prova`, com teste. Mudam as Definições, o NFR-001, os Riscos e as Success Metrics.
 2. **Idioma na primeira visita (decisão da Duda):** em vez de redirecionar, uma faixa oferece o inglês quando o navegador prefere inglês. Mudam FR-022, FR-025, FR-026 (e FR-034 e FR-035, novos), a tabela de idiomas, DQ-002, a FAQ e os Riscos.
@@ -204,7 +207,7 @@ IF o endereço estiver sob `/en/`, ou houver escolha de idioma gravada, ou a fai
 
 ## Constraints
 - Stack e host conforme `.ai/steering/tech-stack.md` (V-D-014, V-D-013).
-- A reconstrução fica na `main`, sem `git push` (V-D-015); o código novo substitui o antigo no lugar (P-Q-001).
+- A reconstrução fica na branch `rebuild/sdd`, com `git push` só quando a Duda pedir; o merge na `main` só no lançamento (spec 010), porque o Netlify publica a partir dela (V-D-015, corrigida em 2026-11-15); o código novo substitui o antigo no lugar (P-Q-001).
 - Conteúdo nunca inventado; fontes e ativos com licença registrada (OFL ou equivalente).
 - Aprovação só pela Duda.
 

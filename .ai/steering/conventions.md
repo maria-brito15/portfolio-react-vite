@@ -2,7 +2,7 @@
 **Estado:** aprovado pela Duda em 2026-11-15 · Só o que o linter não pega.
 
 ## Comando de verificação
-`npm run verify` (a criar na spec 001) roda, nesta ordem: `prettier --check`, `eslint . --max-warnings 0`, `tsc --noEmit`, `vitest run`, `vite build`. Hoje só existem os passos soltos; o `verify` ainda não existe.
+`npm run verify` (a criar na spec 001) roda, nesta ordem: `prettier --check`, `eslint . --max-warnings 0`, `tsc --noEmit`, `vitest run`, `vite build`, com a validação de conteúdo e a varredura de segredos **dentro** das etapas de testes e de geração. É um runner Node sem shell, igual em PowerShell, Git Bash e Linux. Orçamento aprovado: suíte ≤ 90 s e `verify` ≤ 180 s. Hoje só existem os passos soltos; o `verify` ainda não existe.
 
 ## Conteúdo
 - Projetos, casos, experiências, filmes, livros e entradas de diário vivem em `src/content/`, tipados e validados por schema. Componente nenhum guarda texto de conteúdo.

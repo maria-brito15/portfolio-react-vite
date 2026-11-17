@@ -108,3 +108,4 @@ Arquitetura e tabela de rotas, idiomas e endereços, HTML sem JavaScript (depend
 ## Confirmações e pendências da rodada de 2026-11-15
 - **DQ-006 confirmada como intencional pela Duda:** a borda de controle sobre os tons pastel tem **piso de 3:1** (o FR-007 aprovado da 002 pede 3:1 para componentes; o 4:1 vinha do README de referência). 4:1 continua valendo onde o fundo permite (creme, branco, superfícies escuras). Gravado no TD-003.
 - **DQ-009 (nova, aberta):** a requirements desta spec diz "a reconstrução fica na `main`, sem `git push` (V-D-015)", mas o trabalho está na branch `rebuild/sdd`. É a mesma contradição da DQ-013 da spec 001 e se resolve junto com ela.
+- **DQ-009 (respondida em 2026-11-15):** a regra de branch é a da DQ-013 da spec 001 (branch `rebuild/sdd`, push só quando a Duda pedir, merge na `main` no lançamento). As Constraints desta spec foram corrigidas (requirements v1.3, só Constraints).

@@ -1,5 +1,5 @@
 # 001 Engineering baseline, Requirements
-**Status:** draft (v1.3 aguarda aprovação; a v1.2 foi a aprovada)   **Version:** 1.3   **Author:** Claude (rascunho para a Duda)   **Date:** 2026-11-15
+**Status:** approved (v1.3 aprovada pela Duda em 2026-11-15)   **Version:** 1.3   **Author:** Claude (rascunho para a Duda)   **Date:** 2026-11-15
 
 ## Changes since first draft
 ### Versão 1.3 (a pedido da Duda; aplica só L-001, L-002, L-003, L-004, L-005, L-007, L-008 e L-012 do `design.md`)
@@ -12,7 +12,8 @@
 7. **L-008, FR-001:** a validação de conteúdo e a varredura de segredos rodam **dentro** da etapa de testes e da de geração do site, não como etapas à parte.
 8. **L-012, FR-018 (novo):** nota de 0,5 a 5 em passos de 0,5; "sem nota" é ausência de valor, nunca 0.
 9. **Não aplicadas, por decisão da Duda:** L-006 (o NFR-001 continua como está), L-009 e L-010 (só ratificadas no design, sem editar o requisito) e L-011 (steering, depois de aprovar o design).
-10. **Estado:** esta v1.3 é rascunho; o `.status` da spec **não foi alterado** (ver a pergunta na resposta ao fim da rodada).
+10. **Constraints (branch):** a regra de branch foi corrigida (ver Constraints): `rebuild/sdd`, push só quando a Duda pedir, merge na `main` no lançamento.
+11. **Estado:** v1.3 **aprovada pela Duda em 2026-11-15**; o `.status` passa a `design:approved` junto com a aprovação do design.
 
 ### Versão 1.2
 1. **NFR-001:** o custo de 5 s da validação passou a ser medido com conteúdo de exemplo (a migração é a spec 003, que herda a medição com o conteúdo real).
@@ -155,7 +156,7 @@ Parcialmente N/A: esta spec não renderiza interface. Ela só garante, na camada
 
 ## Constraints
 - Stack e host conforme `.ai/steering/tech-stack.md` (V-D-014, V-D-013).
-- A reconstrução fica na `main`, sem `git push` (V-D-015); o código novo substitui o antigo no lugar (P-Q-001).
+- A reconstrução fica na branch `rebuild/sdd`, com `git push` só quando a Duda pedir; o merge na `main` só no lançamento (spec 010), porque o Netlify publica a partir dela (V-D-015, corrigida em 2026-11-15); o código novo substitui o antigo no lugar (P-Q-001).
 - O comando de verificação roda no Windows (PowerShell e Git Bash) e em Linux, sem depender de recursos de um só.
 - Nenhum dado inventado: conteúdo de exemplo nos testes é marcado como exemplo.
 - Aprovação só pela Duda.

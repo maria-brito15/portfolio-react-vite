@@ -1,7 +1,7 @@
 # PLAN — Portfólio da Duda
-**Estado:** `plan:draft` (rebaixado a pedido da Duda em 2026-11-15 até ela aprovar as alterações marcadas [proposta 2026-11-15]; ver `.ai/sdd/.status`) · Fontes: `ideas/001`, `ideas/002`, `steering/`
+**Estado:** `plan:approved` (a Duda aprovou em 2026-11-15, inclusive as alterações marcadas [proposta 2026-11-15]; ver `.ai/sdd/.status`) · Fontes: `ideas/001`, `ideas/002`, `steering/`
 
-> **ALTERAÇÃO PENDENTE DE APROVAÇÃO (2026-11-15) — o `.status` voltou para `plan:draft` a pedido da Duda:** as marcas "[proposta 2026-11-15]" abaixo (linha da 008, specs 011 e 012, dependências e P-Q-003) foram aplicadas como **rascunho**, a pedido da Duda, para ela ler o resultado. **Ela decide se aprova estas alterações**; só ela promove de volta para `plan:approved`. Origem: `.ai/sdd/PROPOSTA-pessoal-conteudo-curado.md` e `.ai/sdd/PLAN-proposta-musica-bastidores.md`.
+> **ALTERAÇÕES APROVADAS PELA DUDA (2026-11-15), `.status` = `plan:approved`:** as marcas "[proposta 2026-11-15]" abaixo (linha da 008, specs 011 e 012, dependências e P-Q-003) foram aplicadas a pedido da Duda e **aprovadas por ela em 2026-11-15**; as marcas ficam como histórico da origem. Origem: `.ai/sdd/PROPOSTA-pessoal-conteudo-curado.md` e `.ai/sdd/PLAN-proposta-musica-bastidores.md`.
 
 ## Mudanças desde o plano aprovado (a pedido da Duda)
 - **[proposta 2026-11-15]** Letterboxd, Hardcover e Spotify são preenchidos **manualmente** (sem API): a 008 vira "filmes e livros como conteúdo curado", entram as specs 011 (música) e 012 (bastidores) depois do MVP, e a P-Q-003 é encerrada.

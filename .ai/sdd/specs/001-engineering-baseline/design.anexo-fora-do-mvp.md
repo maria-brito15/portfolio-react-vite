@@ -158,3 +158,9 @@ O que isso muda **para a 001**:
 - **Painel do Netlify:** `GEMINI_API_KEY` e `GEMINI_MODEL` seguem como ação da Duda depois da onda 1. As variáveis `HARDCOVER_*`, `TMDB_API_KEY`, `PERSONAL_*` ficam para depois da 008.
 - **Importador de CSV (Q-P1 e Q-P14):** permanece, mudando para `scripts/` e gerando o `*.content.ts`; o `--tmdb` e o `tmdb.ts` saem (Q-P2). Tudo isso é da 008.
 - **Caderno e G-1 a G-4** não mudam.
+
+## Aprovação do Anexo B (2026-11-15)
+A Duda respondeu "aprovado" ao item "aprovar o design da 001 e o Anexo B (a lista do que será removido)". **A lista, incluindo a correção de `/pessoal` curado acima, está aprovada pela Duda.** Isso **não autoriza remover nada ainda**: nenhuma remoção acontece antes de `tasks:approved` e de eu restatar os requisitos ("Confirm before building"). A DQ-001 (remover o Caderno na 001) e as ondas G-1 a G-4 seguem como descritas.
+
+## Correção da ordem das ondas (2026-11-15, DQ-014 respondida pela Duda)
+A Duda decidiu **apagar o Caderno antes da onda 3** (trilhas). Nova ordem: **onda 1** assistente (G-1) → **onda 2** jogos (G-2) → **onda 2b** Caderno (G-5, DQ-001) → **onda 3** trilhas (G-3) → **onda 4** personas (G-4) → limpeza. Efeito: a onda 3 não precisa mais de uma "edição mínima" no Caderno. Os gates de onda, o V-06 estendido e "um commit por onda" não mudam. A lista de arquivos aprovada é a mesma; só a ordem mudou.
