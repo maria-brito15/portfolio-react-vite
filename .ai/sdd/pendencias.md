@@ -3,10 +3,10 @@ Painel de coisas que ficaram fora de uma tarefa. Não é fonte de verdade de apr
 
 | ID | Item | Origem | Quem decide |
 | --- | --- | --- | --- |
-| PEND-001 | `src/components/personal/qa.test.tsx` (lista de perfis e chave `portfolio-persona` do localStorage) e `src/data/personalDiscovery.test.tsx` ("sem persona") ainda carregam resquício de persona. Área da spec 008: não foi tocada. | Spec 001, T6.7 (V-06) | Duda, junto com a spec 008 |
-| PEND-002 | 4 arquivos `public/fonts/fraunces-*.woff2` sem uso. | Spec 001, T5.7 | Duda; tarefa separada depois da T6.7 |
-| PEND-003 | `src/components/dashboard/{PersonalSpace,ProfileSummary,StackOverview,AcademicSnapshot,ServicesPreview}.tsx` fora da composição da home. | Spec 001, T5.7 | Duda; tarefa separada depois da T6.7 |
-| PEND-004 | O teste do `secretGuard` usa stub de `loadEnv`. | Spec 001 | Duda |
+| PEND-001 | **Resolvida na T7.3.** `src/components/personal/qa.test.tsx` (lista de perfis e chave `portfolio-persona` do localStorage) e `src/data/personalDiscovery.test.tsx` ("sem persona") ainda carregam resquício de persona. Área da spec 008: não foi tocada. | Spec 001, T6.7 (V-06) | Duda, junto com a spec 008 | 
+| PEND-002 | **Resolvida na T7.1.** 4 arquivos `public/fonts/fraunces-*.woff2` sem uso. | Spec 001, T5.7 | Duda; tarefa separada depois da T6.7 | 
+| PEND-003 | **Resolvida na T7.1.** `src/components/dashboard/{PersonalSpace,ProfileSummary,StackOverview,AcademicSnapshot,ServicesPreview}.tsx` fora da composição da home. | Spec 001, T5.7 | Duda; tarefa separada depois da T6.7 | 
+| PEND-004 | **Resolvida na T7.2.** O teste do `secretGuard` usa stub de `loadEnv`. | Spec 001 | Duda | 
 | PEND-005 | Apagar `GEMINI_API_KEY` e `GEMINI_MODEL` no painel do Netlify e revogar a chave (DQ-012). Só a Duda tem acesso. | Spec 001 | Duda |
 | PEND-006 | 5 pontos de `src/` ainda usam o `id` cru como reserva de texto (o FR-015 literal só vale em `src/content` e `src/i18n`, onde o guarda age): `src/components/paletteItems.ts:130`, `src/data/routes.ts:335`, `src/terminal/commands.tsx:196`, `src/terminal/extras/neofetch.tsx:34`, `src/terminal/extras/personalView.tsx:34`. Aceito no design (DQ-006). | Spec 001, revisão G-1 | Duda, nas specs 002 e 003 |
 | PEND-007 | Sem teste de execuções simultâneas do `verify` (EC-17). | Spec 001, revisão G-5 | Duda decide se vira tarefa |
