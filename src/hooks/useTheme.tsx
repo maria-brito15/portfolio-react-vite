@@ -8,8 +8,8 @@ type ThemeValue = [Theme, () => void, (theme: Theme) => void];
 
 const ThemeContext = createContext<ThemeValue>([DEFAULT_THEME, () => {}, () => {}]);
 
-// O script inline do index.html já aplica o tema salvo antes do React carregar
-// (evita o "flash" do tema errado); aqui o estado parte desse valor. Valor
+// O script de boot (src/boot/boot.ts, injetado no <head>) já aplica o tema antes do React
+// carregar (evita o "flash" do tema errado); aqui o estado parte desse valor. Valor
 // desconhecido cai no tema padrão.
 function readInitialTheme(): Theme {
   const applied = document.documentElement.getAttribute('data-theme');
@@ -22,20 +22,24 @@ function readInitialTheme(): Theme {
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<Theme>(readInitialTheme);
 
+  // O boot já marcou `data-theme`; aqui só se garante o atributo (sem gravar nada).
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
-    try {
-      localStorage.setItem(STORAGE_KEY, theme);
-    } catch {
-      // Sem armazenamento disponível, o tema vale só para a visita atual.
-    }
   }, [theme]);
 
-  // O botão do cabeçalho alterna claro/escuro; a partir de um tema extra, vai para o escuro.
-  const value = useMemo<ThemeValue>(
-    () => [theme, () => setTheme((v) => (v === 'dark' ? 'light' : 'dark')), setTheme],
-    [theme],
-  );
+  // Só uma escolha do visitante é gravada (FR-004); montar o provedor não grava nada.
+  const value = useMemo<ThemeValue>(() => {
+    const choose = (next: Theme) => {
+      setTheme(next);
+      try {
+        localStorage.setItem(STORAGE_KEY, next);
+      } catch {
+        // Sem armazenamento disponível, o tema vale só para a visita atual (FR-006).
+      }
+    };
+
+    return [theme, () => choose(theme === 'dark' ? 'light' : 'dark'), choose];
+  }, [theme]);
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }

@@ -1,7 +1,6 @@
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
 import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { bootSource, resolveTheme } from '../boot/boot';
 import { renderApp } from '../test/helpers';
 import { DEFAULT_THEME, findTheme, isTheme, themeName, themes } from './themes';
 
@@ -40,26 +39,25 @@ describe('tabela de temas', () => {
     expect(DEFAULT_THEME).toBe('light');
   });
 
-  it('o script do index.html ignora um tema antigo salvo e aplica um válido', () => {
-    const html = readFileSync(join(process.cwd(), 'index.html'), 'utf8');
-    const script = html.match(/<script>([\s\S]*?)<\/script>/)?.[1] ?? '';
+  it('o script de boot ignora um tema antigo salvo e aplica um válido', () => {
+    const script = bootSource();
 
     expect(script).toContain('portfolio-theme');
     document.documentElement.removeAttribute('data-theme');
     localStorage.setItem('portfolio-theme', 'dracula');
     new Function(script)();
-    expect(attr()).toBeNull();
-    localStorage.setItem('portfolio-theme', 'light');
+    expect(attr()).toBe('light'); // `dracula` ignorado: segue o sistema (jsdom não tem matchMedia: claro)
+    localStorage.setItem('portfolio-theme', 'dark');
     new Function(script)();
-    expect(attr()).toBe('light');
+    expect(attr()).toBe('dark');
   });
 
-  it('o script do index.html conhece exatamente os mesmos ids (TB-03)', () => {
-    const html = readFileSync(join(process.cwd(), 'index.html'), 'utf8');
-    const listed = html.match(/\[((?:'[a-z]+',?\s*)+)\]\.indexOf\(theme\)/)?.[1] ?? '';
-    const ids = [...listed.matchAll(/'([a-z]+)'/g)].map((m) => m[1]);
-
-    expect(ids.sort()).toEqual(themes.map((t) => t.id).sort());
+  it('o boot conhece exatamente os mesmos ids da tabela de temas (TB-03)', () => {
+    for (const { id } of themes) {
+      // o sistema pede o outro tema: só a escolha gravada pode produzir o id
+      expect(resolveTheme({ stored: id, systemDark: id === 'light' })).toBe(id);
+    }
+    expect(resolveTheme({ stored: 'rosa', systemDark: false })).toBe('light');
   });
 
   it('themeName devolve o nome no idioma e lança, sem reserva, para id desconhecido (T7.4)', () => {

@@ -158,3 +158,30 @@ Exit code: 0 ; 0
 Summary:   OK em 69,1 s (orçamento 180 s): formatação 4,4; lint 11,2; tipos 7,4; testes 42,5; geração 3,7; dist/fonts com os 3 WOFF2 e a licença
 Verdict:   PASS
 ```
+
+## T1.5 Boot injetado no HTML e provedor de tema que só grava a escolha (TD-011, design-review S-04, S-05)
+**Entregue:** `scripts/seoPlugin.ts` injeta `bootSource()` (de `src/boot/boot.ts`) no lugar do marcador `<!-- boot:script -->` do `index.html`, em `<script id="boot">` síncrono; `index.html` perdeu o `data-theme="dark"` fixo e o script inline antigo (que também definia `lang` pelo `localStorage`; agora a URL decide, TD-013), e o `theme-color` virou dois `<meta>` com `media` (`#fff7ea` claro, `#0e0e10` escuro); `ThemeProvider` só grava `portfolio-theme` quando o visitante escolhe (alternar ou `setTheme`), montar não grava nada; testes novos e ajustados.
+
+**Observação:** o marcador `<!-- boot:script -->` fica depois de `meta charset`, `viewport`, `theme-color` e `author` (um `charset` precisa estar nos primeiros 1024 bytes, e o script tem alguns KB). No build, o Vite acrescenta o CSS e o módulo depois dele (conferido no `dist/index.html`: boot na linha 12, `type="module"` na 121, `rel="stylesheet"` na 122). Os 3 `preload` de fonte já tinham entrado na T1.4 e agora têm teste.
+
+```
+Claim:     montar o provedor sem clicar não grava; o clique grava; armazenamento bloqueado não gera erro; o boot decide como as tabelas
+Command:   npx vitest run src/boot/boot.test.ts src/hooks/useTheme.test.tsx scripts/seoPlugin.test.ts src/data/themes.test.tsx
+Exit code: 0
+Summary:   64 testes: useTheme (montar não chama setItem e não grava; parte do tema do boot; alternar e escolher por id gravam; setItem lançando erro não quebra e o tema vale na visita); seoPlugin (index.html sem data-theme fixo nem script antigo; script de boot único, síncrono, depois do charset e antes de CSS/módulo, com o texto exato de bootSource() e sem helpers do esbuild; 2 theme-color com media; 3 preloads de fonte com crossorigin); themes (o script de boot ignora `dracula`; ids do boot = ids da tabela de temas)
+Verdict:   PASS
+```
+```
+Claim:     sem data-theme fixo no index.html e o boot vem antes do CSS no HTML gerado
+Command:   git grep -n 'data-theme="dark"' -- index.html ; grep -n -o -E '<script id="boot">|rel="stylesheet"|type="module"' dist/index.html ; grep -c '<script id="boot">' dist/sobre.html dist/404.html
+Exit code: 1 (nenhuma ocorrência no fonte) ; 0 ; 0
+Summary:   dist/index.html: boot na linha 12, módulo na 121, stylesheet na 122; 1 script de boot em sobre.html e em 404.html (as páginas por rota herdam o template)
+Verdict:   PASS
+```
+```
+Claim:     o gate passa
+Command:   npm run verify
+Exit code: 0
+Summary:   OK em 87,0 s (orçamento 180 s): formatação 7,1; lint 16,9; tipos 9,2; testes 50,2; geração 3,6
+Verdict:   PASS
+```

@@ -1,10 +1,15 @@
 <!doctype html>
-<html lang="pt-BR" data-theme="dark">
+<html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#0b0c0f" />
+    <meta name="theme-color" content="#fff7ea" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e0e10" media="(prefers-color-scheme: dark)" />
     <meta name="author" content="Maria Eduarda de Paula Brito" />
+    <!-- Tema e faixa de idioma antes do primeiro desenho (FR-005): scripts/seoPlugin.ts injeta aqui o
+         script de src/boot/boot.ts, síncrono e antes de qualquer CSS. O tema NÃO é fixado neste
+         arquivo: o script marca `data-theme` (a escolha gravada ou o sistema). -->
+    <!-- boot:script -->
     <!-- Título, descrição, canonical, Open Graph, Twitter e JSON-LD: scripts/seoPlugin.ts
          escreve este bloco por rota a partir de src/data/seo.ts. -->
     <!-- seo:head -->
@@ -33,16 +38,6 @@
       type="font/woff2"
       crossorigin
     />
-    <script>
-      // Aplica o tema salvo antes do primeiro desenho, evitando o flash do tema errado.
-      try {
-        var theme = localStorage.getItem('portfolio-theme');
-        // Mesmos ids de src/data/themes.ts (um teste confere).
-        if (['dark', 'light'].indexOf(theme) !== -1)
-          document.documentElement.setAttribute('data-theme', theme);
-        if (localStorage.getItem('portfolio-lang') === 'en') document.documentElement.lang = 'en';
-      } catch (e) {}
-    </script>
   </head>
   <body>
     <div id="root"></div>

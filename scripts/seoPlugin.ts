@@ -12,6 +12,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import type { Plugin } from 'vite';
+import { bootSource } from '../src/boot/boot';
 import { routes } from '../src/data/routes';
 import {
   NOT_FOUND_ID,
@@ -71,6 +72,13 @@ function bodyBlock(routeId: string) {
 const withRoute = (html: string, routeId: string) =>
   html.replace(HEAD, () => headBlock(routeId)).replace(BODY, () => bodyBlock(routeId));
 
+// Script de boot (tema e faixa de idioma) no lugar do marcador: síncrono, antes do CSS e do
+// JavaScript do site, para o tema valer no primeiro desenho (FR-005). O texto vem de um único
+// módulo (src/boot/boot.ts); aqui só se insere.
+const BOOT = '<!-- boot:script -->';
+const withBoot = (html: string) =>
+  html.replace(BOOT, () => `<script id="boot">\n${bootSource()}\n    </script>`);
+
 export function seoPlugin(): Plugin {
   let outDir = 'dist';
 
@@ -79,7 +87,7 @@ export function seoPlugin(): Plugin {
     configResolved(config) {
       outDir = join(config.root, config.build.outDir);
     },
-    transformIndexHtml: (html) => withRoute(html, 'home'),
+    transformIndexHtml: (html) => withRoute(withBoot(html), 'home'),
     closeBundle() {
       const template = readFileSync(join(outDir, 'index.html'), 'utf8');
       const write = (file: string, content: string) => {
