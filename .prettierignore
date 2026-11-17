@@ -2,3 +2,12 @@ dist
 node_modules
 docs/site-original
 package-lock.json
+docs
+.ai
+.claude
+*.md
+public
+.verify
+test-results
+playwright-report
+scripts/status.mjs
