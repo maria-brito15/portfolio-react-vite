@@ -1,7 +1,8 @@
 import { readFileSync } from 'node:fs';
 
 // `.env.example` documenta cada variável e nunca carrega segredo (docs/specs/personal/, CL-32).
-const lines = readFileSync('.env.example', 'utf8').split('\n');
+// Aceita LF e CRLF: um clone novo no Windows (`core.autocrlf`) traz o arquivo com CRLF.
+const lines = readFileSync('.env.example', 'utf8').split(/\r?\n/);
 const variables = lines.flatMap((line, i) => {
   const match = /^([A-Z][A-Z0-9_]*)=(.*)$/.exec(line);
 

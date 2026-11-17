@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 // `npm run verify`: as 5 etapas do steering, sempre na mesma ordem, e para na primeira falha.
 // Sem shell e sem `.cmd`: o mesmo `node` executa o `.js` de cada ferramenta (design §6.1, TD-006).
 import { spawn } from 'node:child_process';
