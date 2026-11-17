@@ -248,3 +248,10 @@ A falha das rodadas 1 e 3 é sempre `src/pages/HomePersona.test.tsx › ação p
 **Exit code:** 0 · 0 (árvore limpa) · 0 · 1 (nenhuma linha)
 **Summary:** `f5f6650` commitou os 12 arquivos `.ai/` que a Duda já tinha aprovado e modificado (aprovações de 2026-11-15, regra de branch, steering); `3dc85fa` trocou `docs/specs/README.md` por um apontador para `.ai/sdd/INDEX.md` (as 22 pastas que ele listava não existem) e criou `.ai/sdd/pendencias.md` (PEND-001 a PEND-005). Com o README novo, a exceção dele na V-06 cai: sobra só `scripts/status.mjs`. A tag `arquivo/pre-remocao-fora-do-mvp` e a branch `archive/fora-do-mvp` foram para o GitHub por autorização da Duda; `main` e `rebuild/sdd` não receberam push. A Duda pediu `sdd-review` (revisão em contexto novo) antes de promover o `.status`.
 **Verdict:** PASS
+
+## T7.1 Apagar código e fontes sem uso (PEND-002, PEND-003)
+**Claim:** os 5 componentes de `src/components/dashboard/` sem uso, as 4 fontes `fraunces-*.woff2` e o `preload` de `fraunces-latin.woff2` em `index.html` foram removidos; nada os referenciava (a única referência era o próprio `preload`).
+**Command:** `git grep -n -w <componente>` (5 nomes, antes) · `git grep -n -i "fraunces" -- . ':!.ai' ':!docs' ':!package-lock.json'` (depois) · `npm run verify` · `grep -c fraunces dist/index.html`
+**Exit code:** 0 referências nos 5 · 1 (vazio) · 0 · 0 ocorrências
+**Summary:** apagados `PersonalSpace`, `ProfileSummary`, `StackOverview`, `AcademicSnapshot` e `ServicesPreview` (`.tsx`) e as 4 fontes (`fraunces-latin`, `-latin-ext`, `-italic-latin`, `-italic-latin-ext`), cerca de 156 kB em `public/fonts`; `index.html` perdeu o bloco `<link rel="preload" ... fraunces-latin.woff2>` (sobra só o preload do JetBrains Mono). `dist/fonts` ficou só com `jetbrains-mono-*`. `verify` exit 0 em 64,7 s (formatação, lint, tipos 7,3 s, testes 39,2 s, geração 3,3 s); a suíte não perdeu teste (os 5 componentes não tinham teste). As referências antigas em `.ai/` e `docs/` são texto histórico e ficam.
+**Verdict:** PASS
