@@ -302,7 +302,7 @@ Verdict:   PASS
 ```
 Claim:     nenhum teste depende mais de portfolio-lang para escolher o idioma
 Command:   git grep -n "setItem('portfolio-lang'" -- src
-Exit code: 1 (nenhuma ocorrência no código rastreado; o único uso, em LanguageContext.test.tsx, é o cenário "gravado = pt/en mas o endereço manda")
+Exit code: 0 (achou 2 linhas, ambas em src/i18n/LanguageContext.test.tsx:54 e :61, o cenário "gravado = pt/en mas o endereço manda", que o critério da tarefa permite; nenhum outro arquivo)
 Summary:   os 14 arquivos de teste que usavam localStorage para pedir inglês passaram a abrir um endereço /en/...; a suíte inteira (91 arquivos, 1246+ testes) passa
 Verdict:   PASS
 ```
