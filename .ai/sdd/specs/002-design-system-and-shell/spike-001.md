@@ -77,3 +77,5 @@
 4. Qualquer uma das opções precisa ser conferida no build de prova, que ainda não existe.
 
 **Resposta da Duda (2026-11-17):** a escolha entre gzip e brotli para o NFR-001 foi **adiada** ("decidir depois"). A pergunta segue aberta; o requirements e o design não foram alterados. O requirements v1.3 também continua sem aprovação dela.
+
+**Decisão da Duda (2026-11-17, depois do adiamento acima):** a compressão que vale para o NFR-001 é **gzip**. Com gzip, o piso do React (67,5 KB) deixa **22,5 KB** de folga sob os 90 KB para todo o código do site no 1º acesso (hoje ~50,7 KB). **Ainda aberto:** manter os 90 KB (corte de ~56 % no código do site do 1º acesso) ou subir o número. O requirements (v1.3, ainda não aprovada) não foi alterado.
