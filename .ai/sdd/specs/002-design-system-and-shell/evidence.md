@@ -264,3 +264,25 @@ Exit code: 0 ; 0
 Summary:   verify OK em 102,4 s (orçamento 180 s): formatação 5,3; lint 24,1; tipos 17,2; testes 51,7; geração 4,0. dist/sobre.html: alternates pt-BR (…/sobre), en (…/en/about) e x-default (…/sobre)
 Verdict:   PASS
 ```
+
+## T2.4 Roteador: `/en/`, endereços por idioma e saída dos apelidos antigos (TD-007)
+**Entregue:** `routes.ts`: `findPageByPath` casa `path` **ou** `enPath` (com `/en/` valendo `/en`); os `aliases` em inglês antigos (`/about` etc.) **saíram** da tabela e do tipo (o redirecionamento deles é da spec 010); novas funções `langOfPath` (`/en` e `/en/...` = EN, o resto PT, inclusive endereço desconhecido) e `equivalentPath(route, lang)`. `router.tsx`: `RouterProvider` aceita `initial` (caminho com `?` e `#`) e **não lê `window`** quando ele é dado; sem `initial` e sem `window` a localização é a raiz (não quebra no servidor); `redirectLegacy` só age no navegador; `legacyTarget` (`/#hash`) não mudou. `scripts/seoPlugin.ts` deixou de gravar o HTML dos apelidos (`dist/about.html` etc.).
+
+**Toques em testes da 008 (só troca de endereço, mesma asserção, dentro da exceção estreita do tasks.md v1.1):** `foundation.test.tsx`, `hub.test.tsx`, `pages.test.tsx`, `qa.test.tsx` e `personalRoutes.test.tsx` passaram a abrir `/en/about`, `/en/personal/...` em vez dos apelidos; fora da 008: `DocPages.test.tsx`, `InfoPages.test.tsx`, `routes.test.ts`.
+
+**Notas:** o idioma ainda segue o `localStorage` até a T2.5 (o endereço `/en/about` abre a página certa, no idioma que estiver salvo). Em produção (Netlify), os apelidos antigos agora dão 404 até a spec 010 redirecioná-los (Non-Goals da 002: decidido no design).
+
+```
+Claim:     /en/projects e /projetos abrem a mesma rota; /en/ equivale a /en; rota desconhecida cai na 404; apelidos antigos não abrem mais
+Command:   npx vitest run src/data/routes.test.ts src/data/legacyHashes.test.tsx src/App.test.tsx src/router.test.ts src/routerInitial.test.tsx
+Exit code: 0
+Summary:   routes: /en/projects === /projetos; /en/ e /en = home; /en/projects/ = projetos; terminal, github e estudo de caso pelos endereços em inglês confirmados; /xyz, /en/xyz e /en/en undefined; /about, /skills, /projects, /resume, /personal undefined e nenhuma rota tem `aliases`; langOfPath (/en, /en/, /en/xyz = en; /entrada, /xyz = pt); equivalentPath ida e volta nas 19 rotas. router.test.ts (projeto unit, Node SEM window): `initial` '/en/projects?x=1#lista' lido sem tocar window; '/en/' vira '/en'; sem `initial` e sem window = raiz. routerInitial.test.tsx (jsdom): `initial` manda sobre a barra de endereço; sem `initial` lê '/en/' como '/en'; navegar continua funcionando. legacyHashes e App.test sem mudança de asserção
+Verdict:   PASS
+```
+```
+Claim:     a suíte inteira e o gate passam
+Command:   npm run verify
+Exit code: 0
+Summary:   OK em 144,3 s (orçamento 180 s): formatação 8,4; lint 27,2; tipos 22,9; testes 79,8; geração 6,0. A primeira execução falhou no lint (react/no-children-prop em router.test.ts), corrigida com um cast do provedor; a máquina estava mais lenta nesta rodada
+Verdict:   PASS
+```

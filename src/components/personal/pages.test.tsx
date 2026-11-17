@@ -394,7 +394,7 @@ describe('páginas inteiras, com o mock real (CL-03, CL-20)', () => {
 
   it('/personal/books em inglês', async () => {
     localStorage.setItem('portfolio-lang', 'en');
-    renderApp('/personal/books');
+    renderApp('/en/personal/books');
 
     expect(await screen.findByRole('heading', { name: 'Reading now' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { level: 1, name: 'Books' })).toBeInTheDocument();

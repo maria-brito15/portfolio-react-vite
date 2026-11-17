@@ -4,8 +4,11 @@ import { join } from 'node:path';
 import {
   crumbsFor,
   directories,
+  equivalentPath,
   findDirectory,
   findPageByPath,
+  langOfPath,
+  normalizePath,
   routeById,
   routeName,
   routeSegment,
@@ -50,12 +53,12 @@ describe('tabela de rotas', () => {
     expect(new Set(names).size).toBe(names.length);
   });
 
-  it('encontra páginas pelo caminho, inclusive apelidos e barra final', () => {
-    expect(findPageByPath('/resume')?.id).toBe('curriculo');
-    expect(findPageByPath('/academics/')?.id).toBe('academico');
+  it('encontra páginas pelo caminho em português e em inglês, inclusive com barra final', () => {
+    expect(findPageByPath('/en/resume')?.id).toBe('curriculo');
+    expect(findPageByPath('/en/academics/')?.id).toBe('academico');
     expect(findPageByPath('/estudos-de-caso/whatsapp-dispatcher')?.id).toBe('whatsapp-dispatcher');
     expect(findPageByPath('/nada')).toBeUndefined();
-    expect(findPageByPath('/about')?.id).toBe('sobre');
+    expect(findPageByPath('/en/about')?.id).toBe('sobre');
     // âncoras antigas da home não existem mais
     expect(findPageByPath('/#sobre')).toBeUndefined();
   });
@@ -118,12 +121,27 @@ describe('tabela de rotas estendida (TD-006, DQ-016, DQ-019)', () => {
     expect(routeTableProblems(routes)).toEqual([]);
   });
 
-  it('o enPath dos aliases em inglês antigos é /en + o alias; os confirmados pela Duda', () => {
-    for (const r of routes.filter((x) => x.aliases?.length)) {
-      const alias = r.aliases?.[0] as string;
+  it('o enPath das rotas com apelido em inglês é /en + o apelido (nome em inglês); os confirmados pela Duda', () => {
+    const expected: Record<string, string> = {
+      sobre: '/en/about',
+      habilidades: '/en/skills',
+      projetos: '/en/projects',
+      experiencias: '/en/experience',
+      contato: '/en/contact',
+      curriculo: '/en/resume',
+      academico: '/en/academics',
+      servicos: '/en/services',
+      agora: '/en/now',
+      setup: '/en/uses',
+      pessoal: '/en/personal',
+      'pessoal-livros': '/en/personal/books',
+      'pessoal-filmes': '/en/personal/films',
+      'pessoal-musica': '/en/personal/music',
+      'pessoal-teatro': '/en/personal/theater',
+    };
 
-      expect(r.enPath, r.id).toBe(`/en${alias}`);
-    }
+    for (const [id, enPath] of Object.entries(expected))
+      expect(routeById(id)?.enPath, id).toBe(enPath);
 
     expect(routeById('home')?.enPath).toBe('/en');
     expect(routeById('terminal')?.enPath).toBe('/en/terminal');
@@ -176,5 +194,64 @@ describe('tabela de rotas estendida (TD-006, DQ-016, DQ-019)', () => {
     expect(new Set(routes.map((r) => r.enPath)).size).toBe(routes.length);
     for (const r of routes)
       expect(r.enPath === '/en' || r.enPath.startsWith('/en/'), r.id).toBe(true);
+  });
+});
+
+// T2.4 (TD-007): endereços por idioma, sem os apelidos antigos.
+describe('endereços por idioma (FR-019 a FR-021)', () => {
+  it('/en/projects e /projetos abrem a mesma rota', () => {
+    expect(findPageByPath('/en/projects')?.id).toBe('projetos');
+    expect(findPageByPath('/projetos')?.id).toBe('projetos');
+    expect(findPageByPath('/en/projects')).toBe(findPageByPath('/projetos'));
+  });
+
+  it('/en/ (com barra final) equivale a /en e é a home em inglês', () => {
+    expect(normalizePath('/en/')).toBe('/en');
+    expect(normalizePath('/projetos/')).toBe('/projetos');
+    expect(normalizePath('/')).toBe('/');
+    expect(findPageByPath('/en/')?.id).toBe('home');
+    expect(findPageByPath('/en')?.id).toBe('home');
+    expect(findPageByPath('/')?.id).toBe('home');
+    expect(findPageByPath('/en/projects/')?.id).toBe('projetos');
+  });
+
+  it('o terminal, o GitHub e o estudo de caso abrem pelos endereços em inglês confirmados', () => {
+    expect(findPageByPath('/en/terminal')?.id).toBe('terminal');
+    expect(findPageByPath('/en/github')?.id).toBe('github');
+    expect(findPageByPath('/en/case-studies/whatsapp-dispatcher')?.id).toBe('whatsapp-dispatcher');
+  });
+
+  it('rota desconhecida (nos dois idiomas) é undefined, para a página 404', () => {
+    expect(findPageByPath('/xyz')).toBeUndefined();
+    expect(findPageByPath('/en/xyz')).toBeUndefined();
+    expect(findPageByPath('/en/en')).toBeUndefined();
+  });
+
+  it('os apelidos em inglês antigos (/about, /projects) saem: não abrem mais nada', () => {
+    for (const old of ['/about', '/skills', '/projects', '/experience', '/contact', '/resume'])
+      expect(findPageByPath(old), old).toBeUndefined();
+    expect(findPageByPath('/personal')).toBeUndefined();
+    expect(routes.every((r) => !('aliases' in r))).toBe(true);
+  });
+
+  it('langOfPath: /en e /en/... são inglês; o resto, português, inclusive endereço desconhecido', () => {
+    expect(langOfPath('/en')).toBe('en');
+    expect(langOfPath('/en/')).toBe('en');
+    expect(langOfPath('/en/projects')).toBe('en');
+    expect(langOfPath('/en/xyz')).toBe('en');
+    expect(langOfPath('/')).toBe('pt');
+    expect(langOfPath('/projetos')).toBe('pt');
+    expect(langOfPath('/entrada')).toBe('pt');
+    expect(langOfPath('/xyz')).toBe('pt');
+  });
+
+  it('equivalentPath leva a página ao outro idioma e de volta', () => {
+    for (const r of routes) {
+      expect(equivalentPath(r, 'pt'), r.id).toBe(r.path);
+      expect(equivalentPath(r, 'en'), r.id).toBe(r.enPath);
+      expect(findPageByPath(equivalentPath(r, 'en'))?.id, r.id).toBe(r.id);
+      expect(langOfPath(equivalentPath(r, 'en')), r.id).toBe('en');
+      expect(langOfPath(equivalentPath(r, 'pt')), r.id).toBe('pt');
+    }
   });
 });

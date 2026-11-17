@@ -49,8 +49,6 @@ export interface Route {
   prova?: true;
   // Renderizada sem casca: só a faixa decorativa e o `main` (hoje só o terminal, FR-041).
   bare?: true;
-  // Endereços em inglês antigos (`/about`); saem na T2.4 (o redirecionamento é da spec 010).
-  aliases?: string[];
   name?: string;
   alias?: string;
   command?: string;
@@ -140,7 +138,6 @@ export const routes: Route[] = [
     kind: 'page',
     group: 'portfolio',
     path: '/sobre',
-    aliases: ['/about'],
     name: 'sobre',
     alias: 'about',
     command: 'sobre',
@@ -161,7 +158,6 @@ export const routes: Route[] = [
     kind: 'page',
     group: 'portfolio',
     path: '/habilidades',
-    aliases: ['/skills'],
     name: 'habilidades',
     alias: 'skills',
     command: 'habilidades',
@@ -184,7 +180,6 @@ export const routes: Route[] = [
     kind: 'page',
     group: 'portfolio',
     path: '/projetos',
-    aliases: ['/projects'],
     name: 'projetos',
     alias: 'projects',
     command: 'projetos',
@@ -205,7 +200,6 @@ export const routes: Route[] = [
     kind: 'page',
     group: 'portfolio',
     path: '/experiencias',
-    aliases: ['/experience'],
     name: 'experiencias',
     alias: 'experience',
     command: 'experiencias',
@@ -228,7 +222,6 @@ export const routes: Route[] = [
     kind: 'page',
     group: 'personal',
     path: '/contato',
-    aliases: ['/contact'],
     name: 'contato',
     alias: 'contact',
     command: 'contato',
@@ -251,7 +244,6 @@ export const routes: Route[] = [
     kind: 'page',
     group: 'portfolio',
     path: '/curriculo',
-    aliases: ['/resume'],
     name: 'curriculo',
     alias: 'resume',
     command: 'curriculo',
@@ -274,7 +266,6 @@ export const routes: Route[] = [
     kind: 'page',
     group: 'portfolio',
     path: '/academico',
-    aliases: ['/academics'],
     name: 'academico',
     alias: 'academics',
     command: 'academico',
@@ -295,7 +286,6 @@ export const routes: Route[] = [
     kind: 'page',
     group: 'portfolio',
     path: '/servicos',
-    aliases: ['/services'],
     name: 'servicos',
     alias: 'services',
     command: 'servicos',
@@ -357,7 +347,6 @@ export const routes: Route[] = [
     kind: 'page',
     group: 'personal',
     path: '/agora',
-    aliases: ['/now'],
     name: 'agora',
     alias: 'now',
     command: 'agora',
@@ -376,7 +365,6 @@ export const routes: Route[] = [
     kind: 'page',
     group: 'personal',
     path: '/setup',
-    aliases: ['/uses'],
     name: 'setup',
     alias: 'uses',
     command: 'setup',
@@ -401,7 +389,6 @@ export const routes: Route[] = [
     kind: 'page',
     group: 'personal',
     path: '/pessoal',
-    aliases: ['/personal'],
     segment: L('pessoal', 'personal'),
     name: 'pessoal',
     alias: 'personal',
@@ -420,7 +407,6 @@ export const routes: Route[] = [
     id: `pessoal-${pt}`,
     kind: 'page',
     path: `/pessoal/${pt}`,
-    aliases: [`/personal/${en}`],
     enPath: `/en/personal/${en}`,
     ...personalMeta[pt],
     parent: 'pessoal',
@@ -462,12 +448,26 @@ export const directories = routes.filter((r) => r.name && !r.hidden) as Director
 
 export const normalizePath = (path: string) => path.replace(/(.)\/$/, '$1');
 
-// Página (rota própria) que atende a um caminho, ou undefined para o 404.
+// Idioma de um endereço (TD-007): `/en` e `/en/...` são inglês; o resto, português. Vale também para
+// um endereço desconhecido (a 404 sai no idioma do endereço, FR-027).
+export const langOfPath = (path: string): Lang => {
+  const clean = normalizePath(path);
+
+  return clean === '/en' || clean.startsWith('/en/') ? 'en' : 'pt';
+};
+
+// Página (rota própria) que atende a um caminho em português (`path`) ou em inglês (`enPath`), ou
+// undefined para o 404. `/en/` vale `/en` (normalizePath). Os endereços em inglês antigos
+// (`/about`) não existem mais (a spec 010 os redireciona).
 export function findPageByPath(path: string) {
   const clean = normalizePath(path);
 
-  return routes.find((r) => r.kind === 'page' && (r.path === clean || r.aliases?.includes(clean)));
+  return routes.find((r) => r.kind === 'page' && (r.path === clean || r.enPath === clean));
 }
+
+// Endereço da mesma página no idioma pedido (o seletor de idioma navega para ele).
+export const equivalentPath = (route: Route, lang: Lang) =>
+  lang === 'en' ? route.enPath : route.path;
 
 // Remove acentos e caixa ("Currículo" vale como "curriculo").
 export const fold = (text: unknown) =>

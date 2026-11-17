@@ -15,9 +15,9 @@ beforeEach(() => sessionStorage.clear());
 describe('rotas /agora e /setup (CE-06, CE-07)', () => {
   it('existem só em routes.ts, com apelidos em inglês e em construção enquanto vazias', () => {
     expect(findPageByPath('/agora')?.id).toBe('agora');
-    expect(findPageByPath('/now')?.id).toBe('agora');
+    expect(findPageByPath('/en/now')?.id).toBe('agora');
     expect(findPageByPath('/setup')?.id).toBe('setup');
-    expect(findPageByPath('/uses')?.id).toBe('setup');
+    expect(findPageByPath('/en/uses')?.id).toBe('setup');
     expect(routeStatus('agora').draft).toBe(now.items.length === 0);
     expect(routeStatus('setup').draft).toBe(uses.groups.length === 0);
     expect(directories.map((d) => d.name)).toEqual(expect.arrayContaining(['agora', 'setup']));
@@ -61,7 +61,7 @@ describe('/setup em construção', () => {
   it('o apelido em inglês abre a mesma página e o aviso troca de idioma', async () => {
     const user = userEvent.setup();
 
-    renderApp('/uses');
+    renderApp('/en/uses');
     await user.click(screen.getByRole('button', { name: /Switch to English/ }));
     expect(screen.getByRole('heading', { level: 1, name: 'Setup' })).toBeInTheDocument();
     expect(screen.getByText('Under construction.')).toBeInTheDocument();
@@ -94,7 +94,7 @@ describe('/agora com conteúdo (CE-06)', () => {
   it('troca de idioma e o apelido /now abre a mesma página', async () => {
     const user = userEvent.setup();
 
-    renderApp('/now');
+    renderApp('/en/now');
     await user.click(screen.getByRole('button', { name: /Switch to English/ }));
     expect(screen.getByRole('heading', { level: 1, name: 'Now' })).toBeInTheDocument();
     expect(screen.getByText('Focus')).toBeInTheDocument();

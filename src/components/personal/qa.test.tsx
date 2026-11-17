@@ -5,11 +5,11 @@ import { screen, waitFor } from '@testing-library/react';
 import { renderApp } from '../../test/helpers';
 
 const PAGES = [
-  ['/pessoal', '/personal'],
-  ['/pessoal/livros', '/personal/books'],
-  ['/pessoal/filmes', '/personal/films'],
-  ['/pessoal/musica', '/personal/music'],
-  ['/pessoal/teatro', '/personal/theater'],
+  ['/pessoal', '/en/personal'],
+  ['/pessoal/livros', '/en/personal/books'],
+  ['/pessoal/filmes', '/en/personal/films'],
+  ['/pessoal/musica', '/en/personal/music'],
+  ['/pessoal/teatro', '/en/personal/theater'],
 ] as const;
 
 afterEach(() => {

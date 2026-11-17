@@ -89,12 +89,12 @@ export function seoPlugin(): Plugin {
         writeFileSync(join(outDir, file), content);
       };
 
-      // `/sobre` e `/about` (alias) viram arquivos próprios; o alias aponta, por
-      // canonical, para o caminho principal. `.html` em vez de pasta/index.html:
+      // Cada rota em português vira um arquivo próprio (`/sobre` vira `sobre.html`). As páginas em inglês
+      // por rota são da T4.1/T4.2. `.html` em vez de pasta/index.html:
       // a Netlify serve `/sobre` sem redirecionar para `/sobre/`.
       for (const route of routes) {
         if (route.id === 'home') continue;
-        for (const path of [route.path, ...(route.aliases ?? [])])
+        for (const path of [route.path])
           write(`${path.slice(1)}.html`, withRoute(template, route.id));
       }
 

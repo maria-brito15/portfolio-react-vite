@@ -352,7 +352,7 @@ describe('entrada no menu, nos dois idiomas (Navegação)', () => {
 
   it('EN: "Personal" aparece no menu lateral', () => {
     localStorage.setItem('portfolio-lang', 'en');
-    renderApp('/about');
+    renderApp('/en/about');
 
     expect(sidebarLink().some((text) => /Personal/.test(text ?? ''))).toBe(true);
   });

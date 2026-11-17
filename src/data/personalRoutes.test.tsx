@@ -6,14 +6,29 @@ import { SITE_URL, metaFor } from './seo';
 import { headTags } from './seoHead';
 
 const PAGES = [
-  { id: 'pessoal', pt: '/pessoal', en: '/personal', h1: ['Pessoal', 'Personal'] },
-  { id: 'pessoal-livros', pt: '/pessoal/livros', en: '/personal/books', h1: ['Livros', 'Books'] },
-  { id: 'pessoal-filmes', pt: '/pessoal/filmes', en: '/personal/films', h1: ['Filmes', 'Films'] },
-  { id: 'pessoal-musica', pt: '/pessoal/musica', en: '/personal/music', h1: ['Música', 'Music'] },
+  { id: 'pessoal', pt: '/pessoal', en: '/en/personal', h1: ['Pessoal', 'Personal'] },
+  {
+    id: 'pessoal-livros',
+    pt: '/pessoal/livros',
+    en: '/en/personal/books',
+    h1: ['Livros', 'Books'],
+  },
+  {
+    id: 'pessoal-filmes',
+    pt: '/pessoal/filmes',
+    en: '/en/personal/films',
+    h1: ['Filmes', 'Films'],
+  },
+  {
+    id: 'pessoal-musica',
+    pt: '/pessoal/musica',
+    en: '/en/personal/music',
+    h1: ['Música', 'Music'],
+  },
   {
     id: 'pessoal-teatro',
     pt: '/pessoal/teatro',
-    en: '/personal/theater',
+    en: '/en/personal/theater',
     h1: ['Teatro', 'Theater'],
   },
 ];

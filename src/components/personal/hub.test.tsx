@@ -396,7 +396,7 @@ describe('páginas inteiras, com o mock real (CL-03, CL-20, CL-23, CL-24)', () =
 
   it('/personal/theater em inglês', async () => {
     localStorage.setItem('portfolio-lang', 'en');
-    renderApp('/personal/theater');
+    renderApp('/en/personal/theater');
 
     expect(await screen.findByRole('heading', { name: '2026' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { level: 1, name: 'Theater' })).toBeInTheDocument();

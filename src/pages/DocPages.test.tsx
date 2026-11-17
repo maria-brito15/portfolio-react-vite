@@ -31,7 +31,7 @@ describe('currículo', () => {
   it('funciona em inglês e pela rota /resume', async () => {
     const user = userEvent.setup();
 
-    renderApp('/resume');
+    renderApp('/en/resume');
     await user.click(screen.getByRole('button', { name: /Switch to English/ }));
     expect(screen.getByRole('heading', { level: 2, name: /Technical skills/ })).toBeInTheDocument();
   });
