@@ -1,6 +1,7 @@
 # 001 Engineering baseline, Tasks
 **Status:** approved (aprovado pela Duda em 2026-11-15, fase por fase; ver `.status`) · **Versão:** 1.0 · **Autor:** Claude (rascunho para a Duda) · **Data:** 2026-11-15
 **Entrada:** `requirements.md` v1.3 (aprovada), `design.md` v1.0 (aprovado, 13 respostas DQ registradas), `design.anexo-evidencias.md`, `design.anexo-fora-do-mvp.md` (lista de remoção aprovada, com a correção de `/pessoal` curado)
+**Versão 1.1 (2026-11-17):** a Duda aprovou a Fase 7 (T7.1 a T7.3, +4 h, limpeza pós-aceite); a Fase 7 vem depois da revisão. As 29 tarefas e 86 h abaixo são das fases 1 a 6.
 **Estimativa total:** 29 tarefas, **86 h** (1 a 4 h cada), em 6 fases. A "Ação da Duda" (fora da contagem) está no fim da Fase 5.
 
 ## Como ler
@@ -397,6 +398,38 @@ O design (V-06) escreve o padrão completo de uma vez; como as ondas são sucess
 - **Critérios de aceitação:** todos os itens do Success Metrics marcados com evidência; `src.zip` intacto e fora do repositório.
 - **Arquivos prováveis:** nenhum
 - **Verificação:** `npm run verify` (exit 0, PowerShell e Git Bash); o comando do WSL acima (exit 0); `npm audit --omit=dev` (exit 0, `found 0 vulnerabilities`); `grep -r -l "ZodError\|zod" dist/static` (exit 1); `git ls-files .github` (exit 0, saída vazia); `git ls-files src.zip` (exit 0, saída vazia).
+
+---
+
+## Fase 7: Limpeza pós-aceite (adicionada em 2026-11-17, aprovada pela Duda)
+A T6.7 fechou o aceite. Estas 3 tarefas tratam as pendências PEND-001 a PEND-004 de `.ai/sdd/pendencias.md`. **A Duda aprovou a adição em 2026-11-17 e decidiu a ordem: primeiro a revisão (`sdd-review`), depois a Fase 7.** Nenhuma tarefa aqui reabre o aceite da T6.7: se uma delas mudar o resultado de `verify`, o bloco de evidência registra a nova medição. Uma tarefa por commit, sem `git push`.
+
+### T7.1 Apagar código e fontes sem uso (PEND-002, PEND-003)
+- **Requisito:** FR-006 (nada sem uso depois da remoção) · **Prioridade:** P2 · **Estimativa:** 1 h · **Dependências:** revisão feita
+- **Trabalho:** (1) apagar `src/components/dashboard/{PersonalSpace,ProfileSummary,StackOverview,AcademicSnapshot,ServicesPreview}.tsx` (`git grep -w` mostrou nenhuma referência em `src`, inclusive testes); (2) apagar `public/fonts/fraunces-{latin,latin-ext,italic-latin,italic-latin-ext}.woff2` e a linha de `preload` de `/fonts/fraunces-latin.woff2` em `index.html:24` (nenhum CSS usa Fraunces; o preload carrega uma fonte que ninguém usa). Antes de apagar, repetir o `git grep` de cada nome e parar se aparecer referência nova.
+- **Testes:** os existentes; nenhum teste novo (remoção de código sem uso).
+- **Critérios de aceitação:** `git grep -n -i "fraunces" -- . ':!.ai' ':!docs' ':!package-lock.json'` vazio; `dist/index.html` sem `fraunces`; `tsc`, `vite build` e a suíte passam; o `verify` passa.
+- **Arquivos prováveis:** os 5 `.tsx`, os 4 `.woff2`, `index.html`
+- **Verificação:** `git grep` acima (exit 1); `npm run verify` (exit 0); `grep -c fraunces dist/index.html` (0)
+
+### T7.2 `secretGuard` com o `loadEnv` real (PEND-004)
+- **Requisito:** FR-016, NFR-002 · **Prioridade:** P2 · **Estimativa:** 2 h · **Dependências:** revisão feita
+- **Trabalho:** `scripts/secretGuard.test.ts` usa `vi.mock('vite', () => ({ loadEnv: () => ({}) }))` porque o `vite` real carrega o esbuild, que não roda no jsdom. Tentar `// @vitest-environment node` no arquivo e tirar o stub. Se o `vite` real ainda não carregar na suíte, **parar e propor outra saída à Duda** (não voltar ao stub em silêncio).
+- **Testes:** o próprio `secretGuard.test.ts`, agora com o `loadEnv` real (um caso com `.env` temporário lido de verdade).
+- **Critérios de aceitação:** sem `vi.mock('vite'` em `scripts/secretGuard.test.ts`; os casos de antes continuam; suíte ≤ 90 s.
+- **Arquivos prováveis:** `scripts/secretGuard.test.ts`
+- **Verificação:** `npx vitest run scripts/secretGuard.test.ts` (exit 0); `git grep -n "vi.mock('vite'" -- scripts` (exit 1); `npm run verify` (exit 0)
+
+### T7.3 Resquício de persona nos testes da `/pessoal` (PEND-001)
+- **Requisito:** FR-006 · **Prioridade:** P2 · **Estimativa:** 1 h · **Dependências:** revisão feita
+- **Exceção à regra da 008, autorizada pela Duda em 2026-11-17:** tocar **só** `src/components/personal/qa.test.tsx` e `src/data/personalDiscovery.test.tsx`. Nada de integração, Function, `.env.example` ou outro arquivo da 008.
+- **Trabalho:** tirar a lista `PERSONAS`, a chave `portfolio-persona` do `localStorage` e o caso "sem persona", mantendo o que cada teste prova sobre as páginas e o atalho de `/pessoal`. Registrar no bloco de evidência quantos casos saíram (o `it.each(PERSONAS)` de 5 perfis vira 1 caso) e por que a cobertura da `/pessoal` não diminui.
+- **Testes:** os dois arquivos acima.
+- **Critérios de aceitação:** `git grep -n -i -E "\bpersonas?\b" -- src scripts netlify` vazio (exit 1); os dois arquivos passam; suíte e `verify` passam.
+- **Arquivos prováveis:** os dois testes
+- **Verificação:** `git grep` acima (exit 1); `npx vitest run src/components/personal/qa.test.tsx src/data/personalDiscovery.test.tsx` (exit 0); `npm run verify` (exit 0)
+
+Cobertura da Fase 7: FR-006 → T7.1, T7.3 · FR-016, NFR-002 → T7.2. Dependência: **revisão (`sdd-review`) primeiro**; as três são independentes entre si.
 
 ---
 
