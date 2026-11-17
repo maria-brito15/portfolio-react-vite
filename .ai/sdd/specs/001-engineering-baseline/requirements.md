@@ -56,29 +56,29 @@ A base de engenharia é o que garante que o resto do site seja construído sobre
 ### US-001: Adicionar conteúdo sem medo
 **As a** Duda, **I want to** que a verificação recuse conteúdo errado, **so that** nada inválido chegue ao ar.
 **Acceptance criteria:**
-- [ ] Uma data com mês 13, uma imagem sem `alt` ou com caminho externo, um texto sem PT ou EN, ou uma nota de 4,3 fazem a verificação falhar.
-- [ ] A mensagem de erro diz o arquivo, o campo e o motivo.
-- [ ] Conteúdo válido passa sem erro.
+- [x] Uma data com mês 13, uma imagem sem `alt` ou com caminho externo, um texto sem PT ou EN, ou uma nota de 4,3 fazem a verificação falhar.
+- [x] A mensagem de erro diz o arquivo, o campo e o motivo.
+- [x] Conteúdo válido passa sem erro.
 
 ### US-002: Confiar em um comando
 **As a** Duda, **I want to** rodar um comando e saber se está tudo certo, **so that** eu não precise lembrar de cinco.
 **Acceptance criteria:**
-- [ ] O comando termina com código 0 quando todas as etapas passam e com código diferente de 0 se qualquer etapa falhar.
-- [ ] A saída diz qual etapa falhou.
-- [ ] As cinco etapas rodam na mesma ordem toda vez.
-- [ ] A verificação falha se houver um segredo conhecido em arquivo rastreado (FR-016).
+- [x] O comando termina com código 0 quando todas as etapas passam e com código diferente de 0 se qualquer etapa falhar.
+- [x] A saída diz qual etapa falhou.
+- [x] As cinco etapas rodam na mesma ordem toda vez.
+- [x] A verificação falha se houver um segredo conhecido em arquivo rastreado (FR-016).
 
 ### US-003: Nenhum texto sem tradução
 **As a** Duda, **I want to** que a falta de uma tradução seja pega antes do lançamento, **so that** um entrevistador não veja texto cru ou em outro idioma.
 **Acceptance criteria:**
-- [ ] Remover a tradução EN de uma chave faz a verificação falhar nomeando a chave e o idioma que falta.
-- [ ] Em produção, nunca aparece a chave crua nem o texto do outro idioma como reserva.
+- [x] Remover a tradução EN de uma chave faz a verificação falhar nomeando a chave e o idioma que falta.
+- [x] Em produção, nunca aparece a chave crua nem o texto do outro idioma como reserva.
 
 ### US-004: Uma suíte em que eu confio
 **As a** Duda, **I want to** uma suíte rápida e sem falhas, **so that** eu a rode toda vez e uma falha signifique um problema real.
 **Acceptance criteria:**
-- [ ] A suíte completa termina com 0 falhas.
-- [ ] A suíte termina dentro do orçamento (FR-005), medida sem outros processos pesados rodando.
+- [x] A suíte completa termina com 0 falhas.
+- [x] A suíte termina dentro do orçamento (FR-005), medida sem outros processos pesados rodando.
 
 ## Functional Requirements
 ### FR-001: Comando único de verificação (Must Have) — US-002
@@ -237,12 +237,12 @@ A Duda decidiu mover o CI para a spec 010 (D-002).
 **A:** Uma lista vazia é válida; o schema valida os itens, não a quantidade. A spec dona do conteúdo diz se a página aceita lista vazia.
 
 ## Success Metrics
-- [ ] O comando de verificação sai com 0 numa máquina limpa, em até 120 s.
-- [ ] A suíte completa termina com 0 falhas, três vezes seguidas, em até 60 s (meta; o tempo aprovado pelo design é registrado no design).
-- [ ] Uma data inválida, uma imagem sem `alt` ou com arquivo inexistente, um link `//host`, uma tradução removida e uma etiqueta repetida quebram a verificação, cada uma com mensagem de arquivo, campo e motivo (testado).
-- [ ] O código fora do MVP (trilhas, personas, jogos, assistente de IA) foi removido na lista aprovada pela Duda, e a geração e a suíte passam.
-- [ ] O tempo de cada execução fica registrado.
-- [ ] A varredura de segredos acha uma credencial de teste plantada e passa sem ela.
+- [x] O comando de verificação sai com 0 numa máquina limpa, em até 120 s.
+- [x] A suíte completa termina com 0 falhas, três vezes seguidas, em até 60 s (meta; o tempo aprovado pelo design é registrado no design).
+- [x] Uma data inválida, uma imagem sem `alt` ou com arquivo inexistente, um link `//host`, uma tradução removida e uma etiqueta repetida quebram a verificação, cada uma com mensagem de arquivo, campo e motivo (testado).
+- [x] O código fora do MVP (trilhas, personas, jogos, assistente de IA) foi removido na lista aprovada pela Duda, e a geração e a suíte passam.
+- [x] O tempo de cada execução fica registrado.
+- [x] A varredura de segredos acha uma credencial de teste plantada e passa sem ela.
 
 ## Risks
 | Risk | Likelihood | Impact | Mitigation |

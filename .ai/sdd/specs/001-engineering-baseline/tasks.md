@@ -168,7 +168,7 @@ O design (V-06) escreve o padrão completo de uma vez; como as ondas são sucess
 - **Trabalho:**
   - `scripts/contentGuard.ts` no molde de `scripts/personalGuard.ts` (função pura `assert…` + plugin `apply: 'build'` + `configResolved`/`buildStart`): lança erro com as mesmas mensagens do validador.
   - Registrar o plugin em `vite.config.ts` (sem mexer no resto do arquivo; a remoção do `assistantContext` é da T5.1).
-  - ESLint: `no-restricted-imports` para `src/content/**/*.content.ts` (só outros arquivos de conteúdo e `import type`).
+  - ESLint: `no-restricted-syntax` para `src/content/**/*.content.ts` (só outros arquivos de conteúdo e `import type`). Nota (2026-11-17, revisão G-6): o texto original dizia `no-restricted-imports`; a regra implementada usa seletores sobre `ImportDeclaration`, `ExportNamedDeclaration` e `ExportAllDeclaration`, porque `no-restricted-imports` não distingue `import type` sem o `allowTypeImports` do plugin do TypeScript (ver `evidence.md`, T2.7).
 - **Testes:** `scripts/contentGuard.test.ts`: conteúdo inválido lança erro com a linha inteira do §6.2; válido não lança; o teste de lint da regra de importação (arquivo de fixture com import proibido falha no `eslint`, via `ESLint` API).
 - **Critérios de aceitação:** um conteúdo inválido no registro derruba `vite build` (verificado com registro de teste, sem alterar o registro real); `npx vite build` com o registro real vazio passa.
 - **Arquivos prováveis:** `scripts/contentGuard.ts`, `scripts/contentGuard.test.ts`, `vite.config.ts`, `eslint.config.*`

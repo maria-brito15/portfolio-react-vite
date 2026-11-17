@@ -8,3 +8,6 @@ Painel de coisas que ficaram fora de uma tarefa. Não é fonte de verdade de apr
 | PEND-003 | `src/components/dashboard/{PersonalSpace,ProfileSummary,StackOverview,AcademicSnapshot,ServicesPreview}.tsx` fora da composição da home. | Spec 001, T5.7 | Duda; tarefa separada depois da T6.7 |
 | PEND-004 | O teste do `secretGuard` usa stub de `loadEnv`. | Spec 001 | Duda |
 | PEND-005 | Apagar `GEMINI_API_KEY` e `GEMINI_MODEL` no painel do Netlify e revogar a chave (DQ-012). Só a Duda tem acesso. | Spec 001 | Duda |
+| PEND-006 | 5 pontos de `src/` ainda usam o `id` cru como reserva de texto (o FR-015 literal só vale em `src/content` e `src/i18n`, onde o guarda age): `src/components/paletteItems.ts:130`, `src/data/routes.ts:335`, `src/terminal/commands.tsx:196`, `src/terminal/extras/neofetch.tsx:34`, `src/terminal/extras/personalView.tsx:34`. Aceito no design (DQ-006). | Spec 001, revisão G-1 | Duda, nas specs 002 e 003 |
+| PEND-007 | Sem teste de execuções simultâneas do `verify` (EC-17). | Spec 001, revisão G-5 | Duda decide se vira tarefa |
+| PEND-008 | As metas de 60 s (suíte) e 120 s (`verify`) foram superadas em medições registradas (66,5 s e 63,8 s; 133,3 s e 128,1 s); o orçamento aprovado de 90 s e 180 s sempre foi respeitado. A variação entre execuções é grande (72 a 133 s). | Spec 001, revisão G-2 | Duda |
