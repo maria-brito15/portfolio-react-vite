@@ -173,8 +173,7 @@ export default function Academics() {
               key: 'modality',
               label: c.courseCols.modality,
               render: (course: Course) =>
-                (course.modality && (c.modality as Record<string, string>)[course.modality]) ||
-                '—',
+                (course.modality && (c.modality as Record<string, string>)[course.modality]) || '—',
             },
           ]
         : []),

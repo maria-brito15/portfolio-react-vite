@@ -88,7 +88,9 @@ function records(csv: string, required: string[]) {
     if (!index.has(name.toLowerCase()))
       throw new Error(`CSV sem a coluna "${name}" (cabeçalho: ${header.join(', ')}).`);
 
-  return rows.map((row) => (name: string) => row[index.get(name.toLowerCase()) ?? -1]?.trim() ?? '');
+  return rows.map(
+    (row) => (name: string) => row[index.get(name.toLowerCase()) ?? -1]?.trim() ?? '',
+  );
 }
 
 function toEntry(get: (column: string) => string): HistoryEntry | undefined {
@@ -115,7 +117,11 @@ function toEntry(get: (column: string) => string): HistoryEntry | undefined {
 
 // Chave de equivalência entre fontes (título + ano + data de exibição): sem acento, caixa nem
 // pontuação, para "Amélie" do CSV casar com "Amélie" do RSS mesmo com travessão ou apóstrofo.
-export const entryKey = (title: string, year: number | undefined, watchedDate: string | undefined) =>
+export const entryKey = (
+  title: string,
+  year: number | undefined,
+  watchedDate: string | undefined,
+) =>
   [
     title
       .normalize('NFD')
@@ -210,7 +216,8 @@ export function parseHistory(data: unknown): History {
     entries: entries.map((e) => ({
       title: e.title,
       year: Number.isInteger(e.year) ? e.year : undefined,
-      watchedDate: typeof e.watchedDate === 'string' && DAY.test(e.watchedDate) ? e.watchedDate : undefined,
+      watchedDate:
+        typeof e.watchedDate === 'string' && DAY.test(e.watchedDate) ? e.watchedDate : undefined,
       rating: RATINGS.includes(e.rating as Rating) ? e.rating : undefined,
       rewatch: e.rewatch === true,
       review: typeof e.review === 'string' && e.review.trim() ? e.review : undefined,
@@ -259,9 +266,7 @@ export function historyToEntries(
 // entrada do RSS. Entrada sem data só casa com outra sem data de mesmo título e ano.
 export function mergeDiary(rss: FilmDiaryEntry[], history: FilmDiaryEntry[]): FilmDiaryEntry[] {
   const hidden = new Set(
-    history
-      .filter((e) => e.publish === false)
-      .map((e) => entryKey(e.title, e.year, e.watchedDate)),
+    history.filter((e) => e.publish === false).map((e) => entryKey(e.title, e.year, e.watchedDate)),
   );
   const keys = new Set(rss.map((e) => entryKey(e.title, e.year, e.watchedDate)));
   const fromRss = rss.map((e) =>

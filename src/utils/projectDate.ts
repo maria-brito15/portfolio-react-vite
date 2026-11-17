@@ -11,10 +11,7 @@ export function formatProjectDate({ year, month }: ProjectDate) {
 // Rótulo de exibição de um projeto: o texto confirmado em `dateLabel` (quando a
 // autora prefere o mês por extenso, ex. "out/2026"/"oct/2026"), senão o MM/AAAA
 // padrão. `date` continua sendo a fonte da ordenação; `dateLabel` é só exibição.
-export function projectPeriod(
-  { date, dateLabel }: Dated & { dateLabel?: Localized },
-  lang: Lang,
-) {
+export function projectPeriod({ date, dateLabel }: Dated & { dateLabel?: Localized }, lang: Lang) {
   return dateLabel?.[lang] ?? formatProjectDate(date);
 }
 

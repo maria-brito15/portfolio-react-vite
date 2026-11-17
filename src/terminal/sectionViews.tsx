@@ -284,9 +284,7 @@ function AcademicsSection({ id, lang }: ViewProps) {
                         <li key={pick(course.name, 'pt')}>
                           <span className="t-wrap">{pick(course.name, lang)}</span>
                           {visible.hours && (
-                            <span className="t-dim">
-                              {course.hours ? `${course.hours}h` : '—'}
-                            </span>
+                            <span className="t-dim">{course.hours ? `${course.hours}h` : '—'}</span>
                           )}
                           {visible.modality && (
                             <span className="t-dim">

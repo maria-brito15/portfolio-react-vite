@@ -54,16 +54,10 @@ export default function FeaturedProjects({ heading, lead, ids }: BlockProps & { 
                 ))}
               </p>
               <p className="featured-links">
-                {p.caseStudy && (
-                  <Link to={p.caseStudy}>{h.caseStudy}</Link>
-                )}
+                {p.caseStudy && <Link to={p.caseStudy}>{h.caseStudy}</Link>}
                 <Link to={`${page}#projeto-${p.id}`}>{h.details}</Link>
                 {p.repo && (
-                  <a
-                    href={p.repo}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
+                  <a href={p.repo} target="_blank" rel="noopener noreferrer">
                     {h.repo}
                   </a>
                 )}

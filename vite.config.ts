@@ -7,13 +7,7 @@ import { contentGuardPlugin } from './scripts/contentGuard';
 import { secretGuardPlugin } from './scripts/secretGuard';
 
 export default defineConfig(({ command }) => ({
-  plugins: [
-    react(),
-    seoPlugin(),
-    personalGuardPlugin(),
-    contentGuardPlugin(),
-    secretGuardPlugin(),
-  ],
+  plugins: [react(), seoPlugin(), personalGuardPlugin(), contentGuardPlugin(), secretGuardPlugin()],
   // Dados reais do build para o comando `stats` (src/data/build.ts).
   define: { __BUILD__: JSON.stringify(buildInfo(command)) },
   build: {

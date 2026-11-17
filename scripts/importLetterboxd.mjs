@@ -31,7 +31,9 @@ if (!existsSync(diaryPath)) {
 }
 
 const reviewsPath = join(dir, 'reviews.csv');
-const previous = existsSync(target) ? parseHistory(JSON.parse(readFileSync(target, 'utf8'))) : undefined;
+const previous = existsSync(target)
+  ? parseHistory(JSON.parse(readFileSync(target, 'utf8')))
+  : undefined;
 const history = importLetterboxdCsv(
   {
     diary: readFileSync(diaryPath, 'utf8'),
@@ -56,7 +58,12 @@ if (withTmdb) {
     const key = `${entry.title}|${entry.year}`;
 
     if (!cache.has(key))
-      cache.set(key, await searchTmdbMovieId({ auth, title: entry.title, year: entry.year }).catch(() => undefined));
+      cache.set(
+        key,
+        await searchTmdbMovieId({ auth, title: entry.title, year: entry.year }).catch(
+          () => undefined,
+        ),
+      );
 
     entry.tmdbId = cache.get(key);
   }

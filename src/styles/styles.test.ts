@@ -28,9 +28,7 @@ describe('pele única', () => {
 
       for (const family of families) {
         const ok =
-          name === 'tokens.css'
-            ? /JetBrains Mono/.test(family)
-            : family === 'var(--font-mono)';
+          name === 'tokens.css' ? /JetBrains Mono/.test(family) : family === 'var(--font-mono)';
 
         expect(ok, `${name}: ${family}`).toBe(true);
       }

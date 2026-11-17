@@ -8,12 +8,12 @@ const RATINGS = [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5];
 const isObject = (v: unknown): v is Record<string, unknown> =>
   typeof v === 'object' && v !== null && !Array.isArray(v);
 const text = (v: unknown) => (typeof v === 'string' && v.trim() ? v : undefined);
-const day = (v: unknown) => (typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v) ? v : undefined);
+const day = (v: unknown) =>
+  typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v) ? v : undefined;
 const https = (v: unknown) => (typeof v === 'string' && v.startsWith('https://') ? v : undefined);
 const positive = (v: unknown) =>
   typeof v === 'number' && Number.isInteger(v) && v > 0 ? v : undefined;
-const strings = (v: unknown) =>
-  Array.isArray(v) ? v.filter((s): s is string => !!text(s)) : [];
+const strings = (v: unknown) => (Array.isArray(v) ? v.filter((s): s is string => !!text(s)) : []);
 
 function parseMeta(raw: unknown): FilmMeta | undefined {
   if (!isObject(raw)) return undefined;
@@ -57,7 +57,9 @@ function parseEntry(raw: unknown): FilmDiaryEntry | undefined {
     year: positive(raw.year),
     watchedDate: day(raw.watchedDate),
     rewatch: raw.rewatch === true,
-    rating: RATINGS.includes(raw.rating as number) ? (raw.rating as FilmDiaryEntry['rating']) : undefined,
+    rating: RATINGS.includes(raw.rating as number)
+      ? (raw.rating as FilmDiaryEntry['rating'])
+      : undefined,
     liked: typeof raw.liked === 'boolean' ? raw.liked : undefined,
     tmdbId: positive(raw.tmdbId),
     posterUrl: https(raw.posterUrl),

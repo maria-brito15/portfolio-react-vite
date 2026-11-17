@@ -14,13 +14,7 @@ import { techKeywords, topicKeywords } from '../data/searchRanking';
 export type PaletteKind = 'page' | 'section' | 'project' | 'skill' | 'command';
 
 // Ordem dos grupos na lista.
-export const PALETTE_KINDS: PaletteKind[] = [
-  'page',
-  'project',
-  'section',
-  'skill',
-  'command',
-];
+export const PALETTE_KINDS: PaletteKind[] = ['page', 'project', 'section', 'skill', 'command'];
 
 // Tipos que só aparecem quando se digita (a lista sem busca fica curta).
 const TYPED_ONLY: PaletteKind[] = ['skill', 'section'];

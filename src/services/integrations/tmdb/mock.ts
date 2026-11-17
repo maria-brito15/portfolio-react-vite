@@ -8,7 +8,10 @@ export const mockFilmMeta: FilmMeta[] = [
   {
     tmdbId: 9001,
     directors: ['Direção de exemplo'],
-    genres: { pt: ['Gênero de exemplo', 'Outro gênero de exemplo'], en: ['Gênero de exemplo', 'Outro gênero de exemplo'] },
+    genres: {
+      pt: ['Gênero de exemplo', 'Outro gênero de exemplo'],
+      en: ['Gênero de exemplo', 'Outro gênero de exemplo'],
+    },
     runtimeMin: 112,
     overview: {
       pt: 'Sinopse de exemplo em português (dado fictício).',

@@ -7,9 +7,10 @@ import { usePersonalText } from '../../i18n/usePersonalText';
 export default function InstrumentCard({ instrument }: { instrument: Instrument }) {
   const { lang } = useLanguage();
   const p = usePersonalText();
-  const meta = [instrument.level?.[lang], instrument.since && p.music.since(instrument.since)].filter(
-    Boolean,
-  );
+  const meta = [
+    instrument.level?.[lang],
+    instrument.since && p.music.since(instrument.since),
+  ].filter(Boolean);
 
   return (
     <li className="pe-card">

@@ -1,5 +1,11 @@
 import xml from './fixtures/letterboxd-rss.xml?raw';
-import { LetterboxdError, decodeEntities, fetchLetterboxdFeed, letterboxdFeedUrl, parseLetterboxdFeed } from './letterboxd';
+import {
+  LetterboxdError,
+  decodeEntities,
+  fetchLetterboxdFeed,
+  letterboxdFeedUrl,
+  parseLetterboxdFeed,
+} from './letterboxd';
 
 // Feed REAL do perfil, salvo em 14/11/2026 (50 itens).
 const entries = parseLetterboxdFeed(xml, '2026-11-14T12:00:00.000Z');
@@ -58,7 +64,7 @@ describe('feed RSS real do Letterboxd', () => {
     expect(entries.some((e) => e.review?.includes('Watched on'))).toBe(false);
     expect(entries.some((e) => /<\/?(p|em|img|br)\b/.test(e.review ?? ''))).toBe(false);
     expect(byTitle("Ferris Bueller's Day Off").review).toContain('"I said it before');
-    expect(byTitle('The Devil\'s Mouth').review).toBe(
+    expect(byTitle("The Devil's Mouth").review).toBe(
       'eu não sei quem é mais burro sem noção: as pessoas ou o tubarão\n\nabsolutamente nada nem nenhuma decisão faz sentido, ninguém tem bom senso',
     );
   });
@@ -109,10 +115,16 @@ describe('fetchLetterboxdFeed', () => {
 
   it('HTTP de erro e rede fora viram LetterboxdError("unavailable")', async () => {
     await expect(
-      fetchLetterboxdFeed({ username: 'x', fetchFn: async () => new Response('', { status: 503 }) }),
+      fetchLetterboxdFeed({
+        username: 'x',
+        fetchFn: async () => new Response('', { status: 503 }),
+      }),
     ).rejects.toMatchObject({ kind: 'unavailable' });
     await expect(
-      fetchLetterboxdFeed({ username: 'x', fetchFn: async () => Promise.reject(new Error('down')) }),
+      fetchLetterboxdFeed({
+        username: 'x',
+        fetchFn: async () => Promise.reject(new Error('down')),
+      }),
     ).rejects.toMatchObject({ kind: 'unavailable' });
   });
 });

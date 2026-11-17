@@ -6,12 +6,7 @@
 import type { FilmDiaryEntry, PersonalFeed } from '../../src/data/personal/types';
 import { createSnapshotService, type CachedRead, type JsonStore } from './cache';
 import { LetterboxdError, fetchLetterboxdFeed } from './letterboxd';
-import {
-  emptyHistory,
-  historyToEntries,
-  mergeDiary,
-  type History,
-} from './letterboxdCsv';
+import { emptyHistory, historyToEntries, mergeDiary, type History } from './letterboxdCsv';
 import { TmdbError, createEnricher } from './tmdb';
 
 export type FilmsError = 'unavailable';
@@ -79,7 +74,8 @@ export function createFilmsService(
   const username = env.LETTERBOXD_USERNAME?.trim() || 'dudapbrt';
   const profile = `https://letterboxd.com/${encodeURIComponent(username)}/`;
   const ttlMin = Number(env.PERSONAL_LETTERBOXD_TTL_MIN);
-  const ttlMs = (Number.isFinite(ttlMin) && ttlMin > 0 ? ttlMin : DEFAULT_LETTERBOXD_TTL_MIN) * 60_000;
+  const ttlMs =
+    (Number.isFinite(ttlMin) && ttlMin > 0 ? ttlMin : DEFAULT_LETTERBOXD_TTL_MIN) * 60_000;
   const auth = env.TMDB_API_KEY?.trim();
   const enrich = auth
     ? createEnricher({ auth, store, fetchFn: options.fetchFn, log: options.log })
@@ -90,7 +86,8 @@ export function createFilmsService(
     ttlMs,
     load: () => fetchLetterboxdFeed({ username, fetchFn: options.fetchFn }),
   });
-  const csv = () => historyToEntries(history, profile, history.importedAt || new Date(0).toISOString());
+  const csv = () =>
+    historyToEntries(history, profile, history.importedAt || new Date(0).toISOString());
   const finish = async (entries: FilmDiaryEntry[]) => (enrich ? enrich(entries) : entries);
 
   return {

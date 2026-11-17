@@ -34,42 +34,40 @@ export default function TheaterTimeline({
         <>
           <PlaceholderBadge source={feed.source} />
           <StaleNotice stale={feed.stale} updatedAt={feed.updatedAt} />
-          {feed.items.length === 0 ? (
-            !hideEmpty && <Empty>{text.empty}</Empty>
-          ) : (
-            groupByYearOf(feed.items, (v) => v.date).map((group) => (
-              <EditorialSection
-                key={group.key}
-                title={group.key === 'undated' ? text.undated : group.key}
-              >
-                <ol className="pe-entries pe-entries--dated">
-                  {group.items.map((visit) => {
-                    const where = [visit.company, visit.venue, visit.city].filter(Boolean);
+          {feed.items.length === 0
+            ? !hideEmpty && <Empty>{text.empty}</Empty>
+            : groupByYearOf(feed.items, (v) => v.date).map((group) => (
+                <EditorialSection
+                  key={group.key}
+                  title={group.key === 'undated' ? text.undated : group.key}
+                >
+                  <ol className="pe-entries pe-entries--dated">
+                    {group.items.map((visit) => {
+                      const where = [visit.company, visit.venue, visit.city].filter(Boolean);
 
-                    return (
-                      <li key={visit.id}>
-                        <span className="pe-num">
-                          {visit.date ? formatDay(visit.date, lang) : ''}
-                        </span>
-                        <div>
-                          <p className="pe-entry-title">{visit.title}</p>
-                          <p className="pe-entry-meta">
-                            {where.length > 0 && <span>{where.join(' · ')}</span>}
-                            <SourceBadge provenance={visit.provenance} />
-                          </p>
-                          {visit.note && (
-                            <p className="pe-entry-note">
-                              <span className="pe-kicker">{text.note}</span> {visit.note[lang]}
+                      return (
+                        <li key={visit.id}>
+                          <span className="pe-num">
+                            {visit.date ? formatDay(visit.date, lang) : ''}
+                          </span>
+                          <div>
+                            <p className="pe-entry-title">{visit.title}</p>
+                            <p className="pe-entry-meta">
+                              {where.length > 0 && <span>{where.join(' · ')}</span>}
+                              <SourceBadge provenance={visit.provenance} />
                             </p>
-                          )}
-                        </div>
-                      </li>
-                    );
-                  })}
-                </ol>
-              </EditorialSection>
-            ))
-          )}
+                            {visit.note && (
+                              <p className="pe-entry-note">
+                                <span className="pe-kicker">{text.note}</span> {visit.note[lang]}
+                              </p>
+                            )}
+                          </div>
+                        </li>
+                      );
+                    })}
+                  </ol>
+                </EditorialSection>
+              ))}
           <AttributionFooter feed={feed} />
         </>
       )}

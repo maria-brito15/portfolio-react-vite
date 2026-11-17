@@ -49,7 +49,12 @@ interface TmdbDetails {
 const names = (list: { name?: string }[] | undefined) =>
   (list ?? []).map((g) => g.name?.trim()).filter((n): n is string => !!n);
 
-function request(auth: string, path: string, params: Record<string, string>, fetchFn: typeof fetch) {
+function request(
+  auth: string,
+  path: string,
+  params: Record<string, string>,
+  fetchFn: typeof fetch,
+) {
   const bearer = auth.startsWith('eyJ');
   const url = new URL(`${API}${path}`);
 
@@ -72,7 +77,12 @@ async function details(
   let res: Response;
 
   try {
-    res = await request(auth, `/${kind}/${id}`, { language, append_to_response: 'credits' }, fetchFn);
+    res = await request(
+      auth,
+      `/${kind}/${id}`,
+      { language, append_to_response: 'credits' },
+      fetchFn,
+    );
   } catch (error) {
     throw new TmdbError('unavailable', error instanceof Error ? error.message : 'rede');
   }
@@ -123,10 +133,7 @@ export async function fetchTmdbMeta(options: {
     posterUrl: image(POSTER_SIZE, en.poster_path ?? pt.poster_path),
     backdropUrl: image(BACKDROP_SIZE, en.backdrop_path ?? pt.backdrop_path),
     // Sinopse que o TMDB não tem num idioma fica ausente nele (não se copia do outro).
-    overview:
-      overview.pt || overview.en
-        ? { pt: overview.pt, en: overview.en }
-        : undefined,
+    overview: overview.pt || overview.en ? { pt: overview.pt, en: overview.en } : undefined,
   };
 }
 
@@ -204,7 +211,12 @@ export function createEnricher(options: EnrichOptions) {
         const [key, { kind, id }] = next;
 
         try {
-          const meta = await fetchTmdbMeta({ auth: options.auth, id, kind, fetchFn: options.fetchFn });
+          const meta = await fetchTmdbMeta({
+            auth: options.auth,
+            id,
+            kind,
+            fetchFn: options.fetchFn,
+          });
 
           cache.meta[key] = { meta, at: now() };
           delete cache.missing[key];
@@ -216,7 +228,9 @@ export function createEnricher(options: EnrichOptions) {
           } else {
             const kind = error instanceof TmdbError ? error.kind : 'unknown';
 
-            options.log?.(`personal-films: tmdb ${kind}${error instanceof Error ? `: ${error.message}` : ''}`);
+            options.log?.(
+              `personal-films: tmdb ${kind}${error instanceof Error ? `: ${error.message}` : ''}`,
+            );
             if (kind === 'auth' || kind === 'rate') stop = true;
           }
         }
@@ -229,7 +243,9 @@ export function createEnricher(options: EnrichOptions) {
 
     return entries.map((entry) => {
       const meta =
-        entry.tmdbId === undefined ? undefined : cache.meta[cacheKey(entry.kind, entry.tmdbId)]?.meta;
+        entry.tmdbId === undefined
+          ? undefined
+          : cache.meta[cacheKey(entry.kind, entry.tmdbId)]?.meta;
 
       return meta ? { ...entry, meta, posterUrl: meta.posterUrl } : entry;
     });
@@ -246,7 +262,12 @@ export async function searchTmdbMovieId(options: {
   fetchFn?: typeof fetch;
 }): Promise<number | undefined> {
   const fold = (s: string) =>
-    s.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
+    s
+      .normalize('NFD')
+      .replace(/\p{M}/gu, '')
+      .toLowerCase()
+      .replace(/[^\p{L}\p{N}]+/gu, ' ')
+      .trim();
   let res: Response;
 
   try {

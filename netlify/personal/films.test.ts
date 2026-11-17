@@ -55,7 +55,9 @@ describe('GET /api/personal/films', () => {
 
     expect(body.items).toHaveLength(50);
     expect(body.items.some((i: { posterUrl?: string }) => i.posterUrl)).toBe(false);
-    expect(fetchFn.mock.calls.every(([u]) => new URL(String(u)).hostname === 'letterboxd.com')).toBe(true);
+    expect(
+      fetchFn.mock.calls.every(([u]) => new URL(String(u)).hostname === 'letterboxd.com'),
+    ).toBe(true);
   });
 
   it('TMDB fora do ar: ainda 200 e não vencido', async () => {
@@ -77,7 +79,9 @@ describe('GET /api/personal/films', () => {
     Date.now = () => real() + 3_600_000 * 2;
 
     try {
-      const service = createFilmsService({}, store, undefined, { fetchFn: network({ letterboxd: true }) });
+      const service = createFilmsService({}, store, undefined, {
+        fetchFn: network({ letterboxd: true }),
+      });
       const body = await (await handleFilms(get(), { service })).json();
 
       expect(body.stale).toBe(true);
@@ -129,7 +133,9 @@ describe('GET /api/personal/films', () => {
     const service = createFilmsService({}, memoryJsonStore(), undefined, { fetchFn: network() });
 
     for (const method of ['POST', 'PUT', 'DELETE'])
-      expect((await handleFilms(new Request('https://x.test/', { method }), { service })).status).toBe(405);
+      expect(
+        (await handleFilms(new Request('https://x.test/', { method }), { service })).status,
+      ).toBe(405);
   });
 
   it('a chave do TMDB nunca aparece na resposta nem nos logs', async () => {
