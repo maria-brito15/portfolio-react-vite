@@ -75,3 +75,5 @@
 2. Se vale brotli: manter os 90 KB e exigir no design que o terminal e `src/data` saiam do 1º acesso (divisão de código por rota, `React.lazy`).
 3. Se vale gzip: ou subir a meta (por exemplo, 100 a 110 KB), ou aceitar que a casca nova quase não tem orçamento para código próprio.
 4. Qualquer uma das opções precisa ser conferida no build de prova, que ainda não existe.
+
+**Resposta da Duda (2026-11-17):** a escolha entre gzip e brotli para o NFR-001 foi **adiada** ("decidir depois"). A pergunta segue aberta; o requirements e o design não foram alterados. O requirements v1.3 também continua sem aprovação dela.
