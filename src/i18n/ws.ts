@@ -1,6 +1,6 @@
-// Textos do "workspace": barra lateral, painel inicial, Game Center, página do
-// GitHub e catálogo de comandos. Ficam num arquivo próprio para o `ui.ts` não
-// crescer sem fim; `ui.ts` os inclui em `ui.pt.ws` e `ui.en.ws`.
+// Textos do "workspace": barra lateral, painel inicial, página do GitHub e catálogo de
+// comandos. Ficam num arquivo próprio para o `ui.ts` não crescer sem fim; `ui.ts` os inclui em
+// `ui.pt.ws` e `ui.en.ws`.
 export const wsPt = {
   groups: {
     home: 'Workspace',
@@ -43,8 +43,6 @@ export const wsPt = {
     repo: 'Repositório ↗',
     details: 'Ver na página de projetos',
     githubMore: 'Ver detalhes e repositórios →',
-    interactive: 'Interativo',
-    interactiveLead: 'O site também é um espaço para explorar: jogue ou use a linha de comando.',
     terminalText:
       'Todos os comandos do site, com Tab para completar, histórico e atalhos clicáveis.',
     terminalOpen: 'Abrir o terminal →',
@@ -123,8 +121,6 @@ export const wsEn: typeof wsPt = {
     repo: 'Repository ↗',
     details: 'See on the projects page',
     githubMore: 'See details and repositories →',
-    interactive: 'Interactive',
-    interactiveLead: 'The site is also a place to explore: play a game or use the command line.',
     terminalText: 'Every site command, with Tab to complete, history and clickable shortcuts.',
     terminalOpen: 'Open the terminal →',
     terminalTry: 'try',

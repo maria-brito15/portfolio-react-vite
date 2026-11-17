@@ -12,7 +12,7 @@ export default function CommandCatalog({
   title,
   lead,
 }: {
-  // Mostra só estas categorias (o Game Center mostra "fun").
+  // Mostra só estas categorias.
   only?: CommandCategory[];
   go?: boolean;
   title: string;

@@ -1,4 +1,4 @@
-// Paleta de comandos (Ctrl+K): busca páginas, projetos, jogos, habilidades e
+// Paleta de comandos (Ctrl+K): busca páginas, projetos, habilidades e
 // comandos, agrupados por categoria. Páginas, projetos e comandos rodam na
 // sessão do terminal (o mesmo interpretador); os demais destinos abrem direto.
 // Combobox acessível: o foco fica no campo e a opção ativa vai em
