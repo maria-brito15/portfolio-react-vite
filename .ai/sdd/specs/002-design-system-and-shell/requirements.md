@@ -1,7 +1,10 @@
 # 002 Design system and shell, Requirements
-**Status:** draft   **Version:** 1.3   **Author:** Claude (rascunho para a Duda)   **Date:** 2026-11-15   **Depende de:** 001-engineering-baseline
+**Status:** approved (v1.4 aprovada pela Duda em 2026-11-17)   **Version:** 1.4   **Author:** Claude (rascunho para a Duda)   **Date:** 2026-11-17   **Depende de:** 001-engineering-baseline
 
 ## Changes since first draft
+### Versão 1.4 (2026-11-17, aprovada pela Duda junto com as v1.1 a v1.3)
+Pelo SPIKE-001 (`spike-001.md`): o JavaScript do 1º acesso hoje mede 118,2 KB em gzip e o piso do React sozinho é 67,5 KB. A Duda decidiu que a compressão que vale é **gzip** e que a meta de JavaScript passa de 90 KB para **100 KB**. O CSS segue em 20 KB (hoje 16,1 KB). Mudam a meta da seção de objetivos, o NFR-001, a FAQ, os Riscos e as Success Metrics. A referência a "143 KB" (medida antiga) foi trocada pela medição do SPIKE-001. Nenhum outro requisito mudou.
+
 ### Versão 1.3 (correção só das Constraints, autorizada pela Duda em 2026-11-15)
 A regra de branch passou de "`main`, sem push" para "branch `rebuild/sdd`, push só quando a Duda pedir, merge na `main` no lançamento" (V-D-015 corrigida). Nenhum requisito funcional mudou.
 
@@ -33,7 +36,7 @@ A casca é o que o visitante vê em toda página: a identidade visual nova, o ca
 - Uma só fonte de tokens (cor, tipo, espaço, movimento) alimenta os dois temas, e todo par texto/fundo passa em contraste AA, verificado por teste.
 - A casca funciona de 360 a 1920 px, sem rolagem horizontal, com tudo alcançável pelo teclado.
 - Cada idioma tem endereço próprio (PT na raiz, EN sob `/en/`) e a troca de idioma leva à mesma página no outro idioma.
-- A casca, medida na página de prova do build de prova (ver Definições), transfere no máximo 90 KB de JavaScript e 20 KB de CSS comprimidos (o chunk principal de hoje tem 143 KB comprimido).
+- A casca, medida na página de prova do build de prova (ver Definições), transfere no máximo 100 KB de JavaScript e 20 KB de CSS comprimidos em gzip (o JavaScript do 1º acesso de hoje tem 118,2 KB em gzip, medido no SPIKE-001).
 - LCP ≤ 2,5 s, INP ≤ 200 ms e CLS ≤ 0,1 na página de prova do build de prova, em perfil de celular médio.
 
 ## Non-Goals (v1)
@@ -189,7 +192,7 @@ IF o endereço estiver sob `/en/`, ou houver escolha de idioma gravada, ou a fai
 ## Non-Functional Requirements
 ### NFR-001: Performance
 - Todas as medições abaixo são feitas na página de prova do **build de prova** (otimizado como o de produção, ver Definições), nunca no servidor de desenvolvimento.
-- JavaScript ≤ 90 KB e CSS ≤ 20 KB transferidos comprimidos.
+- JavaScript ≤ 100 KB e CSS ≤ 20 KB transferidos, comprimidos em gzip.
 - Em perfil de celular médio: LCP ≤ 2,5 s, CLS ≤ 0,1 e INP ≤ 200 ms (o design define o método de medição de INP em laboratório). O CLS é medido também com a faixa de idioma visível (FR-035: não desloca o conteúdo).
 - No máximo 2 famílias e 4 arquivos de fonte na primeira pintura, com a fonte crítica pré-carregada.
 - A meta de JavaScript é conferida contra o resultado do SPIKE-001 (ver Riscos) antes de o design a fixar.
@@ -274,10 +277,10 @@ A Duda confirmou PT na raiz e EN sob `/en/`, com `hreflang` (D-005).
 **A:** O HTML entregue já contém os links do menu (FR-028); em tela estreita, o botão do menu pode exigir JavaScript, mas os links continuam alcançáveis (design define a alternativa sem JavaScript).
 
 **Q:** Como sabemos o que o HTML pré-renderizado contém hoje (FR-028)?
-**A:** Pelo SPIKE-001, a rodar no início do design e não agora; ele mede o conteúdo do HTML pré-renderizado atual e confere a meta de 90 KB contra o resultado. O SPIKE nunca fecha tarefas.
+**A:** Pelo SPIKE-001, a rodar no início do design e não agora; ele mede o conteúdo do HTML pré-renderizado atual e confere a meta de 100 KB (gzip) contra o resultado. O SPIKE-001 foi feito em 2026-11-17 (`spike-001.md`). O SPIKE nunca fecha tarefas.
 
 ## Success Metrics
-- [ ] Na página de prova do build de prova: JavaScript ≤ 90 KB e CSS ≤ 20 KB comprimidos.
+- [ ] Na página de prova do build de prova: JavaScript ≤ 100 KB e CSS ≤ 20 KB comprimidos em gzip.
 - [ ] No build de prova, em perfil de celular: LCP ≤ 2,5 s, CLS ≤ 0,1 (também com a faixa de idioma visível), INP ≤ 200 ms e notas de acessibilidade e boas práticas ≥ 95.
 - [ ] O build publicado não contém `/_prova` (teste).
 - [ ] O verificador de acessibilidade não encontra violações nos 2 temas × 2 idiomas.
@@ -291,7 +294,7 @@ A Duda confirmou PT na raiz e EN sob `/en/`, com `hreflang` (D-005).
 | Identidade nova atrasa o design | Média | Alto | D-004: fallback aprovado; famílias e valores concretos como TD |
 | Remover o código antigo quebra páginas ainda sem spec | Alta | Médio | D-001: nada é publicado enquanto a Duda não der `push`; lista de remoções no design |
 | Um `push` antes da 010 publica um site parcial, porque o Netlify publica a partir da `main` | Média | Alto | D-001; a Duda só dá `push` no lançamento; o AGENTS.md já proíbe `push` sem pedido |
-| Meta de 90 KB de JavaScript inviável com o roteador e a i18n atuais | Média | Médio | SPIKE-001: medir cedo; ajustar o número ou a arquitetura com aprovação |
+| Meta de 100 KB (gzip) de JavaScript inviável com o roteador e a i18n atuais | Média | Médio | SPIKE-001: medir cedo; ajustar o número ou a arquitetura com aprovação |
 | HTML sem JavaScript (FR-028) exige mudar a renderização | Média | Alto | SPIKE-001 mede o conteúdo do HTML pré-renderizado de hoje; decisão registrada como TD |
 | A faixa de idioma (FR-025) desloca o conteúdo e piora o CLS | Média | Médio | FR-035 a proíbe; o CLS é medido com a faixa visível (NFR-001) |
 | A faixa depende de JavaScript para ler a preferência do navegador | Alta | Baixo | Sem JavaScript o visitante usa o seletor do cabeçalho; nenhum redirecionamento, então nenhum link compartilhado é desviado |
