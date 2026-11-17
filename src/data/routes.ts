@@ -180,12 +180,13 @@ export const routes: Route[] = [
     desc: L('sites e landing pages', 'websites and landing pages'),
   },
   {
-    // Sem `name`: não entra em `ls`/`cd` (a página já é o terminal).
+    // Sem `name`: não entra em `ls`/`cd` (a página já é o terminal). O `segment` é só o texto do breadcrumb.
     id: 'terminal',
     kind: 'page',
     path: TERMINAL_PATH,
     group: 'interactive',
     label: L('Terminal', 'Terminal'),
+    segment: L('terminal', 'terminal'),
     desc: L(
       'a linha de comando do site, com todos os comandos',
       'the site command line, with every command',
@@ -316,28 +317,37 @@ export function findDirectory(arg: unknown) {
   return directories.find((d) => d.name === name || d.alias === name);
 }
 
+// Texto do segmento da rota no idioma. Sem texto de reserva (FR-015): falta de dado lança, nunca
+// devolve o `id`.
+export function routeSegment(route: Route, lang: Lang): string {
+  const text = route.segment?.[lang];
+
+  if (!text) throw new Error(`rota ${route.id}: segmento sem ${lang}`);
+
+  return text;
+}
+
+// Nome do "diretório" da rota (`name` em PT, `alias` em EN); lança se faltar.
+export function routeName(route: Route, lang: Lang): string {
+  const text = lang === 'pt' ? route.name : route.alias;
+
+  if (!text) throw new Error(`rota ${route.id}: ${lang === 'pt' ? 'name' : 'alias'} ausente`);
+
+  return text;
+}
+
+// Rótulo no breadcrumb: o segmento, quando existe; senão o nome do diretório.
+const crumbLabel = (route: Route, lang: Lang) =>
+  route.segment ? routeSegment(route, lang) : routeName(route, lang);
+
 // Segmentos do breadcrumb e do título da janela: [{ label, to }], sem o "~".
 export function crumbsFor(route: Route | undefined | null, lang: Lang): Crumb[] {
   if (!route || route.id === 'home') return [];
 
-  const own = {
-    label: route.segment
-      ? route.segment[lang]
-      : ((lang === 'pt' ? route.name : route.alias) ?? route.id),
-    to: route.path,
-  };
+  const own = { label: crumbLabel(route, lang), to: route.path };
   const parent = route.parent ? routeById(route.parent) : undefined;
 
-  return parent
-    ? [
-        {
-          label:
-            parent.segment?.[lang] ?? (lang === 'pt' ? parent.name : parent.alias) ?? parent.id,
-          to: parent.path,
-        },
-        own,
-      ]
-    : [own];
+  return parent ? [{ label: crumbLabel(parent, lang), to: parent.path }, own] : [own];
 }
 
 // Caminho exibido no título da janela: "~/academico", "~/projetos/whatsapp-dispatcher".

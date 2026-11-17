@@ -1,10 +1,10 @@
 // `neofetch`: monograma ASCII ao lado de campos do "sistema" da Duda. Todo
 // campo vem dos dados do site (nome, cargo, local, idioma, tema e a linha do
 // tempo de habilidades); nenhum valor é escrito à mão aqui.
-import type { Lang, Localized } from '../../types';
+import type { Lang, Localized, Theme } from '../../types';
 import { portfolio } from '../../data/portfolio';
 import { formatSince, skillTimeline } from '../../data/skillTimeline';
-import { themes } from '../../data/themes';
+import { themeName } from '../../data/themes';
 import type { Command } from '../commands';
 import { initialsOf, monogram } from './ascii';
 
@@ -20,7 +20,7 @@ export function stackFacts() {
   };
 }
 
-export function neofetchRows(lang: Lang, theme: string, today = new Date()) {
+export function neofetchRows(lang: Lang, theme: Theme, today = new Date()) {
   const about = portfolio[lang].about;
   const { count, since } = stackFacts();
   const label = (pt: string, en: string) => (lang === 'pt' ? pt : en);
@@ -31,7 +31,7 @@ export function neofetchRows(lang: Lang, theme: string, today = new Date()) {
     [label('local', 'location'), about.location],
     [label('idiomas', 'languages'), about.languages],
     [label('interface', 'interface'), lang === 'pt' ? 'português' : 'English'],
-    [label('tema', 'theme'), themes.find((t) => t.id === theme)?.names[lang] ?? theme],
+    [label('tema', 'theme'), themeName(theme, lang)],
     [
       label('stack', 'stack'),
       label(`${count} tecnologias com data`, `${count} technologies with a start date`),

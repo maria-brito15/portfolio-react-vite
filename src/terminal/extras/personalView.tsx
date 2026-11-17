@@ -4,7 +4,7 @@
 import type { ReactNode } from 'react';
 import type { Lang } from '../../types';
 import { personalEn, personalPt } from '../../i18n/personal';
-import { routeById, routes, type Route } from '../../data/routes';
+import { routeById, routeSegment, routes, type Route } from '../../data/routes';
 import {
   formatDay,
   formatRating,
@@ -31,7 +31,6 @@ const MAX_LINES = 8;
 
 const HUB = 'pessoal';
 const sections = () => routes.filter((r) => r.parent === HUB);
-const segment = (route: Route, lang: Lang) => route.segment?.[lang] ?? route.id;
 
 function Index({ lang, error }: { lang: Lang; error?: string }) {
   const text = termText(lang);
@@ -44,9 +43,9 @@ function Index({ lang, error }: { lang: Lang; error?: string }) {
       <ul className="t-index-list">
         {sections().map((route, i) => (
           <li key={route.id}>
-            <RunCommand command={`${name} ${segment(route, lang)}`}>
+            <RunCommand command={`${name} ${routeSegment(route, lang)}`}>
               <span className="t-ok">[{i + 1}]</span>
-              <span className="t-accent">{segment(route, lang)}</span>
+              <span className="t-accent">{routeSegment(route, lang)}</span>
               <span className="t-dim">{route.desc?.[lang]}</span>
             </RunCommand>
           </li>
@@ -78,8 +77,10 @@ function Lines<T>({
     return (
       <p className="t-err">
         {text.error}{' '}
-        <RunCommand command={`${lang === 'pt' ? 'pessoal' : 'personal'} ${segment(route, lang)}`}>
-          {segment(route, lang)}
+        <RunCommand
+          command={`${lang === 'pt' ? 'pessoal' : 'personal'} ${routeSegment(route, lang)}`}
+        >
+          {routeSegment(route, lang)}
         </RunCommand>
       </p>
     );
@@ -218,7 +219,7 @@ function SectionView({ route, lang }: { route: Route; lang: Lang }) {
 
   return (
     <div>
-      <p className="t-accent">{segment(route, lang)}</p>
+      <p className="t-accent">{routeSegment(route, lang)}</p>
       <View lang={lang} />
       <ActionLine routeId={route.id} />
     </div>

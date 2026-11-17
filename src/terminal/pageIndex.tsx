@@ -4,15 +4,14 @@
 import { useLanguage } from '../i18n/LanguageContext';
 import type { ReactNode } from 'react';
 import type { Lang } from '../types';
-import { routeById, type Route } from '../data/routes';
+import { routeById, routeName, type Route } from '../data/routes';
 import { neighbors, sectionsOf, type Section } from '../data/sections';
 import { ui } from '../i18n/ui';
 import { Cmd } from './outputs';
 import { useTerminalSession } from './sessionContext';
 
 // Nome do comando da página e da seção no idioma atual.
-const pageName = (route: Route, lang: Lang) =>
-  (lang === 'pt' ? route.name : route.alias) ?? route.id;
+const pageName = (route: Route, lang: Lang) => routeName(route, lang);
 const sectionName = (section: Section, lang: Lang) =>
   lang === 'pt' ? section.name : section.alias;
 

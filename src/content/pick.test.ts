@@ -31,6 +31,29 @@ function findFallbacks(dir: string): string[] {
   );
 }
 
+// T7.4: fora de `src/content` e `src/i18n`, o que se procura é o `id` cru como reserva de texto
+// (`?? id`, `?? route.id`, `|| r.id`). Testes ficam de fora: eles montam amostras de propósito.
+// O lookahead exclui comparações (`route.id === 'home'`), que não são reserva de texto.
+const ID_FALLBACK = /(\?\?|\|\|)\s*([A-Za-z_]\w*\.)*id\b(?!\s*[=!]==?)/;
+
+// Exceções conferidas à mão, com o motivo. O `id` aqui é o nome do comando num parâmetro de URL,
+// não texto de interface.
+const ID_FALLBACK_ALLOWED = ['encodeURIComponent(command ?? route.id)'];
+
+function findIdFallbacks(dir: string): string[] {
+  return sourceFiles(dir)
+    .filter((file) => !/\.test\.tsx?$/.test(file))
+    .flatMap((file) =>
+      readFileSync(file, 'utf8')
+        .split('\n')
+        .flatMap((line, i) =>
+          ID_FALLBACK.test(line) && !ID_FALLBACK_ALLOWED.some((ok) => line.includes(ok))
+            ? [`${file}:${i + 1}: ${line.trim()}`]
+            : [],
+        ),
+    );
+}
+
 describe('pick', () => {
   const text: Localized = { pt: 'Olá', en: 'Hello' };
 
@@ -80,4 +103,29 @@ describe('guarda contra texto de reserva (FR-015)', () => {
   it.each(['src/content', 'src/i18n'])('não há texto de reserva em %s', (dir) => {
     expect(findFallbacks(resolve(process.cwd(), dir))).toEqual([]);
   });
+});
+
+describe('guarda contra o `id` cru como texto de reserva (T7.4, FR-015)', () => {
+  it('acha amostras com `id` como reserva e ignora testes e reservas vazias', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'reserva-id-'));
+    const samples = [
+      `const a = r.segment?.[lang] ${OP} r.id;`,
+      `const b = name ${OP} id;`,
+      `const c = x || route.id;`,
+      `const ok1 = t[lang] ${OP} '';`,
+      `const ok2 = x ${OP} identity;`,
+    ];
+
+    writeFileSync(join(dir, 'amostra.ts'), samples.join('\n'));
+    writeFileSync(join(dir, 'amostra.test.ts'), samples[0]);
+
+    expect(findIdFallbacks(dir)).toHaveLength(3);
+  });
+
+  it.each(['src/data', 'src/components', 'src/terminal', 'src/pages'])(
+    'não há `id` cru como texto de reserva em %s',
+    (dir) => {
+      expect(findIdFallbacks(resolve(process.cwd(), dir))).toEqual([]);
+    },
+  );
 });

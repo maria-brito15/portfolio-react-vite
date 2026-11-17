@@ -4,9 +4,34 @@ import {
   findDirectory,
   findPageByPath,
   routeById,
+  routeName,
+  routeSegment,
+  routes,
   terminalUrl,
   windowPath,
 } from './routes';
+
+describe('texto da rota sem reserva (T7.4, FR-015)', () => {
+  it('toda rota que aparece no breadcrumb tem rótulo nos dois idiomas', () => {
+    for (const r of routes.filter((x) => x.id !== 'home'))
+      for (const lang of ['pt', 'en'] as const)
+        expect(() => crumbsFor(r, lang), `${r.id}/${lang}`).not.toThrow();
+  });
+
+  it('as filhas de projetos e de pessoal têm segmento nos dois idiomas', () => {
+    for (const r of routes.filter((x) => x.parent === 'projetos' || x.parent === 'pessoal'))
+      for (const lang of ['pt', 'en'] as const)
+        expect(routeSegment(r, lang), `${r.id}/${lang}`).toBeTruthy();
+  });
+
+  it('routeSegment e routeName lançam, nomeando a rota, quando falta o texto', () => {
+    const sem = { id: 'sem-texto', kind: 'page', path: '/x', label: { pt: 'x', en: 'x' } } as never;
+
+    expect(() => routeSegment(sem, 'pt')).toThrow('rota sem-texto: segmento sem pt');
+    expect(() => routeName(sem, 'en')).toThrow('rota sem-texto: alias ausente');
+    expect(() => routeName(sem, 'pt')).toThrow('rota sem-texto: name ausente');
+  });
+});
 
 describe('tabela de rotas', () => {
   it('todos os caminhos e nomes de comando são únicos', () => {

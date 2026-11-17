@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderApp } from '../test/helpers';
-import { DEFAULT_THEME, findTheme, isTheme, themes } from './themes';
+import { DEFAULT_THEME, findTheme, isTheme, themeName, themes } from './themes';
 
 const input = () =>
   screen.getByRole('textbox', { name: /Linha de comando do terminal|terminal command line/i });
@@ -37,6 +37,12 @@ describe('tabela de temas', () => {
     const ids = [...listed.matchAll(/'([a-z]+)'/g)].map((m) => m[1]);
 
     expect(ids.sort()).toEqual(themes.map((t) => t.id).sort());
+  });
+
+  it('themeName devolve o nome no idioma e lança, sem reserva, para id desconhecido (T7.4)', () => {
+    expect(themeName('dark', 'pt')).toBe('escuro');
+    expect(themeName('light', 'en')).toBe('light');
+    expect(() => themeName('rosa' as never, 'pt')).toThrow('tema desconhecido: rosa');
   });
 
   it('os temas extras são escuros', () => {

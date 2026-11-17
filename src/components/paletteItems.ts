@@ -4,7 +4,7 @@
 // Escolher uma opção ou roda o MESMO comando que o terminal rodaria (`run`) ou
 // vai direto a um destino (`to`): nenhum interpretador novo (JA-07).
 import type { Lang } from '../types';
-import { directories, fold, routeById, routes } from '../data/routes';
+import { directories, fold, routeById, routeSegment, routes } from '../data/routes';
 import { sectionsOf } from '../data/sections';
 import { skillTimeline } from '../data/skillTimeline';
 import { commandInventory } from '../terminal/commands';
@@ -127,7 +127,7 @@ export function paletteItems(lang: Lang): PaletteItem[] {
       id: `case:${r.id}`,
       kind: 'project',
       topic: 'case',
-      label: `${r.label[lang]}: ${r.segment?.[lang] ?? r.id}`,
+      label: `${r.label[lang]}: ${routeSegment(r, lang)}`,
       hint: routeById('projetos')?.label[lang] ?? '',
       to: r.path,
       search: fold(

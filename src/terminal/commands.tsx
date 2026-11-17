@@ -22,7 +22,7 @@ import {
   type Section,
 } from '../data/sections';
 import { projectPeriod } from '../utils/projectDate';
-import { findTheme, themes } from '../data/themes';
+import { findTheme, themeName, themes } from '../data/themes';
 import { shortcutLine, shortcuts } from '../data/shortcuts';
 import { ui } from '../i18n/ui';
 import { ActionLine, Cmd, Ext, TermLink } from './outputs';
@@ -192,8 +192,6 @@ function runStep(direction: number, ctx: CommandContext): CommandResult {
 
   return runSection(pageCommand(context.routeId), [step.section.id]);
 }
-
-const themeName = (id: Theme, lang: Lang) => themes.find((t) => t.id === id)?.names[lang] ?? id;
 
 // Lista de temas: cada nome é um botão que roda `tema <nome>`; o atual vem marcado.
 function ThemeList({ current, lang, error }: { current: Theme; lang: Lang; error?: string }) {
