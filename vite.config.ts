@@ -22,9 +22,7 @@ export default defineConfig(({ command }) => ({
     assetsDir: 'static',
   },
   test: {
-    environment: 'jsdom',
     globals: true,
-    setupFiles: './src/test/setup.js',
     css: false,
     // Cada arquivo roda numa VM dentro de um worker: bem mais rápido que `forks` com a suíte de
     // jsdom (medição E5: 91 a 112 s, 0 falhas). Plano B se algo quebrar: `forks` com `isolate`.
@@ -32,5 +30,23 @@ export default defineConfig(({ command }) => ({
     // As páginas renderizam o site inteiro (jsdom); em máquinas lentas 5 s não bastam.
     testTimeout: 20000,
     exclude: ['node_modules', 'dist', 'e2e'],
+    // Dois projetos (TD-008): `unit` roda em Node, sem jsdom nem o `setup.ts` de DOM; `dom` roda
+    // as páginas e componentes (`.test.tsx`) em jsdom, com o `setup.ts`. Um `.test.ts` que precise
+    // de DOM declara `// @vitest-environment jsdom` na primeira linha (hoje nenhum precisa).
+    projects: [
+      {
+        extends: true,
+        test: { name: 'unit', environment: 'node', include: ['**/*.test.ts'] },
+      },
+      {
+        extends: true,
+        test: {
+          name: 'dom',
+          environment: 'jsdom',
+          include: ['**/*.test.tsx'],
+          setupFiles: './src/test/setup.js',
+        },
+      },
+    ],
   },
 }));
