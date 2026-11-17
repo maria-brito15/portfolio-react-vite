@@ -349,5 +349,5 @@ O que o design **acertou**: tokens e contrastes (igual à seção 3 do README e 
 Antes de qualquer tarefa de implementação, o implementador restata, com as próprias palavras, e espera o OK da Duda:
 1. **FRs (resumo):** casca com skip link, cabeçalho, menu pela tabela de rotas, tema claro/escuro sem flash, idioma por URL (PT na raiz, EN em `/en/`) com faixa de oferta sem redirecionar, 404 por idioma com sugestões, HTML por rota com conteúdo sem JavaScript, rodapé de créditos com elenco lido do `package.json`, faixa decorativa, estado nunca só por cor, fontes próprias, cabeçalhos de segurança, medição num build de prova.
 2. **Restrições:** branch `rebuild/sdd`, nenhum `git push`, nada na `main`; nada da 008 (`netlify/personal/`, `personal-*.mts`, integrações, `@netlify/blobs`, `[functions]`); `src.zip` intacto; cada tarefa com `verify` verde e bloco de evidência; a página `/_prova` nunca no build publicado.
-3. **Perguntas abertas:** DQ-003 (teste de peso das fontes) e respondida ou adiada antes das tarefas que dependem dela. DQ-008, DQ-010 a DQ-015 foram respondidas.
+3. **Perguntas abertas:** DQ-003 (teste de peso das fontes) fica aberta até a tarefa que mede o peso dos arquivos. DQ-008, DQ-010 a DQ-015 foram respondidas.
 4. **Estado:** o gate da implementação é `tasks:approved`; este documento é `design:draft`.
