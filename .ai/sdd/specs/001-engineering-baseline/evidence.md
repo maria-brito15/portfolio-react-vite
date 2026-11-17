@@ -272,3 +272,10 @@ A falha das rodadas 1 e 3 é sempre `src/pages/HomePersona.test.tsx › ação p
 
 ### Fechamento da Fase 7
 T7.1, T7.2 e T7.3 fechadas. PEND-001 a PEND-004 de `.ai/sdd/pendencias.md` resolvidas. Sobra a PEND-005 (Netlify, só a Duda) e as PEND-006 a PEND-008 (decisões dela).
+
+## T7.5 Teste de execuções simultâneas do `verify` (PEND-007, revisão G-5)
+**Claim:** o registro de tempos em `.verify/times.jsonl` aguenta execuções simultâneas (EC-17 do design): 4 processos `node` de verdade, 25 gravações cada, no mesmo arquivo, deram 100 linhas, todas JSON válido, nenhuma partida nem misturada. EC-17 não pede bloqueio, então nada foi bloqueado.
+**Command:** `npx vitest run scripts/verify.test.ts` (3 vezes) · `git diff --stat -- scripts/verify.mjs` · `npm run verify`
+**Exit code:** 0, 0, 0 (13 testes cada; antes eram 12) · 1 linha mudada · 0
+**Summary:** `scripts/verify.mjs`: só a palavra `export` em `appendRecord`. `scripts/verify.test.ts`: caso novo "4 processos x 25 linhas": cada processo importa `verify.mjs` e chama `appendRecord` 25 vezes com um `em` único (`p<id>-<i>`); o teste confere código 0 dos 4 processos, 100 linhas, 100 valores de `em` distintos e as 6 chaves do registro em cada linha. O valor do caso não depende de acaso: uma linha partida ou duas gravações misturadas falhariam o `JSON.parse` ou a contagem. Desvio dito: na primeira tentativa montei o arquivo de teste por um comando de shell com `\n` e crases e ele saiu estragado; corrigi com o Edit, e o arquivo final é o que está no commit. Suíte: 85 arquivos, 1144 → 1145 testes, 0 falhas. `verify` exit 0 em 114,7 s, **dentro do orçamento de 180 s, mas bem acima dos ~68 s habituais**: rodou com a revisão do design da 002 (um agente lendo arquivos) em segundo plano, então o tempo não vale como medição (mesma ressalva do EC-17).
+**Verdict:** PASS

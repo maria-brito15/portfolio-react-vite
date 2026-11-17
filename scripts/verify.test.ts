@@ -1,8 +1,9 @@
 import { EventEmitter } from 'node:events';
 import { existsSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
-import { spawnSync } from 'node:child_process';
+import { join, resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
+import { spawn, spawnSync } from 'node:child_process';
 import { defaultSteps, runVerify, type RunVerifyOptions, type VerifyStep } from './verify.mjs';
 
 // Etapas falsas: `node -e` que grava a própria ordem num arquivo e sai com o código pedido.
@@ -231,5 +232,41 @@ describe('verify: runner das 5 etapas', () => {
       expect(enforced.code).toBe(1);
       expect(within.code).toBe(0);
     });
+  });
+});
+
+// EC-17 (design da 001): execuções simultâneas anexam uma linha cada, sem se corromper. O registro
+// é só `appendRecord`; aqui vários processos `node` de verdade escrevem no mesmo arquivo ao mesmo tempo.
+describe('registro com execuções simultâneas (EC-17)', () => {
+  const PROCESSES = 4;
+  const PER_PROCESS = 25;
+  const verifyUrl = pathToFileURL(resolve(process.cwd(), 'scripts/verify.mjs')).href;
+
+  const writer = (file: string, id: number) =>
+    new Promise<number | null>((done) => {
+      const code = `import(${JSON.stringify(verifyUrl)}).then((m) => {
+        for (let i = 0; i < ${PER_PROCESS}; i++)
+          m.appendRecord(${JSON.stringify(file)}, {
+            em: 'p${id}-' + i, etapas: { a: 1 }, total: i, ok: true, node: process.version, sistema: 'teste',
+          });
+      })`;
+
+      spawn(process.execPath, ['-e', code], { stdio: 'ignore' }).on('close', done);
+    });
+
+  it('4 processos x 25 linhas: 100 linhas, todas JSON válido, nenhuma partida', async () => {
+    const file = join(mkdtempSync(join(tmpdir(), 'verify-simult-')), 'times.jsonl');
+
+    const codes = await Promise.all(Array.from({ length: PROCESSES }, (_, id) => writer(file, id)));
+
+    expect(codes).toEqual(Array(PROCESSES).fill(0));
+
+    const lines = readFileSync(file, 'utf8').trimEnd().split('\n');
+    const records = lines.map((line) => JSON.parse(line));
+
+    expect(records).toHaveLength(PROCESSES * PER_PROCESS);
+    expect(new Set(records.map((r) => r.em)).size).toBe(PROCESSES * PER_PROCESS);
+    for (const r of records)
+      expect(Object.keys(r).sort()).toEqual(['em', 'etapas', 'node', 'ok', 'sistema', 'total']);
   });
 });

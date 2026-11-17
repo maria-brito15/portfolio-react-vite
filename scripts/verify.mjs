@@ -82,7 +82,7 @@ function readPrevious(file) {
 }
 
 /** Uma linha por execução, em modo append (execuções simultâneas não corrompem a anterior). */
-function appendRecord(file, record) {
+export function appendRecord(file, record) {
   mkdirSync(dirname(file), { recursive: true });
   appendFileSync(file, `${JSON.stringify(record)}\n`);
 }
