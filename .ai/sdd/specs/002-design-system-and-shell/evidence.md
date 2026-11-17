@@ -82,3 +82,36 @@ Exit code: 0
 Summary:   OK em 86,0 s (orçamento 180 s): formatação 3,8; lint 10,9; tipos 7,1; testes 61,2; geração 2,9
 Verdict:   PASS
 ```
+
+## T1.3 Módulo de boot autocontido: tema e faixa de idioma (TD-011, TD-012)
+**Entregue:** `src/boot/boot.ts` (sem imports) com `resolveTheme({ stored, systemDark })`, `languageOffer({ path, storedLang, dismissed, navigatorLangs, storageOk, bare? })` e `bootSource()` (texto do script inline, montado com `Function.prototype.toString`; cada função autocontida); `src/boot/boot.test.ts` (projeto `unit`). **Ainda não é injetado no HTML** (isso é a T1.5).
+
+**Decisões de interpretação (para a Duda conferir):**
+- `languageOffer` devolve `true` quando a faixa deve aparecer (a UI e o link para o `enPath` são da T2.6).
+- "O idioma preferido do navegador é o inglês" = só o **primeiro** item de `navigator.languages`, pelo subtag principal (`en`, `en-US`, `EN-gb`); `['pt-BR', 'en']` não oferece.
+- Sob `/en` ou `/en/...` vale o endereço (sem faixa); `/entrada` não é inglês. Em `/xyz` inexistente a regra segue igual (a tabela só fixa o 404 no idioma do endereço).
+- Com o armazenamento bloqueado, a escolha e a dispensa **não são lidas** (a faixa volta a cada visita em inglês, FR-026).
+- A rota sem casca (`bare`, FR-041) nunca marca `data-lang-offer`; o script lê `data-shell="bare"` do `<html>` (o build grava na T4.1/T4.2), e a função recebeu a entrada opcional `bare`.
+- Chaves lidas: `portfolio-theme`, `portfolio-lang` e `portfolio-lang-offer` (`'dismissed'`).
+
+```
+Claim:     as 7 linhas da tabela de tema e as de idioma passam; o script avaliado em vm decide igual às funções
+Command:   npx vitest run src/boot/boot.test.ts
+Exit code: 0
+Summary:   39 testes: tema (6 linhas da tabela + valor de outro tipo; `dracula` ignorado); idioma (9 linhas da tabela e variações: `/en`, `/en/`, `/entrada`, bare, lista vazia, só o 1º idioma conta, maiúsculas); o script em vm confere com as funções em todas as combinações de tema (5 x 2) e de idioma (4 caminhos x 3 x 2 x 4 listas x 2 de armazenamento); bloqueado sem erro; sem matchMedia sem erro
+Verdict:   PASS
+```
+```
+Claim:     as funções são autocontidas e o arquivo não tem imports
+Command:   (mesmo arquivo de teste) cada função avaliada sozinha em contexto vazio; varredura de `import`/`require` em boot.ts; script com identificador livre plantado; busca de `__name` no texto do script
+Exit code: 0
+Summary:   as duas funções rodam sem identificador livre; nenhum `import`; o identificador livre plantado (`outroModulo`) lança "is not defined" (a guarda enxerga o problema); o script não leva helpers do esbuild
+Verdict:   PASS
+```
+```
+Claim:     o gate passa
+Command:   npm run verify
+Exit code: 0
+Summary:   OK em 80,7 s (orçamento 180 s): formatação 4,0; lint 11,7; tipos 8,2; testes 53,5; geração 3,3
+Verdict:   PASS
+```
