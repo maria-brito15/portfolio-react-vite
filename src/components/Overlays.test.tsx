@@ -87,7 +87,9 @@ describe('paleta de comandos (JA-06, JA-07)', () => {
 
     const dialog = await palette();
 
-    expect(within(dialog).getByRole('combobox')).toHaveFocus();
+    // O foco vai ao campo num efeito do `Overlay`, depois de o diálogo aparecer: espera, em vez de
+    // supor que já aconteceu (sob carga o diálogo aparece antes do efeito).
+    await waitFor(() => expect(within(dialog).getByRole('combobox')).toHaveFocus());
     await user.keyboard('{Escape}');
     expect(screen.queryByRole('dialog')).toBeNull();
     expect(terminalInput()).toHaveFocus();
