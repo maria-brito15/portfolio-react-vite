@@ -224,3 +224,23 @@ Exit code: 0
 Summary:   OK em 111,0 s (orçamento 180 s): formatação 6,3; lint 17,2; tipos 11,7; testes 69,7; geração 6,0
 Verdict:   PASS
 ```
+
+## T2.2 Tabela de rotas estendida, schema e `enPath` (TD-006, DQ-016, DQ-019, DQ-026)
+**Correção de spec antes de implementar (aprovada pela Duda nesta sessão, via pergunta):** o design v2.2 mandava migrar `desc` do `pageMeta` para a rota, mas o `desc` da rota é a dica **curta** do terminal, da paleta e da barra lateral; sobrescrevê-lo trocaria essas dicas por texto longo de SEO (mudança de comportamento do terminal, spec 009). Decisão da Duda: **campos novos `title` e `description`** (SEO, migrados do `pageMeta`) e `desc` não muda. Registrado como **DQ-026** no `design.md` (v2.3: Data Model e TD-006) e no `tasks.md` (v1.3: T2.2 e T2.3).
+
+**Entregue:** `Route` ganhou `enPath`, `title`, `description`, `menu`, `order`, `prova`, `bare` (`src/data/routes.ts`); `enPath` das 19 rotas (os aliases em inglês viram `/en` + alias; os 4 confirmados: `/en`, `/en/terminal`, `/en/github`, `/en/case-studies/whatsapp-dispatcher`; as 4 subpáginas de `/pessoal` por `/en/personal/<en>`); `title` e `description` copiados de `pageMeta` por script (PT e EN, sem retranscrever à mão; a T2.3 esvazia o `pageMeta`); `menu: true` e `order` 1 a 5 em Projetos, Currículo, Acadêmico, Contato, Pessoal; `bare: true` só no terminal; o campo `prova` existe no tipo mas **nenhuma rota o usa** (a `/_prova` nasce na T5.1). `src/content/schema/route.ts` (`RouteTableSchema`, `routeTableProblems`) valida a tabela inteira com as mensagens do Data Model.
+
+```
+Claim:     cada mensagem de erro do Data Model é provada por uma tabela quebrada de propósito; a tabela real passa
+Command:   npx vitest run src/content/schema/route.test.ts src/data/routes.test.ts
+Exit code: 0
+Summary:   31 testes (schema 14 + routes 17): endereço em português com /en ou repetido ou sem barra; endereço em inglês fora de /en, repetido, colidindo com um endereço em PT ou ausente; título, descrição, rótulo e dica sem idioma ou vazio; `menu: ordem 1 repetida`; menu sem ordem; `bare e menu juntos`; só uma rota bare; prova e menu juntos; todos os problemas saem de uma vez; a tabela real passa; enPath = /en + alias; title/description idênticos ao pageMeta nos dois idiomas; o desc curto não mudou; menu 1 a 5 na ordem DQ-019; projetos, currículo e contato no menu (regra de 2 interações); só o terminal é bare; nenhuma rota de prova ainda
+Verdict:   PASS
+```
+```
+Claim:     o gate passa
+Command:   npm run verify
+Exit code: 0
+Summary:   OK em 149,8 s (orçamento 180 s): formatação 14,0; lint 34,1; tipos 21,7; testes 76,5; geração 3,4. Primeira execução falhou no lint (2 linhas em branco do @stylistic em route.ts), corrigidas com eslint --fix e repetidas; a máquina estava mais lenta nesta execução (formatação 7,1 → 14,0 s sem mudar código)
+Verdict:   PASS
+```

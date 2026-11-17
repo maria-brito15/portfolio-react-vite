@@ -11,4 +11,5 @@ export { ContentDateSchema, type ContentDate } from './date';
 export { LinkSchema, linkProblem, type ContentLink } from './link';
 export { TagSchema, TagSetSchema, tagIdProblem, type ContentTag } from './tag';
 export { RatingSchema, ratingProblem } from './rating';
+export { RouteTableSchema, routeTableProblems } from './route';
 export { ImageSchema, imagePathProblem, IMAGE_EXTENSIONS, type ContentImage } from './image';
