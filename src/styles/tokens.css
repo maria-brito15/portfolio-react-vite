@@ -1,4 +1,5 @@
-/* JetBrains Mono hospedada no próprio site (OFL): sem pedido a terceiros e sem CSS bloqueante. */
+/* JetBrains Mono hospedada no próprio site (OFL): sem pedido a terceiros e sem CSS bloqueante.
+   (A T1.4 troca esta fonte pela IBM Plex.) */
 @font-face {
   font-family: 'JetBrains Mono';
   font-style: normal;
@@ -21,17 +22,16 @@
     U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
-/* Tokens de design: UM sistema só, o do terminal/IDE. Um nome por papel.
-   Cor com significado fixo em todo o site, páginas e terminal:
-     --accent (violeta) = primário: links, foco, ação principal · --accent-2 (rosa) = secundário
-     --ok (menta) = ok, ativo, usuário · --warn (âmbar) = comando e ação
-     --err (coral) = erro · --info (ciano) = caminho e informação
-   Paleta de categorias (--c-*): seis cores de apoio, escolhidas por papel (grupo da
-   barra lateral, tipo de tecnologia, métrica), nunca por enfeite. Componentes usam
-   `data-tone="violet|mint|amber|coral|cyan|pink"` (ui.css); nenhum hex fora deste arquivo.
-   Tema escuro é o padrão; `[data-theme='light']` só sobrescreve o que muda.
-   Todos os acentos e tons passam AA (4,5:1) sobre bg e as três superfícies;
-   `contrast.test.ts` confere nos cinco temas. */
+/* Tokens de design (spec 002, TD-001, TD-017): a ÚNICA fonte de cor, espaçamento e movimento.
+   Nenhum hex fora deste arquivo (styles.test.ts); sem degradê.
+   Dois temas: `:root` é o claro; `[data-theme='dark']` é o escuro; sem `data-theme`, o escuro vale
+   quando o sistema pede (`prefers-color-scheme`), com o mesmo conteúdo do bloco `dark` (um teste
+   confere).
+   Nomes por papel: --bg, --surface, --text, --text-muted, --accent, --on-accent, --control-border,
+   --divider, --tone-* (fundos pastel, tema claro), --tone-dark-* (fundos escuros, tema escuro),
+   --deco-1 a --deco-5 (só decoração, sem texto), --space-*, --radius-*, --dur-*.
+   Regras de uso (Achados 4 e 5 do design): o acento nunca é cor de texto sobre --tone-dark-*; a
+   borda de controle nunca fica sobre --tone-dark-*; contrast.test.ts guarda a matriz de pares. */
 
 :root {
   /* Espaçamento */
@@ -44,27 +44,28 @@
   --space-7: 3rem;
   --gutter: 1.5rem;
 
-  /* Raios: painéis de terminal, cantos discretos */
+  /* Raios */
   --radius-sm: 4px;
   --radius-md: 8px;
   --radius-lg: 12px;
   --radius-pill: 100px;
 
-  /* Tipografia: uma voz só, JetBrains Mono. Hierarquia por peso e tamanho. */
+  /* Movimento: tudo sob prefers-reduced-motion (base.css). */
+  --dur-fast: 120ms;
+  --dur-base: 200ms;
+
+  /* Tipografia (a T1.4 troca a família). Hierarquia por peso e tamanho. */
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  --fs-chrome: 0.75rem; /* barra de título, breadcrumb, badges */
+  --fs-chrome: 0.75rem;
   --fs-body: 0.95rem;
-  --fs-mono: 0.95rem; /* terminal e barra de comandos */
-  --fs-mono-sm: 0.8rem; /* mesmo, em telas estreitas */
+  --fs-mono: 0.95rem;
+  --fs-mono-sm: 0.8rem;
   --fs-h1: 1.9rem;
   --fs-h2: 1.1rem;
   --lh-mono: 1.65;
-  --measure: 72ch; /* largura de leitura das páginas de texto */
+  --measure: 72ch;
 
-  /* Layout */
-  /* A janela cresce com a tela: largura de 1100px até 1480px (78% da largura em
-     telas largas); a altura do terminal ocupa o que sobra da viewport depois do
-     cabeçalho, da barra da janela e dos atalhos (--win-chrome), entre o mínimo e o teto. */
+  /* Layout (da casca antiga; sai junto com ela, T3.4) */
   --win-max: clamp(1100px, 78vw, 1480px);
   --win-chrome: 16.5rem;
   --win-min-h: 320px;
@@ -73,159 +74,124 @@
   --cmdbar-h: 2.5rem;
   --top-h: calc(var(--nav-h) + var(--cmdbar-h));
 
-  /* Cores (escuro): fundo azul-marinho profundo, superfícies em três degraus */
-  --bg: #0e121a; /* fundo da página */
-  --surface: #11151e; /* janela */
-  --surface-2: #191f2b; /* barra de título e sub-painéis */
-  --surface-3: #252d3a; /* trilhas, realces */
-  --border: rgba(190, 200, 230, 0.12);
-  --border-ui: #727b8e; /* contorno de campo e seletor: ≥ 3:1 (WCAG 1.4.11) */
-  --text: #e4e8f0;
-  --text-2: #b9c0cf;
-  --dim: #909aad;
-  --accent: #a78bfa; /* = --c-violet */
-  --accent-2: #e69acb; /* = --c-pink */
-  --ok: #65d6b0; /* = --c-mint */
-  --warn: #f5be69; /* = --c-amber */
-  --err: #f28d86; /* = --c-coral */
-  --info: #75cde5; /* = --c-cyan */
-  --on-accent: #11151e; /* texto sobre fundo --accent */
-  --c-violet: #a78bfa;
-  --c-mint: #65d6b0;
-  --c-amber: #f5be69;
-  --c-coral: #f28d86;
-  --c-cyan: #75cde5;
-  --c-pink: #e69acb;
-  /* Categorias: a cor de cada grupo da barra lateral (e dos atalhos do painel). */
-  --cat-home: var(--c-mint);
-  --cat-portfolio: var(--c-violet);
-  --cat-interactive: var(--c-pink);
-  --cat-development: var(--c-cyan);
-  --cat-personal: var(--c-amber);
-  /* Intensidade dos fundos e filetes tingidos (color-mix com o tom, nunca degradê). */
-  --tint-bg: 12%;
-  --tint-line: 32%;
-  --nav-bg: rgba(14, 18, 26, 0.9);
-  --grid-color: rgba(190, 200, 230, 0.03);
-  --win-shadow: 0 30px 80px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(167, 139, 250, 0.08);
-  --dot-close: #ff5f57;
-  --dot-min: #febc2e;
-  --dot-max: #28c840;
-}
-
-[data-theme='light'] {
-  --bg: #f3f4f6;
+  /* Tema claro (fundo creme, DQ-004) */
+  --bg: #fff7ea;
   --surface: #ffffff;
-  --surface-2: #eceef2;
-  --surface-3: #e2e5ea;
-  --border: rgba(20, 22, 26, 0.14);
-  --border-ui: #7d8085; /* contorno de campo e seletor: ≥ 3:1 (WCAG 1.4.11) */
-  --text: #1d2128;
-  --text-2: #3f454f;
-  --dim: #5d636e;
-  --accent: #5b3bc4;
+  --text: #17171a;
+  --text-muted: #585861;
+  --accent: #2b36d9;
+  --on-accent: #ffffff;
+  --control-border: #77777f;
+  --divider: #d9d9d4; /* só decoração: não leva informação */
+
+  /* Tons de apoio (fundos de capas, números e cartões; o tema claro os usa) */
+  --tone-peach: #ffd9c7;
+  --tone-lilac: #e4e1ff;
+  --tone-mint: #c9edd8;
+  --tone-lemon: #ffeea8;
+  --tone-sky: #cfe8ff;
+  --tone-pink: #ffd3e8;
+  /* Tons escuros equivalentes (capas no tema escuro): só com --text por cima */
+  --tone-dark-1: #5a2a4e;
+  --tone-dark-2: #1f5a62;
+  --tone-dark-3: #6b3a1e;
+  --tone-dark-4: #2f3a9e;
+
+  /* Faixa decorativa de cinco cores (FR-038): só decoração, sem texto */
+  --deco-1: #2b36d9;
+  --deco-2: #b4308a;
+  --deco-3: #0a6e78;
+  --deco-4: #b4410f;
+  --deco-5: #e0a800;
+
+  /* LEGADO (TD-017): nomes antigos que as páginas ainda não migradas usam. Cada spec de página
+     (003 a 009) apaga os que parar de usar. Os que têm equivalente apontam para o token novo; as
+     cores semânticas sem equivalente (ok, aviso, erro, info, rosa) mantêm o valor que já passava
+     AA nos dois temas. */
+  --surface-2: color-mix(in srgb, var(--surface) 92%, var(--text));
+  --surface-3: color-mix(in srgb, var(--surface) 84%, var(--text));
+  --border: var(--divider);
+  --border-ui: var(--control-border);
+  --text-2: var(--text-muted);
+  --dim: var(--text-muted);
   --accent-2: #a1307a;
   --ok: #0f6e51;
   --warn: #8f5016;
   --err: #b42332;
   --info: #0b6482;
-  --c-violet: #5b3bc4;
-  --c-mint: #0f6e51;
-  --c-amber: #8f5016;
-  --c-coral: #b42332;
-  --c-cyan: #0b6482;
-  --c-pink: #a1307a;
+  --c-violet: var(--accent);
+  --c-mint: var(--ok);
+  --c-amber: var(--warn);
+  --c-coral: var(--err);
+  --c-cyan: var(--info);
+  --c-pink: var(--accent-2);
+  --cat-home: var(--c-mint);
+  --cat-portfolio: var(--c-violet);
+  --cat-interactive: var(--c-pink);
+  --cat-development: var(--c-cyan);
+  --cat-personal: var(--c-amber);
   --tint-bg: 9%;
   --tint-line: 38%;
-  --on-accent: #ffffff;
-  --nav-bg: rgba(255, 255, 255, 0.92);
-  --grid-color: rgba(20, 22, 26, 0.035);
+  --nav-bg: color-mix(in srgb, var(--bg) 92%, transparent);
+  --grid-color: color-mix(in srgb, var(--text) 4%, transparent);
   --win-shadow: 0 20px 60px rgba(20, 22, 26, 0.12);
+  --dot-close: #ff5f57;
+  --dot-min: #febc2e;
+  --dot-max: #28c840;
 }
 
-/* Temas extras (`tema <nome>` no terminal): todos escuros, sem degradê, só
-   cores sólidas. Cada acento passa AA (4,5:1) sobre as três superfícies;
-   `contrast.test.ts` confere. */
-[data-theme='dracula'] {
-  --bg: #1e1f29;
-  --surface: #282a36;
-  --surface-2: #343746;
-  --surface-3: #3e4254;
-  --border: rgba(248, 248, 242, 0.12);
-  --border-ui: #8f9092; /* contorno de campo e seletor: ≥ 3:1 (WCAG 1.4.11) */
-  --text: #f8f8f2;
-  --text-2: #d6d8e0;
-  --dim: #b8bfe0;
-  --accent: #cdb0ff;
-  --accent-2: #ff9ed2;
-  --ok: #69f0a0;
-  --warn: #ffcf8a;
-  --err: #ff9494;
-  --info: #8be9fd;
-  --c-violet: #cdb0ff;
-  --c-mint: #69f0a0;
-  --c-amber: #ffcf8a;
-  --c-coral: #ff9494;
-  --c-cyan: #8be9fd;
-  --c-pink: #ff9ed2;
-  --on-accent: #282a36;
-  --nav-bg: rgba(30, 31, 41, 0.92);
-  --grid-color: rgba(248, 248, 242, 0.03);
+/* Tema escuro explícito (escolha do visitante ou do boot). */
+[data-theme='dark'] {
+  --bg: #0e0e10;
+  --surface: #17171a;
+  --text: #ececee;
+  --text-muted: #a3a3ac;
+  --accent: #8f98ff;
+  --on-accent: #0e0e10;
+  --control-border: #7a7a84;
+  --divider: #2c2c32;
+  --deco-1: #8f98ff;
+  --deco-2: #ff8fcb;
+  --deco-3: #4fd1d9;
+  --deco-4: #ffa36b;
+  --deco-5: #ffd84d;
+  /* LEGADO */
+  --accent-2: #e69acb;
+  --ok: #65d6b0;
+  --warn: #f5be69;
+  --err: #f28d86;
+  --info: #75cde5;
+  --tint-bg: 12%;
+  --tint-line: 32%;
+  --win-shadow: 0 30px 80px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(143, 152, 255, 0.1);
 }
 
-[data-theme='solarized'] {
-  --bg: #00212b;
-  --surface: #002b36;
-  --surface-2: #073642;
-  --surface-3: #0d4452;
-  --border: rgba(238, 232, 213, 0.14);
-  --border-ui: #838e89; /* contorno de campo e seletor: ≥ 3:1 (WCAG 1.4.11) */
-  --text: #eee8d5;
-  --text-2: #cdd0c4;
-  --dim: #9fb0b0;
-  --accent: #5fb4f0;
-  --accent-2: #f09ac6;
-  --ok: #a6bd2e;
-  --warn: #e6a63a;
-  --err: #ff8a85;
-  --info: #4fc8c0;
-  --c-violet: #a9acf0;
-  --c-mint: #a6bd2e;
-  --c-amber: #e6a63a;
-  --c-coral: #ff8a85;
-  --c-cyan: #4fc8c0;
-  --c-pink: #f09ac6;
-  --on-accent: #002b36;
-  --nav-bg: rgba(0, 33, 43, 0.92);
-  --grid-color: rgba(238, 232, 213, 0.03);
-}
-
-/* Âmbar: monitor de fósforo (CRT). */
-[data-theme='amber'] {
-  --bg: #0a0700;
-  --surface: #100b02;
-  --surface-2: #1a1204;
-  --surface-3: #251a07;
-  --border: rgba(255, 194, 51, 0.18);
-  --border-ui: #85651a; /* contorno de campo e seletor: ≥ 3:1 (WCAG 1.4.11) */
-  --text: #ffc233;
-  --text-2: #e8a90f;
-  --dim: #bf8a1a;
-  --accent: #ffd966;
-  --accent-2: #ff9d2e;
-  --ok: #a6e05a;
-  --warn: #ff9d2e;
-  --err: #ff7352;
-  --info: #ffe9a3;
-  --c-violet: #ffd966;
-  --c-mint: #a6e05a;
-  --c-amber: #ffc233;
-  --c-coral: #ff7352;
-  --c-cyan: #ffe9a3;
-  --c-pink: #ff9d2e;
-  --on-accent: #100b02;
-  --nav-bg: rgba(10, 7, 0, 0.92);
-  --grid-color: rgba(255, 194, 51, 0.04);
+/* Sem `data-theme` (boot ainda não rodou ou sem JavaScript): o sistema decide (FR-003). */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --bg: #0e0e10;
+    --surface: #17171a;
+    --text: #ececee;
+    --text-muted: #a3a3ac;
+    --accent: #8f98ff;
+    --on-accent: #0e0e10;
+    --control-border: #7a7a84;
+    --divider: #2c2c32;
+    --deco-1: #8f98ff;
+    --deco-2: #ff8fcb;
+    --deco-3: #4fd1d9;
+    --deco-4: #ffa36b;
+    --deco-5: #ffd84d;
+    /* LEGADO */
+    --accent-2: #e69acb;
+    --ok: #65d6b0;
+    --warn: #f5be69;
+    --err: #f28d86;
+    --info: #75cde5;
+    --tint-bg: 12%;
+    --tint-line: 32%;
+    --win-shadow: 0 30px 80px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(143, 152, 255, 0.1);
+  }
 }
 
 @media (max-width: 720px) {
@@ -246,31 +212,24 @@
   }
 }
 
-/* Impressão: papel é branco, então sempre os tokens do tema claro (o tema escuro
-   imprimiria texto cinza-claro sobre branco). Os valores repetem os do tema claro
-   acima; um teste confere que não divergem. */
+/* Impressão: papel é branco, então sempre os valores do tema claro (o tema escuro imprimiria
+   texto cinza-claro sobre branco). Repete os valores do tema claro acima; um teste confere que
+   não divergem. */
 @media print {
   :root,
   [data-theme] {
+    --bg: #fff7ea;
     --surface: #ffffff;
-    --surface-2: #eceef2;
-    --surface-3: #e2e5ea;
-    --border: rgba(20, 22, 26, 0.14);
-    --text: #1d2128;
-    --text-2: #3f454f;
-    --dim: #5d636e;
-    --accent: #5b3bc4;
+    --text: #17171a;
+    --text-muted: #585861;
+    --accent: #2b36d9;
+    --on-accent: #ffffff;
+    --control-border: #77777f;
+    --divider: #d9d9d4;
     --accent-2: #a1307a;
     --ok: #0f6e51;
     --warn: #8f5016;
     --err: #b42332;
     --info: #0b6482;
-    --c-violet: #5b3bc4;
-    --c-mint: #0f6e51;
-    --c-amber: #8f5016;
-    --c-coral: #b42332;
-    --c-cyan: #0b6482;
-    --c-pink: #a1307a;
-    --on-accent: #ffffff;
   }
 }

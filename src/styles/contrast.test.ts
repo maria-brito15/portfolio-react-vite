@@ -1,19 +1,26 @@
-// ES-05: contraste AA (>= 4,5:1) dos tokens de cor, lidos de tokens.css nos dois temas.
-// Trocar um acento por uma cor abaixo disso faz este teste falhar.
+// FR-007 e TD-003: contraste dos tokens, lidos de tokens.css nos dois temas, por uma matriz de pares
+// permitidos. Um par fora da matriz falha (Achados 4 e 5 do design: acento e borda de controle
+// sobre os tons escuros). Texto normal 4,5:1; componentes (borda de controle) 3:1.
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const css = readFileSync(join(process.cwd(), 'src/styles/tokens.css'), 'utf8');
 
-function tokens(re: RegExp): Record<string, string> {
-  const block = css.match(re)?.[1] ?? '';
-
+function tokens(block: string): Record<string, string> {
   return Object.fromEntries(
     [...block.matchAll(/--([\w-]+):\s*(#[0-9a-fA-F]{3,6})\b/g)].map(([, name, hex]) => [name, hex]),
   );
 }
-const dark = tokens(/:root\s*\{([\s\S]*?)\n\}/);
-const light = { ...dark, ...tokens(/\[data-theme='light'\]\s*\{([\s\S]*?)\n\}/) };
+
+const blockOf = (re: RegExp) => css.match(re)?.[1] ?? '';
+const rootBlock = blockOf(/\n:root\s*\{([\s\S]*?)\n\}/);
+const darkBlock = blockOf(/\[data-theme='dark'\]\s*\{([\s\S]*?)\n\}/);
+const mediaBlock = blockOf(/:root:not\(\[data-theme\]\)\s*\{([\s\S]*?)\n {2}\}/);
+const printBlock = blockOf(/@media print\s*\{\s*:root,\s*\[data-theme\]\s*\{([\s\S]*?)\n {2}\}/);
+
+const light = tokens(rootBlock);
+const darkOverrides = tokens(darkBlock);
+const dark = { ...light, ...darkOverrides };
 
 const luminance = (hex: string) => {
   let h = hex.slice(1);
@@ -32,95 +39,185 @@ const ratio = (a: string, b: string) => {
   return (hi + 0.05) / (lo + 0.05);
 };
 
-const SURFACES = ['surface', 'surface-2', 'surface-3'];
-const ACCENTS = ['accent', 'accent-2', 'ok', 'warn', 'err', 'info'];
-// Paleta de categorias (--c-*): mesmos 4,5:1, também sobre --bg (a barra lateral fica sobre ele).
-const TONES = ['violet', 'mint', 'amber', 'coral', 'cyan', 'pink'].map((n) => `c-${n}`);
-const TEXTS = ['text', 'text-2', 'dim'];
-// Temas extras (TB-04): só sobrescrevem tokens sobre o escuro; cada um precisa
-// de bloco próprio em tokens.css, com contraste AA.
-const extra = (id: string) => ({
-  ...dark,
-  ...tokens(new RegExp(`\\[data-theme='${id}'\\]\\s*\\{([\\s\\S]*?)\\n\\}`)),
-});
-const themes: [string, Record<string, string>][] = [
-  ['escuro', dark],
-  ['claro', light],
-  ['dracula', extra('dracula')],
-  ['solarized', extra('solarized')],
-  ['amber', extra('amber')],
+const PASTELS = ['tone-peach', 'tone-lilac', 'tone-mint', 'tone-lemon', 'tone-sky', 'tone-pink'];
+const DARK_TONES = ['tone-dark-1', 'tone-dark-2', 'tone-dark-3', 'tone-dark-4'];
+const DECO = ['deco-1', 'deco-2', 'deco-3', 'deco-4', 'deco-5'];
+const BASE_FG = ['text', 'text-muted', 'accent', 'control-border', 'on-accent', 'divider', 'bg'];
+
+// Matriz de pares permitidos: [primeiro plano, fundo, piso de contraste]. O que não está aqui é
+// proibido. Pastéis valem no tema claro; tons escuros no escuro, só com --text por cima.
+const ALLOWED: Record<'light' | 'dark', [string, string, number][]> = {
+  light: [
+    ['text', 'bg', 4.5],
+    ['text', 'surface', 4.5],
+    ['text-muted', 'bg', 4.5],
+    ['text-muted', 'surface', 4.5],
+    ['accent', 'bg', 4.5],
+    ['accent', 'surface', 4.5],
+    ['on-accent', 'accent', 4.5],
+    ['control-border', 'bg', 3],
+    ['control-border', 'surface', 3],
+    ...PASTELS.flatMap((tone): [string, string, number][] => [
+      ['text', tone, 4.5],
+      ['text-muted', tone, 4.5],
+      ['accent', tone, 4.5],
+      ['control-border', tone, 3],
+    ]),
+  ],
+  dark: [
+    ['text', 'bg', 4.5],
+    ['text', 'surface', 4.5],
+    ['text-muted', 'bg', 4.5],
+    ['text-muted', 'surface', 4.5],
+    ['accent', 'bg', 4.5],
+    ['accent', 'surface', 4.5],
+    ['on-accent', 'accent', 4.5],
+    ['control-border', 'bg', 3],
+    ['control-border', 'surface', 3],
+    ...DARK_TONES.map((tone): [string, string, number] => ['text', tone, 4.5]),
+  ],
+};
+
+const themes: ['light' | 'dark', Record<string, string>][] = [
+  ['light', light],
+  ['dark', dark],
 ];
 
-describe('contraste AA dos tokens (ES-05)', () => {
+// Falha se o par não está na matriz do tema (a guarda que o CSS e os componentes devem respeitar).
+function assertAllowed(theme: 'light' | 'dark', fg: string, bg: string) {
+  const pair = ALLOWED[theme].find(([f, b]) => f === fg && b === bg);
+
+  if (!pair) throw new Error(`par proibido no tema ${theme}: --${fg} sobre --${bg}`);
+
+  return pair[2];
+}
+
+// Varre o CSS: toda regra com `color: var(--x)` e fundo `var(--tone-*)` precisa de um par permitido
+// em algum tema. (Hoje nenhuma regra usa --tone-*: as páginas novas é que passam a usar.)
+function pairsInCss(source: string): [string, string][] {
+  const pairs: [string, string][] = [];
+
+  for (const [, body] of source.matchAll(/\{([^{}]*)\}/g)) {
+    const fg = body.match(/(?:^|[;\s])color:\s*var\(--([\w-]+)\)/)?.[1];
+    const bg = body.match(
+      /background(?:-color)?:\s*var\(--(tone-(?:peach|lilac|mint|lemon|sky|pink|dark-\d))\)/,
+    )?.[1];
+
+    if (fg && bg) pairs.push([fg, bg]);
+  }
+
+  return pairs;
+}
+
+describe('contraste dos tokens (FR-007, TD-003)', () => {
   it('lê os tokens dos dois temas', () => {
-    for (const [, theme] of themes) {
-      for (const name of [...SURFACES, ...ACCENTS, ...TEXTS, 'on-accent']) {
-        expect(theme[name], `--${name}`).toMatch(/^#[0-9a-f]{3,6}$/i);
+    for (const [name, theme] of themes) {
+      for (const token of ['bg', 'surface', ...BASE_FG, ...PASTELS, ...DARK_TONES]) {
+        expect(theme[token], `${name}: --${token}`).toMatch(/^#[0-9a-f]{3,6}$/i);
       }
     }
     expect(dark.accent).not.toBe(light.accent);
+    expect(dark.bg).not.toBe(light.bg);
   });
 
-  it('cada tema extra tem bloco próprio e muda as superfícies e o acento', () => {
-    for (const [name, theme] of themes.slice(2)) {
-      expect(theme.surface, name).not.toBe(dark.surface);
-      expect(theme.accent, name).not.toBe(dark.accent);
+  it.each(themes)('tema %s: cada par permitido passa o piso e bate com o design', (name, theme) => {
+    for (const [fg, bg, floor] of ALLOWED[name]) {
+      const value = ratio(theme[fg], theme[bg]);
+
+      expect(value, `--${fg} sobre --${bg}: ${value.toFixed(2)}:1`).toBeGreaterThanOrEqual(floor);
     }
   });
 
-  it('nenhum tema usa degradê (ES-xx)', () => {
-    expect(css).not.toMatch(/gradient\(/);
+  it('as razões calculadas batem com as do design (amostra)', () => {
+    const near = (a: string, b: string, expected: number) =>
+      expect(ratio(a, b)).toBeCloseTo(expected, 1);
+
+    near(light['text'], light['bg'], 16.82);
+    near(light['text-muted'], light['bg'], 6.62);
+    near(light['accent'], light['bg'], 7.5);
+    near(light['control-border'], light['bg'], 4.17);
+    near(light['on-accent'], light['accent'], 7.98);
+    near(dark['text'], dark['bg'], 16.35);
+    near(dark['text-muted'], dark['bg'], 7.71);
+    near(dark['accent'], dark['bg'], 7.44);
+    near(dark['control-border'], dark['bg'], 4.54);
+    near(light['accent'], light['tone-pink'], 5.98);
+    near(dark['text'], dark['tone-dark-2'], 6.6);
   });
 
-  it.each(themes)(
-    'tema %s: cada acento tem ≥ 4,5:1 em surface, surface-2 e surface-3',
-    (_, theme) => {
-      for (const accent of ACCENTS) {
-        for (const surface of SURFACES) {
-          const value = ratio(theme[accent], theme[surface]);
-
-          expect(
-            value,
-            `--${accent} sobre --${surface}: ${value.toFixed(2)}:1`,
-          ).toBeGreaterThanOrEqual(4.5);
-        }
-      }
-    },
-  );
-
-  it.each(themes)(
-    'tema %s: texto (text, text-2, dim) tem ≥ 4,5:1 em surface, surface-2 e surface-3',
-    (_, theme) => {
-      for (const text of TEXTS) {
-        for (const surface of SURFACES) {
-          const value = ratio(theme[text], theme[surface]);
-
-          expect(
-            value,
-            `--${text} sobre --${surface}: ${value.toFixed(2)}:1`,
-          ).toBeGreaterThanOrEqual(4.5);
-        }
-      }
-    },
-  );
-
-  it.each(themes)('tema %s: texto sobre botão de acento (on-accent sobre accent)', (_, theme) => {
-    expect(ratio(theme['on-accent'], theme.accent)).toBeGreaterThanOrEqual(4.5);
+  it('o design proíbe acento e borda de controle sobre os tons escuros (Achados 4 e 5)', () => {
+    for (const tone of DARK_TONES) {
+      // os valores reais ficam abaixo do piso, então a matriz precisa deixá-los de fora
+      expect(ratio(dark.accent, dark[tone]), `accent/${tone}`).toBeLessThan(4.5);
+      expect(ratio(dark['control-border'], dark[tone]), `control-border/${tone}`).toBeLessThan(3);
+      expect(() => assertAllowed('dark', 'accent', tone)).toThrow(/proibido/);
+      expect(() => assertAllowed('dark', 'control-border', tone)).toThrow(/proibido/);
+      expect(assertAllowed('dark', 'text', tone)).toBe(4.5);
+    }
   });
 
-  it.each(themes)(
-    'tema %s: --border-ui (contorno de campos) tem ≥ 3:1 em bg e nas três superfícies (WCAG 1.4.11)',
-    (_, theme) => {
-      for (const surface of ['bg', ...SURFACES]) {
-        const value = ratio(theme['border-ui'], theme[surface]);
+  it('um par fora da matriz falha (provado com pares plantados)', () => {
+    expect(() => assertAllowed('light', 'divider', 'bg')).toThrow(/proibido/);
+    expect(() => assertAllowed('light', 'text', 'tone-dark-1')).toThrow(/proibido/);
+    expect(() => assertAllowed('dark', 'text', 'tone-peach')).toThrow(/proibido/);
+    expect(pairsInCss('.x { color: var(--accent); background: var(--tone-dark-2); }')).toEqual([
+      ['accent', 'tone-dark-2'],
+    ]);
+  });
 
-        expect(
-          value,
-          `--border-ui sobre --${surface}: ${value.toFixed(2)}:1`,
-        ).toBeGreaterThanOrEqual(3);
+  it('nenhuma regra do CSS usa um par fora da matriz', () => {
+    const dir = join(process.cwd(), 'src', 'styles');
+    const files = ['base.css', 'ui.css', 'sections.css', 'services.css', 'shell.css'];
+    const everyPair = (fg: string, bg: string) =>
+      (['light', 'dark'] as const).some((theme) =>
+        ALLOWED[theme].some(([f, b]) => f === fg && b === bg),
+      );
+
+    for (const file of files) {
+      for (const [fg, bg] of pairsInCss(readFileSync(join(dir, file), 'utf8'))) {
+        expect(everyPair(fg, bg), `${file}: --${fg} sobre --${bg}`).toBe(true);
       }
-    },
-  );
+    }
+  });
+
+  it('as cinco cores decorativas existem nos dois temas (só decoração, sem contraste exigido)', () => {
+    for (const [name, theme] of themes) {
+      for (const token of DECO)
+        expect(theme[token], `${name}: --${token}`).toMatch(/^#[0-9a-f]{6}$/i);
+    }
+    expect(dark['deco-1']).not.toBe(light['deco-1']);
+  });
+
+  it('o bloco escuro do sistema é igual ao bloco `data-theme="dark"`', () => {
+    const media = tokens(mediaBlock);
+
+    expect(media).toEqual(darkOverrides);
+    expect(Object.keys(media).length).toBeGreaterThan(8);
+  });
+
+  it('a impressão usa os mesmos valores do tema claro (ES-09)', () => {
+    const print = tokens(printBlock);
+
+    expect(Object.keys(print).length).toBeGreaterThan(8);
+
+    for (const [name, value] of Object.entries(print)) {
+      expect(value, `--${name} na impressão`).toBe(light[name]);
+    }
+  });
+
+  // LEGADO (TD-017): as páginas antigas ainda usam estas cores como texto; elas seguem em 4,5:1
+  // sobre o fundo e a superfície nos dois temas, até a spec de cada página trocá-las.
+  it.each(themes)('tema %s: cores semânticas legadas têm ≥ 4,5:1 em bg e surface', (_, theme) => {
+    for (const name of ['accent-2', 'ok', 'warn', 'err', 'info']) {
+      for (const surface of ['bg', 'surface']) {
+        const value = ratio(theme[name], theme[surface]);
+
+        expect(value, `--${name} sobre --${surface}: ${value.toFixed(2)}:1`).toBeGreaterThanOrEqual(
+          4.5,
+        );
+      }
+    }
+  });
 
   it('campos e mensagem de erro do formulário usam tokens, não cores fixas', () => {
     const sections = readFileSync(join(process.cwd(), 'src/styles/sections.css'), 'utf8');
@@ -131,36 +228,6 @@ describe('contraste AA dos tokens (ES-05)', () => {
 
     expect(form).not.toMatch(/#[0-9a-f]{3,6}(?![0-9a-z])/i);
     expect(form).toContain('var(--border-ui)');
-  });
-
-  it.each(themes)(
-    'tema %s: cada tom de categoria (--c-*) tem ≥ 4,5:1 em bg e nas três superfícies',
-    (_, theme) => {
-      for (const tone of TONES) {
-        for (const surface of ['bg', ...SURFACES]) {
-          const value = ratio(theme[tone], theme[surface]);
-
-          expect(
-            value,
-            `--${tone} sobre --${surface}: ${value.toFixed(2)}:1`,
-          ).toBeGreaterThanOrEqual(4.5);
-        }
-      }
-    },
-  );
-
-  it.each(themes)('tema %s: o texto de acento sobre bg também passa AA', (_, theme) => {
-    for (const accent of ACCENTS) {
-      expect(ratio(theme[accent], theme.bg), `--${accent}`).toBeGreaterThanOrEqual(4.5);
-    }
-  });
-
-  it('a impressão usa os mesmos tokens do tema claro (ES-09)', () => {
-    const print = tokens(/@media print\s*\{\s*:root,\s*\[data-theme\]\s*\{([\s\S]*?)\n {2}\}/);
-
-    for (const name of [...SURFACES, ...ACCENTS, ...TONES, ...TEXTS, 'on-accent']) {
-      expect(print[name], `--${name} na impressão`).toBe(light[name]);
-    }
   });
 
   it('o cálculo detecta um acento fraco (guarda do próprio teste)', () => {
