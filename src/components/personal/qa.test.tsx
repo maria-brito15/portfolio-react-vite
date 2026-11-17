@@ -1,4 +1,4 @@
-// Fase 6 (QA): as cinco rotas do espaço cultural em PT e EN e sob os cinco perfis. Confere o que
+// Fase 6 (QA): as cinco rotas do espaço cultural em PT e EN. Confere o que
 // dá para conferir sem navegador: um <h1>, ordem dos títulos sem saltos, <main> único, imagens
 // com alt não vazio, nenhuma chave de tradução crua e nenhum texto no idioma errado.
 import { screen, waitFor } from '@testing-library/react';
@@ -11,18 +11,15 @@ const PAGES = [
   ['/pessoal/musica', '/personal/music'],
   ['/pessoal/teatro', '/personal/theater'],
 ] as const;
-const PERSONAS = ['rh', 'tech', 'professor', 'cliente', 'amigo'] as const;
 
 afterEach(() => {
   localStorage.removeItem('portfolio-lang');
-  localStorage.removeItem('portfolio-persona');
 });
 
 const RAW_KEY = /\b[a-z]+(\.[a-zA-Z]+){2,}\b/;
 
-async function open(path: string, lang: 'pt' | 'en', persona?: string) {
+async function open(path: string, lang: 'pt' | 'en') {
   localStorage.setItem('portfolio-lang', lang);
-  if (persona) localStorage.setItem('portfolio-persona', persona);
 
   const view = renderApp(path);
 
@@ -77,12 +74,12 @@ describe.each(PAGES)('QA de %s', (pt, en) => {
   });
 });
 
-describe('perfis: nada escondido e nenhuma página quebrada', () => {
-  it.each(PERSONAS)('perfil %s vê as cinco páginas completas', async (persona) => {
+describe('nada escondido e nenhuma página quebrada', () => {
+  it('as cinco páginas abrem completas e com títulos distintos', async () => {
     const seen: string[] = [];
 
     for (const [pt] of PAGES) {
-      const { container, unmount } = await open(pt, 'pt', persona);
+      const { container, unmount } = await open(pt, 'pt');
 
       audit(container);
       seen.push(container.querySelector('h1')?.textContent ?? '');

@@ -50,7 +50,7 @@ describe('home com o espaço no ar (CL-02, CL-06)', () => {
     expect(block()).toBeNull();
   });
 
-  it('sem persona, no ar, o atalho existe e o bloco não', () => {
+  it('no ar, o atalho existe e o bloco não', () => {
     publish();
     renderApp('/');
 
