@@ -1,6 +1,5 @@
 import { readFileSync } from 'node:fs';
 import { routeTableProblems } from '../content/schema/route';
-import { pageMeta } from './seo';
 import { join } from 'node:path';
 import {
   crumbsFor,
@@ -132,11 +131,11 @@ describe('tabela de rotas estendida (TD-006, DQ-016, DQ-019)', () => {
     expect(routeById('whatsapp-dispatcher')?.enPath).toBe('/en/case-studies/whatsapp-dispatcher');
   });
 
-  it('title e description são os do pageMeta, nos dois idiomas, e o desc curto não mudou', () => {
+  it('title e description estão completos nos dois idiomas e o desc curto não mudou', () => {
     for (const r of routes) {
       for (const lang of ['pt', 'en'] as const) {
-        expect(r.title[lang], `${r.id}/${lang}`).toBe(pageMeta[r.id][lang].title);
-        expect(r.description[lang], `${r.id}/${lang}`).toBe(pageMeta[r.id][lang].description);
+        expect(r.title[lang].trim(), `${r.id}/${lang}`).not.toBe('');
+        expect(r.description[lang].trim(), `${r.id}/${lang}`).not.toBe('');
       }
     }
     // o desc curto (terminal, paleta, barra lateral) segue sendo o de antes, e não o texto de SEO

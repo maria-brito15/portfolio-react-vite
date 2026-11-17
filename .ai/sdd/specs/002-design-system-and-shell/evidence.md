@@ -244,3 +244,23 @@ Exit code: 0
 Summary:   OK em 149,8 s (orçamento 180 s): formatação 14,0; lint 34,1; tipos 21,7; testes 76,5; geração 3,4. Primeira execução falhou no lint (2 linhas em branco do @stylistic em route.ts), corrigidas com eslint --fix e repetidas; a máquina estava mais lenta nesta execução (formatação 7,1 → 14,0 s sem mudar código)
 Verdict:   PASS
 ```
+
+## T2.3 `seo.ts` lê a tabela e emite `hreflang` (TD-006, TD-013)
+**Entregue:** `pageMeta` removido de `seo.ts`: `metaFor` lê `title`/`description` da tabela de rotas (uma fonte só); fica no arquivo só o meta da 404 (`NOT_FOUND_META`), porque ela não é uma rota. `headTags` (em `seoHead.ts`) emite três `<link rel="alternate">` (`pt-BR`, `en`, `x-default` apontando para o PT); a 404 e a rota de prova (quando existir, `prova: true`) não emitem `hreflang` nem canonical. O canonical e o `og:url` passam a ser o endereço da página **no idioma pedido** (PT: `path`; EN: `enPath`), para cada página ser o próprio canonical e o `hreflang` ser recíproco. `tagSelector` distingue os três `alternate` pelo `hreflang` (o cliente os atualiza sem duplicar). O comentário "não há hreflang" foi corrigido (o cabeçalho de `seo.ts` foi reescrito).
+
+**Observações:** (1) o JSON-LD continua com a URL em PT (JSON-LD é da spec 010; não mudei). (2) O build ainda grava só as páginas em PT (`dist/sobre.html` etc.); as páginas em inglês por rota são da T4.1/T4.2, então por ora o `en` do `hreflang` aponta para um endereço que só o cliente resolve (`/en/about`); isso se fecha na Fase 4.
+
+```
+Claim:     seo.ts não guarda texto de página e metaFor lê da tabela; hreflang recíproco em toda rota; 404 sem hreflang nem canonical
+Command:   npx vitest run src/data scripts src/hooks
+Exit code: 0
+Summary:   300 testes verdes: metaFor == title/description da rota nos dois idiomas; seo.ts sem `pageMeta` e sem nenhum título de rota; toda rota emite os 3 alternates (pt-BR, en, x-default = PT) nos dois idiomas, com as URLs de path e enPath; PT e EN declaram o mesmo par e cada um é o próprio canonical/og:url; home PT = raiz e home EN = /en; 404 sem alternates e sem canonical; tagSelector dá 3 seletores distintos
+Verdict:   PASS
+```
+```
+Claim:     o HTML gerado no build traz o hreflang
+Command:   npm run verify ; grep -o '<link rel="alternate"[^>]*>' dist/sobre.html
+Exit code: 0 ; 0
+Summary:   verify OK em 102,4 s (orçamento 180 s): formatação 5,3; lint 24,1; tipos 17,2; testes 51,7; geração 4,0. dist/sobre.html: alternates pt-BR (…/sobre), en (…/en/about) e x-default (…/sobre)
+Verdict:   PASS
+```

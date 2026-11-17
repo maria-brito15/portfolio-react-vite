@@ -38,7 +38,7 @@ export interface Route {
   path: string;
   // Endereço em inglês: `/en` (a home) ou sob `/en/` (spec 002, FR-020).
   enPath: string;
-  // Título e texto de SEO da página, nos dois idiomas (copiados de `pageMeta`, que a T2.3 esvazia).
+  // Título e texto de SEO da página, nos dois idiomas: a fonte única (seo.ts os lê daqui, T2.3).
   // `desc` abaixo continua sendo a dica curta do terminal, da paleta e da barra lateral.
   title: Localized;
   description: Localized;

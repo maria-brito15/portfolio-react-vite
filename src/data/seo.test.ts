@@ -1,8 +1,10 @@
 import { routes } from './routes';
 import { projects } from './projects';
 import { profile } from './profile';
-import { NOT_FOUND_ID, SITE_URL, absoluteUrl, metaFor, pageMeta } from './seo';
-import { headTags, jsonLdFor } from './seoHead';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { NOT_FOUND_ID, SITE_URL, absoluteUrl, metaFor } from './seo';
+import { headTags, jsonLdFor, tagSelector } from './seoHead';
 import { isDraft } from './routeStatus';
 import type { Lang } from '../types';
 
@@ -20,23 +22,117 @@ describe('metadados por página', () => {
   });
 
   it('títulos curtos o bastante para não serem cortados; descrições entre 70 e 165 caracteres', () => {
-    for (const [id, meta] of Object.entries(pageMeta))
+    for (const id of [...routes.map((r) => r.id), NOT_FOUND_ID])
       for (const lang of LANGS) {
-        expect(meta[lang].title.length, `${id}/${lang} título`).toBeLessThanOrEqual(66);
+        const meta = metaFor(id, lang);
+
+        expect(meta.title.length, `${id}/${lang} título`).toBeLessThanOrEqual(66);
         if (id === NOT_FOUND_ID) continue;
-        expect(meta[lang].description.length, `${id}/${lang} descrição`).toBeGreaterThanOrEqual(70);
-        expect(meta[lang].description.length, `${id}/${lang} descrição`).toBeLessThanOrEqual(165);
+        expect(meta.description.length, `${id}/${lang} descrição`).toBeGreaterThanOrEqual(70);
+        expect(meta.description.length, `${id}/${lang} descrição`).toBeLessThanOrEqual(165);
       }
   });
 
   it('títulos e descrições são únicos em cada idioma (sem conteúdo duplicado)', () => {
     for (const lang of LANGS) {
-      const titles = Object.values(pageMeta).map((m) => m[lang].title);
-      const descriptions = Object.values(pageMeta).map((m) => m[lang].description);
+      const ids = [...routes.map((r) => r.id), NOT_FOUND_ID];
+      const titles = ids.map((id) => metaFor(id, lang).title);
+      const descriptions = ids.map((id) => metaFor(id, lang).description);
 
       expect(new Set(titles).size).toBe(titles.length);
       expect(new Set(descriptions).size).toBe(descriptions.length);
     }
+  });
+});
+
+describe('título e descrição vêm da tabela de rotas (FR-009, TD-006)', () => {
+  it('metaFor devolve exatamente o title e a description da rota, nos dois idiomas', () => {
+    for (const r of routes)
+      for (const lang of LANGS)
+        expect(metaFor(r.id, lang), `${r.id}/${lang}`).toEqual({
+          title: r.title[lang],
+          description: r.description[lang],
+        });
+  });
+
+  it('seo.ts não guarda texto de página: só o meta da 404 (que não é rota)', () => {
+    const source = readFileSync(join(process.cwd(), 'src/data/seo.ts'), 'utf8');
+
+    expect(source).not.toMatch(/pageMeta/);
+    // nenhum título de rota aparece no arquivo
+    for (const r of routes) expect(source, r.id).not.toContain(r.title.pt);
+    expect(metaFor('qualquer-coisa', 'pt').title).toBe(metaFor(NOT_FOUND_ID, 'pt').title);
+  });
+});
+
+const findTag = (tags: ReturnType<typeof headTags>['tags'], key: string) =>
+  tags.find((t) => Object.values(t.attrs).includes(key));
+
+describe('hreflang (FR-023, FR-024, TD-013)', () => {
+  const alternates = (id: string, lang: Lang) =>
+    headTags(id, lang).tags.filter((t) => t.attrs.rel === 'alternate');
+  const hrefOf = (id: string, lang: Lang, hreflang: string) =>
+    alternates(id, lang).find((t) => t.attrs.hreflang === hreflang)?.attrs.href;
+
+  it('toda rota emite os três alternates: pt-BR, en e x-default (o PT)', () => {
+    for (const r of routes)
+      for (const lang of LANGS) {
+        const tags = alternates(r.id, lang);
+
+        expect(tags.map((t) => t.attrs.hreflang).sort(), `${r.id}/${lang}`).toEqual([
+          'en',
+          'pt-BR',
+          'x-default',
+        ]);
+        expect(hrefOf(r.id, lang, 'pt-BR')).toBe(absoluteUrl(r.path));
+        expect(hrefOf(r.id, lang, 'en')).toBe(absoluteUrl(r.enPath));
+        expect(hrefOf(r.id, lang, 'x-default')).toBe(absoluteUrl(r.path));
+      }
+  });
+
+  it('é recíproco: a página em PT e a em EN declaram o mesmo par, e cada uma é o próprio canonical', () => {
+    for (const r of routes) {
+      const pt = headTags(r.id, 'pt').tags;
+      const en = headTags(r.id, 'en').tags;
+
+      expect(alternates(r.id, 'pt')).toEqual(alternates(r.id, 'en'));
+      expect(findTag(pt, 'canonical')?.attrs.href, r.id).toBe(hrefOf(r.id, 'pt', 'pt-BR'));
+      expect(findTag(en, 'canonical')?.attrs.href, r.id).toBe(hrefOf(r.id, 'en', 'en'));
+      expect(findTag(en, 'og:url')?.attrs.content, r.id).toBe(hrefOf(r.id, 'en', 'en'));
+    }
+  });
+
+  it('a home em inglês é /en e a home em português é a raiz', () => {
+    expect(hrefOf('home', 'pt', 'en')).toBe(`${SITE_URL}/en`);
+    expect(hrefOf('home', 'pt', 'pt-BR')).toBe(`${SITE_URL}/`);
+  });
+
+  it('a 404 não emite hreflang nem canonical', () => {
+    for (const lang of LANGS) {
+      const tags = headTags(NOT_FOUND_ID, lang).tags;
+
+      expect(tags.filter((t) => t.attrs.rel === 'alternate')).toEqual([]);
+      expect(findTag(tags, 'canonical')).toBeUndefined();
+    }
+  });
+
+  it('uma rota de prova (quando existir) não emite hreflang nem canonical', () => {
+    // a rota entra só na T5.1; aqui se prova a regra com a tabela real quando ela existir
+    for (const r of routes.filter((x) => x.prova)) {
+      const tags = headTags(r.id, 'pt').tags;
+
+      expect(tags.filter((t) => t.attrs.rel === 'alternate')).toEqual([]);
+    }
+  });
+
+  it('o cliente atualiza cada alternate pelo próprio hreflang, sem duplicar (tagSelector)', () => {
+    const selectors = alternates('projetos', 'pt').map(tagSelector);
+
+    expect(new Set(selectors).size).toBe(3);
+    expect(selectors).toContain('link[rel="alternate"][hreflang="en"]');
+    expect(tagSelector({ tag: 'link', attrs: { rel: 'canonical', href: 'x' } })).toBe(
+      'link[rel="canonical"]',
+    );
   });
 });
 

@@ -28,7 +28,20 @@ const LOCALES: Record<Lang, string> = { pt: 'pt_BR', en: 'en_US' };
 export function headTags(routeId: string, lang: Lang): { title: string; tags: HeadTag[] } {
   const { title, description } = metaFor(routeId, lang);
   const route = routeById(routeId);
-  const url = absoluteUrl(route?.path ?? '/');
+  // Cada idioma tem o próprio endereço (TD-007): o canonical e o og:url são os da página no idioma.
+  const url = absoluteUrl(lang === 'en' ? (route?.enPath ?? '/en') : (route?.path ?? '/'));
+  // A 404 e a rota de prova não têm página equivalente: sem canonical e sem hreflang (TD-013).
+  const alternates: HeadTag[] =
+    route && !route.prova && routeId !== NOT_FOUND_ID
+      ? [
+          ['pt-BR', route.path],
+          ['en', route.enPath],
+          ['x-default', route.path],
+        ].map(([hreflang, path]) => ({
+          tag: 'link' as const,
+          attrs: { rel: 'alternate', hreflang, href: absoluteUrl(path) },
+        }))
+      : [];
   const image = `${SITE_URL}${OG_IMAGE}`;
   const imageAlt =
     lang === 'pt'
@@ -53,6 +66,7 @@ export function headTags(routeId: string, lang: Lang): { title: string; tags: He
       ...(routeId === NOT_FOUND_ID
         ? []
         : [{ tag: 'link' as const, attrs: { rel: 'canonical', href: url } }]),
+      ...alternates,
       m('property', 'og:type', 'website'),
       m('property', 'og:site_name', SITE_NAME),
       m('property', 'og:title', title),
@@ -76,6 +90,10 @@ export function headTags(routeId: string, lang: Lang): { title: string; tags: He
 
 // Seletor da tag no documento, para atualizar em vez de duplicar.
 export const tagSelector = ({ tag, attrs }: HeadTag) => {
+  // As três tags `alternate` se distinguem pelo idioma (`hreflang`), não só pelo `rel`.
+  if (attrs.rel === 'alternate' && attrs.hreflang)
+    return `${tag}[rel="alternate"][hreflang="${attrs.hreflang}"]`;
+
   const id = (['name', 'property', 'rel'] as const).find((k) => attrs[k]) ?? 'name';
 
   return `${tag}[${id}="${attrs[id]}"]`;
