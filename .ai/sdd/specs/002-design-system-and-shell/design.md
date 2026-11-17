@@ -1,6 +1,6 @@
 # 002 Design system and shell, Design
 **Status:** draft (completo, aguarda aprovação da Duda; ver `.status`) · **Versão:** 2.0 · **Autor:** Claude (rascunho para a Duda) · **Data:** 2026-11-17
-**Entrada:** `requirements.md` v1.5 (aprovada em 2026-11-17), `spike-001.md` (medição do `dist`), `design-reference/README.md` e `telas-e-requisitos.md` (referência visual, não é especificação) e as telas `mockup/Tokens`, `Mobile`, `NotFound` e `Projetos` (lidas em 2026-11-17; ver "Divergências entre o mockup e este design"), `.ai/steering/*` e o design da 001 (`review:done`).
+**Entrada:** `requirements.md` v1.6 (aprovada em 2026-11-17), `spike-001.md` (medição do `dist`), `design-reference/README.md` e `telas-e-requisitos.md` (referência visual, não é especificação) e as telas `mockup/Tokens`, `Mobile`, `NotFound` e `Projetos` (lidas em 2026-11-17; ver "Divergências entre o mockup e este design"), `.ai/steering/*` e o design da 001 (`review:done`).
 
 ## Executive Summary
 A casca nova substitui no lugar a casca "terminal/IDE" de hoje (cabeçalho, barra de comandos, barra lateral, janela, barra de tarefas). Ela entrega, em toda página: link "ir para o conteúdo", cabeçalho com menu lido da tabela de rotas, seletor de tema (claro e escuro) e de idioma (PT na raiz, EN sob `/en/`), `main` e rodapé. Seis decisões sustentam o resto:
@@ -23,7 +23,7 @@ Nada aqui foi aprovado. Onde há escolha que é da Duda, está marcada como `DQ-
 | FR-005 Tema antes do 1º desenho | TD-011 (script de boot no `<head>`) | V-03 |
 | FR-006 Armazenamento bloqueado e o tema | TD-011 | V-03 |
 | FR-007 Contraste | TD-003 | V-01 |
-| FR-008 Casca (skip link, cabeçalho, `main`, rodapé) | Interface Contract, TD-010 | V-04 |
+| FR-008 Casca (skip link, cabeçalho, `main`, rodapé) | Interface Contract, TD-010, TD-024 (exceção do terminal) | V-04 |
 | FR-009 Tabela única de rotas | TD-006 | V-05 |
 | FR-010 Rota fora do menu | TD-006 | V-05 |
 | FR-011 Rota sem texto em um idioma | TD-006 (schema + paridade da 001) | V-05 |
@@ -56,6 +56,7 @@ Nada aqui foi aprovado. Onde há escolha que é da Duda, está marcada como `DQ-
 | FR-038 Faixa decorativa | TD-021, tokens `--deco-1` a `--deco-5` | V-14 |
 | FR-039 Sugestões na 404 | TD-022 | V-14 |
 | FR-040 Estado nunca só por cor | TD-023 | V-14 |
+| FR-041 Variante sem casca para o terminal | TD-024, Data Model (campo `bare`) | V-15 |
 | NFR-001 Performance | TD-009, TD-019 | V-13 |
 | NFR-002 Segurança | TD-015 | V-10, V-11 |
 | NFR-003 Acessibilidade | TD-004, TD-010, TD-019 | V-01, V-07, V-13 |
@@ -145,6 +146,7 @@ Faixa de cinco cores no topo de toda página (`aria-hidden`, 6 px de altura, sem
 | `menu` | booleano | `true` só nos itens do menu principal; `order` define a posição | — |
 | `order` | número | obrigatório quando `menu` é `true`; sem repetição entre itens do menu | `menu: ordem <n> repetida` |
 | `prova` | `true` opcional | só a rota `/_prova`; fora do menu, do sitemap e do índice; existe só no build de prova | — |
+| `bare` | `true` opcional | rota renderizada **sem casca** (só a faixa decorativa e o `main`); hoje só `terminal`; a rota `bare` não entra no menu nem recebe a faixa de idioma (FR-041) | `rota <id>: bare e menu juntos` |
 Os campos do terminal (`name`, `alias`, `command`, `group`, `hidden`, `showInNav`) ficam como estão (spec 009 e 008). `aliases` com caminhos em inglês antigos (`/about`) **deixam de existir** na 002: os endereços EN passam a ser `enPath`; o redirecionamento dos endereços antigos é da spec 010 (Non-Goals da 002).
 
 **Chaves de armazenamento** (reaproveitadas, como as Notas do requirements sugeriram):
@@ -165,7 +167,7 @@ Os campos do terminal (`name`, `alias`, `command`, `group`, `hidden`, `showInNav
 **Oferta de inglês** (função pura `languageOffer(...)`, 9 linhas da tabela do requirements): entradas `{ path, storedLang, dismissed, navigatorLangs, storageOk }`; saída `{ show: boolean }`. Mostra se, e só se: `path` não está sob `/en`, não há `storedLang`, não foi dispensada, e `navigatorLangs[0]` começa com `en`. Com `storageOk = false`, `storedLang` e `dismissed` valem "ausente" (a faixa volta em toda visita, FR-026).
 
 ## Interface Contract
-**`SiteShell`** (substitui o atual no mesmo arquivo, `src/components/shell/SiteShell.tsx`): `({ routeId?, children }) => JSX`. Os atributos antigos `badge`, `variant`, `after`, `missingPath` saem; as páginas que ainda os passam (`DocPage`, `EditorialPage`, `CaseStudy`, `GithubPage`, `Home`, `InfoPages`, `NotFound`, `SectionPage`, `Services`, `TerminalPage`) recebem **só o ajuste mecânico** de parar de passá-los (sem mexer no conteúdo; D-001).
+**`SiteShell`** (substitui o atual no mesmo arquivo, `src/components/shell/SiteShell.tsx`): `({ routeId?, children }) => JSX`; a variante vem da tabela de rotas (`route.bare`), não de uma propriedade: uma rota `bare` (hoje só o terminal) renderiza **apenas a faixa decorativa e o `main`**, sem skip link, cabeçalho, seletores, rodapé nem faixa de idioma (FR-041; o primeiro item focável dela é da spec 009, por exemplo "Sair do terminal"). Os atributos antigos `badge`, `variant`, `after`, `missingPath` saem; as páginas que ainda os passam (`DocPage`, `EditorialPage`, `CaseStudy`, `GithubPage`, `Home`, `InfoPages`, `NotFound`, `SectionPage`, `Services`, `TerminalPage`) recebem **só o ajuste mecânico** de parar de passá-los (sem mexer no conteúdo; D-001).
 
 **Ordem do DOM da casca (é a ordem do foco, FR-016):**
 0. faixa decorativa de cinco cores (`aria-hidden`, não focável), antes de tudo, sem alterar a ordem do foco (FR-038);
@@ -266,6 +268,9 @@ Só há um `header`, um `nav` principal, um `main` e um `footer` por página (NF
 ### TD-023: Estado nunca só por cor (FR-040)
 **Decision:** a página atual do menu usa `aria-current="page"` e o CSS dá sublinhado e peso a `[aria-current]`; o idioma selecionado no controle PT | EN usa `aria-current="true"` com o mesmo tratamento. Um teste (`src/styles/state.test.ts`) lê o CSS e falha se uma regra de estado (`[aria-current]`, `[aria-pressed="true"]`, `[aria-expanded="true"]`) mudar só `color` ou `background` sem `text-decoration` ou `font-weight`. **Rationale:** FR-040, TD-004 e o WCAG 1.4.1. **Alternatives:** só conferir à mão (não protege contra regressão).
 
+### TD-024: Variante sem casca para o `/terminal` (FR-041)
+**Decision:** a tabela de rotas ganha `bare?: true` e só a rota do terminal o usa. `SiteShell` lê `routeById(routeId).bare`: se verdadeiro, renderiza `<DecorativeStripe />` e `<main id="conteudo">{children}</main>` e nada mais; o cabeçalho, o menu, os seletores de tema e idioma, o rodapé e a faixa de idioma **não são montados**. O tema ainda é aplicado pelo script de boot (a página `bare` também tem `data-theme`, `lang` e `hreflang`). O pré-render (TD-008) gera o HTML `bare` do mesmo jeito. A exceção do FR-008 e da US-004 está escrita no requirements v1.6. **Rationale:** o mockup do terminal (`Terminal.dc.html`) é assim, e a Duda decidiu pela variante sem casca em 2026-11-17. **Alternatives:** o terminal com a casca completa (diverge do mockup, mas sem exceção ao FR-008); deixar para a spec 009 (a 009 pode exigir mudar a casca depois). **Consequência dita:** na rota `bare` não há seletor de tema nem de idioma; a spec 009 decide se o terminal oferece comandos para isso (hoje o comando `tema` existe).
+
 ## Verification Strategy
 Cada FR vira um teste automatizado ou um comando com exit code. Os testes ficam dentro de cada tarefa (convenção da 001) e passam em `npm run verify`, exceto V-07, V-13 e as checagens de `dist` (`npm run prova` e comandos de aceite, como o `npm audit` da 001).
 | ID | Cobre | Comando | Passa quando |
@@ -284,6 +289,7 @@ Cada FR vira um teste automatizado ou um comando com exit code. Os testes ficam 
 | V-12 | FR-032, TD-009 | `grep -r "_prova" dist` (exit 1) e `git grep -n -E "WindowProvider\|Taskbar\|CommandBar" -- src` (só os arquivos mantidos por outra spec) | `/_prova` fora do publicado; peças antigas fora do código |
 | V-13 | NFR-001, NFR-003 | `npm run prova` | JS ≤ 100 KB e CSS ≤ 20 KB (gzip); LCP ≤ 2,5 s, CLS ≤ 0,1 (também com a faixa), INP ≤ 200 ms; axe 0; notas ≥ 95 |
 | V-14 | FR-036 a FR-040 | `npx vitest run src/components/shell/Footer.test.tsx src/pages/NotFound.test.tsx src/data/suggestRoutes.test.ts src/styles/state.test.ts` | rodapé com as 4 seções, "sem cookies" e um único link; elenco = versões maiores do `package.json`; faixa `aria-hidden` com 5 cores e sem texto; 404 sugere até 3 rotas do menu e mantém os links; regra de estado com sublinhado ou peso |
+| V-15 | FR-041, FR-008 (exceção) | `npx vitest run src/components/shell/SiteShell.test.tsx src/data/routes.test.ts` | a rota `bare` renderiza só a faixa e o `main` (sem `header`, `nav`, `footer`, seletores nem faixa de idioma); só uma rota é `bare`; `bare` e `menu` não coexistem; toda outra rota tem a casca completa |
 Nenhum teste pode ser pulado (`skip`/`todo`) e a suíte continua dentro do orçamento de 90 s (001).
 
 ## Arquivos que esta spec remove ou substitui (FR-032)
@@ -315,6 +321,7 @@ O mockup (`design-reference/mockup/*.dc.html`) é só referência visual. Li `To
 | 10 | Rodapé: "sem rastreadores" | "sem cookies" | DQ-007 respondida pela Duda |
 | 11 | Dois quadros fixos (1280 e 390 px), **sem ponto de quebra** | Ponto de quebra 1024 px (estimado; a tarefa mede) | O mockup não define; ver TD-010 |
 | 12 | Título de página 60/63 px em Plex Sans 600 | Preload da Sans 600 e da 400 | Candidato ao LCP; ver TD-016 |
+| 13 | `/terminal` sem cabeçalho, menu, rodapé nem seletores (só a faixa e o `main`, "Sair do terminal" primeiro) | **Variante sem casca** para a rota do terminal (FR-041, TD-024) | A Duda escolheu a variante em 2026-11-17 (requirements v1.6) |
 O que o design **acertou**: tokens e contrastes (igual à seção 3 do README e à tela `Tokens`), duas famílias, alvo de toque de 44×44 px, foco com anel de 3 px no acento, estado nunca só por cor, página atual com sublinhado e peso, sem degradê.
 
 ## Riscos
