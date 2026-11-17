@@ -1,7 +1,10 @@
 # 002 Design system and shell, Requirements
-**Status:** approved (v1.5 aprovada pela Duda em 2026-11-17)   **Version:** 1.5   **Author:** Claude (rascunho para a Duda)   **Date:** 2026-11-17   **Depende de:** 001-engineering-baseline
+**Status:** approved (v1.6 aprovada pela Duda em 2026-11-17)   **Version:** 1.6   **Author:** Claude (rascunho para a Duda)   **Date:** 2026-11-17   **Depende de:** 001-engineering-baseline
 
 ## Changes since first draft
+### Versão 1.6 (2026-11-17, aprovada pela Duda)
+O mockup do terminal (`design-reference/mockup/Terminal.dc.html`) não tem cabeçalho, menu nem rodapé: só a faixa decorativa e o `main`, com "Sair do terminal" como primeiro item. A Duda decidiu que a rota do terminal usa uma **variante sem casca** (FR-041). O FR-008 e o primeiro critério da US-004 ganham a exceção explícita para essa rota. O conteúdo do terminal continua sendo da spec 009 (FR-033). Nenhum outro requisito mudou.
+
 ### Versão 1.5 (2026-11-17, aprovada pela Duda)
 A Duda aprovou como requisitos os cinco itens P-002-a a P-002-e de `design-reference/telas-e-requisitos.md`, que o mockup mostra: rodapé de créditos (FR-036), "elenco" lido de uma fonte (FR-037), faixa decorativa de cinco cores (FR-038), sugestões de rotas na 404 (FR-039) e estado nunca só por cor (FR-040). **Ficam de fora:** a linha "trilha sonora" do rodapé (depende da Música e de uma playlist escolhida por ela, fora do MVP) e o motivo "cd /curriculos" da 404 (a pergunta sobre ser decorativo ou funcional segue aberta). As prioridades (Must e Should) são minhas e a Duda pode mudá-las. Nenhum requisito anterior mudou.
 
@@ -81,7 +84,7 @@ A casca é o que o visitante vê em toda página: a identidade visual nova, o ca
 ### US-004: Navegar por teclado e leitor de tela
 **As a** pessoa que não usa mouse, **I want to** chegar a tudo pelo teclado, **so that** eu use o site como qualquer outra.
 **Acceptance criteria:**
-- [ ] O primeiro item focável é o link "ir para o conteúdo".
+- [ ] O primeiro item focável é o link "ir para o conteúdo" (na rota do terminal, o primeiro item focável é o que a spec 009 define, FR-041).
 - [ ] Todo controle tem foco visível com contraste de pelo menos 3:1.
 - [ ] A ordem de foco na página de prova é a sequência do FR-016.
 - [ ] A casca tem marcos de leitor de tela (`header`, `nav`, `main`, `footer`) sem repetição indevida.
@@ -109,7 +112,7 @@ IF o armazenamento local do navegador estiver indisponível, THE SYSTEM SHALL se
 THE SYSTEM SHALL manter razão de contraste de pelo menos 4,5:1 para texto normal e 3:1 para texto grande e para componentes de interface, em ambos os temas, e SHALL ter teste automatizado que falha se um par de tokens violar.
 
 ### FR-008: Casca do site (Must Have) — US-001, US-004
-THE SYSTEM SHALL renderizar em toda página um link "ir para o conteúdo", um cabeçalho com a navegação principal, o seletor de tema, o seletor de idioma, um `main` e um rodapé.
+THE SYSTEM SHALL renderizar em toda página, **exceto a rota do terminal (FR-041)**, um link "ir para o conteúdo", um cabeçalho com a navegação principal, o seletor de tema, o seletor de idioma, um `main` e um rodapé.
 
 ### FR-009: Tabela única de rotas (Must Have) — US-001
 THE SYSTEM SHALL declarar cada rota numa única tabela de rotas, e a navegação, o título da página e a página de erro SHALL ler dela.
@@ -206,6 +209,9 @@ IF o endereço não existir, THE SYSTEM SHOULD mostrar, na página 404, até tr�
 
 ### FR-040: Estado nunca só por cor (Must Have) — US-004
 WHERE um estado da interface depender de cor (por exemplo, a página atual no menu ou o idioma selecionado), THE SYSTEM SHALL acompanhá-lo de sublinhado, peso ou texto, e SHALL ter teste automatizado que falha se um estado só mudar a cor.
+
+### FR-041: Variante sem casca para o terminal (Must Have) — US-001
+WHERE a rota estiver marcada na tabela de rotas como "sem casca" (hoje só o terminal), THE SYSTEM SHALL renderizá-la apenas com a faixa decorativa (FR-038) e um `main`, sem cabeçalho, menu, seletores nem rodapé, e SHALL NOT exibir a faixa de idioma nela. O conteúdo da rota e o primeiro item focável dela são da spec dona (009).
 
 ## Non-Functional Requirements
 ### NFR-001: Performance
@@ -308,6 +314,7 @@ A Duda confirmou PT na raiz e EN sob `/en/`, com `hreflang` (D-005).
 - [ ] O rodapé de créditos aparece em toda página, com o elenco lido de uma única fonte (FR-036, FR-037).
 - [ ] A 404 sugere até três rotas reais do menu e continua respondendo 404 (FR-039).
 - [ ] Um estado que só muda de cor falha o teste (FR-040).
+- [ ] A rota marcada "sem casca" renderiza só a faixa e o `main` (FR-041).
 
 ## Risks
 | Risk | Likelihood | Impact | Mitigation |
