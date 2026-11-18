@@ -25,7 +25,7 @@ export default defineConfig({
     },
     {
       name: 'shell',
-      testMatch: 'shell.e2e.ts',
+      testMatch: ['shell.e2e.ts', 'prova.e2e.ts'],
       use: { baseURL: `http://localhost:${PROVA_PORT}` },
     },
   ],

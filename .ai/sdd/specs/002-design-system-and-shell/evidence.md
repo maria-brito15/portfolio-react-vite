@@ -667,3 +667,35 @@ Summary:   33 de 42 passam (Tab na ordem do FR-016, anel de foco, console limpo 
 Verdict:   FAIL (corrigido abaixo; a repetir)
 ```
 **Correções:** `.prova img { max-width: 100%; height: auto }` em `shell.css`; `LanguageOffer` só libera o espaço depois da hidratação (`ready` por `useSyncExternalStore`: falso no servidor e no 1º passe, verdadeiro depois). `npm run verify` exit 0 (103,1 s) e `dist-prova` reconstruído (42 páginas, `checkDist` OK). **A repetir pela Duda:** `npm run build:prova && npx playwright test e2e/shell.e2e.ts --project=shell`.
+
+## T5.3 Medição de tamanho, desempenho e acessibilidade (TD-019, DQ-010): **PARCIAL, a medição no Chrome falta**
+**Entregue:** devDependencies `@axe-core/playwright` (version:4.14.0, com `axe-core` version:4.14.1), `lighthouse` (version:13.6.0) e `chrome-launcher` (version:1.2.3); `scripts/measureBundle.mjs` (gzip do JS e do CSS que o HTML da `/_prova` referencia, com `modulepreload`; falha se JS > 100 KB ou CSS > 20 KB; KB = 1000 bytes) com teste; `scripts/lighthouseRun.mjs` (perfil celular, 3 execuções, mediana; LCP ≤ 2,5 s, CLS ≤ 0,1 também com a faixa de idioma visível, acessibilidade e boas práticas ≥ 95; usa o Chrome instalado via `chrome-launcher`, `CHROME_PATH` para outro, e sai com 2 se não achar); `scripts/inpRun.mjs` (CPU 4× mais lenta, celular, interações no menu, tema e botões, pior duração de evento ≤ 200 ms); `e2e/prova.e2e.ts` (axe WCAG 2.0/2.1 A e AA + best-practice, 0 violações, 2 temas × 2 idiomas × 1280 e 390 px); `npm run prova` = build:prova + measureBundle + checkDist + e2e (`shell` e axe) + Lighthouse + INP. A lógica pura (mediana, metas, pior interação, limites) tem teste unitário (`measureTools.test.ts`, `measureBundle.test.ts`).
+
+```
+Claim:     o JS e o CSS da /_prova cabem nas metas
+Command:   node scripts/measureBundle.mjs dist-prova
+Exit code: 0
+Summary:   _prova.html e en/_prova.html: JS 98,4 KB gzip (2 arquivos: entrada + chunk da página de prova), CSS 13,6 KB gzip (1 arquivo). Meta JS ≤ 100 KB, CSS ≤ 20 KB. Folga do JS: 1,6 KB (o chunk de entrada sozinho tem 97,9 KB); a T3.5 já tinha tirado o terminal da entrada (380,83 → 302,10 kB; 120,77 → 96,95 KB gzip)
+Verdict:   PASS (margem curta no JS)
+```
+```
+Claim:     as dependências de produção continuam sem vulnerabilidade
+Command:   npm audit --omit=dev
+Exit code: 0
+Summary:   found 0 vulnerabilities (as 7 moderadas que o npm lista são das devDependencies novas e não entram no site)
+Verdict:   PASS
+```
+```
+Claim:     os testes unitários da medição passam e o gate passa
+Command:   npx vitest run scripts/measureBundle.test.ts scripts/measureTools.test.ts ; npm run verify
+Exit code: 0 ; 0
+Summary:   13 testes; verify OK em 112,6 s (orçamento 180 s)
+Verdict:   PASS
+```
+```
+Claim:     axe 0 violações; Lighthouse (LCP, CLS, notas) e INP dentro das metas
+Command:   npm run prova
+Exit code: não executado
+Summary:   precisa do Chrome (Playwright, Lighthouse e CDP); o modo automático nega a execução. Nada disso foi medido
+Verdict:   PENDENTE
+```
