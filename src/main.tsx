@@ -1,9 +1,4 @@
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
-import App from './App';
-import { RouterProvider } from './router';
-import { LanguageProvider } from './i18n/LanguageContext';
-import { ThemeProvider } from './hooks/useTheme';
+import { mount } from './mount';
 import './styles/tokens.css';
 import './styles/ui.css';
 import './styles/base.css';
@@ -18,14 +13,5 @@ import { announceInConsole } from './utils/consoleMessage';
 
 announceInConsole();
 
-createRoot(document.getElementById('root') as HTMLElement).render(
-  <StrictMode>
-    <RouterProvider>
-      <LanguageProvider>
-        <ThemeProvider>
-          <App />
-        </ThemeProvider>
-      </LanguageProvider>
-    </RouterProvider>
-  </StrictMode>,
-);
+// `hydrateRoot` quando o HTML pré-renderizado já está no `#root`; `createRoot` no `vite dev`.
+mount(document.getElementById('root') as HTMLElement);

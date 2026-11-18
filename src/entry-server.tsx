@@ -30,6 +30,9 @@ export interface RenderedRoute {
 export async function renderRoute(path: string): Promise<RenderedRoute> {
   const route = findPageByPath(path);
   const lang = langOfPath(path);
+  // `progressiveChunkSize` enorme: sem ele o React tira de dentro do `<main>` os trechos acima de
+  // ~12,8 KB (`<template id="B:0">` + bloco escondido + script inline), e quem não roda JavaScript
+  // veria a página vazia (FR-028).
   const { prelude } = await prerender(
     <RouterProvider initial={path}>
       <LanguageProvider>
@@ -38,6 +41,7 @@ export async function renderRoute(path: string): Promise<RenderedRoute> {
         </ThemeProvider>
       </LanguageProvider>
     </RouterProvider>,
+    { progressiveChunkSize: Number.MAX_SAFE_INTEGER },
   );
 
   return {

@@ -15,7 +15,7 @@ const page = (
     ...alt.map((href) => `<link rel="alternate" hreflang="en" href="${BASE}${href}" />`),
     '</head><body>',
     root
-      ? `<div id="root"><div>x</div>${'<main>'.repeat(main)}${'<h1>t</h1>'.repeat(h1)}</div>`
+      ? `<div id="root"><div>x</div>${'<main>'.repeat(main)}${'<h1>t</h1>'.repeat(h1)}${'</main>'.repeat(main)}</div>`
       : '<div id="root"></div>',
     '</body></html>',
   ].join('');
@@ -99,6 +99,21 @@ describe('checkDist', () => {
     mkdirSync(join(root, '.vite'));
     expect(checkDist(root)).toContain('dist/.vite: sobrou do build');
     expect(checkDist(join(root, 'nao-existe'))[0]).toMatch(/pasta inexistente/);
+  });
+
+  it('acusa trecho adiado pelo React (template B:, bloco escondido, script inline)', () => {
+    const deferred = `${page()}<template id="B:0"></template><div hidden id="S:0"></div><script>$RC("B:0","S:0")</script>`;
+    const problems = checkDist(dist({ ...ESSENTIAL, 'g.html': deferred }));
+
+    expect(problems.some((p) => p.startsWith('g.html: trecho adiado pelo React'))).toBe(true);
+  });
+
+  it('acusa <h1> fora do <main>', () => {
+    const outside =
+      '<html><body><div id="root"><h1>t</h1><main><p>x</p></main></div></body></html>';
+    const problems = checkDist(dist({ ...ESSENTIAL, 'h.html': outside }));
+
+    expect(problems).toContain('h.html: o <h1> não está dentro do <main>');
   });
 
   it('fileForPath é o mesmo mapa do plugin', () => {

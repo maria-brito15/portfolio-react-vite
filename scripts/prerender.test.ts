@@ -154,3 +154,18 @@ describe('pré-render de cada rota × idioma (FR-028)', () => {
     expect(() => assembleDocument({ template: '<html></html>', rendered: page })).toThrow(/root/);
   });
 });
+
+describe('o conteúdo vem inteiro no HTML, sem JavaScript (FR-028)', () => {
+  it.each(PATHS)(
+    '$path: sem trecho adiado (template B:, bloco escondido, script inline) e o h1 está dentro do main',
+    async ({ path }) => {
+      const { doc } = await build(path);
+
+      expect(doc).not.toMatch(/<template id="B:/);
+      expect(doc).not.toMatch(/id="S:\d+"/);
+      expect(doc).not.toMatch(/\$R[CSX]\(/);
+      expect(doc).not.toContain('<!--$?-->');
+      expect(doc).toMatch(/<main[^>]*>[\s\S]*<h1[ >][\s\S]*<\/main>/);
+    },
+  );
+});

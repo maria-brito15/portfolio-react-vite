@@ -67,6 +67,13 @@ export function checkDist(dist) {
         problems.push(`${file}: hreflang ${m[1]} aponta para ${m[2]}, que não existe`);
     }
 
+    if (/<template id="B:|id="S:\d+"|\$R[CSX]\(|<!--\$\?-->/.test(html))
+      problems.push(
+        `${file}: trecho adiado pelo React (conteúdo fora do lugar, some sem JavaScript)`,
+      );
+    if (!/<main[^>]*>[\s\S]*<h1[ >][\s\S]*<\/main>/.test(html))
+      problems.push(`${file}: o <h1> não está dentro do <main>`);
+
     if (!/<div id="root"><(?!\/div>)/.test(html))
       problems.push(`${file}: #root vazio (sem pré-render)`);
   }

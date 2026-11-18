@@ -579,3 +579,31 @@ Exit code: 0
 Summary:   OK em 76,7 s: formatação 5,6; lint 12,0; tipos 9,2; testes 44,1; geração (com pré-render) 5,7. Dentro do orçamento; o pré-render soma ~3 s à geração
 Verdict:   PASS
 ```
+
+## T4.3 Hidratação no cliente (TD-008)
+**Entregue:** `src/mount.tsx` (`mount(container, onRecoverableError?)`: `hydrateRoot` quando o `#root` já tem filhos, `createRoot` quando está vazio, como no `vite dev`) e `src/main.tsx` reduzido a importar os estilos e chamar `mount`. O `RouterProvider`, o `LanguageProvider` e o `ThemeProvider` já partiam de estado determinístico (T2.4, T2.5, `useTheme`). `shell.css` antigo não voltou (a T3.4 o reduziu; só entra o que é da casca nova).
+
+**Achado e correção (afeta o FR-028):** ao hidratar `/curriculo` e `/servicos` o teste acusou "The server could not finish this Suspense boundary". A causa estava no HTML gerado pela T4.2, não na hidratação: por padrão o React tira de dentro do `<main>` os trechos acima de ~12,8 KB (`<template id="B:0">` + bloco escondido + script inline `$RC`), então **sem JavaScript o `<main>` dessas páginas (e das versões em inglês) ficava vazio**, e o `checkDist` e o teste da T4.1 não viam (o `<h1>` existia, mas escondido no fim do arquivo). Correção: `renderRoute` passa `progressiveChunkSize: Number.MAX_SAFE_INTEGER` ao `prerender`. Travas novas: `scripts/prerender.test.ts` (38 casos: nenhuma rota × idioma tem `template B:`, bloco `S:n`, `$RC(` nem `<!--$?-->`, e o `<h1>` está dentro do `<main>`) e `scripts/checkDist.mjs` (mesmas duas checagens no `dist` real, com 2 testes novos). Conferido no `dist`: `curriculo.html` sem `template B:` e com o conteúdo dentro do `<main>`.
+
+```
+Claim:     hidratar o HTML gerado por renderRoute não dá aviso nem erro recuperável; hidratar o HTML de outra rota dá
+Command:   npx vitest run src/mount.test.tsx
+Exit code: 0
+Summary:   12 testes (jsdom): 10 rotas (`/`, `/sobre`, `/projetos`, `/curriculo`, `/servicos`, `/contato`, `/terminal`, `/en`, `/en/projects`, `/pagina-inexistente`) hidratam com 0 erros recuperáveis e 0 linhas em console.error/warn; o controle (HTML de /sobre sobre a URL /projetos) é detectado; sem HTML no #root cria a árvore do zero. O teste empresta as web streams do Node ao jsdom e ignora um único aviso do React que só existe por rodar servidor e cliente no mesmo processo ("multiple renderers concurrently rendering the same context provider")
+Verdict:   PASS
+```
+```
+Claim:     o dist real passa nas checagens novas
+Command:   node scripts/checkDist.mjs dist
+Exit code: 0
+Summary:   `checkDist: OK (40 páginas)`
+Verdict:   PASS
+```
+```
+Claim:     o gate passa
+Command:   npm run verify
+Exit code: 0
+Summary:   OK; a máquina estava sob carga (todas as etapas 3 a 5 vezes mais lentas, inclusive formatação 19,5 s e lint 67,3 s): testes 67,0 s (dentro dos 90 s), total 206,0 s acima dos 180 s. Na rodada anterior, com a máquina livre, deu 76,7 s com o mesmo conjunto. A remedir
+Verdict:   PASS (orçamento a remedir)
+```
+**Não verificado:** "o `vite dev` continua abrindo o site" (precisa subir o servidor; o modo automático negou isso antes). O caminho `createRoot` está coberto pelo teste "sem HTML no #root"; o e2e (`npx playwright test e2e/site.e2e.ts`) sobe o `vite dev` e deve ser repetido pela Duda.
