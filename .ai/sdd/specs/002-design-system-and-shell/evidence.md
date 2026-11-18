@@ -515,3 +515,22 @@ Exit code: 0
 Summary:   OK em 83,1 s (orçamento 180 s): formatação 4,4; lint 18,5; tipos 13,9; testes 43,6; geração 2,7. Uma execução anterior falhou no lint (escape inútil numa regex do teste), corrigida
 Verdict:   PASS
 ```
+
+## T3.8 Estado nunca só por cor (TD-023)
+**Entregue:** `aria-current="page"` (item atual do menu) e `aria-current="true"` (idioma atual) já vinham da T3.2 e da T2.6; esta tarefa acrescenta a regra comum em `shell.css`: `.hdr [aria-current]`, `.hdr [aria-pressed='true']` e `.hdr [aria-expanded='true']` ganham `font-weight: 700` e `text-decoration: underline` (substitui a regra só do menu). `src/styles/state.test.ts` lê todas as folhas e falha se uma regra com `[aria-current|pressed|expanded]` mudar só cor, fundo, contorno em cor, sombra ou opacidade.
+**Isenção com dono (registrar):** duas regras do FAQ em `services.css` (`.faq-item:has(.faq-q[aria-expanded='true'])` e `.faq-q[aria-expanded='true']`) só mudam a cor; a abertura do item é mostrada também pela seta que gira (regra seguinte, `transform`). São da spec da página de Serviços e ficam isentas no teste, que confere que as isenções ainda existem (ao saírem, a lista é limpa).
+
+```
+Claim:     nenhuma regra de estado muda só a cor; o detector pega uma regra plantada que só muda a cor
+Command:   npx vitest run src/styles/state.test.ts
+Exit code: 0
+Summary:   4 testes: nenhuma regra fora das 2 isenções muda só a cor; as isenções existem; menu, botão ligado e menu aberto ganham font-weight e text-decoration em shell.css; regra plantada `.x[aria-current='page'] { color: red }` é pega (também dentro de @media) e a que acrescenta peso passa
+Verdict:   PASS
+```
+```
+Claim:     o gate passa
+Command:   npm run verify
+Exit code: 0
+Summary:   OK em 93,6 s (orçamento 180 s): formatação 5,6; lint 23,4; tipos 17,4; testes 44,2; geração 3,0
+Verdict:   PASS
+```

@@ -362,7 +362,10 @@ html[data-lang-offer] body {
   padding: 0 var(--space-2);
   color: var(--text);
 }
-.hdr-nav a[aria-current='page'] {
+/* Estado nunca só por cor (T3.8, FR-040): a página atual, o botão ligado e o menu aberto ganham peso e sublinhado. */
+.hdr [aria-current],
+.hdr [aria-pressed='true'],
+.hdr [aria-expanded='true'] {
   font-weight: 700;
   text-decoration: underline;
   text-underline-offset: 0.3em;
