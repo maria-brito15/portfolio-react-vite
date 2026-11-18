@@ -256,17 +256,12 @@ export function TerminalProvider({ children }: { children: ReactNode }) {
 
   // /terminal?cmd=academico: o terminal já abre com o comando executado (visão em
   // terminal). Só comandos que têm página dedicada; o parâmetro some da URL em
-  // seguida. O endereço antigo /?cmd=academico (quando a home era o terminal)
-  // continua valendo: é redirecionado para /terminal?cmd=academico.
+  // seguida. O endereço antigo /?cmd=academico é redirecionado pelo roteador
+  // (legacyCommandTarget), pois esta sessão só existe em /terminal.
   const handled = useRef('');
 
   useEffect(() => {
     if (!search || !new URLSearchParams(search).has('cmd')) return;
-    if (normalizePath(path) === '/') {
-      navigate(TERMINAL_PATH + search, { replace: true });
-
-      return;
-    }
     if (normalizePath(path) !== TERMINAL_PATH || handled.current === search) return;
     handled.current = search;
 

@@ -571,3 +571,11 @@ export function legacyTarget(path: string, hash: string) {
 
   return legacyHashes[fold(decoded)];
 }
+
+// Endereço antigo `/?cmd=…` (quando a home era o terminal): vale como `/terminal?cmd=…`. Resolvido
+// no roteador, porque a sessão do terminal só existe dentro de `/terminal` (T3.5).
+export function legacyCommandTarget(path: string, search: string) {
+  if (normalizePath(path) !== '/' || !new URLSearchParams(search).has('cmd')) return undefined;
+
+  return TERMINAL_PATH + search;
+}

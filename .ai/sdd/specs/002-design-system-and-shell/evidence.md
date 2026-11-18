@@ -443,3 +443,29 @@ Summary:   a falha foi `desktop · dark › /academico`: o `h1` não apareceu em
 Verdict:   PASS (com 1 falha intermitente registrada)
 ```
 **T3.4: FECHADA** (o item PENDENTE acima está resolvido).
+
+## T3.5 Terminal fora do 1º acesso (TD-025 (a), R-001)
+**Entregue:** `App.tsx` não importa mais `TerminalProvider`; a sessão do terminal nasce em `TerminalPage` (chunk carregado sob demanda). Todos os consumidores da sessão (`Terminal`, `TerminalOutput`, `outputs`, `pageIndex` e o `RunButton`, usado só pelo `CommandCatalog`) já viviam dentro da página do terminal, então o `RunButton` **não precisou degradar** nem carregar o provedor sob demanda. O histórico digitado continua em `sessionStorage`. Efeito colateral tratado: o redirecionamento do endereço antigo `/?cmd=…` para `/terminal?cmd=…` morava no provedor (que já não existe na home); passou ao roteador (`legacyCommandTarget` em `routes.ts`, usado por `readLocation` em `router.tsx`), e o ramo `/` saiu do provedor.
+
+**Medição do chunk de entrada (`vite build`):**
+| | entrada `index-*.js` | gzip | `TerminalPage-*.js` | gzip |
+| --- | --- | --- | --- | --- |
+| antes | 380,83 kB | 120,77 kB | 6,17 kB | 2,48 kB |
+| depois | 302,10 kB | 96,95 kB | 52,46 kB | 15,98 kB |
+
+A entrada caiu 78,7 kB (23,8 kB em gzip, −19,7 %); o terminal foi para o chunk da rota.
+
+```
+Claim:     App.tsx não importa a sessão do terminal; ela só existe no chunk da rota; o terminal e o /?cmd= antigo seguem funcionando
+Command:   git grep -n "TerminalSession" -- src/App.tsx ; npx vitest run src/appImports.test.ts src/terminal src/App.test.tsx
+Exit code: 1 (grep sem achados), 0
+Summary:   appImports.test.ts (3): App.tsx sem TerminalSession/TerminalProvider/src/terminal; TerminalPage é lazy e cria o provedor; só a página do terminal usa o CommandCatalog/RunButton. Os testes do terminal e o do /?cmd=… (App.test e sections.nav) passam com o redirecionamento no roteador. Antes do ajuste, 2 testes falhavam (o /?cmd= não redirecionava)
+Verdict:   PASS
+```
+```
+Claim:     o gate passa
+Command:   npm run verify
+Exit code: 0
+Summary:   OK em 188,7 s (testes 99,8 s). Orçamento de 180 s/90 s estourado por pouco com a máquina sob carga: prettier 13,1 s e tsc 30,1 s (eram 6,9 e 13,3 s na T3.3, mesmo código de base). A repetir com a máquina livre
+Verdict:   PASS (orçamento a remedir)
+```

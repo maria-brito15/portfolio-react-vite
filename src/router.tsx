@@ -14,7 +14,7 @@ import {
 // uma biblioteca de rotas completa não se justifica. Cada entrada do histórico
 // guarda `{ idx }` (quantas navegações internas existem antes dela): com
 // `idx > 0` a página anterior é do próprio site e "Voltar" pode usar history.back().
-import { legacyTarget, normalizePath } from './data/routes';
+import { legacyCommandTarget, legacyTarget, normalizePath } from './data/routes';
 
 interface RouterLocation {
   path: string;
@@ -38,7 +38,9 @@ const currentIndex = (): number => window.history.state?.idx ?? 0;
 function redirectLegacy() {
   if (typeof window === 'undefined') return;
 
-  const target = legacyTarget(window.location.pathname, window.location.hash);
+  const target =
+    legacyCommandTarget(window.location.pathname, window.location.search) ??
+    legacyTarget(window.location.pathname, window.location.hash);
 
   if (target) window.history.replaceState({ idx: currentIndex() }, '', target);
 }

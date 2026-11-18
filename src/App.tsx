@@ -1,7 +1,6 @@
 import { Suspense } from 'react';
 import { useRouter } from './router';
 import { findPageByPath } from './data/routes';
-import { TerminalProvider } from './terminal/TerminalSession';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import {
@@ -70,13 +69,13 @@ export default function App() {
   const route = findPageByPath(path);
 
   return (
-    <TerminalProvider>
+    <>
       <SiteShell bare={route?.bare}>
         <Suspense fallback={null}>
           <Page id={route?.id} />
         </Suspense>
       </SiteShell>
       {!route?.bare && <GlobalOverlays />}
-    </TerminalProvider>
+    </>
   );
 }
