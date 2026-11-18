@@ -489,3 +489,29 @@ Exit code: 0
 Summary:   OK em 74,3 s (orçamento 180 s): formatação 4,5; lint 18,4; tipos 13,4; testes 35,5; geração 2,5. Execuções anteriores falharam em 2 testes do terminal (phase3) que esperavam a 404 antiga, no lint e num link duplicado ("Projetos" no menu e nas sugestões)
 Verdict:   PASS
 ```
+
+## T3.7 Cabeçalhos de segurança e regras de 404 no `netlify.toml` (TD-014, TD-015)
+**Entregue:** os 4 cabeçalhos de segurança já estavam em `for = "/*"` no `netlify.toml`; esta tarefa os **trava com teste** e acrescenta as três regras `[[redirects]]` na ordem do design, sem `force`: `/en/` → `/en` (301), `/en/*` → `/en/404.html` (404), `/*` → `/404.html` (404). O bloco `[functions]` (008) não foi tocado. Sem CSP (TD-015). `scripts/headers.test.ts` lê o TOML com um leitor mínimo próprio (não há parser de TOML instalado).
+**Atenção (ligação com a T4.2):** `/en/404.html` e `/404.html` só passam a existir quando o pré-render (T4.2) os gerar; até lá as regras apontam para arquivos que o build ainda não escreve (hoje o site não é publicado por esta branch).
+
+```
+Claim:     os 4 cabeçalhos e a ordem das regras estão travados; o teste falha ao remover um cabeçalho
+Command:   npx vitest run scripts/headers.test.ts
+Exit code: 0
+Summary:   7 testes: os 4 cabeçalhos em for="/*"; falha provada com cópia em memória sem cada um dos 4 (e com X-Frame-Options trocado por SAMEORIGIN); sem Content-Security-Policy; as 3 regras na ordem e sem force; sem a regra antiga "/* → /index.html"
+Verdict:   PASS
+```
+```
+Claim:     o bloco [functions] não aparece no diff
+Command:   git diff -U0 -- netlify.toml | grep -n "functions"
+Exit code: 1
+Summary:   nenhuma linha de [functions] no diff
+Verdict:   PASS
+```
+```
+Claim:     o gate passa
+Command:   npm run verify
+Exit code: 0
+Summary:   OK em 83,1 s (orçamento 180 s): formatação 4,4; lint 18,5; tipos 13,9; testes 43,6; geração 2,7. Uma execução anterior falhou no lint (escape inútil numa regex do teste), corrigida
+Verdict:   PASS
+```

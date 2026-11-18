@@ -48,3 +48,21 @@
   for = "/cases/*"
   [headers.values]
     Cache-Control = "public, max-age=604800"
+
+# Endereços que não existem respondem 404 de verdade, na ordem abaixo (a primeira que casa vale) e
+# sem `force`: um arquivo que existe sempre vence. /en/ (com barra) vira /en; o resto de /en/ cai no
+# 404 em inglês; o resto do site, no 404 em português. Os HTMLs vêm do pré-render (spec 002, T4.2).
+[[redirects]]
+  from = "/en/"
+  to = "/en"
+  status = 301
+
+[[redirects]]
+  from = "/en/*"
+  to = "/en/404.html"
+  status = 404
+
+[[redirects]]
+  from = "/*"
+  to = "/404.html"
+  status = 404
