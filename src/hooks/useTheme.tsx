@@ -10,8 +10,11 @@ const ThemeContext = createContext<ThemeValue>([DEFAULT_THEME, () => {}, () => {
 
 // O script de boot (src/boot/boot.ts, injetado no <head>) já aplica o tema antes do React
 // carregar (evita o "flash" do tema errado); aqui o estado parte desse valor. Valor
-// desconhecido cai no tema padrão.
+// desconhecido cai no tema padrão. No pré-render (sem `document`) vale o padrão: nada do HTML depende
+// do tema (o texto do botão de tema é escolhido por CSS), então a hidratação não diverge.
 function readInitialTheme(): Theme {
+  if (typeof document === 'undefined') return DEFAULT_THEME;
+
   const applied = document.documentElement.getAttribute('data-theme');
 
   return isTheme(applied) ? applied : DEFAULT_THEME;

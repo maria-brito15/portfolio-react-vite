@@ -534,3 +534,21 @@ Exit code: 0
 Summary:   OK em 93,6 s (orçamento 180 s): formatação 5,6; lint 23,4; tipos 17,4; testes 44,2; geração 3,0
 Verdict:   PASS
 ```
+
+## T4.1 `entry-server` e montador do documento (TD-008)
+**Entregue:** `src/entry-server.tsx` com `renderRoute(path)` (`prerender` de `react-dom/static` sobre `RouterProvider initial` > `LanguageProvider` > `ThemeProvider` > `App`; devolve `routeId`, `lang`, `status` 200/404, `bare` e o HTML do `#root`, com o `lazy` já resolvido) e o montador `assembleDocument({ template, rendered, preload })` (troca o `<html>` por `lang` e `data-shell="bare"` só na rota sem casca, o bloco `seo:head` pelo `<head>` da rota e do idioma com `hreflang`, canonical e JSON-LD, mais os `modulepreload`; remove o `<noscript>` antigo; põe o HTML no `#root`; falha alto se o template não tem `#root`). Para o App pré-renderizar em Node, uma única mudança de código: `useTheme.tsx` devolve o tema padrão quando não há `document` (nada do HTML depende do tema: o texto do botão de tema é escolhido por CSS, então a hidratação não diverge; no cliente continua lendo o `data-theme` do boot). O resto da casca e das páginas já lia só dado determinístico (era o que as T2.4, T2.5 e T3.3 preparavam).
+
+```
+Claim:     o HTML de cada rota × idioma é gerado em memória e passa nas checagens
+Command:   npx vitest run scripts/prerender.test.ts
+Exit code: 0
+Summary:   83 testes (projeto `unit`, Node, sem jsdom): 19 rotas × 2 idiomas com `<main>`, um só `<h1>`, `lang`, faixa decorativa e, fora do terminal, cabeçalho, skip link e rodapé (nunca a faixa de idioma, que só existe no cliente); título, canonical e 3 `hreflang` recíprocos iguais nos dois idiomas; `/xyz` e `/en/xyz`: status 404, um `h1`, noindex, sem canonical nem hreflang; `data-shell="bare"` só no terminal; boot antes do CSS e do script, sem async/defer/module; `<noscript>` antigo some; `modulepreload`; erro sem `#root`. Obs.: o template do teste é sintético; o `dist` real é conferido na T4.2 (`checkDist.mjs`)
+Verdict:   PASS
+```
+```
+Claim:     o gate passa
+Command:   npm run verify
+Exit code: 0
+Summary:   OK em 90,1 s (orçamento 180 s): formatação 5,2; lint 22,6; tipos 15,0; testes 42,6; geração 4,7
+Verdict:   PASS
+```
