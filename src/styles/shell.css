@@ -870,3 +870,57 @@ html[data-lang-offer] body {
   color: var(--text);
   cursor: pointer;
 }
+
+/* ---------- Faixa decorativa e rodapé de créditos (T3.1, FR-036 a FR-038) ---------- */
+.deco-stripe {
+  display: flex;
+  height: 6px;
+}
+.deco-stripe span {
+  flex: 1 1 0;
+}
+.deco-1 {
+  background: var(--deco-1);
+}
+.deco-2 {
+  background: var(--deco-2);
+}
+.deco-3 {
+  background: var(--deco-3);
+}
+.deco-4 {
+  background: var(--deco-4);
+}
+.deco-5 {
+  background: var(--deco-5);
+}
+.credits {
+  display: grid;
+  gap: var(--space-2, 0.5rem);
+  justify-items: center;
+}
+.credits p {
+  margin: 0;
+}
+.credits-title {
+  font-weight: 700;
+  color: var(--text);
+}
+.credits-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2, 0.5rem) var(--space-4, 1.5rem);
+  margin: 0;
+}
+.credits-list div {
+  display: flex;
+  gap: 0.5em;
+}
+.credits-list dt {
+  text-transform: uppercase;
+}
+.credits-list dd {
+  margin: 0;
+  color: var(--text);
+}

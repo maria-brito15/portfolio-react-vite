@@ -21,6 +21,16 @@ export const ui = {
     theme: { toLight: 'Modo claro', toDark: 'Modo escuro' },
     language: { label: 'EN', switchTo: 'Switch to English' },
     langSwitch: { label: 'Idioma', pt: 'Português', en: 'English' },
+    credits: {
+      title: 'UM PORTFÓLIO DE ENGENHARIA',
+      directedBy: 'DIRECTED BY',
+      writer: 'Roteiro e código',
+      cast: 'Elenco',
+      shotIn: 'Filmado em',
+      end: 'Fim',
+      noCookies: 'sem cookies',
+      home: 'Voltar ao início',
+    },
     langOffer: {
       label: 'Oferta de idioma',
       text: 'Esta página também está em inglês.',
@@ -216,6 +226,16 @@ export const ui = {
     theme: { toLight: 'Light mode', toDark: 'Dark mode' },
     language: { label: 'PT-BR', switchTo: 'Mudar para português' },
     langSwitch: { label: 'Language', pt: 'Português', en: 'English' },
+    credits: {
+      title: 'AN ENGINEERING PORTFOLIO',
+      directedBy: 'DIRECTED BY',
+      writer: 'Written and coded by',
+      cast: 'Cast',
+      shotIn: 'Shot in',
+      end: 'The end',
+      noCookies: 'no cookies',
+      home: 'Back to start',
+    },
     langOffer: {
       label: 'Language offer',
       text: 'This page is also available in English.',

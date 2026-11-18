@@ -331,3 +331,21 @@ Exit code: 0
 Summary:   OK em 141,8 s (orçamento 180 s; máquina oscilando). A execução anterior falhou só no lint do LanguageOffer (useEffect com setState), corrigida trocando por useSyncExternalStore
 Verdict:   PASS
 ```
+
+## T3.1 Faixa decorativa, rodapé de créditos e elenco (TD-020, TD-021)
+**Entregue:** `DecorativeStripe.tsx` (`aria-hidden`, 5 `<span class="deco-N">`, 6 px, cores só por `--deco-1..5` no CSS, sem texto nem foco); `src/content/credits.content.ts` (roteiro e código "Duda", filmado em "Belo Horizonte, MG", valores confirmados pela Duda em 2026-11-17; elenco declarado `react`, `vite`, `typescript`) com schema em `src/content/schema/credits.ts` (o lint dos arquivos de conteúdo só permite `import type`, por isso o schema fica fora) e registrado em `registry.ts` (o contentGuard passa a validá-lo); `scripts/castVersions.ts` lê a versão maior instalada de `node_modules/<nome>/package.json` e `vite.config.ts` injeta `__CAST__` (molde de `__BUILD__`); `src/data/cast.ts` lê `__CAST__` (fora do Vite, tabela vazia: mostra só o nome, sem versão inventada); `Footer.next.tsx` (nome provisório; a T3.3 faz `git mv` para `Footer.tsx`): título, "directed by", lista de definição (roteiro e código, elenco, filmado em, fim), "sem cookies"/"no cookies" e **um só link**, para a home do idioma (`pathInLang`); rótulos `credits` em `ui.ts` (PT e EN); CSS no fim de `shell.css`. A linha "trilha sonora" não entra. `Footer.tsx` antigo e o `SiteShell` não foram tocados (a T3.3 monta).
+
+```
+Claim:     rodapé com as 4 seções, "sem cookies" e um só link; elenco = versão instalada; nomes do elenco existem em package.json; faixa com 5 cores e sem texto
+Command:   npx vitest run src/components/shell/Footer.test.tsx src/components/shell/DecorativeStripe.test.tsx
+Exit code: 0
+Summary:   Footer.test (PT e EN, 4 dt, um link /  e /en, elenco montado a partir da versão instalada lida do disco, cada nome em dependencies/devDependencies, schema recusa elenco vazio e chave extra, pacote ausente = null) e DecorativeStripe.test (aria-hidden, deco-1..5, texto vazio, nada focável) passam; paridade de ui.ts e contentGuard seguem verdes
+Verdict:   PASS
+```
+```
+Claim:     o gate passa
+Command:   npm run verify
+Exit code: 0
+Summary:   OK em 92,7 s (orçamento 180 s): formatação 6,7; lint 20,0; tipos 13,2; testes 48,0; geração 4,9. A primeira execução falhou no lint (arquivo de conteúdo importava zod e o schema), corrigida movendo o schema para src/content/schema/credits.ts
+Verdict:   PASS
+```

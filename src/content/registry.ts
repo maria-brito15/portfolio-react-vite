@@ -2,6 +2,8 @@
 // Explícito (e não `import.meta.glob`) porque o `vite.config.ts` o importa direto, e lá não há glob.
 // Um `*.content.ts` que existe no disco e não está aqui é problema de verificação (EC-10).
 import type { ZodType } from 'zod';
+import { credits } from './credits.content';
+import { CreditsSchema } from './schema/credits';
 
 export interface RegistryEntry {
   /** Caminho relativo à raiz do projeto, com `/`: `src/content/exemplo.content.ts`. */
@@ -10,5 +12,6 @@ export interface RegistryEntry {
   data: unknown;
 }
 
-// Vazio hoje: lista vazia é válida (EC-11). A spec 003 acrescenta o primeiro conteúdo real.
-export const registry: RegistryEntry[] = [];
+export const registry: RegistryEntry[] = [
+  { file: 'src/content/credits.content.ts', schema: CreditsSchema, data: credits },
+];

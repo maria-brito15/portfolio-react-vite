@@ -2,14 +2,20 @@ import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import { seoPlugin } from './scripts/seoPlugin';
 import { buildInfo } from './scripts/buildInfo';
+import { castVersions } from './scripts/castVersions';
+import { credits } from './src/content/credits.content';
 import { personalGuardPlugin } from './scripts/personalGuard';
 import { contentGuardPlugin } from './scripts/contentGuard';
 import { secretGuardPlugin } from './scripts/secretGuard';
 
 export default defineConfig(({ command }) => ({
   plugins: [react(), seoPlugin(), personalGuardPlugin(), contentGuardPlugin(), secretGuardPlugin()],
-  // Dados reais do build para o comando `stats` (src/data/build.ts).
-  define: { __BUILD__: JSON.stringify(buildInfo(command)) },
+  define: {
+    // Dados reais do build para o comando `stats` (src/data/build.ts).
+    __BUILD__: JSON.stringify(buildInfo(command)),
+    // Versão maior instalada do elenco do rodapé (src/data/cast.ts, FR-037).
+    __CAST__: JSON.stringify(castVersions(credits.cast.map((member) => member.package))),
+  },
   build: {
     // JS e CSS com hash vão para /static (cache imutável); /assets guarda só as
     // imagens fixas (foto, imagem de compartilhamento), que não levam hash.
