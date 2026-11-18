@@ -552,3 +552,30 @@ Exit code: 0
 Summary:   OK em 90,1 s (orçamento 180 s): formatação 5,2; lint 22,6; tipos 15,0; testes 42,6; geração 4,7
 Verdict:   PASS
 ```
+
+## T4.2 Plugin de pré-render dentro do `vite build` (TD-008, TD-014)
+**Entregue:** `scripts/prerender.ts` (`prerenderSite`) e o `closeBundle` assíncrono de `scripts/seoPlugin.ts` (que substitui o `<noscript>` antigo): monta um build de servidor aninhado do `entry-server` (`configFile: false`, só `react()`, `define` herdado, `copyPublicDir: false`, `emptyOutDir`, saída `.prerender/`; nunca instancia o próprio plugin, e `closeBundle` ainda ignora um build `ssr` por segurança), importa o resultado, renderiza cada rota × idioma e grava um HTML por endereço (PT: `dist/index.html`, `dist/sobre.html`…; EN: **home em `dist/en.html`**, `dist/en/about.html`…) mais `dist/404.html` e `dist/en/404.html`; lê `dist/.vite/manifest.json` (`build.manifest: true`) e põe no `<head>` de cada rota o `modulepreload` e o CSS dos chunks dela (mapa rota → fonte lazy em `prerender.ts`, conferido por teste contra `lazyPages.ts`); **falha o build** sem `<main>` ou sem `<h1>`; `finally` apaga `.prerender/` e `dist/.vite/`. Para o plugin carregar no config do Vite sem React nem CSS, o bloco `seo:head` foi para `src/data/seoDocument.ts`. `scripts/checkDist.mjs` (e `.d.mts`) confere o `dist` real. `.prerender` e `dist-prova` entraram em `.gitignore`, `.prettierignore` e nos `ignores` do `eslint.config.js`. O sitemap segue só com os endereços PT (não pedido: sem mudança).
+
+**Observação:** o build aninhado emite um aviso do Vite ("seoHead.ts é importado dinamicamente por useDocumentMeta e estaticamente por seoDocument.ts"); só vale para o build de servidor, onde não há divisão de chunks. Sem efeito no cliente.
+
+```
+Claim:     o plugin evita recursão, limpa com sucesso ou falha e falha sem <h1>; checkDist pega dist ruim
+Command:   npx vitest run scripts/seoPlugin.test.ts scripts/checkDist.test.ts scripts/prerenderPlugin.test.ts
+Exit code: 0
+Summary:   endereço → arquivo; config aninhada sem o plugin de SEO e sem `public/`; closeBundle ignora build ssr; chunks e CSS pelo manifesto (sem o que a entrada já carrega); toda rota lazy do App tem fonte mapeada e vice-versa; assertRendered; `prerenderSite` com entrada falsa grava um HTML por endereço e apaga `.prerender/` e `dist/.vite/` nos 3 casos (sucesso, página sem `<h1>`, build aninhado quebrado); checkDist acusa sem h1/dois h1/sem main, arquivo essencial ausente, #root vazio, hreflang para arquivo inexistente, `data-shell="bare"` fora do terminal e `.vite/` sobrando
+Verdict:   PASS
+```
+```
+Claim:     o `dist` real tem cada rota × idioma pré-renderizada
+Command:   npm run verify ; node scripts/checkDist.mjs dist ; ls -a | grep prerender ; ls -a dist | grep "^\.vite"
+Exit code: 0 ; 0 ; 1 ; 1
+Summary:   `checkDist: OK (40 páginas)` (19 rotas × 2 idiomas + 2 de 404); `.prerender/` e `dist/.vite/` não existem depois do build; `dist/terminal.html` e `dist/en/terminal.html` com `data-shell="bare"`; `dist/sobre.html` com `modulepreload` e CSS da rota
+Verdict:   PASS
+```
+```
+Claim:     o orçamento da 001 vale depois do pré-render (suíte ≤ 90 s, verify ≤ 180 s)
+Command:   npm run verify
+Exit code: 0
+Summary:   OK em 76,7 s: formatação 5,6; lint 12,0; tipos 9,2; testes 44,1; geração (com pré-render) 5,7. Dentro do orçamento; o pré-render soma ~3 s à geração
+Verdict:   PASS
+```

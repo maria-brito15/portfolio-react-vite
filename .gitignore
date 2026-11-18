@@ -23,3 +23,7 @@ src.zip
 
 # registro local de tempos do verify (T1.3)
 .verify/
+
+# pré-render do build (spec 002, T4.2) e build de prova (T5.1): geradas e apagadas
+.prerender/
+dist-prova/

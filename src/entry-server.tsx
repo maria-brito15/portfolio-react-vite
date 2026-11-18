@@ -11,7 +11,7 @@ import { LanguageProvider } from './i18n/LanguageContext';
 import { ThemeProvider } from './hooks/useTheme';
 import { RouterProvider } from './router';
 import { NOT_FOUND_ID } from './data/seo';
-import { headTags, jsonLdFor, type HeadTag } from './data/seoHead';
+import { escapeHtml, headBlock } from './data/seoDocument';
 import { findPageByPath, langOfPath } from './data/routes';
 import type { Lang } from './types';
 
@@ -51,32 +51,9 @@ export async function renderRoute(path: string): Promise<RenderedRoute> {
 
 // ---------------------------------------------------------------- montador do documento
 
-const escapeHtml = (text: string) =>
-  text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-
-const renderTag = ({ tag, attrs }: HeadTag) =>
-  `<${tag} ${Object.entries(attrs)
-    .map(([key, value]) => `${key}="${escapeHtml(value)}"`)
-    .join(' ')} />`;
-
 const HEAD = /<!-- seo:head -->[\s\S]*?<!-- \/seo:head -->/;
 const BODY = /<!-- seo:body -->[\s\S]*?<!-- \/seo:body -->/;
 const ROOT = '<div id="root"></div>';
-
-export function headBlock(routeId: string, lang: Lang): string {
-  const { title, tags } = headTags(routeId, lang);
-  const graph = jsonLdFor(routeId, lang);
-  // `<` escapado: nada dentro do JSON pode fechar a tag <script>.
-  const json = graph ? JSON.stringify(graph).replace(/</g, '\\u003c') : '';
-
-  return [
-    '<!-- seo:head -->',
-    `<title>${escapeHtml(title)}</title>`,
-    ...tags.map(renderTag),
-    ...(json ? [`<script id="ld-json" type="application/ld+json">${json}</script>`] : []),
-    '<!-- /seo:head -->',
-  ].join('\n    ');
-}
 
 export interface AssembleInput {
   /** `dist/index.html` do build do cliente (com o boot, o CSS e o script já injetados). */
@@ -84,14 +61,24 @@ export interface AssembleInput {
   rendered: RenderedRoute;
   /** Caminhos (`/static/…js`) dos chunks da rota, para `<link rel="modulepreload">`. */
   preload?: string[];
+  /** Folhas de estilo dos chunks da rota (`/static/…css`), para a página não piscar sem estilo. */
+  styles?: string[];
 }
 
-export function assembleDocument({ template, rendered, preload = [] }: AssembleInput): string {
+export function assembleDocument({
+  template,
+  rendered,
+  preload = [],
+  styles = [],
+}: AssembleInput): string {
   const { routeId, lang, bare, html } = rendered;
 
   if (!template.includes(ROOT)) throw new Error('o template não tem <div id="root"></div>');
 
-  const links = preload.map((href) => `<link rel="modulepreload" href="${escapeHtml(href)}" />`);
+  const links = [
+    ...preload.map((href) => `<link rel="modulepreload" href="${escapeHtml(href)}" />`),
+    ...styles.map((href) => `<link rel="stylesheet" crossorigin href="${escapeHtml(href)}" />`),
+  ];
   const attrs = `lang="${lang === 'pt' ? 'pt-BR' : 'en'}"${bare ? ' data-shell="bare"' : ''}`;
 
   return template

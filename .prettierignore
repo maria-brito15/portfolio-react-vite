@@ -11,3 +11,5 @@ public
 test-results
 playwright-report
 scripts/status.mjs
+.prerender
+dist-prova

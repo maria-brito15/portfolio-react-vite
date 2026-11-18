@@ -9,6 +9,8 @@ export default [
   {
     ignores: [
       'dist',
+      '.prerender',
+      'dist-prova',
       'docs',
       'node_modules',
       'coverage',

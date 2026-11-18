@@ -20,6 +20,8 @@ export default defineConfig(({ command }) => ({
     // JS e CSS com hash vão para /static (cache imutável); /assets guarda só as
     // imagens fixas (foto, imagem de compartilhamento), que não levam hash.
     assetsDir: 'static',
+    // O pré-render lê o manifesto para o modulepreload e o CSS de cada rota (scripts/prerender.ts).
+    manifest: true,
   },
   test: {
     globals: true,
