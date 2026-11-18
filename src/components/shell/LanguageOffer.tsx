@@ -52,10 +52,18 @@ export default function LanguageOffer() {
   const [closed, setClosed] = useState(false);
   const shown = offer && !closed;
 
-  // O espaço reservado só existe enquanto a faixa pode aparecer.
+  // O espaço reservado só existe enquanto a faixa pode aparecer. Só se libera depois da hidratação:
+  // no 1º passe (igual ao HTML do servidor) `offer` é falso mesmo quando a faixa vai aparecer, e
+  // remover a marca ali faria o conteúdo saltar (CLS).
+  const ready = useSyncExternalStore(
+    subscribe,
+    () => true,
+    () => false,
+  );
+
   useEffect(() => {
-    if (!shown) document.documentElement.removeAttribute(ROOT_FLAG);
-  }, [shown]);
+    if (ready && !shown) document.documentElement.removeAttribute(ROOT_FLAG);
+  }, [ready, shown]);
 
   if (!shown) return null;
 

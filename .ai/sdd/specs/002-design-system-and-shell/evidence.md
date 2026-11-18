@@ -657,3 +657,13 @@ Exit code: não executado
 Summary:   o modo automático negou a execução (o Playwright sobe servidores e abre o Chrome), como na T3.4. Os testes estão escritos mas **nunca rodaram**: é provável que o primeiro passe revele ajustes (largura do link PT/EN, ordem exata do Tab, anel de foco)
 Verdict:   PENDENTE
 ```
+
+### T5.2 (1ª execução do e2e, pela Duda): 33 passam, 9 falham; 2 defeitos reais corrigidos
+```
+Claim:     o e2e da casca passa nos 2 temas × 2 idiomas
+Command:   npm run build:prova && npx playwright test e2e/shell.e2e.ts --project=shell   (Duda, no prompt)
+Exit code: 1
+Summary:   33 de 42 passam (Tab na ordem do FR-016, anel de foco, console limpo e mesma origem, 360 e 1920 px, botão do menu em 1023/1024 px, alvos 44×44, foco e Esc, faixa de idioma como 2º foco). Falharam 9: (a) 8 × "sem rolagem horizontal" em 1023 e 1024 px (sobra de ~200 px): a figura da `/_prova` (`width=1200`) passava da coluna entre 721 e ~1224 px, sem `max-width`; (b) 1 × "espaço da faixa reservado no 1º desenho": o `LanguageOffer` removia `html[data-lang-offer]` no 1º passe da hidratação (igual ao HTML do servidor, em que `offer` é falso) e só depois mostrava a faixa, então o conteúdo saltaria (CLS)
+Verdict:   FAIL (corrigido abaixo; a repetir)
+```
+**Correções:** `.prova img { max-width: 100%; height: auto }` em `shell.css`; `LanguageOffer` só libera o espaço depois da hidratação (`ready` por `useSyncExternalStore`: falso no servidor e no 1º passe, verdadeiro depois). `npm run verify` exit 0 (103,1 s) e `dist-prova` reconstruído (42 páginas, `checkDist` OK). **A repetir pela Duda:** `npm run build:prova && npx playwright test e2e/shell.e2e.ts --project=shell`.

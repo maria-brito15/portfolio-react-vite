@@ -461,3 +461,9 @@ main#conteudo {
   min-height: 44px;
   justify-content: center;
 }
+
+/* A figura da página de prova nunca passa da largura da coluna (T5.2). */
+.prova img {
+  max-width: 100%;
+  height: auto;
+}
