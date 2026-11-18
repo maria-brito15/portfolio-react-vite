@@ -1,4 +1,4 @@
-import { screen, within } from '@testing-library/react';
+import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderApp } from '../../test/helpers';
 import { skillTimeline, type SkillGroup } from '../../data/skillTimeline';
@@ -128,18 +128,19 @@ describe('404 temático (CE-03)', () => {
     expect(suggestPages('/projetos/x/y/%').length).toBeLessThanOrEqual(3);
   });
 
-  it('a página mostra "você quis dizer" com links e a dica do ls', () => {
+  // As sugestões da página (rotas do menu) e a dica do `ls` mudaram na T3.6: ver NotFound.test.tsx.
+  it('a página mostra "você quis dizer" com links e a volta para a home', async () => {
     renderApp('/projeto');
     expect(screen.getByText('Página não encontrada')).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: '~/projetos' })).toHaveAttribute('href', '/projetos');
-    expect(screen.getByText(/digite ls na barra de comandos/)).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /Voltar ao portfólio/ })).toHaveAttribute('href', '/');
-  });
 
-  it('sem nada parecido, mostra só o ls e a volta para a home', () => {
-    renderApp('/zzzzzzzzzz');
-    expect(screen.queryByText('Você quis dizer:')).toBeNull();
-    expect(screen.getByText(/digite ls na barra de comandos/)).toBeInTheDocument();
+    const suggest = screen.getByText('Você quis dizer:').parentElement as HTMLElement;
+
+    expect(within(suggest).getByRole('link', { name: 'Projetos' })).toHaveAttribute(
+      'href',
+      '/projetos',
+    );
+    expect(screen.getByRole('link', { name: /Voltar ao portfólio/ })).toHaveAttribute('href', '/');
+    await waitFor(() => expect(document.title).not.toBe(''));
   });
 });
 

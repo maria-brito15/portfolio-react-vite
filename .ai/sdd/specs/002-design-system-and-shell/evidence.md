@@ -469,3 +469,23 @@ Exit code: 0
 Summary:   OK em 188,7 s (testes 99,8 s). Orçamento de 180 s/90 s estourado por pouco com a máquina sob carga: prettier 13,1 s e tsc 30,1 s (eram 6,9 e 13,3 s na T3.3, mesmo código de base). A repetir com a máquina livre
 Verdict:   PASS (orçamento a remedir)
 ```
+
+## T3.6 Sugestões na 404 (TD-022)
+**Entregue:** `src/data/suggestRoutes.ts` (`suggestRoutes(path, lang)`, função pura: distância de edição sobre o último segmento, contra o rótulo no idioma e o último trecho do endereço PT e EN; só rotas `menu: true`; até 3; desempate pela ordem; sem semelhança ou sem endereço, as 3 primeiras do menu). `NotFound.tsx` mostra as sugestões **depois da hidratação** (`useSyncExternalStore` com `false` no servidor e `true` no cliente: o HTML estático traz as 3 primeiras), com links no idioma da página e o botão para a home (`/` ou `/en`); a dica "digite ls na barra de comandos" saiu (a barra não existe mais) e a chave `tryLs` saiu de `ui.ts` (PT e EN). `suggestPages` (utils) fica, é do terminal.
+
+**Testes:** `suggestRoutes.test.ts` (só rotas do menu, no máximo 3; erro de digitação em PT e EN; "/projects" acha Projetos; sem semelhança = 3 primeiras do menu na ordem; pura; endereço malformado não lança) e `NotFound.test.tsx` (sugestão com link no idioma, home em `/en`, sem a dica da barra, HTML estático com as 3 primeiras e sem "cd /curriculos"). Em `phase3.test.tsx` (terminal) o teste da 404 passou a conferir o link "Projetos" no bloco de sugestões e o teste "sem nada parecido, só o ls" saiu (comportamento substituído por esta tarefa). Os testes esperam o título (`useDocumentMeta` importa o módulo de SEO sob demanda) para não terminarem antes do import.
+
+```
+Claim:     sugestões reais, no máximo 3, links presentes; HTML estático com as 3 primeiras
+Command:   npx vitest run src/data/suggestRoutes.test.ts src/pages/NotFound.test.tsx
+Exit code: 0
+Summary:   10 testes passam (6 de suggestRoutes e 4 de NotFound)
+Verdict:   PASS
+```
+```
+Claim:     o gate passa
+Command:   npm run verify
+Exit code: 0
+Summary:   OK em 74,3 s (orçamento 180 s): formatação 4,5; lint 18,4; tipos 13,4; testes 35,5; geração 2,5. Execuções anteriores falharam em 2 testes do terminal (phase3) que esperavam a 404 antiga, no lint e num link duplicado ("Projetos" no menu e nas sugestões)
+Verdict:   PASS
+```

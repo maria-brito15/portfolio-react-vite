@@ -203,7 +203,6 @@ export const ui = {
       text: 'O endereço acessado não existe neste site.',
       back: '← Voltar ao portfólio',
       didYouMean: 'Você quis dizer:',
-      tryLs: 'Ou digite ls na barra de comandos para ver todas as páginas.',
     },
     draft: {
       title: 'Em construção',
@@ -411,7 +410,6 @@ export const ui = {
       text: "The address you opened doesn't exist on this site.",
       back: '← Back to the portfolio',
       didYouMean: 'Did you mean:',
-      tryLs: 'Or type ls in the command bar to list every page.',
     },
     draft: {
       title: 'Under construction',
