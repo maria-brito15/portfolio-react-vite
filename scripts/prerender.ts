@@ -7,7 +7,7 @@ import { dirname, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import react from '@vitejs/plugin-react';
 import { build, type InlineConfig } from 'vite';
-import { routes } from '../src/data/routes';
+import { allRoutes } from '../src/data/routes';
 import type { AssembleInput, RenderedRoute } from '../src/entry-server';
 
 export interface EntryServer {
@@ -50,6 +50,7 @@ const LAZY_SOURCE: Record<string, string> = {
   'pessoal-musica': 'src/pages/personal/Music.tsx',
   'pessoal-teatro': 'src/pages/personal/Theater.tsx',
   'whatsapp-dispatcher': 'src/pages/CaseStudy.tsx',
+  prova: 'src/pages/Prova.tsx',
 };
 
 export const lazySourceOf = (routeId: string): string | undefined => LAZY_SOURCE[routeId];
@@ -91,10 +92,10 @@ export function assertRendered(path: string, html: string) {
 }
 
 /** Todos os endereços a gerar: cada rota (de verdade) nos dois idiomas e a 404 nos dois. */
-export function prerenderPaths(): { path: string; routeId?: string }[] {
+export function prerenderPaths(prova = false): { path: string; routeId?: string }[] {
   return [
-    ...routes
-      .filter((route) => !route.prova)
+    ...allRoutes
+      .filter((route) => !route.prova || prova)
       .flatMap((route) => [
         { path: route.path, routeId: route.id },
         { path: route.enPath, routeId: route.id },
@@ -128,6 +129,8 @@ export interface PrerenderOptions {
   root: string;
   outDir: string;
   define: Record<string, unknown>;
+  /** Inclui a rota de prova (`/_prova`): só o `vite build --mode prova` liga (T5.1). */
+  prova?: boolean;
   /** Costura de teste: por padrão faz o build aninhado e importa o `entry-server`. */
   loadEntry?: (root: string, define: Record<string, unknown>) => Promise<EntryServer>;
 }
@@ -144,6 +147,7 @@ export async function prerenderSite({
   root,
   outDir,
   define,
+  prova = false,
   loadEntry = buildAndImport,
 }: PrerenderOptions): Promise<string[]> {
   const written: string[] = [];
@@ -156,7 +160,7 @@ export async function prerenderSite({
       : {};
     const entry = await loadEntry(root, define);
 
-    for (const { path, routeId } of prerenderPaths()) {
+    for (const { path, routeId } of prerenderPaths(prova)) {
       const isError = routeId === undefined;
       const rendered = await entry.renderRoute(path);
 

@@ -8,17 +8,28 @@ import { personalGuardPlugin } from './scripts/personalGuard';
 import { contentGuardPlugin } from './scripts/contentGuard';
 import { secretGuardPlugin } from './scripts/secretGuard';
 
-export default defineConfig(({ command }) => ({
-  plugins: [react(), seoPlugin(), personalGuardPlugin(), contentGuardPlugin(), secretGuardPlugin()],
+// `vite build --mode prova` gera `dist-prova/` com a rota `/_prova` (T5.1, TD-009); o resto da
+// configuração é igual à do build publicado (scripts/buildConfig.test.ts confere).
+export default defineConfig(({ command, mode }) => ({
+  plugins: [
+    react(),
+    seoPlugin({ prova: mode === 'prova' }),
+    personalGuardPlugin(),
+    contentGuardPlugin(),
+    secretGuardPlugin(),
+  ],
   define: {
     // Dados reais do build para o comando `stats` (src/data/build.ts).
     __BUILD__: JSON.stringify(buildInfo(command)),
+    // A rota de prova só existe com este valor (src/data/routes.ts).
+    __PROVA__: JSON.stringify(mode === 'prova'),
     // Versão maior instalada do elenco do rodapé (src/data/cast.ts, FR-037).
     __CAST__: JSON.stringify(castVersions(credits.cast.map((member) => member.package))),
   },
   build: {
     // JS e CSS com hash vão para /static (cache imutável); /assets guarda só as
     // imagens fixas (foto, imagem de compartilhamento), que não levam hash.
+    outDir: mode === 'prova' ? 'dist-prova' : 'dist',
     assetsDir: 'static',
     // O pré-render lê o manifesto para o modulepreload e o CSS de cada rota (scripts/prerender.ts).
     manifest: true,

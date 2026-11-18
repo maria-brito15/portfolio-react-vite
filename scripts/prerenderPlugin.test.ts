@@ -15,7 +15,7 @@ import {
   type Manifest,
 } from './prerender';
 import { seoPlugin } from './seoPlugin';
-import { routes } from '../src/data/routes';
+import { allRoutes, routes } from '../src/data/routes';
 
 describe('endereço → arquivo', () => {
   it.each([
@@ -92,7 +92,7 @@ describe('chunks da rota pelo manifesto', () => {
     );
 
     expect(app).toContain('lazyPages');
-    for (const route of routes) {
+    for (const route of allRoutes) {
       const source = lazySourceOf(route.id);
 
       if (source) expect(lazyFiles, `${route.id} → ${source}`).toContain(source);
@@ -100,7 +100,7 @@ describe('chunks da rota pelo manifesto', () => {
 
     for (const file of lazyFiles) {
       expect(
-        routes.some((route) => lazySourceOf(route.id) === file),
+        allRoutes.some((route) => lazySourceOf(route.id) === file),
         file,
       ).toBe(true);
     }

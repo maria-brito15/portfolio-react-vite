@@ -103,7 +103,7 @@ const personalMeta: Record<string, { title: Localized; description: Localized }>
   },
 };
 
-export const routes: Route[] = [
+const baseRoutes: Route[] = [
   {
     id: 'home',
     enPath: '/en',
@@ -438,6 +438,36 @@ export const routes: Route[] = [
     hidden: true,
   },
 ];
+
+// A rota de prova só entra quando o build a pede: `__PROVA__` (injetado pelo `vite build --mode prova`).
+// Fora dele (o site publicado, o servidor de desenvolvimento e os testes) ela não existe.
+declare const __PROVA__: boolean | undefined;
+
+export const provaEnabled = typeof __PROVA__ !== 'undefined' && __PROVA__ === true;
+
+// Página de prova (T5.1, TD-009): os elementos que a medição e os testes de acessibilidade
+// precisam. Fica fora da lista acima de propósito: no site publicado ela é código morto (a
+// constante `__PROVA__` vira `false`) e o empacotador a remove, então nem a rota nem o texto dela
+// chegam ao `dist`.
+export const PROVA_ROUTE: Route = {
+  id: 'prova',
+  kind: 'page',
+  path: '/_prova',
+  enPath: '/en/_prova',
+  title: L('Página de prova | Duda Brito', 'Proof page | Duda Brito'),
+  description: L(
+    'Página de teste do build de prova: não faz parte do site publicado.',
+    'Test page of the proof build: not part of the published site.',
+  ),
+  prova: true,
+  label: L('Prova', 'Proof'),
+  hidden: true,
+};
+
+/** A tabela inteira, com a rota de prova: só o plugin de build (Node) e os testes a usam. */
+export const allRoutes: Route[] = [...baseRoutes, PROVA_ROUTE];
+
+export const routes: Route[] = provaEnabled ? allRoutes : baseRoutes;
 
 export const routeById = (id: string) => routes.find((r) => r.id === id);
 

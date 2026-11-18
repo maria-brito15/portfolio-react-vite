@@ -16,6 +16,7 @@ import {
   SectionPage,
   Services,
   TerminalPage,
+  Prova,
 } from './pages/lazyPages';
 
 import SiteShell from './components/shell/SiteShell';
@@ -57,6 +58,8 @@ function Page({ id }: { id?: string }) {
       return <PersonalMusic />;
     case 'pessoal-teatro':
       return <PersonalTheater />;
+    case 'prova':
+      return <Prova />;
     case 'whatsapp-dispatcher':
       return <CaseStudy />;
     default:

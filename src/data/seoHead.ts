@@ -49,7 +49,7 @@ export function headTags(routeId: string, lang: Lang): { title: string; tags: He
       : 'Duda Brito, Software Engineering student at PUC Minas';
   // O 404 e as páginas em construção (`draft`, sem conteúdo) ficam fora do índice.
   const robots =
-    routeId === NOT_FOUND_ID || isDraft(routeId)
+    routeId === NOT_FOUND_ID || isDraft(routeId) || route?.prova
       ? 'noindex, follow'
       : 'index, follow, max-image-preview:large, max-snippet:-1';
   const m = (attr: 'name' | 'property', key: string, content: string): HeadTag => ({

@@ -21,6 +21,7 @@ vi.mock('../pages/lazyPages', async () => ({
   PersonalFilms: (await import('../pages/personal/Films')).default,
   PersonalMusic: (await import('../pages/personal/Music')).default,
   PersonalTheater: (await import('../pages/personal/Theater')).default,
+  Prova: (await import('../pages/Prova')).default,
 }));
 
 // O boot da primeira visita fica desligado nos testes (quem os testa limpa a marca).

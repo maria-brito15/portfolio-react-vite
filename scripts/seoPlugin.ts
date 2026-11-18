@@ -30,7 +30,12 @@ const withBoot = (html: string) =>
 const withHead = (html: string, routeId: string) =>
   html.replace(HEAD, () => headBlock(routeId, 'pt'));
 
-export function seoPlugin(): Plugin {
+export interface SeoPluginOptions {
+  /** Pré-renderiza também a rota de prova (`vite build --mode prova`, T5.1). */
+  prova?: boolean;
+}
+
+export function seoPlugin({ prova = false }: SeoPluginOptions = {}): Plugin {
   let root = process.cwd();
   let outDir = 'dist';
   let define: Record<string, unknown> = {};
@@ -48,7 +53,7 @@ export function seoPlugin(): Plugin {
       // cinto de segurança contra recursão.
       if (this.environment?.config?.build?.ssr) return;
 
-      await prerenderSite({ root, outDir, define });
+      await prerenderSite({ root, outDir, define, prova });
 
       const write = (file: string, content: string) => {
         mkdirSync(dirname(join(outDir, file)), { recursive: true });
@@ -57,7 +62,7 @@ export function seoPlugin(): Plugin {
 
       // Páginas em construção não entram no sitemap (o HTML delas sai com noindex).
       const urls = routes
-        .filter((r) => !isDraft(r.id))
+        .filter((r) => !isDraft(r.id) && !r.prova)
         .map((r) => `  <url><loc>${absoluteUrl(r.path)}</loc></url>`);
 
       write(

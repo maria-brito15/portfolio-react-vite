@@ -3,7 +3,7 @@
 // `hreflang` aponta para um arquivo que existe; `data-shell="bare"` só no terminal; nada sobrou de
 // `.vite/` nem de `.prerender/`. Uso: `node scripts/checkDist.mjs dist` (sai 0 sem problema).
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
-import { join, relative, sep } from 'node:path';
+import { basename, join, relative, resolve, sep } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 const REQUIRED = [
@@ -40,6 +40,24 @@ export function checkDist(dist) {
   if (!existsSync(dist)) return [`${dist}: pasta inexistente`];
 
   const files = htmlFiles(dist);
+
+  // A página de prova só existe em `dist-prova/` (T5.1): o publicado nunca a contém.
+  const prova = basename(resolve(dist)) === 'dist-prova';
+  const proval = files.filter((f) => f.includes('_prova'));
+
+  if (prova) {
+    for (const needed of ['_prova.html', 'en/_prova.html'])
+      if (!files.includes(needed)) problems.push(`${needed}: não foi gerado (build de prova)`);
+  } else {
+    for (const f of proval)
+      problems.push(`${f}: a página de prova não pode estar no dist publicado`);
+    for (const f of ['sitemap.xml', ...files]) {
+      const p = join(dist, f);
+
+      if (existsSync(p) && /_prova/.test(readFileSync(p, 'utf8')))
+        problems.push(`${f}: cita /_prova no dist publicado`);
+    }
+  }
 
   for (const required of REQUIRED)
     if (!files.includes(required)) problems.push(`${required}: não foi gerado`);

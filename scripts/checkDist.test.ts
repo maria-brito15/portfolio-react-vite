@@ -116,6 +116,32 @@ describe('checkDist', () => {
     expect(problems).toContain('h.html: o <h1> não está dentro do <main>');
   });
 
+  it('o dist publicado não pode ter a página de prova (arquivo, sitemap nem texto)', () => {
+    const problems = checkDist(
+      dist({
+        ...ESSENTIAL,
+        '_prova.html': page(),
+        'sitemap.xml': '<loc>https://x.test/_prova</loc>',
+      }),
+    );
+
+    expect(problems).toContain('_prova.html: a página de prova não pode estar no dist publicado');
+    expect(problems).toContain('sitemap.xml: cita /_prova no dist publicado');
+  });
+
+  it('o dist-prova precisa dela nos dois idiomas', () => {
+    const root = mkdtempSync(join(tmpdir(), 'checkdist-'));
+    const prova = join(root, 'dist-prova');
+
+    made.push(root);
+    for (const [file, html] of Object.entries({ ...ESSENTIAL, '_prova.html': page() })) {
+      mkdirSync(dirname(join(prova, file)), { recursive: true });
+      writeFileSync(join(prova, file), html);
+    }
+
+    expect(checkDist(prova)).toEqual(['en/_prova.html: não foi gerado (build de prova)']);
+  });
+
   it('fileForPath é o mesmo mapa do plugin', () => {
     expect(fileForPath('/')).toBe('index.html');
     expect(fileForPath('/en')).toBe('en.html');

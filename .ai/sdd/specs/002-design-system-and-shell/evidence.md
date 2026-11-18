@@ -607,3 +607,28 @@ Summary:   OK; a máquina estava sob carga (todas as etapas 3 a 5 vezes mais len
 Verdict:   PASS (orçamento a remedir)
 ```
 **Não verificado:** "o `vite dev` continua abrindo o site" (precisa subir o servidor; o modo automático negou isso antes). O caminho `createRoot` está coberto pelo teste "sem HTML no #root"; o e2e (`npx playwright test e2e/site.e2e.ts`) sobe o `vite dev` e deve ser repetido pela Duda.
+
+## T5.1 Rota `/_prova` e `build:prova` (TD-009)
+**Entregue:** a rota `/_prova` (`PROVA_ROUTE`, `prova: true`, fora do menu, `hidden`) **junto com o filtro**: `routes.ts` exporta `allRoutes` (tabela inteira, só o plugin em Node e os testes usam) e `routes = provaEnabled ? allRoutes : baseRoutes`, com `provaEnabled = typeof __PROVA__ !== 'undefined' && __PROVA__ === true`. Sem `__PROVA__` (cliente) e sem a opção `prova` do plugin (Node, `seoPlugin({ prova })` → `prerenderPaths(prova)`) a rota não existe nem é pré-renderizada. `src/pages/Prova.tsx` (h1, h2, h3, 3 parágrafos marcados EXEMPLO/EXAMPLE, link de texto, botão principal e secundário, figura com `alt` e `width`/`height` 1200×630, 5 etiquetas com `Chip`; o rodapé com o link para a home é o da casca); textos `prova` em `ui.ts` (PT e EN); `lazyPages` só carrega a página com `provaEnabled` (`Prova = provaEnabled ? lazy(...) : () => null`); `npm run build:prova` = `vite build --mode prova` → `dist-prova/` (`outDir` e `__PROVA__` vêm do `mode` em `vite.config.ts`, o resto é igual); a rota sai com `noindex` (robots) e fora do sitemap; `checkDist.mjs` falha se o `dist` publicado tem `_prova` (arquivo, sitemap ou texto) e, para `dist-prova`, exige `_prova.html` e `en/_prova.html`. Tirei a rota de dentro da lista principal para o empacotador removê-la do pacote publicado (se ficasse na lista, o `/_prova` iria no JavaScript do site).
+
+```
+Claim:     sem __PROVA__ a rota é filtrada; com ele entra; as duas configurações só diferem em modo, outDir, __PROVA__ e na opção do plugin; a página tem os elementos pedidos
+Command:   npx vitest run src/data/routes.test.ts src/data/provaRoute.test.ts scripts/buildConfig.test.ts scripts/prova.test.ts scripts/checkDist.test.ts
+Exit code: 0
+Summary:   provaRoute.test (3): sem `__PROVA__` e com `__PROVA__` falso a rota não existe (routeById, findPageByPath nos 2 idiomas); com ele entra, fora do menu e de `directories`. buildConfig.test (7): mesmos plugins na mesma ordem; `define` só difere em `__PROVA__` (false x true; `__BUILD__` igual salvo a hora); `build` só difere em `outDir` (dist x dist-prova); demais chaves iguais; a rota está na tabela completa sem `menu`; `prerenderPaths(true)` tem +2 endereços. prova.test (3): `/_prova` e `/en/_prova` com 1 h1, 1 h2, 1 h3, 3 parágrafos EXEMPLO/EXAMPLE, 2 botões, figura com alt e 1200×630, 5 etiquetas, `<main>` com o h1 e rodapé; noindex e sem hreflang. checkDist (11): acusa `_prova` no dist publicado e a falta dela no dist-prova
+Verdict:   PASS
+```
+```
+Claim:     dist/ sem _prova; dist-prova/ com a rota
+Command:   node scripts/checkDist.mjs dist ; grep -rl "_prova" dist ; ls dist/static | grep -i "^Prova" ; npm run build:prova ; node scripts/checkDist.mjs dist-prova ; ls dist-prova/static | grep -i "^Prova"
+Exit code: 0 ; 1 ; 1 ; 0 ; 0 ; 0
+Summary:   `dist`: 40 páginas, nenhuma ocorrência de `_prova` em nenhum arquivo e nenhum chunk `Prova-*.js`. `dist-prova`: 42 páginas (as 40 mais `_prova.html` e `en/_prova.html`) e o chunk `Prova-*.js`. `dist-prova/` está no `.gitignore`
+Verdict:   PASS
+```
+```
+Claim:     o gate passa
+Command:   npm run verify
+Exit code: 0
+Summary:   OK em 96,9 s (orçamento 180 s): formatação 7,8; lint 22,6; tipos 15,2; testes 45,8; geração 5,5. Execuções anteriores falharam em 1 teste do plugin (a rota de prova sem fonte mapeada em `lazyPages`) e no valor do robots do teste, corrigidos
+Verdict:   PASS
+```
