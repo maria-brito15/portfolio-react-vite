@@ -433,3 +433,13 @@ Exit code: não executado
 Summary:   o modo automático negou a execução (o Playwright sobe um servidor e abre o Chrome). O arquivo não assume a casca antiga (usa só h1, getByText, getByRole e `.term-log`), então não precisou de edição; falta rodar
 Verdict:   PENDENTE
 ```
+
+### T3.4 (fechamento): e2e executado pela Duda e repetido
+```
+Claim:     e2e/site.e2e.ts passa
+Command:   npx playwright test e2e/site.e2e.ts   (Duda, no prompt) ; depois, 2 vezes: npx playwright test e2e/site.e2e.ts -g "desktop . dark .*academico"
+Exit code: 1 na primeira (50 passaram, 1 falhou); 0 e 0 nas duas repetições do teste que falhou
+Summary:   a falha foi `desktop · dark › /academico`: o `h1` não apareceu em 5 s (carga fria do servidor de desenvolvimento, com a máquina sob carga; a mesma rota passou nas outras 5 combinações de tela e tema). Repetido sozinho, passou duas vezes (11,9 s e 12,5 s). Não houve erro de console nem rolagem horizontal em nenhuma página. Veredito de flaky de tempo, não de código; se voltar a aparecer com a máquina livre, investigar
+Verdict:   PASS (com 1 falha intermitente registrada)
+```
+**T3.4: FECHADA** (o item PENDENTE acima está resolvido).
