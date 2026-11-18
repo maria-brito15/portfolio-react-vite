@@ -12,7 +12,6 @@ import './styles/sections.css';
 import './styles/responsive.css';
 import './styles/terminal.css';
 import './styles/shell.css';
-import './styles/workspace.css';
 import './styles/personal.css';
 import './styles/resume.css';
 import { announceInConsole } from './utils/consoleMessage';

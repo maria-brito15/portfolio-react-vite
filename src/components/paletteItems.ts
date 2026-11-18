@@ -1,20 +1,19 @@
 // Opções da paleta de comandos (Ctrl+K), montadas das fontes únicas do site:
 // `routes.ts` (páginas), `sections.ts` (projetos), `skillTimeline` (habilidades),
-// e o inventário de comandos. Nada é repetido à mão.
-// Escolher uma opção ou roda o MESMO comando que o terminal rodaria (`run`) ou
-// vai direto a um destino (`to`): nenhum interpretador novo (JA-07).
+// Nada é repetido à mão.
+// Escolher uma opção vai a um destino de página (`to`, no idioma da interface). Os itens que rodavam
+// comandos do terminal (`run`) saem até a spec 009 (T3.4).
 import type { Lang } from '../types';
-import { directories, fold, routeById, routeSegment, routes } from '../data/routes';
+import { directories, fold, pathInLang, routeById, routeSegment, routes } from '../data/routes';
 import { sectionsOf } from '../data/sections';
 import { skillTimeline } from '../data/skillTimeline';
-import { commandInventory } from '../terminal/commands';
 import { projects as projectData } from '../data/projects';
 import { techKeywords, topicKeywords } from '../data/searchRanking';
 
-export type PaletteKind = 'page' | 'section' | 'project' | 'skill' | 'command';
+export type PaletteKind = 'page' | 'section' | 'project' | 'skill';
 
 // Ordem dos grupos na lista.
-export const PALETTE_KINDS: PaletteKind[] = ['page', 'project', 'section', 'skill', 'command'];
+export const PALETTE_KINDS: PaletteKind[] = ['page', 'project', 'section', 'skill'];
 
 // Tipos que só aparecem quando se digita (a lista sem busca fica curta).
 const TYPED_ONLY: PaletteKind[] = ['skill', 'section'];
@@ -26,10 +25,8 @@ export interface PaletteItem {
   topic: string;
   label: string;
   hint: string;
-  // Linha executada na sessão do terminal ao escolher a opção…
-  run?: string;
-  // …ou o endereço aonde ir direto.
-  to?: string;
+  // Endereço aonde ir (já no idioma da interface).
+  to: string;
   // Texto pesquisável (PT e EN juntos, sem acento e sem caixa).
   search: string;
 }
@@ -51,7 +48,7 @@ export function paletteItems(lang: Lang): PaletteItem[] {
       topic: d.id,
       label,
       hint: d.desc[lang],
-      run: `cd ${label}`,
+      to: pathInLang(d.path, lang),
       search: fold([d.name, d.alias, d.desc.pt, d.desc.en, keywords(d.id)].join(' ')),
     };
   });
@@ -66,7 +63,7 @@ export function paletteItems(lang: Lang): PaletteItem[] {
       topic: 'terminal',
       label: terminal.label[lang],
       hint: terminal.desc?.[lang] ?? '',
-      to: terminal.path,
+      to: pathInLang(terminal.path, lang),
       search: fold(
         [
           terminal.label.pt,
@@ -86,7 +83,7 @@ export function paletteItems(lang: Lang): PaletteItem[] {
       topic: 'pessoal',
       label: `${routeById('pessoal')?.label[lang] ?? ''}: ${r.label[lang]}`,
       hint: r.desc?.[lang] ?? '',
-      to: r.path,
+      to: pathInLang(r.path, lang),
       search: fold(
         [
           r.label.pt,
@@ -101,14 +98,13 @@ export function paletteItems(lang: Lang): PaletteItem[] {
     });
 
   const projectsPage = routeById('projetos');
-  const projectsName = projectsPage ? (lang === 'pt' ? projectsPage.name : projectsPage.alias) : '';
   const projects: PaletteItem[] = sectionsOf('projetos').map((s) => ({
     id: `project:${s.id}`,
     kind: 'project',
     topic: 'project',
     label: s.label[lang],
     hint: s.desc?.[lang] ?? '',
-    run: `cd ${projectsName}/${s.id}`,
+    to: `${pathInLang(projectsPage?.path ?? '/projetos', lang)}#${s.anchor}`,
     search: fold(
       [
         s.label.pt,
@@ -129,7 +125,7 @@ export function paletteItems(lang: Lang): PaletteItem[] {
       topic: 'case',
       label: `${r.label[lang]}: ${routeSegment(r, lang)}`,
       hint: routeById('projetos')?.label[lang] ?? '',
-      to: r.path,
+      to: pathInLang(r.path, lang),
       search: fold(
         [
           r.label.pt,
@@ -148,28 +144,10 @@ export function paletteItems(lang: Lang): PaletteItem[] {
       topic: 'skill',
       label: item.name,
       hint: group.title[lang],
-      to: routeById('habilidades')?.path ?? '/habilidades',
+      to: pathInLang(routeById('habilidades')?.path ?? '/habilidades', lang),
       search: fold([item.name, group.title.pt, group.title.en].join(' ')),
     })),
   );
-
-  const commands: PaletteItem[] = commandInventory()
-    // Fora da paleta: ocultos e os que exigem argumento (`cd <página>`).
-    .filter((c) => !c.hidden && !c.usage?.pt.startsWith('<'))
-    .map((c) => {
-      // Comando com um só nome (neofetch) vale nos dois idiomas.
-      const label = lang === 'pt' ? c.names[0] : (c.names[1] ?? c.names[0]);
-
-      return {
-        id: `command:${c.id}`,
-        kind: 'command' as const,
-        topic: 'command',
-        label,
-        hint: c.desc?.[lang] ?? '',
-        run: label,
-        search: fold([...c.names, c.desc?.pt, c.desc?.en].join(' ')),
-      };
-    });
 
   // Seções das páginas de conteúdo (competências, disciplinas, FAQ…): levam direto à âncora.
   // Projetos já têm itens próprios.
@@ -185,7 +163,7 @@ export function paletteItems(lang: Lang): PaletteItem[] {
         topic: routeId,
         label: `${route.label[lang]}: ${s.label[lang]}`,
         hint: s.desc?.[lang] ?? '',
-        to: `${route.path}#${s.anchor}`,
+        to: `${pathInLang(route.path, lang)}#${s.anchor}`,
         search: fold(
           [
             s.label.pt,
@@ -201,7 +179,7 @@ export function paletteItems(lang: Lang): PaletteItem[] {
     },
   );
 
-  return [...pages, ...sections, ...projects, ...skills, ...commands];
+  return [...pages, ...sections, ...projects, ...skills];
 }
 
 // Menor é melhor: 0 nome igual · 1 começa com o termo · 2 começa uma palavra ·

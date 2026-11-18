@@ -79,7 +79,7 @@ describe('busca (CL-06)', () => {
         const item = list.find((i) => i.id === `page:${id}`);
 
         expect(item, `${lang}/${id}`).toBeDefined();
-        expect(Boolean(item!.to || item!.run), `${lang}/${id}`).toBe(true);
+        expect(Boolean(item!.to), `${lang}/${id}`).toBe(true);
       }
     }
   });

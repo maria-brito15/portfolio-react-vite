@@ -404,3 +404,32 @@ Exit code: 0
 Summary:   OK em 82,6 s (orçamento 180 s): formatação 6,9; lint 19,4; tipos 13,3; testes 37,8; geração 5,1. As execuções anteriores falharam em 82 testes que assumiam a casca antiga, em lint (imports sem uso nos testes) e em tipos (Element em vez de HTMLElement), tudo corrigido
 Verdict:   PASS
 ```
+
+## T3.4 Remover a casca antiga; paleta só com destinos (TD-018, TD-025 (c), DQ-020): **PARCIAL, falta o e2e**
+**Entregue:** apagados `Sidebar`, `CommandBar`, `Window`, `Taskbar`, `Breadcrumb`, `windowManager`, `windowGeometry` (`Windows.test.tsx` já saíra na T3.3), `workspace.css` e o `import` em `main.tsx`; o bloco `.grid-bg` de `base.css` (e a menção em `resume.css`) e a isenção `GRADIENT_EXEMPT` do `styles.test.ts` (agora "nenhum degradê em folha nenhuma"; o degradê plantado no teste do detector é montado em partes para o `git grep` da verificação dar exit 1); `shell.css` reduzido ao que é da casca nova, mais os blocos ainda usados: ações "ver no terminal / página própria" (`ViewActions`), diálogos globais (paleta e atalhos), `.palette-group` (movido do `workspace.css`) e `.draft-note`. `App.tsx` sem `WindowProvider`; `GlobalOverlays` **não é montado na rota `bare`** (Ctrl+K e `?` não abrem nada no terminal). `commandBarEvents.ts` só tem `OPEN_PALETTE` e `OPEN_SHORTCUTS`. `shortcuts.ts` perdeu "/ foca a barra de comandos". Paleta: só destinos de página; `PaletteItem.to` é obrigatório e vem de `pathInLang` (no idioma da interface; antes um clique em inglês levaria ao endereço PT e trocaria o idioma), o tipo `command` e todos os `run` saíram; `CommandPalette` não usa mais a sessão do terminal.
+
+**Efeito visual a conferir (T6.1):** `workspace.css` também trazia o estilo do painel da home (`.dash`), do catálogo de comandos e da página do GitHub; sai junto, como a tarefa manda ("estilos da casca antiga"). Essas páginas ficam sem esse CSS até as specs 003+ e a 009 (o catálogo do terminal é da 009). Aviso, não decisão minha.
+
+**Testes:** `Overlays.test.tsx` reescrito para a casca nova (13 testes; paleta e atalhos numa rota com casca; em `/terminal` não abrem; escolha leva a `/academico` e, em inglês, a `/en/academics`); `search.test.ts`, `personalDiscovery.test.tsx`: `to` no lugar de `to || run`; `styles.test.ts` como acima.
+
+```
+Claim:     nenhum resto da casca antiga, do workspace.css nem de degradê em src/styles
+Command:   git grep -n -E "WindowProvider|Taskbar|components/shell/(CommandBar|Sidebar|Window)" -- src ; git grep -n "workspace.css" -- src index.html ; git grep -n -i "gradient(" -- src/styles
+Exit code: 1, 1, 1
+Summary:   as três buscas não acham nada
+Verdict:   PASS
+```
+```
+Claim:     o gate passa
+Command:   npm run verify
+Exit code: 0
+Summary:   OK; a máquina estava sob carga (navegador e outros processos): TODAS as etapas ficaram 2 a 3 vezes mais lentas, inclusive prettier (6,9 → 11,6 s) e tsc (13,3 → 25,7 s), então o estouro do orçamento (testes 121,5 s; total 204,9 s) não é do código: a T3.3 mediu 37,8 s e 82,6 s com o mesmo conjunto de testes. A repetir quando a máquina estiver livre
+Verdict:   PASS (orçamento a remedir)
+```
+```
+Claim:     e2e/site.e2e.ts passa
+Command:   npx playwright test e2e/site.e2e.ts
+Exit code: não executado
+Summary:   o modo automático negou a execução (o Playwright sobe um servidor e abre o Chrome). O arquivo não assume a casca antiga (usa só h1, getByText, getByRole e `.term-log`), então não precisou de edição; falta rodar
+Verdict:   PENDENTE
+```

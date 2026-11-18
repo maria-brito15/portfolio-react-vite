@@ -5,7 +5,6 @@ import { directories } from '../data/routes';
 import { shortcuts } from '../data/shortcuts';
 import { PALETTE_KINDS, filterItems, paletteItems } from './paletteItems';
 import { projects } from '../data/projects';
-import { commandInventory } from '../terminal/commands';
 
 const palette = () => screen.findByRole('dialog', { name: 'Paleta de comandos' });
 const terminalInput = () => screen.getByRole('textbox', { name: 'Linha de comando do terminal' });
@@ -22,17 +21,7 @@ describe('opções da paleta (JA-06)', () => {
 
     for (const d of directories) expect(ids).toContain(`page:${d.id}`);
 
-    for (const hidden of ['cowsay', 'matrix', 'rm', 'boot', 'sudo', 'pwd'])
-      expect(ids).not.toContain(`command:${hidden}`);
-    expect(ids).not.toContain('command:cd');
-    expect(ids).toContain('command:neofetch');
-    expect(items.find((i) => i.id === 'page:projetos')?.run).toBe('cd projetos');
-    expect(paletteItems('en').find((i) => i.id === 'page:projetos')?.run).toBe('cd projects');
-
-    // todo comando listado existe e não está oculto
-    const visible = commandInventory().filter((c) => !c.hidden);
-
-    expect(items.filter((i) => i.kind === 'command').length).toBeLessThanOrEqual(visible.length);
+    // só destinos de página, no idioma da interface (os itens que rodavam comandos saíram, T3.4)    expect(items.every((i) => i.to.startsWith('/'))).toBe(true);    expect(items.some((i) => i.id.startsWith('command:'))).toBe(false);    expect(items.find((i) => i.id === 'page:projetos')?.to).toBe('/projetos');    expect(paletteItems('en').find((i) => i.id === 'page:projetos')?.to).toBe('/en/projects');
   });
 
   it('a busca ignora acento e caixa, e todos os termos precisam casar', () => {
@@ -46,22 +35,22 @@ describe('opções da paleta (JA-06)', () => {
     expect(filterItems(items, '')).toHaveLength(
       items.filter((i) => i.kind !== 'skill' && i.kind !== 'section').length,
     );
-    expect(filterItems(items, 'tema escuro').length).toBeGreaterThan(0);
+    expect(filterItems(items, 'estudo caso').length).toBeGreaterThan(0);
   });
 
-  it('cobre páginas, seções, projetos, estudo de caso, habilidades e comandos, e agrupa nessa ordem', () => {
+  it('cobre páginas, seções, projetos, estudo de caso e habilidades, e agrupa nessa ordem', () => {
     const items = paletteItems('pt');
     const kinds = new Set(items.map((i) => i.kind));
 
-    expect([...kinds].sort()).toEqual(['command', 'page', 'project', 'section', 'skill']);
+    expect([...kinds].sort()).toEqual(['page', 'project', 'section', 'skill']);
     for (const p of projects) expect(items.map((i) => i.id)).toContain(`project:${p.id}`);
     expect(items.find((i) => i.id === 'case:whatsapp-dispatcher')?.to).toBe(
       '/estudos-de-caso/whatsapp-dispatcher',
     );
     expect(items.find((i) => i.id === 'page:terminal')?.to).toBe('/terminal');
-    expect(items.find((i) => i.id === 'project:ecoshop')?.run).toBe('cd projetos/ecoshop');
-    expect(paletteItems('en').find((i) => i.id === 'project:ecoshop')?.run).toBe(
-      'cd projects/ecoshop',
+    expect(items.find((i) => i.id === 'project:ecoshop')?.to).toMatch(/^\/projetos#/);
+    expect(paletteItems('en').find((i) => i.id === 'project:ecoshop')?.to).toMatch(
+      /^\/en\/projects#/,
     );
 
     const order = filterItems(items, 'e').map((i) => PALETTE_KINDS.indexOf(i.kind));
@@ -78,11 +67,10 @@ describe('opções da paleta (JA-06)', () => {
 });
 
 describe('paleta de comandos (JA-06, JA-07)', () => {
-  it('Ctrl+K abre, o foco vai ao campo, e Ctrl+K de novo ou Esc fecham devolvendo o foco', async () => {
+  it('Ctrl+K abre, o foco vai ao campo, e Ctrl+K de novo ou Esc fecham', async () => {
     const user = userEvent.setup();
 
-    renderApp();
-    await user.click(terminalInput());
+    renderApp('/sobre');
     await ctrlK(user);
 
     const dialog = await palette();
@@ -92,7 +80,6 @@ describe('paleta de comandos (JA-06, JA-07)', () => {
     await waitFor(() => expect(within(dialog).getByRole('combobox')).toHaveFocus());
     await user.keyboard('{Escape}');
     expect(screen.queryByRole('dialog')).toBeNull();
-    expect(terminalInput()).toHaveFocus();
     await ctrlK(user);
     await palette();
     await ctrlK(user);
@@ -102,15 +89,15 @@ describe('paleta de comandos (JA-06, JA-07)', () => {
   it('filtra enquanto digita, anuncia a contagem e navega com as setas', async () => {
     const user = userEvent.setup();
 
-    renderApp();
+    renderApp('/sobre');
     await ctrlK(user);
 
     const dialog = await palette();
     const box = within(dialog).getByRole('combobox');
 
     await user.type(box, 'proj');
-    // "projetos" é uma página (cd), um comando (mostra no terminal) e uma seção do currículo
-    expect(within(dialog).getAllByRole('option', { name: /projetos/ })).toHaveLength(3);
+    // "projetos" é uma página e uma seção do currículo (os comandos saíram da paleta, T3.4)
+    expect(within(dialog).getAllByRole('option', { name: /projetos/ }).length).toBeGreaterThan(0);
     expect(within(dialog).queryByRole('option', { name: /academico/ })).toBeNull();
     expect(within(dialog).getByRole('status')).toHaveTextContent(/resultado/);
     await user.clear(box);
@@ -129,7 +116,7 @@ describe('paleta de comandos (JA-06, JA-07)', () => {
   it('o foco fica preso no diálogo (Tab não escapa)', async () => {
     const user = userEvent.setup();
 
-    renderApp();
+    renderApp('/sobre');
     await ctrlK(user);
 
     const dialog = await palette();
@@ -140,31 +127,34 @@ describe('paleta de comandos (JA-06, JA-07)', () => {
     expect(dialog.contains(document.activeElement)).toBe(true);
   });
 
-  it('escolher uma página roda `cd` pela sessão e abre a página', async () => {
+  it('escolher uma página vai direto ao endereço dela, no idioma da interface', async () => {
     const user = userEvent.setup();
 
-    renderApp();
+    renderApp('/sobre');
     await ctrlK(user);
     await palette();
     await user.keyboard('academ{Enter}');
     expect(screen.queryByRole('dialog')).toBeNull();
-    // o mesmo carregamento do terminal ("abrindo /academico…") e depois a navegação
-    await waitFor(() => expect(window.location.pathname).toBe('/academico'), { timeout: 4000 });
-    expect(JSON.parse(sessionStorage.getItem('portfolio-terminal') as string)).toEqual([
-      'cd academico',
-    ]);
+    await waitFor(() => expect(window.location.pathname).toBe('/academico'));
   });
 
-  it('escolher um comando na home roda no terminal e mostra a saída lá', async () => {
+  it('em inglês a escolha leva ao endereço /en/…', async () => {
     const user = userEvent.setup();
 
-    renderApp();
-    await user.click(terminalInput());
+    renderApp('/en/about');
     await ctrlK(user);
-    await palette();
-    await user.keyboard('neofetch{Enter}');
-    expect(log().querySelector('.t-neofetch')).toBeInTheDocument();
-    expect(terminalInput()).toHaveFocus();
+    await screen.findByRole('dialog');
+    await user.keyboard('academ{Enter}');
+    await waitFor(() => expect(window.location.pathname).toBe('/en/academics'));
+  });
+
+  it('o terminal é rota sem casca: Ctrl+K e ? não abrem diálogo nele', async () => {
+    const user = userEvent.setup();
+
+    renderApp('/terminal');
+    await ctrlK(user);
+    await user.keyboard('?');
+    expect(screen.queryByRole('dialog')).toBeNull();
   });
 
   it('não rouba Ctrl+K nem ? de campos de formulário que não são a linha de comando', async () => {
@@ -186,7 +176,7 @@ describe('lista de atalhos (JA-08, JA-09)', () => {
   it('? abre a lista da tabela única e Esc fecha', async () => {
     const user = userEvent.setup();
 
-    renderApp();
+    renderApp('/sobre');
     await user.keyboard('?');
 
     const dialog = await screen.findByRole('dialog', { name: 'Atalhos de teclado' });
@@ -199,23 +189,15 @@ describe('lista de atalhos (JA-08, JA-09)', () => {
     expect(screen.queryByRole('dialog')).toBeNull();
   });
 
-  it('? digitado na linha de comando é só texto', async () => {
-    const user = userEvent.setup();
-
-    renderApp();
-    await user.click(terminalInput());
-    await user.keyboard('a?b');
-    expect(terminalInput()).toHaveValue('a?b');
-    expect(screen.queryByRole('dialog')).toBeNull();
-  });
-
   it('o comando atalhos e a dica da ajuda leem a mesma tabela', async () => {
     const user = userEvent.setup();
 
-    renderApp();
+    renderApp('/terminal');
     await user.type(terminalInput(), 'atalhos{Enter}');
     for (const s of shortcuts) expect(within(log()).getByText(s.desc.pt)).toBeInTheDocument();
     await user.type(terminalInput(), 'ajuda{Enter}');
-    expect(log()).toHaveTextContent('Dica: Ctrl+K abre a paleta de comandos, / foca a barra');
+    expect(log()).toHaveTextContent(
+      'Dica: Ctrl+K abre a paleta de comandos, ? mostra esta lista de atalhos',
+    );
   });
 });

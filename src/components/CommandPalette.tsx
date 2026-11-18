@@ -1,6 +1,6 @@
-// Paleta de comandos (Ctrl+K): busca páginas, projetos, habilidades e
-// comandos, agrupados por categoria. Páginas, projetos e comandos rodam na
-// sessão do terminal (o mesmo interpretador); os demais destinos abrem direto.
+// Paleta de comandos (Ctrl+K): busca destinos de página (páginas, projetos, seções e
+// habilidades), agrupados por categoria; escolher um leva direto ao endereço, no idioma da
+// interface. Os itens que rodavam comandos do terminal saíram até a spec 009 (T3.4).
 // Combobox acessível: o foco fica no campo e a opção ativa vai em
 // `aria-activedescendant`.
 import {
@@ -14,8 +14,6 @@ import {
 } from 'react';
 import { useLanguage } from '../i18n/LanguageContext';
 import { useRouter } from '../router';
-import { useTerminalSession } from '../terminal/sessionContext';
-import { showCommandOutput } from './shell/commandBarEvents';
 import { filterItems, matchRanges, paletteItems, type PaletteItem } from './paletteItems';
 import Overlay from './Overlay';
 
@@ -37,7 +35,6 @@ function highlight(text: string, query: string) {
 
 export default function CommandPalette({ onClose }: { onClose: () => void }) {
   const { lang, t } = useLanguage();
-  const session = useTerminalSession();
   const { navigate } = useRouter();
   const listId = useId();
   const [query, setQuery] = useState('');
@@ -55,12 +52,10 @@ export default function CommandPalette({ onClose }: { onClose: () => void }) {
     if (activeId) document.getElementById(activeId)?.scrollIntoView({ block: 'nearest' });
   }, [activeId]);
 
-  // Fecha primeiro (o foco volta a quem abriu); depois vai ao destino ou roda o
-  // mesmo comando do terminal.
+  // Fecha primeiro (o foco volta a quem abriu); depois vai ao destino.
   function choose(item: PaletteItem) {
     onClose();
-    if (item.to) navigate(item.to);
-    else if (item.run && session.execute(item.run)) showCommandOutput();
+    navigate(item.to);
   }
 
   function onKeyDown(event: KeyboardEvent<HTMLInputElement>) {

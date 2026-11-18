@@ -22,7 +22,6 @@ import {
 import SiteShell from './components/shell/SiteShell';
 import GlobalOverlays from './components/GlobalOverlays';
 import { Now, Uses } from './pages/InfoPages';
-import { WindowProvider } from './components/shell/windowManager';
 
 // Rota (src/data/routes.ts) → página.
 function Page({ id }: { id?: string }) {
@@ -71,15 +70,13 @@ export default function App() {
   const route = findPageByPath(path);
 
   return (
-    <WindowProvider>
-      <TerminalProvider>
-        <SiteShell bare={route?.bare}>
-          <Suspense fallback={null}>
-            <Page id={route?.id} />
-          </Suspense>
-        </SiteShell>
-        <GlobalOverlays />
-      </TerminalProvider>
-    </WindowProvider>
+    <TerminalProvider>
+      <SiteShell bare={route?.bare}>
+        <Suspense fallback={null}>
+          <Page id={route?.id} />
+        </Suspense>
+      </SiteShell>
+      {!route?.bare && <GlobalOverlays />}
+    </TerminalProvider>
   );
 }

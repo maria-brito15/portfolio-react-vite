@@ -4,10 +4,10 @@ const items = paletteItems('pt');
 const ids = (query: string, list = items) => filterItems(list, query).map((i) => i.id);
 
 describe('itens da paleta', () => {
-  it.each(['pt', 'en'] as const)('todo item tem rótulo e destino ou comando em %s', (lang) => {
+  it.each(['pt', 'en'] as const)('todo item tem rótulo e destino em %s', (lang) => {
     for (const item of paletteItems(lang)) {
       expect(item.label.trim(), item.id).not.toBe('');
-      expect(Boolean(item.to || item.run), item.id).toBe(true);
+      expect(Boolean(item.to), item.id).toBe(true);
     }
   });
 });

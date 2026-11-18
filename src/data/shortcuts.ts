@@ -1,6 +1,6 @@
 // Tabela única de atalhos de teclado (JA-08, JA-09). A lista `?`, o comando
 // `atalhos` e a dica da `ajuda` leem daqui; quem trata a tecla de fato está em
-// GlobalOverlays (Ctrl+K, ?), CommandBar (/) e useTerminal (Tab, ↑ ↓, Ctrl+L, Ctrl+C).
+// GlobalOverlays (Ctrl+K, ?) e useTerminal (Tab, ↑ ↓, Ctrl+L, Ctrl+C).
 import type { Lang, Localized } from '../types';
 
 const L = (pt: string, en: string): Localized => ({ pt, en });
@@ -12,7 +12,6 @@ export interface Shortcut {
 
 export const shortcuts: Shortcut[] = [
   { keys: 'Ctrl+K', desc: L('abre a paleta de comandos', 'opens the command palette') },
-  { keys: '/', desc: L('foca a barra de comandos', 'focuses the command bar') },
   { keys: '?', desc: L('mostra esta lista de atalhos', 'shows this shortcut list') },
   {
     keys: 'Tab',

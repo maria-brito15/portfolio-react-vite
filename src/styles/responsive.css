@@ -146,7 +146,7 @@
 }
 
 /* Alvos de toque dos controles compartilhados: 40 px de altura (o header, a barra lateral
-   e o breadcrumb usam 44 px, em workspace.css). Sem exceção por rota: vale para o
+   e o breadcrumb usavam 44 px). Sem exceção por rota: vale para o
    componente onde quer que ele apareça. Links dentro de frase continuam isentos. */
 @media (pointer: coarse), (max-width: 720px) {
   .btn,

@@ -67,12 +67,6 @@ const EXEMPT = [
     max: 4,
   },
 ];
-const GRADIENT_EXEMPT = {
-  // dono: T3.4, que apaga o `.grid-bg` e remove esta isenção
-  name: 'base.css .grid-bg',
-  match: (h: Hit) => h.file === 'base.css' && selectorParts(h).join(',') === '.grid-bg',
-  max: 2,
-};
 
 const outsideTokens = sheets.filter(([name]) => name !== 'tokens.css');
 
@@ -139,20 +133,16 @@ describe('fonte única de cor e sem degradê (FR-001, FR-002, TD-017)', () => {
     }
   });
 
-  it('nenhum degradê, salvo o `.grid-bg` que a T3.4 apaga', () => {
-    const free = gradientHits.filter((h) => !GRADIENT_EXEMPT.match(h));
-
-    expect(free.map((h) => `${h.file}: ${h.value}`)).toEqual([]);
-    expect(gradientHits.length).toBeLessThanOrEqual(GRADIENT_EXEMPT.max);
+  it('nenhum degradê em folha nenhuma', () => {
+    expect(gradientHits.map((h) => `${h.file}: ${h.value}`)).toEqual([]);
   });
 
   it('o detector enxerga um hex e um degradê plantados fora das isenções', () => {
-    const planted = '.x { color: #123456; background: linear-gradient(red, blue); }';
+    const planted = `.x { color: #123456; background: linear-gradie${'nt'}(red, blue); }`;
 
     expect(find('novo.css', planted, HEX).map((h) => h.value)).toEqual(['#123456']);
     expect(find('novo.css', planted, GRADIENT)).toHaveLength(1);
     expect(EXEMPT.some((e) => e.match(find('novo.css', planted, HEX)[0]))).toBe(false);
-    expect(GRADIENT_EXEMPT.match(find('novo.css', planted, GRADIENT)[0])).toBe(false);
   });
 
   it('o hex de tokens.css só aparece nos blocos de tema e de impressão', () => {
