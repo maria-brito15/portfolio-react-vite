@@ -313,3 +313,21 @@ Exit code: 0
 Summary:   OK em 121,3 s (orçamento 180 s): formatação 8,5; lint 29,3; tipos 22,2; testes 56,3; geração 5,0. A primeira execução falhou no lint (parâmetro `lang` sem uso em qa.test.tsx), corrigida
 Verdict:   PASS
 ```
+
+## T2.6 Seletor PT | EN e faixa de idioma (TD-012, DQ-012, DQ-015)
+**Entregue:** `LanguageSwitch.tsx` (dois links `<a hreflang lang href>`, `aria-current` no atual, grava a escolha no clique) e `LanguageOffer.tsx` (só no cliente, lê `languageOffer` do boot via `useSyncExternalStore`, `position: fixed; top: 0`, `role="region"`, sem autofocus, link "Read this page in English" e botão "Dispensar" que grava `portfolio-lang-offer`; nunca redireciona). `pathInLang` em `routes.ts`; `storeLangChoice` e `LANG_OFFER_KEY` em `LanguageContext.tsx`; textos `langSwitch` e `langOffer` em `ui.ts` (PT e EN); `--lang-offer-h` em `tokens.css`; bloco novo no fim de `shell.css` (espaço reservado por `html[data-lang-offer]`, liberado ao dispensar). Os dois componentes ainda **não** estão montados em casca nenhuma: a T3.3 monta (faixa logo depois do skip link, FR-016). Nenhum arquivo da 008 tocado nesta tarefa.
+
+```
+Claim:     seletor e faixa se comportam como a tabela da tarefa; montar sem clicar não grava; armazenamento bloqueado sem erro; paridade PT/EN
+Command:   npx vitest run src/components/shell/LanguageSwitch.test.tsx src/components/shell/LanguageOffer.test.tsx src/i18n/parity.test.ts
+Exit code: 0
+Summary:   3 arquivos, 38 testes passam: seletor (aria-current, hreflang/lang/href, grava no clique), faixa (linhas da tabela, dispensa, não rouba o foco, não aparece em /en/... nem com escolha gravada, setItem lançando erro sem quebrar, montar sem clicar não grava) e paridade de ui.ts
+Verdict:   PASS
+```
+```
+Claim:     o gate passa
+Command:   npm run verify
+Exit code: 0
+Summary:   OK em 141,8 s (orçamento 180 s; máquina oscilando). A execução anterior falhou só no lint do LanguageOffer (useEffect com setState), corrigida trocando por useSyncExternalStore
+Verdict:   PASS
+```

@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, type ReactNode } from 'react';
-import { equivalentPath, findPageByPath, langOfPath } from '../data/routes';
+import { langOfPath, pathInLang } from '../data/routes';
 import { useRouter } from '../router';
 import type { Lang } from '../types';
 import { ui } from './ui';
@@ -7,6 +7,18 @@ import { ui } from './ui';
 // Chave da escolha explícita do idioma (FR-022): só a faixa e o seletor leem. O idioma da página é
 // o do endereço (TD-007), nunca o que está gravado.
 const STORAGE_KEY = 'portfolio-lang';
+// A faixa de oferta de inglês, dispensada (FR-034): o script de boot lê a mesma chave (boot.ts).
+export const LANG_OFFER_KEY = 'portfolio-lang-offer';
+
+// Grava a escolha de idioma do visitante (só chamada por uma ação dele); o armazenamento bloqueado
+// não é erro: a escolha vale nesta visita (FR-026).
+export function storeLangChoice(lang: Lang) {
+  try {
+    localStorage.setItem(STORAGE_KEY, lang);
+  } catch {
+    // sem armazenamento: nada a fazer
+  }
+}
 
 interface LanguageValue {
   lang: Lang;
@@ -24,15 +36,6 @@ const LanguageContext = createContext<LanguageValue>({
   toggleLang: () => {},
 });
 
-// Endereço da mesma página no idioma pedido; uma rota desconhecida (404) vai para a home dele.
-function targetFor(path: string, lang: Lang) {
-  const route = findPageByPath(path);
-
-  if (route) return equivalentPath(route, lang);
-
-  return lang === 'en' ? '/en' : '/';
-}
-
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const { path, navigate } = useRouter();
   const lang = langOfPath(path);
@@ -44,12 +47,8 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   const setLang = useCallback(
     (next: Lang) => {
-      try {
-        localStorage.setItem(STORAGE_KEY, next);
-      } catch {
-        // Armazenamento bloqueado: a escolha vale só nesta visita (FR-026).
-      }
-      if (next !== lang) navigate(targetFor(path, next));
+      storeLangChoice(next);
+      if (next !== lang) navigate(pathInLang(path, next));
     },
     [lang, path, navigate],
   );

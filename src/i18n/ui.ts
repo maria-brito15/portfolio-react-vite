@@ -20,6 +20,13 @@ export const ui = {
     },
     theme: { toLight: 'Modo claro', toDark: 'Modo escuro' },
     language: { label: 'EN', switchTo: 'Switch to English' },
+    langSwitch: { label: 'Idioma', pt: 'Português', en: 'English' },
+    langOffer: {
+      label: 'Oferta de idioma',
+      text: 'Esta página também está em inglês.',
+      link: 'Read this page in English',
+      dismiss: 'Dispensar',
+    },
     github: {
       label: 'GitHub',
       title: 'GitHub em números',
@@ -208,6 +215,13 @@ export const ui = {
     },
     theme: { toLight: 'Light mode', toDark: 'Dark mode' },
     language: { label: 'PT-BR', switchTo: 'Mudar para português' },
+    langSwitch: { label: 'Language', pt: 'Português', en: 'English' },
+    langOffer: {
+      label: 'Language offer',
+      text: 'This page is also available in English.',
+      link: 'Read this page in English',
+      dismiss: 'Dismiss',
+    },
     github: {
       label: 'GitHub',
       title: 'GitHub in numbers',

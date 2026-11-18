@@ -469,6 +469,15 @@ export function findPageByPath(path: string) {
 export const equivalentPath = (route: Route, lang: Lang) =>
   lang === 'en' ? route.enPath : route.path;
 
+// O mesmo, a partir do endereço aberto: uma rota desconhecida (a 404) vai para a home do idioma.
+export function pathInLang(path: string, lang: Lang) {
+  const route = findPageByPath(path);
+
+  if (route) return equivalentPath(route, lang);
+
+  return lang === 'en' ? '/en' : '/';
+}
+
 // Remove acentos e caixa ("Currículo" vale como "curriculo").
 export const fold = (text: unknown) =>
   String(text ?? '')
