@@ -1,83 +1,44 @@
-import { Link } from '../../router';
+import { Link, useRouter } from '../../router';
 import { useLanguage } from '../../i18n/LanguageContext';
-import { useTheme } from '../../hooks/useTheme';
-import { findTheme, themes } from '../../data/themes';
-import { openPalette } from './commandBarEvents';
+import { normalizePath, pathInLang, routes } from '../../data/routes';
+import Menu from './Menu';
+import ThemeToggle from './ThemeToggle';
+import LanguageSwitch from './LanguageSwitch';
 
-// Header compacto em três zonas: menu (celular) e logo à esquerda, busca global
-// no centro (abre a paleta, como `Ctrl K`) e, à direita, seletor de tema e
-// idioma. A navegação em si mora na barra lateral (Sidebar).
-export default function Header({
-  menuOpen,
-  menuId,
-  onMenu,
-}: {
-  menuOpen: boolean;
-  menuId: string;
-  onMenu: () => void;
-}) {
-  const { lang, t, toggleLang } = useLanguage();
-  const [theme, , setTheme] = useTheme();
+const items = routes.filter((route) => route.menu).sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+
+// Cabeçalho (FR-008, TD-010): marca, `<nav>` com os itens `menu: true` na ordem de `order`, tema e
+// idioma. A ordem do DOM é a do foco (FR-016): itens, tema, idioma. Em tela estreita tudo isso fica
+// no painel do Menu.
+export default function Header() {
+  const { lang, t } = useLanguage();
+  const { path } = useRouter();
+  const here = normalizePath(path);
 
   return (
-    <header className="site-nav">
-      <div className="nav-left">
-        <button
-          type="button"
-          className="header-menu"
-          aria-label={menuOpen ? t.ws.sidebar.close : t.ws.sidebar.open}
-          aria-expanded={menuOpen}
-          aria-controls={menuId}
-          onClick={onMenu}
-        >
-          <span aria-hidden="true">{menuOpen ? '✕' : '☰'}</span>
-        </button>
-        <Link to="/" className="logo" aria-label={t.nav.home}>
-          mariab.dev
-        </Link>
-      </div>
-      <div className="nav-center">
-        <button
-          type="button"
-          className="header-cmd"
-          aria-label={t.cmdbar.headerButton}
-          title={t.cmdbar.shortcut}
-          onClick={openPalette}
-        >
-          <span className="header-cmd-prompt" aria-hidden="true">
-            &gt;_
-          </span>
-          <span className="header-cmd-text">{t.ws.header.search}</span>
-          <kbd aria-hidden="true">Ctrl K</kbd>
-        </button>
-      </div>
-      <div className="nav-right">
-        <select
-          className="theme-select"
-          aria-label={t.ws.header.theme}
-          value={theme}
-          onChange={(event) => {
-            const next = findTheme(event.target.value);
+    <header className="hdr">
+      <Link to={pathInLang('/', lang)} className="hdr-brand">
+        {t.header.brand}
+      </Link>
+      <Menu>
+        <nav aria-label={t.header.nav} className="hdr-nav">
+          <ul>
+            {items.map((route) => {
+              const to = pathInLang(route.path, lang);
 
-            if (next) setTheme(next.id);
-          }}
-        >
-          {themes.map((th) => (
-            <option key={th.id} value={th.id}>
-              {th.names[lang]}
-            </option>
-          ))}
-        </select>
-        <button
-          type="button"
-          className="theme-toggle lang-toggle"
-          onClick={toggleLang}
-          aria-label={`${t.language.label} — ${t.language.switchTo}`}
-        >
-          <span aria-hidden="true">🌍</span>
-          <span>{t.language.label}</span>
-        </button>
-      </div>
+              return (
+                <li key={route.id}>
+                  <Link to={to} aria-current={here === normalizePath(to) ? 'page' : undefined}>
+                    {route.label[lang]}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+        <ThemeToggle />
+        <LanguageSwitch />
+      </Menu>
     </header>
   );
 }

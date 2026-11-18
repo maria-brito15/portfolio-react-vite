@@ -1,6 +1,6 @@
 // Mesmo padrão nas páginas com seções, parte B.
 // Parte da divisão de `sections.test.tsx` (spec 001, T6.3): nenhum caso mudou.
-import { screen, waitFor, within } from '@testing-library/react';
+import { waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderApp } from '../test/helpers';
 import { routes } from '../data/routes';
@@ -30,8 +30,7 @@ describe('mesmo padrão em todas as páginas com seções (DS-12)', () => {
       const nav = () => log().querySelector<HTMLElement>('.t-sectionnav')!;
       const index = () => log().querySelector<HTMLElement>('.t-index')!;
 
-      if (lang === 'en')
-        await user.click(screen.getByRole('button', { name: /Switch to English/ }));
+      if (lang === 'en') await run(user, 'idioma');
 
       // índice numerado, instrução e dicas
       await run(user, page);

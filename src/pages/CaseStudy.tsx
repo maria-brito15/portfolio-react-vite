@@ -1,4 +1,3 @@
-import SiteShell from '../components/shell/SiteShell';
 import { useLanguage } from '../i18n/LanguageContext';
 import { useDocumentMeta } from '../hooks/useDocumentMeta';
 import WhatsAppDispatcherPt from './case-study/WhatsAppDispatcherPt';
@@ -10,9 +9,5 @@ export default function CaseStudy() {
 
   useDocumentMeta('whatsapp-dispatcher');
 
-  return (
-    <SiteShell routeId="whatsapp-dispatcher">
-      {lang === 'pt' ? <WhatsAppDispatcherPt /> : <WhatsAppDispatcherEn />}
-    </SiteShell>
-  );
+  return <>{lang === 'pt' ? <WhatsAppDispatcherPt /> : <WhatsAppDispatcherEn />}</>;
 }

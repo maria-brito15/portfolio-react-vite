@@ -1,7 +1,6 @@
 import { useLanguage } from '../i18n/LanguageContext';
 import { useDocumentMeta } from '../hooks/useDocumentMeta';
 import { projects } from '../data/projects';
-import SiteShell from '../components/shell/SiteShell';
 import GithubStats from '../components/GithubStats';
 import Card from '../components/ui/Card';
 import Chip from '../components/ui/Chip';
@@ -19,7 +18,7 @@ export default function GithubPage() {
   useDocumentMeta('github');
 
   return (
-    <SiteShell routeId="github">
+    <>
       <section className="sec github-page" aria-labelledby="gh-page-title">
         <h1 id="gh-page-title" className="sr-only">
           GitHub
@@ -51,6 +50,6 @@ export default function GithubPage() {
         </ul>
         <p className="t-dim">{g.note}</p>
       </section>
-    </SiteShell>
+    </>
   );
 }

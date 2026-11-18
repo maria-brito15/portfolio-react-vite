@@ -7,7 +7,7 @@ import { RouterProvider } from '../../router';
 import { credits } from '../../content/credits.content';
 import { CreditsSchema } from '../../content/schema/credits';
 import { castVersions } from '../../../scripts/castVersions';
-import Footer from './Footer.next';
+import Footer from './Footer';
 
 const open = (path: string) => {
   window.history.replaceState(null, '', path);

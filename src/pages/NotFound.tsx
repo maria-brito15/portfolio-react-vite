@@ -2,7 +2,6 @@ import { Link, useRouter } from '../router';
 import { useLanguage } from '../i18n/LanguageContext';
 import { useDocumentMeta } from '../hooks/useDocumentMeta';
 import { suggestPages } from '../utils/suggest';
-import SiteShell from '../components/shell/SiteShell';
 import Prompt from '../terminal/Prompt';
 
 export default function NotFound() {
@@ -13,7 +12,7 @@ export default function NotFound() {
   useDocumentMeta('notFound');
 
   return (
-    <SiteShell missingPath={path}>
+    <>
       <div className="not-found">
         <p className="term-line not-found-cmd">
           <Prompt />
@@ -39,6 +38,6 @@ export default function NotFound() {
           {t.notFound.back}
         </Link>
       </div>
-    </SiteShell>
+    </>
   );
 }

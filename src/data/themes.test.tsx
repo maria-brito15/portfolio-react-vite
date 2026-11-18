@@ -135,23 +135,21 @@ describe('comando tema (TB-01, TB-02, TB-03)', () => {
 });
 
 describe('botão do cabeçalho (TB-05) e persistência (TB-03)', () => {
-  it('o seletor do cabeçalho lista os dois temas, reflete o comando tema e aplica a escolha', async () => {
+  it('o botão do cabeçalho alterna os dois temas e grava a escolha', async () => {
     const user = userEvent.setup();
 
-    renderApp();
+    renderApp('/');
 
-    const select = screen.getByRole('combobox', { name: 'Tema' });
+    // O terminal é uma rota sem casca (FR-041): o comando `tema` é testado nele; o botão, na casca.
+    const toggle = screen.getByRole('button', { name: 'Alternar tema' });
 
-    expect([...select.querySelectorAll('option')].map((o) => o.value)).toEqual(
-      themes.map((t) => t.id),
-    );
-    expect(select.querySelectorAll('option')).toHaveLength(2);
-    await run(user, 'tema claro');
+    expect(toggle).toHaveAttribute('aria-pressed', 'true');
+    await user.click(toggle);
     expect(attr()).toBe('light');
-    expect(select).toHaveValue('light');
-    await user.selectOptions(select, 'dark');
+    expect(toggle).toHaveAttribute('aria-pressed', 'false');
+    await user.click(toggle);
     expect(attr()).toBe('dark');
-    await user.selectOptions(select, DEFAULT_THEME);
+    await user.click(toggle);
     expect(attr()).toBe(DEFAULT_THEME);
     expect(localStorage.getItem('portfolio-theme')).toBe(DEFAULT_THEME);
   });

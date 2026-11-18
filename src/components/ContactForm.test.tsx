@@ -182,7 +182,7 @@ describe('formulário de contato', () => {
     const user = userEvent.setup();
 
     renderApp('/contato');
-    await user.click(screen.getByRole('button', { name: /Switch to English/ }));
+    await user.click(screen.getByRole('link', { name: 'EN' }));
     await user.click(screen.getByRole('button', { name: 'Send message' }));
     await waitFor(() => expect(screen.getByText('Please enter your name.')).toBeInTheDocument());
   });

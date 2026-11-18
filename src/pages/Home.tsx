@@ -5,7 +5,6 @@ import { now } from '../data/now';
 import { routeById } from '../data/routes';
 import { HOME, type HomeAction } from '../data/homeLayout';
 import { useDocumentMeta } from '../hooks/useDocumentMeta';
-import SiteShell from '../components/shell/SiteShell';
 import HomeSections from '../components/dashboard/HomeSections';
 
 // A home é o painel do workspace: apresentação, foco atual e os blocos da composição
@@ -23,7 +22,7 @@ export default function Home() {
   useDocumentMeta('home');
 
   return (
-    <SiteShell routeId="home">
+    <>
       <div className="dash">
         <header className="dash-hero" id="inicio">
           <p className="t-dim">{c.hero.tag}</p>
@@ -59,6 +58,6 @@ export default function Home() {
 
         <HomeSections />
       </div>
-    </SiteShell>
+    </>
   );
 }

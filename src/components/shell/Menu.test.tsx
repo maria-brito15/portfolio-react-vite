@@ -5,7 +5,7 @@ import { LanguageProvider } from '../../i18n/LanguageContext';
 import { ThemeProvider } from '../../hooks/useTheme';
 import { RouterProvider } from '../../router';
 import { routes } from '../../data/routes';
-import Header from './Header.next';
+import Header from './Header';
 
 const open = (path = '/') => {
   window.history.replaceState(null, '', path);

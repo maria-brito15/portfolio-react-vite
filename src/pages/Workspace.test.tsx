@@ -1,118 +1,11 @@
 import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderApp } from '../test/helpers';
-import { NAV_GROUPS, routes } from '../data/routes';
-import { navRoutes } from '../data/routeStatus';
 import { projects } from '../data/projects';
 import { CATEGORIES, categoryOf, commandCatalog } from '../terminal/catalog';
 import { commandInventory } from '../terminal/commands';
 
-const sidebar = () =>
-  screen.getByRole('navigation', { name: /Navegação principal|Main navigation/ });
-
 beforeEach(() => sessionStorage.clear());
-
-describe('barra lateral', () => {
-  it('lista todas as rotas com grupo, sem rascunhos nem duplicatas, e marca a página atual', () => {
-    renderApp('/projetos');
-
-    const links = within(sidebar()).getAllByRole('link');
-    const hrefs = links.map((a) => a.getAttribute('href'));
-    const expected = NAV_GROUPS.flatMap((g) => navRoutes(g).map((r) => r.path));
-
-    expect(hrefs).toEqual(expected);
-    expect(new Set(hrefs).size).toBe(hrefs.length);
-    // /setup está em construção (rascunho) e fica de fora; /agora tem conteúdo
-    expect(hrefs).not.toContain('/setup');
-    expect(hrefs).toContain('/agora');
-    // toda rota navegável tem um caminho na barra: nada importante fica escondido
-    for (const id of ['sobre', 'projetos', 'habilidades', 'curriculo', 'academico', 'servicos'])
-      expect(hrefs).toContain(routes.find((r) => r.id === id)!.path);
-
-    for (const path of ['/terminal', '/github', '/contato']) expect(hrefs).toContain(path);
-
-    const current = within(sidebar()).getByRole('link', { current: 'page' });
-
-    expect(current).toHaveAttribute('href', '/projetos');
-  });
-
-  it('o estudo de caso ilumina "Projetos", a rota-mãe', () => {
-    renderApp('/estudos-de-caso/whatsapp-dispatcher');
-    expect(within(sidebar()).getByRole('link', { current: 'page' })).toHaveAttribute(
-      'href',
-      '/projetos',
-    );
-  });
-
-  it('os grupos são recolhíveis e têm rótulo nos dois idiomas', async () => {
-    const user = userEvent.setup();
-
-    renderApp('/sobre');
-    expect(within(sidebar()).getByText('Portfólio')).toBeInTheDocument();
-    expect(within(sidebar()).getByText('Desenvolvimento')).toBeInTheDocument();
-    await user.click(screen.getByRole('button', { name: /Switch to English/ }));
-    expect(within(sidebar()).getByText('Portfolio')).toBeInTheDocument();
-    expect(within(sidebar()).getByText('Development')).toBeInTheDocument();
-    expect(within(sidebar()).getByRole('link', { name: 'Terminal' })).toBeInTheDocument();
-    expect(sidebar().querySelectorAll('details')).toHaveLength(
-      NAV_GROUPS.filter((g) => navRoutes(g).length).length,
-    );
-  });
-
-  it('o botão do header abre e fecha a gaveta; Esc fecha; navegar também', async () => {
-    const user = userEvent.setup();
-
-    renderApp('/sobre');
-
-    const menu = screen.getByRole('button', { name: 'Abrir menu de navegação' });
-
-    expect(menu).toHaveAttribute('aria-expanded', 'false');
-    expect(sidebar()).not.toHaveClass('is-open');
-    await user.click(menu);
-    expect(screen.getByRole('button', { name: 'Fechar menu de navegação' })).toHaveAttribute(
-      'aria-expanded',
-      'true',
-    );
-    expect(sidebar()).toHaveClass('is-open');
-    await user.keyboard('{Escape}');
-    expect(sidebar()).not.toHaveClass('is-open');
-    await user.click(screen.getByRole('button', { name: 'Abrir menu de navegação' }));
-    await user.click(within(sidebar()).getByRole('link', { name: 'Habilidades' }));
-    expect(window.location.pathname).toBe('/habilidades');
-    expect(sidebar()).not.toHaveClass('is-open');
-  });
-
-  it('gaveta aberta: o foco entra nela, Tab circula só dentro e Esc devolve o foco ao botão', async () => {
-    const user = userEvent.setup();
-
-    renderApp('/sobre');
-
-    const menu = screen.getByRole('button', { name: 'Abrir menu de navegação' });
-
-    menu.focus();
-    await user.keyboard('{Enter}');
-
-    const links = within(sidebar()).getAllByRole('link');
-
-    expect(links[0]).toHaveFocus();
-    // Shift+Tab no primeiro item vai ao último; Tab no último volta ao primeiro.
-    await user.tab({ shift: true });
-    expect(sidebar().contains(document.activeElement)).toBe(true);
-    for (let i = 0; i < 40; i++) await user.tab();
-    expect(sidebar().contains(document.activeElement)).toBe(true);
-    await user.keyboard('{Escape}');
-    expect(sidebar()).not.toHaveClass('is-open');
-    expect(screen.getByRole('button', { name: 'Abrir menu de navegação' })).toHaveFocus();
-  });
-
-  it('o botão de atalhos abre a lista de atalhos', async () => {
-    const user = userEvent.setup();
-
-    renderApp('/sobre');
-    await user.click(within(sidebar()).getByRole('button', { name: /Atalhos de teclado/ }));
-    expect(await screen.findByRole('dialog', { name: 'Atalhos de teclado' })).toBeInTheDocument();
-  });
-});
 
 describe('painel inicial', () => {
   it('mostra só projetos com selo, com links para o estudo de caso e para o repositório', () => {
@@ -150,7 +43,7 @@ describe('painel inicial', () => {
     const user = userEvent.setup();
 
     renderApp('/');
-    await user.click(screen.getByRole('button', { name: /Switch to English/ }));
+    await user.click(screen.getByRole('link', { name: 'EN' }));
     for (const name of ['Quick access', 'Featured projects'])
       expect(screen.getByRole('heading', { level: 2, name })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'See projects' })).toBeInTheDocument();

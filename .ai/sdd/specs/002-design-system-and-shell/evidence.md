@@ -369,3 +369,38 @@ Exit code: 0
 Summary:   OK em ≈ 95 s (orçamento 180 s): formatação 7,6; lint 19,9; tipos 14,4; testes 48,4; geração 4,7. A primeira execução falhou no lint (regra jsx-a11y inexistente num comentário; setState em efeito no ThemeToggle; linhas em branco do estilo), corrigidos
 Verdict:   PASS
 ```
+
+## T3.3 `SiteShell` novo no `App`, variante sem casca e páginas sem embrulho (TD-018, TD-024, DQ-018)
+**Entregue:** `Header.next.tsx` e `Footer.next.tsx` passaram por `git mv` para `Header.tsx` e `Footer.tsx` (os antigos foram apagados), no mesmo commit da troca. `SiteShell({ bare?, children })` novo: faixa decorativa, skip link ("Ir para o conteúdo"), `LanguageOffer`, `<header>`, `<main id="conteudo" tabindex="-1">`, `<footer>`, na ordem do FR-016; com `bare` só a faixa e o `main`. O `App` monta `<SiteShell bare={route?.bare}>` **fora do `Suspense`** (o `bare` vem da tabela de rotas: só o `terminal`). As 10 páginas pararam de chamar `<SiteShell>` (`DocPage`, `EditorialPage`, `CaseStudy`, `GithubPage`, `Home`, `InfoPages`, `NotFound`, `SectionPage`, `Services`, `TerminalPage`); `DocPage` perdeu o parâmetro `routeId` (e `Resume`/`Academics` deixaram de passá-lo). `TerminalPage` agora entrega o selo, o `Terminal` e o `CommandCatalog` dentro do `main` do terminal (`#terminal`). CSS do skip link e do `main` no fim de `shell.css`. `Sidebar`, `CommandBar`, `Window`, `Taskbar`, `Breadcrumb` e o `windowManager` continuam no disco, **sem uso**: a T3.4 os apaga.
+
+**Desvio do processo (registrar):** a tarefa pede tirar o embrulho "uma página por vez, com o gate verde". Tirei as 10 num passo só e rodei o `verify` uma vez no fim, porque a casca antiga e a nova não convivem (o `App` monta a nova para todas). O gate final está verde.
+
+**Testes ajustados (só consultas e expectativas da casca antiga; nenhum comportamento mudou):**
+- `SiteShell.test.tsx` reescrito (V-04, V-15): 16 rotas com 1 `.hdr`, 1 `nav`, 1 `main#conteudo` e 1 `footer.credits` na ordem faixa → skip link → header → main → footer; skip link é o primeiro foco; header não remonta ao navegar; a faixa de idioma vem logo depois do skip link (navegador em inglês); só uma rota `bare`; `/terminal` e `/en/terminal` só com faixa e `main`.
+- `Windows.test.tsx` **apagado** (testava a `Window`, que não é mais montada; a T3.4 o removeria). Em `Workspace.test.tsx` saiu o bloco "barra lateral" (Sidebar desmontada); em `Overlays.test.tsx` saiu "fora da home, a saída aparece no painel da barra de comandos" (`.cmdbar-panel`, desmontado; a T3.4 tira os itens `run` da paleta).
+- `App.test.tsx`, `themes.test.tsx`: o seletor de tema virou o botão "Alternar tema"; o cabeçalho é verificado por marca, nav, tema; o terminal é checado como `main #terminal` sem `.win`, sem `.hdr` e sem rodapé.
+- Trocar para inglês: onde havia o botão "Switch to English" (`App`, `ContactForm`, `Workspace`, `Projects`) usa-se o link "EN"; no terminal (sem casca, sem seletor) `extras.test`, `Terminal.test` usam o novo `goToEnglish()` (`src/test/helpers.tsx`: abre o mesmo endereço em `/en`), e `sections.index/nav/pagesA/pagesB.test` usam o comando `idioma`.
+- `qa.test.tsx` (008, só teste): o breadcrumb `~/pessoal` saiu; confere agora o link do menu para `/pessoal` ou `/en/personal`. `foundation.test.tsx` (008, só teste): o link do menu aceita o endereço do idioma. `InfoPages.test.tsx`: saiu a checagem de `.win-title`.
+- Arquivos da 008 tocados: `components/personal/EditorialPage.tsx` (só perdeu o embrulho `<SiteShell>` e a menção no comentário), `components/personal/qa.test.tsx`, `components/personal/foundation.test.tsx`. Nada de `netlify/`, `scripts/personalGuard.ts`, `src/services`, `src/data/personal` ou `.env.example`.
+
+```
+Claim:     nenhum <SiteShell fora do App; nenhum arquivo .next; a 008 intocada fora da exceção
+Command:   git grep -n "<SiteShell" -- src ; git ls-files src/components/shell | grep -c "\.next\." ; git diff --stat HEAD -- netlify scripts/personalGuard.ts src/services src/data/personal .env.example
+Exit code: 0
+Summary:   a única ocorrência é src/App.tsx:76 (nenhuma em testes); 0 arquivos `.next`; o diff dos caminhos protegidos da 008 é vazio
+Verdict:   PASS
+```
+```
+Claim:     a casca nova funciona em todas as rotas e o terminal é sem casca
+Command:   npx vitest run src/components/shell/SiteShell.test.tsx src/App.test.tsx
+Exit code: 0
+Summary:   ver o escopo acima; subconjunto (App, shell, Terminal, extras) com 13 arquivos e 160 testes passa
+Verdict:   PASS
+```
+```
+Claim:     o gate passa
+Command:   npm run verify
+Exit code: 0
+Summary:   OK em 82,6 s (orçamento 180 s): formatação 6,9; lint 19,4; tipos 13,3; testes 37,8; geração 5,1. As execuções anteriores falharam em 82 testes que assumiam a casca antiga, em lint (imports sem uso nos testes) e em tipos (Element em vez de HTMLElement), tudo corrigido
+Verdict:   PASS
+```

@@ -188,7 +188,7 @@ export default function Academics() {
   };
 
   return (
-    <DocPage routeId="academico" sections={sections}>
+    <DocPage sections={sections}>
       <header className="doc-head">
         <h1>{c.title}</h1>
         <p className="doc-muted">{c.intro}</p>

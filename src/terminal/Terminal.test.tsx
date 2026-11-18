@@ -1,6 +1,6 @@
 import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { renderApp } from '../test/helpers';
+import { goToEnglish, renderApp } from '../test/helpers';
 import { complete, findCommand } from './commands';
 
 function terminalInput() {
@@ -55,7 +55,7 @@ describe('terminal da página inicial', () => {
 
     renderApp();
     expect(terminalInput()).toHaveAttribute('placeholder', 'experimente: curriculo');
-    await user.click(screen.getByRole('button', { name: /Switch to English/ }));
+    goToEnglish();
 
     const input = () => screen.getByRole('textbox', { name: 'Terminal command line' });
 

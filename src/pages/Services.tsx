@@ -1,4 +1,3 @@
-import SiteShell from '../components/shell/SiteShell';
 import SectionTitle from '../components/ui/SectionTitle';
 import Card from '../components/ui/Card';
 import SectionDivider from '../components/SectionDivider';
@@ -19,7 +18,7 @@ export default function Services() {
   const mailto = `mailto:${profile.servicesEmail}`;
 
   return (
-    <SiteShell routeId="servicos">
+    <>
       <section className="hero">
         <div>
           <div className="badge">
@@ -149,6 +148,6 @@ export default function Services() {
           <ContactLinks email={profile.servicesEmail} emailLabel={c.contact.email} />
         </div>
       </section>
-    </SiteShell>
+    </>
   );
 }

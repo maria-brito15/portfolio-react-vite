@@ -181,7 +181,7 @@ describe('índice das seções (um só renderizador)', () => {
     const user = userEvent.setup();
 
     renderApp();
-    await user.click(screen.getByRole('button', { name: /Switch to English/ }));
+    await run(user, 'idioma');
     await run(user, 'resume');
     expect(indexOf()).toHaveTextContent('Type the number or the name');
     for (const page of ['academico', 'servicos', 'projetos', 'experiencias']) {
@@ -364,7 +364,7 @@ describe('ajuda com exemplo de ponta a ponta (DS-11)', () => {
     expect(findCommand('curriculo')).toBeDefined();
     expect(findCommand('cd')).toBeDefined();
 
-    await user.click(screen.getByRole('button', { name: /Switch to English/ }));
+    await run(user, 'idioma');
     await run(user, 'help');
     await waitFor(() => expect(log()).toHaveTextContent('how to navigate:'));
     expect([...log().querySelectorAll('.t-howto button')].map((b) => b.textContent)).toEqual([
@@ -418,7 +418,7 @@ describe('erros que reensinam (DS-10)', () => {
     const user = userEvent.setup();
 
     renderApp();
-    await user.click(screen.getByRole('button', { name: /Switch to English/ }));
+    await run(user, 'idioma');
     await run(user, 'resume');
     await run(user, '9');
     await waitFor(() => expect(log().querySelector<HTMLElement>('.t-err')!).toBeTruthy());

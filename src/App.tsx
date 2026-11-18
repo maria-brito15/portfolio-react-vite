@@ -19,6 +19,7 @@ import {
   TerminalPage,
 } from './pages/lazyPages';
 
+import SiteShell from './components/shell/SiteShell';
 import GlobalOverlays from './components/GlobalOverlays';
 import { Now, Uses } from './pages/InfoPages';
 import { WindowProvider } from './components/shell/windowManager';
@@ -72,9 +73,11 @@ export default function App() {
   return (
     <WindowProvider>
       <TerminalProvider>
-        <Suspense fallback={null}>
-          <Page id={route?.id} />
-        </Suspense>
+        <SiteShell bare={route?.bare}>
+          <Suspense fallback={null}>
+            <Page id={route?.id} />
+          </Suspense>
+        </SiteShell>
         <GlobalOverlays />
       </TerminalProvider>
     </WindowProvider>

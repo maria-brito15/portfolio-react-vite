@@ -67,8 +67,10 @@ describe.each(PAGES)('QA de %s', (pt, en) => {
 
     audit(container);
     expect(document.documentElement.lang.slice(0, 2)).toBe(lang);
-    // o hub e as subpáginas trazem o breadcrumb no idioma da rota
-    expect(container.textContent).toContain(lang === 'pt' ? '~/pessoal' : '~/personal');
+    // o menu do cabeçalho leva ao hub no idioma da rota (o breadcrumb saiu com a casca antiga)
+    expect(
+      container.querySelector(`header a[href="${lang === 'pt' ? '/pessoal' : '/en/personal'}"]`),
+    ).not.toBeNull();
   });
 });
 

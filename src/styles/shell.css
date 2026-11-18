@@ -1037,3 +1037,24 @@ html[data-theme='dark'] .theme-btn-to-light {
     justify-content: center;
   }
 }
+
+/* ---------- Casca nova: skip link, main e terminal sem casca (T3.3, FR-008, FR-016, FR-041) ---------- */
+.skip-link {
+  position: absolute;
+  left: var(--space-2);
+  top: -100px;
+  z-index: 100;
+  padding: var(--space-2) var(--space-3);
+  background: var(--bg);
+  color: var(--text);
+  border: 2px solid var(--accent);
+}
+.skip-link:focus {
+  top: var(--space-2);
+}
+main#conteudo {
+  display: block;
+  min-height: 60vh;
+  padding: var(--space-5) var(--gutter);
+  outline: none;
+}

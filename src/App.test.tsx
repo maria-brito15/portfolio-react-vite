@@ -33,13 +33,13 @@ describe('página inicial', () => {
     ).toBeInTheDocument();
   });
 
-  it('o terminal é uma janela com a documentação dos comandos logo abaixo', () => {
+  it('o terminal vive no main da rota sem casca, com a documentação dos comandos logo abaixo', () => {
     renderApp();
 
-    const ids = [...document.querySelectorAll('main section[id]')].map((s) => s.id);
-
-    expect(ids).toEqual(['terminal']);
-    expect(document.querySelectorAll('.win')).toHaveLength(1);
+    expect(document.querySelectorAll('main #terminal')).toHaveLength(1);
+    expect(document.querySelectorAll('.win')).toHaveLength(0);
+    expect(document.querySelector('.hdr')).toBeNull();
+    expect(document.querySelector('footer.credits')).toBeNull();
     expect(
       screen.getByRole('heading', { level: 2, name: 'Referência de comandos' }),
     ).toBeInTheDocument();
@@ -82,7 +82,7 @@ describe('página inicial', () => {
 
     renderApp('/sobre');
     expect(screen.getByRole('heading', { name: /Sobre mim/ })).toBeInTheDocument();
-    await user.click(screen.getByRole('button', { name: /Switch to English/ }));
+    await user.click(screen.getByRole('link', { name: 'EN' }));
     expect(screen.getByRole('heading', { name: /About me/ })).toBeInTheDocument();
     expect(document.documentElement.lang).toBe('en');
     expect(localStorage.getItem('portfolio-lang')).toBe('en');
@@ -92,24 +92,26 @@ describe('página inicial', () => {
   it('alterna o tema e persiste no localStorage', async () => {
     const user = userEvent.setup();
 
-    renderApp();
-    await user.selectOptions(screen.getByRole('combobox', { name: 'Tema' }), 'light');
+    renderApp('/');
+    document.documentElement.setAttribute('data-theme', 'dark');
+    await user.click(screen.getByRole('button', { name: 'Alternar tema' }));
     expect(document.documentElement.getAttribute('data-theme')).toBe('light');
     expect(localStorage.getItem('portfolio-theme')).toBe('light');
-    expect(screen.getByRole('combobox', { name: 'Tema' })).toHaveValue('light');
   });
 
-  it('o header só tem o logo como link; a navegação mora na barra lateral', () => {
-    renderApp();
+  it('o header tem a marca, a navegação principal, o tema e o idioma', () => {
+    renderApp('/');
 
-    const header = document.querySelector<HTMLElement>('header.site-nav')!;
+    const header = document.querySelector<HTMLElement>('.hdr')!;
 
+    expect(within(header).getByRole('link', { name: 'duda/portfólio' })).toHaveAttribute(
+      'href',
+      '/',
+    );
     expect(
-      within(header)
-        .queryAllByRole('link')
-        .map((a) => a.getAttribute('href')),
-    ).toEqual(['/']);
-    expect(screen.getByRole('navigation', { name: 'Navegação principal' })).toBeInTheDocument();
+      within(header).getByRole('navigation', { name: 'Navegação principal' }),
+    ).toBeInTheDocument();
+    expect(within(header).getByRole('button', { name: 'Alternar tema' })).toBeInTheDocument();
   });
 });
 
@@ -148,7 +150,7 @@ describe('navegação', () => {
       const { unmount } = renderApp(path);
 
       expect(screen.getByRole('main')).toBeInTheDocument();
-      await user.click(screen.getByRole('button', { name: /Switch to English/ }));
+      await user.click(screen.getByRole('link', { name: 'EN' }));
       expect(document.documentElement.lang).toBe('en');
       unmount();
       localStorage.clear();

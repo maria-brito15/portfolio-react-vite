@@ -341,7 +341,11 @@ describe('entrada no menu, nos dois idiomas (Navegação)', () => {
   const sidebarLink = () =>
     screen
       .getAllByRole('link')
-      .filter((a) => a.getAttribute('href') === '/pessoal' && a.closest('nav, aside'))
+      .filter(
+        (a) =>
+          ['/pessoal', '/en/personal'].includes(a.getAttribute('href') ?? '') &&
+          a.closest('nav, aside'),
+      )
       .map((a) => a.textContent);
 
   it('PT: "Pessoal" aparece no menu lateral, em qualquer página', () => {

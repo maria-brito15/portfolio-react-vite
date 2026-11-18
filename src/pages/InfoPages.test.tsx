@@ -45,11 +45,10 @@ describe('rotas /agora e /setup (CE-06, CE-07)', () => {
 });
 
 describe('/setup em construção', () => {
-  it('mostra título, aviso de construção, a janela de sempre e noindex', async () => {
+  it('mostra título, aviso de construção e noindex', async () => {
     renderApp('/setup');
     expect(screen.getByRole('heading', { level: 1, name: 'Setup' })).toBeInTheDocument();
     expect(screen.getByText('Em construção.')).toBeInTheDocument();
-    expect(document.querySelector('.win-title')).toHaveTextContent('~/setup');
     // O módulo de SEO é carregado sob demanda (useDocumentMeta).
     await waitFor(() => expect(document.title).toContain('Duda Brito'));
     expect(document.querySelector('meta[name="robots"]')).toHaveAttribute(

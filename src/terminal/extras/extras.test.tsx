@@ -1,6 +1,6 @@
 import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { renderApp } from '../../test/helpers';
+import { goToEnglish, renderApp } from '../../test/helpers';
 import { commandInventory, findCommand, complete } from '../commands';
 import { stackFacts, neofetchRows } from './neofetch';
 import MatrixRain, { MATRIX_MS } from './Matrix';
@@ -56,7 +56,7 @@ describe('neofetch (PE-01, PE-02)', () => {
     await run(user, 'neofetch');
     expect(log().querySelector('.t-ascii')).toHaveTextContent('####');
     expect(within(log()).getByText('cargo')).toBeInTheDocument();
-    await user.click(screen.getByRole('button', { name: /Switch to English/ }));
+    goToEnglish();
     expect(within(log()).getByText('role')).toBeInTheDocument();
   });
 });

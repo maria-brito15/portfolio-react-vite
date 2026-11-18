@@ -36,7 +36,7 @@ describe('timeline de projetos', () => {
 
     // o rótulo do Portfólio é por idioma ("out/2026" / "oct/2026"); a data em
     // si ({ year: 2026, month: 10 }) não muda, só a exibição.
-    await user.click(screen.getByRole('button', { name: /Switch to English/ }));
+    await user.click(screen.getByRole('link', { name: 'EN' }));
     expect(dates()[2]).toBe('oct/2026');
   });
 
@@ -55,7 +55,7 @@ describe('timeline de projetos', () => {
 
     expect(dateTexts()).not.toMatch(FORBIDDEN);
     expect(tl.textContent).not.toMatch(/Repositório (privado|a divulgar)/);
-    await user.click(screen.getByRole('button', { name: /Switch to English/ }));
+    await user.click(screen.getByRole('link', { name: 'EN' }));
     expect(dateTexts()).not.toMatch(FORBIDDEN);
     expect(tl.textContent).not.toMatch(/Private repository|Repository to be published/);
     expect(tl.querySelector<HTMLElement>('.date-note')!).toHaveTextContent(
@@ -87,7 +87,7 @@ describe('timeline de projetos', () => {
     const tl = within(timeline());
 
     expect(tl.getByText(/Desafio Técnico de Estágio/)).toBeInTheDocument();
-    await user.click(screen.getByRole('button', { name: /Switch to English/ }));
+    await user.click(screen.getByRole('link', { name: 'EN' }));
     expect(tl.getByText(/Internship Technical Challenge/)).toBeInTheDocument();
   });
 

@@ -1,10 +1,13 @@
-import { screen, waitFor, within } from '@testing-library/react';
+// T3.3 (V-04, V-15): a casca nova, montada uma vez pelo App. Skip link primeiro focável; 1 header,
+// 1 nav principal, 1 main e 1 footer; rota `bare` só com a faixa e o `main`; só uma rota `bare`;
+// a faixa de idioma vem logo depois do skip link (FR-016).
+import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { routes } from '../../data/routes';
 import { renderApp } from '../../test/helpers';
 
-const ROUTES = [
+const SHELL_ROUTES = [
   '/',
-  '/terminal',
   '/jogos',
   '/github',
   '/curriculo',
@@ -16,319 +19,108 @@ const ROUTES = [
   '/experiencias',
   '/contato',
   '/estudos-de-caso/whatsapp-dispatcher',
+  '/pessoal',
+  '/en',
+  '/en/projects',
   '/pagina-que-nao-existe',
 ];
 
-const barInput = () => screen.getByRole('textbox', { name: 'Barra de comandos do site' });
+const follows = (a: Element, b: Element) =>
+  Boolean(a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING);
 
-beforeEach(() => sessionStorage.clear());
+beforeEach(() => {
+  sessionStorage.clear();
+  localStorage.clear();
+});
 
-describe('layout único em todas as páginas', () => {
-  it.each(ROUTES)('%s tem um Header, uma barra de comandos, uma Window e um Footer', (route) => {
+describe('casca única (FR-008, FR-016)', () => {
+  it.each(SHELL_ROUTES)(
+    '%s tem 1 header, 1 nav principal, 1 main e 1 footer, nessa ordem',
+    (route) => {
+      renderApp(route);
+      expect(document.querySelectorAll('.hdr')).toHaveLength(1);
+      expect(screen.getAllByRole('main')).toHaveLength(1);
+      expect(document.querySelectorAll('footer.credits')).toHaveLength(1);
+      expect(
+        within(document.querySelector<HTMLElement>('.hdr')!).getAllByRole('navigation'),
+      ).toHaveLength(1);
+      expect(document.querySelectorAll('main#conteudo')).toHaveLength(1);
+
+      const order = [
+        document.querySelector('.deco-stripe')!,
+        document.querySelector('.skip-link')!,
+        document.querySelector<HTMLElement>('.hdr')!,
+        screen.getByRole('main'),
+        document.querySelector('footer.credits')!,
+      ];
+
+      for (let i = 1; i < order.length; i++) expect(follows(order[i - 1], order[i])).toBe(true);
+    },
+  );
+
+  it('o skip link é o primeiro item focável e leva ao main', async () => {
+    const user = userEvent.setup();
+
+    renderApp('/sobre');
+    await user.tab();
+
+    const skip = screen.getByRole('link', { name: 'Ir para o conteúdo' });
+
+    expect(skip).toHaveFocus();
+    expect(skip).toHaveAttribute('href', '#conteudo');
+    expect(screen.getByRole('main')).toHaveAttribute('tabindex', '-1');
+  });
+
+  it('em inglês o skip link e o rodapé vêm no idioma da página', () => {
+    renderApp('/en/about');
+    expect(screen.getByRole('link', { name: 'Skip to content' })).toBeInTheDocument();
+    expect(screen.getByText('no cookies')).toBeInTheDocument();
+  });
+
+  it('a casca é a mesma ao trocar de página: o header não é remontado', async () => {
+    const user = userEvent.setup();
+
+    renderApp('/sobre');
+
+    const header = document.querySelector<HTMLElement>('.hdr')!;
+
+    await user.click(within(header).getByRole('link', { name: 'Projetos' }));
+    expect(window.location.pathname).toBe('/projetos');
+    expect(document.querySelector<HTMLElement>('.hdr')!).toBe(header);
+  });
+});
+
+describe('faixa de idioma na ordem do foco (FR-016)', () => {
+  it('com o navegador em inglês, vem logo depois do skip link e antes do header', () => {
+    vi.spyOn(window.navigator, 'languages', 'get').mockReturnValue(['en-US', 'en']);
+    renderApp('/sobre');
+
+    const skip = document.querySelector('.skip-link')!;
+    const offer = screen.getByRole('region', { name: 'Oferta de idioma' });
+    const header = document.querySelector<HTMLElement>('.hdr')!;
+
+    expect(follows(skip, offer)).toBe(true);
+    expect(follows(offer, header)).toBe(true);
+    expect(skip.nextElementSibling).toBe(offer);
+    vi.restoreAllMocks();
+  });
+});
+
+describe('rota sem casca (FR-041, TD-024)', () => {
+  it('só uma rota é `bare`: o terminal', () => {
+    expect(routes.filter((route) => route.bare).map((route) => route.id)).toEqual(['terminal']);
+  });
+
+  it.each(['/terminal', '/en/terminal'])('%s tem só a faixa e o main', (route) => {
+    vi.spyOn(window.navigator, 'languages', 'get').mockReturnValue(['en-US', 'en']);
     renderApp(route);
-    expect(document.querySelectorAll('header.site-nav')).toHaveLength(1);
-    expect(document.querySelectorAll('.cmdbar')).toHaveLength(1);
-    // a home é o painel (sem janela); as demais páginas têm uma Window
-    expect(document.querySelectorAll('.win')).toHaveLength(route === '/' ? 0 : 1);
-    expect(document.querySelectorAll('nav.sidebar')).toHaveLength(1);
-    expect(document.querySelectorAll('footer')).toHaveLength(1);
-
-    // a ordem do esqueleto: Header → barra → barra lateral → Window (ou painel) → Footer
-    const order = [
-      'header.site-nav',
-      '.cmdbar',
-      'nav.sidebar',
-      route === '/' ? '.dash' : '.win',
-      'footer',
-    ].map((sel) => document.querySelector<HTMLElement>(sel)!);
-
-    for (let i = 1; i < order.length; i++) {
-      expect(
-        order[i - 1].compareDocumentPosition(order[i]) & Node.DOCUMENT_POSITION_FOLLOWING,
-      ).toBeTruthy();
-    }
-  });
-
-  it('o header é o mesmo em todas as rotas: menu, logo, busca, tema e idioma', () => {
-    for (const route of ROUTES) {
-      const { unmount } = renderApp(route);
-      const header = document.querySelector<HTMLElement>('header.site-nav')!;
-
-      expect(
-        within(header)
-          .queryAllByRole('link')
-          .map((a) => a.getAttribute('href')),
-        route,
-      ).toEqual(['/']);
-      expect(within(header).getByRole('link', { name: /mariab.dev/ })).toBeInTheDocument();
-
-      const buttons = within(header)
-        .getAllByRole('button')
-        .map((b) => b.getAttribute('aria-label'));
-
-      expect(buttons, route).toEqual([
-        'Abrir menu de navegação',
-        'Comandos (Ctrl K)',
-        'EN — Switch to English',
-      ]);
-      expect(within(header).getByRole('combobox', { name: 'Tema' })).toBeInTheDocument();
-      // a navegação mora na barra lateral, não no header
-      expect(header.querySelector<HTMLElement>('ul, .nav-links')).toBeNull();
-      unmount();
-    }
-  });
-
-  it('o botão >_ do header abre a paleta de comandos, como Ctrl+K', async () => {
-    const user = userEvent.setup();
-
-    renderApp('/academico');
-    await user.click(screen.getByRole('button', { name: 'Comandos (Ctrl K)' }));
-
-    const dialog = await screen.findByRole('dialog', { name: 'Paleta de comandos' });
-
-    // O foco vai ao campo num efeito do `Overlay`, depois de o diálogo aparecer: espera, em vez de
-    // supor que já aconteceu (sob carga o diálogo aparece antes do efeito).
-    await waitFor(() => expect(within(dialog).getByRole('combobox')).toHaveFocus());
-    // Esc fecha e devolve o foco ao botão
-    await user.keyboard('{Escape}');
-    expect(screen.queryByRole('dialog')).toBeNull();
-    expect(screen.getByRole('button', { name: 'Comandos (Ctrl K)' })).toHaveFocus();
-  });
-
-  it('só as páginas internas têm "Voltar" e breadcrumb', () => {
-    for (const route of ROUTES) {
-      const { unmount } = renderApp(route);
-      const inner = route !== '/';
-
-      expect(!!document.querySelector<HTMLElement>('.shell-back')!, route).toBe(inner);
-      expect(!!document.querySelector<HTMLElement>('.crumbs')!, route).toBe(inner);
-      unmount();
-    }
-  });
-
-  it('o breadcrumb usa o vocabulário dos comandos nos dois idiomas', async () => {
-    const user = userEvent.setup();
-
-    renderApp('/academico');
-
-    const crumbs = () =>
-      within(document.querySelector<HTMLElement>('.crumbs')!).getAllByRole('listitem');
-
-    expect(crumbs().map((li) => li.textContent)).toEqual(['~', 'academico']);
-    expect(document.querySelector<HTMLElement>('.win-title')!).toHaveTextContent(
-      'visitante@mariab.dev: ~/academico',
-    );
-    await user.click(screen.getByRole('button', { name: /Switch to English/ }));
-    expect(crumbs().map((li) => li.textContent)).toEqual(['~', 'academics']);
-    expect(document.querySelector<HTMLElement>('.win-title')!).toHaveTextContent('~/academics');
-  });
-
-  it('o estudo de caso mostra projetos / whatsapp-dispatcher', () => {
-    renderApp('/estudos-de-caso/whatsapp-dispatcher');
-    expect(
-      within(document.querySelector<HTMLElement>('.crumbs')!)
-        .getAllByRole('listitem')
-        .map((li) => li.textContent),
-    ).toEqual(['~', 'projetos', 'whatsapp-dispatcher']);
-  });
-});
-
-describe('Voltar', () => {
-  it('usa history.back() quando a página anterior é do site', async () => {
-    const user = userEvent.setup();
-    const back = vi.spyOn(window.history, 'back').mockImplementation(() => {});
-
-    renderApp('/projetos');
-    await user.click(screen.getByRole('link', { name: /Ler o Estudo de Caso/ }));
-    expect(window.location.pathname).toBe('/estudos-de-caso/whatsapp-dispatcher');
-    await user.click(screen.getByRole('button', { name: 'Voltar à página anterior' }));
-    expect(back).toHaveBeenCalledTimes(1);
-    back.mockRestore();
-  });
-
-  it('vai para a home quando a página foi aberta direto', async () => {
-    const user = userEvent.setup();
-    const back = vi.spyOn(window.history, 'back').mockImplementation(() => {});
-
-    renderApp('/academico');
-    await user.click(screen.getByRole('button', { name: 'Voltar à página anterior' }));
-    expect(back).not.toHaveBeenCalled();
-    expect(window.location.pathname).toBe('/');
-    back.mockRestore();
-  });
-});
-
-describe('barra de comandos', () => {
-  it('/ foca a barra e Ctrl+K abre a paleta de comandos', async () => {
-    const user = userEvent.setup();
-
-    renderApp('/academico');
-    await user.keyboard('/');
-    expect(barInput()).toHaveFocus();
-    expect(barInput()).toHaveValue('');
-    barInput().blur();
-    await user.keyboard('{Control>}k{/Control}');
-    expect(await screen.findByRole('dialog', { name: 'Paleta de comandos' })).toBeInTheDocument();
-  });
-
-  it('os atalhos não roubam o foco de campos de formulário', async () => {
-    const user = userEvent.setup();
-
-    renderApp();
-
-    const terminal = screen.getByRole('textbox', { name: 'Linha de comando do terminal' });
-
-    await user.click(terminal);
-    await user.keyboard('a/b');
-    expect(terminal).toHaveFocus();
-    expect(terminal).toHaveValue('a/b');
-    // Ctrl+K na linha de comando abre a paleta; ao fechar, o foco volta e o texto fica.
-    await user.keyboard('{Control>}k{/Control}');
-    expect(await screen.findByRole('dialog')).toBeInTheDocument();
-    await user.keyboard('{Escape}');
-    expect(terminal).toHaveFocus();
-    expect(terminal).toHaveValue('a/b');
-  });
-
-  it('executa comandos fora da home e mostra a saída num painel', async () => {
-    const user = userEvent.setup();
-
-    renderApp('/servicos');
-    await user.type(barInput(), 'curriculo{Enter}');
-
-    const panel = document.querySelector<HTMLElement>('.cmdbar-panel')!;
-
-    expect(within(panel).getByText('Maria Eduarda de Paula Brito')).toBeInTheDocument();
-    expect(window.location.pathname).toBe('/servicos');
-    // fora da home, "ver no terminal" leva à home com o comando já executado
-    expect(within(panel).getByRole('link', { name: /ver no terminal/ })).toHaveAttribute(
-      'href',
-      '/terminal?cmd=curriculo',
-    );
-    expect(within(panel).getByRole('button', { name: /abrir página própria/ })).toBeInTheDocument();
-    // Esc fecha o painel
-    await user.keyboard('{Escape}');
-    expect(document.querySelector<HTMLElement>('.cmdbar-panel')!).toBeNull();
-  });
-
-  it('completa com Tab e lista sugestões', async () => {
-    const user = userEvent.setup();
-
-    renderApp('/curriculo');
-    await user.type(barInput(), 'proj{Tab}');
-    expect(barInput()).toHaveValue('projetos ');
-    await user.clear(barInput());
-    await user.type(barInput(), 'c{Tab}');
-
-    const list = screen.getByRole('list', { name: 'Sugestões de comandos' });
-
-    expect(within(list).getByRole('button', { name: 'curriculo' })).toBeInTheDocument();
-    await user.click(within(list).getByRole('button', { name: 'curriculo' }));
-    expect(barInput()).toHaveValue('curriculo ');
-  });
-
-  it('na home, a barra e o terminal compartilham o histórico e a saída', async () => {
-    const user = userEvent.setup();
-
-    renderApp();
-    await user.type(barInput(), 'ajuda{Enter}');
-    expect(
-      within(document.querySelector<HTMLElement>('.term-log')!).getByText(/Comandos disponíveis/),
-    ).toBeInTheDocument();
-    expect(document.querySelector<HTMLElement>('.cmdbar-panel')!).toBeNull();
-    await user.type(barInput(), '{ArrowUp}');
-    expect(barInput()).toHaveValue('ajuda');
-  });
-});
-
-describe('duas visualizações', () => {
-  it('as páginas dedicadas têm [ ver no terminal ] e [ página própria ] na barra da janela', async () => {
-    const user = userEvent.setup();
-
-    renderApp('/academico');
-
-    const bar = document.querySelector<HTMLElement>('.win-bar')!;
-
-    expect(within(bar).getByRole('link', { name: 'ver no terminal' })).toHaveAttribute(
-      'href',
-      '/terminal?cmd=academico',
-    );
-    expect(within(bar).getByRole('button', { name: 'página própria' })).toHaveAttribute(
-      'aria-pressed',
-      'true',
-    );
-    await user.click(within(bar).getByRole('link', { name: 'ver no terminal' }));
-    expect(window.location.pathname).toBe('/terminal');
-    expect(window.location.search).toBe('');
-
-    const log = document.querySelector<HTMLElement>('.term-log')!;
-
-    expect(
-      within(log).getByText('Linha do tempo'.toLowerCase(), { exact: false }),
-    ).toBeInTheDocument();
-    expect(within(log).getByRole('button', { name: /abrir página própria/ })).toBeInTheDocument();
-  });
-
-  it('/terminal?cmd=servicos abre a home com o comando executado e limpa a URL', () => {
-    renderApp('/terminal?cmd=servicos');
-    expect(window.location.search).toBe('');
-    expect(document.querySelector<HTMLElement>('.term-entry')!).toHaveTextContent('servicos');
-    expect(document.querySelector<HTMLElement>('.term-log')!).toHaveTextContent(
-      'Site Institucional',
-    );
-  });
-
-  it('ignora ?cmd= que não é de uma página', () => {
-    renderApp('/terminal?cmd=tema');
-    expect(document.querySelector<HTMLElement>('.term-entry')!).toBeNull();
-  });
-
-  it('Serviços e estudo de caso levam a servicos / projetos no terminal', () => {
-    renderApp('/servicos');
-    expect(
-      within(document.querySelector<HTMLElement>('.win-bar')!).getByRole('link', {
-        name: 'ver no terminal',
-      }),
-    ).toHaveAttribute('href', '/terminal?cmd=servicos');
-  });
-
-  it('o estudo de caso leva a projetos no terminal', () => {
-    renderApp('/estudos-de-caso/whatsapp-dispatcher');
-    expect(
-      within(document.querySelector<HTMLElement>('.win-bar')!).getByRole('link', {
-        name: 'ver no terminal',
-      }),
-    ).toHaveAttribute('href', '/terminal?cmd=projetos');
-  });
-
-  it('toda saída com página dedicada termina com as duas ações', async () => {
-    const user = userEvent.setup();
-
-    renderApp();
-
-    const input = screen.getByRole('textbox', { name: 'Linha de comando do terminal' });
-
-    for (const cmd of [
-      'sobre',
-      'habilidades',
-      'projetos',
-      'experiencias',
-      'curriculo',
-      'academico',
-      'servicos',
-      'contato',
-    ]) {
-      await user.type(input, `${cmd}{Enter}`);
-
-      const log = document.querySelector<HTMLElement>('.term-log')!;
-
-      expect(within(log).getByRole('button', { name: /ver no terminal/ }), cmd).toBeInTheDocument();
-      expect(within(log).getByText(/abrir página própria/), cmd).toBeInTheDocument();
-    }
-    // sem página dedicada: sem ações
-    await user.type(input, 'ajuda{Enter}');
-    expect(
-      within(document.querySelector<HTMLElement>('.term-log')!).queryByText(/abrir página própria/),
-    ).toBeNull();
+    expect(document.querySelectorAll('.deco-stripe')).toHaveLength(1);
+    expect(screen.getByRole('main')).toBeInTheDocument();
+    expect(document.querySelector('.hdr')).toBeNull();
+    expect(document.querySelector('footer.credits')).toBeNull();
+    expect(document.querySelector('nav')).toBeNull();
+    expect(document.querySelector('.skip-link')).toBeNull();
+    expect(screen.queryByRole('region', { name: /idioma|language/i })).not.toBeInTheDocument();
+    vi.restoreAllMocks();
   });
 });

@@ -167,22 +167,6 @@ describe('paleta de comandos (JA-06, JA-07)', () => {
     expect(terminalInput()).toHaveFocus();
   });
 
-  it('fora da home, a saída aparece no painel da barra de comandos', async () => {
-    const user = userEvent.setup();
-
-    renderApp('/servicos');
-    await ctrlK(user);
-    await palette();
-    await user.click(await screen.findByRole('option', { name: /stats/ }));
-    await waitFor(() => {
-      const panel = document.querySelector<HTMLElement>('.cmdbar-panel');
-
-      expect(panel).not.toBeNull();
-      expect(panel).toHaveTextContent('commits');
-    });
-    expect(window.location.pathname).toBe('/servicos');
-  });
-
   it('não rouba Ctrl+K nem ? de campos de formulário que não são a linha de comando', async () => {
     const user = userEvent.setup();
 

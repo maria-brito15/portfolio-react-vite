@@ -1,6 +1,6 @@
 // Número sozinho, ls, cd e autocompletar.
 // Parte da divisão de `sections.test.tsx` (spec 001, T6.3): nenhum caso mudou.
-import { act, screen, waitFor, within } from '@testing-library/react';
+import { act, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderApp } from '../test/helpers';
 import { routes } from '../data/routes';
@@ -79,7 +79,7 @@ describe('número sozinho e navegação sequencial (DS-05, DS-07)', () => {
     const user = userEvent.setup();
 
     renderApp();
-    await user.click(screen.getByRole('button', { name: /Switch to English/ }));
+    await run(user, 'idioma');
     await run(user, 'next');
     await waitFor(() => expect(log()).toHaveTextContent('no index open'));
     await run(user, 'resume');
@@ -132,7 +132,7 @@ describe('ls <página> e <página> <seção>', () => {
     renderApp();
     await run(user, 'CURRICULO/Competencias');
     expect(log()).toHaveTextContent('Competências técnicas');
-    await user.click(screen.getByRole('button', { name: /Switch to English/ }));
+    await run(user, 'idioma');
     await run(user, 'resume skills');
     expect(log()).toHaveTextContent('Technical skills');
   });

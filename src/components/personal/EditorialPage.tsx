@@ -3,10 +3,9 @@ import { editorialNumber } from '../../data/personal/editorial';
 import { routeById } from '../../data/routes';
 import { useDocumentMeta } from '../../hooks/useDocumentMeta';
 import { useLanguage } from '../../i18n/LanguageContext';
-import SiteShell from '../shell/SiteShell';
 import EditorialHeader from './EditorialHeader';
 
-// Moldura de toda página do espaço cultural: o esqueleto do site (`SiteShell`), o título do
+// Moldura de toda página do espaço cultural: o título do
 // documento e a cabeça editorial (número 001–005, kicker, título e lede). Título e kicker saem
 // de `routes.ts`: nas subpáginas o kicker é o caminho ("Pessoal / Filmes"); o hub passa o seu.
 export default function EditorialPage({
@@ -28,7 +27,7 @@ export default function EditorialPage({
   useDocumentMeta(routeId);
 
   return (
-    <SiteShell routeId={routeId}>
+    <>
       <section className="sec info-page">
         <EditorialHeader
           number={editorialNumber(routeId)}
@@ -39,6 +38,6 @@ export default function EditorialPage({
         />
         {children}
       </section>
-    </SiteShell>
+    </>
   );
 }
