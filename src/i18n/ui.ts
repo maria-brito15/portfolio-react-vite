@@ -21,6 +21,9 @@ export const ui = {
     theme: { toLight: 'Modo claro', toDark: 'Modo escuro' },
     language: { label: 'EN', switchTo: 'Switch to English' },
     langSwitch: { label: 'Idioma', pt: 'Português', en: 'English' },
+    header: { brand: 'duda/portfólio', nav: 'Navegação principal' },
+    themeToggle: { label: 'Alternar tema' },
+    menu: { open: 'Abrir menu', close: 'Fechar menu' },
     credits: {
       title: 'UM PORTFÓLIO DE ENGENHARIA',
       directedBy: 'DIRECTED BY',
@@ -226,6 +229,9 @@ export const ui = {
     theme: { toLight: 'Light mode', toDark: 'Dark mode' },
     language: { label: 'PT-BR', switchTo: 'Mudar para português' },
     langSwitch: { label: 'Language', pt: 'Português', en: 'English' },
+    header: { brand: 'duda/portfolio', nav: 'Main navigation' },
+    themeToggle: { label: 'Toggle theme' },
+    menu: { open: 'Open menu', close: 'Close menu' },
     credits: {
       title: 'AN ENGINEERING PORTFOLIO',
       directedBy: 'DIRECTED BY',

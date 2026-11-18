@@ -924,3 +924,116 @@ html[data-lang-offer] body {
   margin: 0;
   color: var(--text);
 }
+
+/* ---------- Cabeçalho novo, tema e menu (T3.2, FR-012 a FR-015, TD-010) ---------- */
+.hdr {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-2) var(--gutter);
+  border-bottom: 1px solid var(--border);
+  background: var(--nav-bg);
+  overflow-wrap: anywhere;
+}
+.hdr-brand {
+  font-weight: 700;
+  color: var(--text);
+  text-decoration: none;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+.menu {
+  flex: 1;
+  min-width: 0;
+}
+.menu-button {
+  display: none;
+}
+.menu-panel {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+.hdr-nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.hdr-nav a,
+.theme-btn,
+.menu-panel .lang-switch a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 var(--space-2);
+  color: var(--text);
+}
+.hdr-nav a[aria-current='page'] {
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.3em;
+}
+.menu-panel .theme-btn {
+  margin-left: auto;
+  border: 1px solid var(--control-border);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  cursor: pointer;
+}
+.theme-btn-to-light {
+  display: none;
+}
+html[data-theme='dark'] .theme-btn-to-dark {
+  display: none;
+}
+html[data-theme='dark'] .theme-btn-to-light {
+  display: inline;
+}
+@media (max-width: 63.999rem) {
+  .js .menu-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+    margin-left: auto;
+    border: 1px solid var(--control-border);
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--text);
+    cursor: pointer;
+  }
+  .js .menu {
+    flex: 0 0 auto;
+    margin-left: auto;
+  }
+  .js .menu-panel {
+    display: none;
+  }
+  .js .menu-panel[data-open] {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--gutter);
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+  }
+  .js .hdr-nav ul {
+    flex-direction: column;
+  }
+  .js .menu-panel .theme-btn {
+    margin-left: 0;
+    justify-content: center;
+  }
+}

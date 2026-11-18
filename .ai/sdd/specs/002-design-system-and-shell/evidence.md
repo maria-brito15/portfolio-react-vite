@@ -349,3 +349,23 @@ Exit code: 0
 Summary:   OK em 92,7 s (orçamento 180 s): formatação 6,7; lint 20,0; tipos 13,2; testes 48,0; geração 4,9. A primeira execução falhou no lint (arquivo de conteúdo importava zod e o schema), corrigida movendo o schema para src/content/schema/credits.ts
 Verdict:   PASS
 ```
+
+## T3.2 Cabeçalho, botão de tema e menu em tela estreita (TD-010)
+**Entregue:** `Header.next.tsx` (marca `duda/portfólio`, `<nav aria-label>` com os itens `menu: true` na ordem de `order`, `aria-current="page"` na atual, links no idioma da página; depois tema e idioma; provisório, a T3.3 faz o `git mv`), `ThemeToggle.tsx` (nome fixo "Alternar tema"/"Toggle theme", texto visível do tema de destino escolhido por CSS em `html[data-theme]`, `aria-pressed` só depois de montar, via `useSyncExternalStore`), `Menu.tsx` (botão `aria-expanded`/`aria-controls`, painel sempre no HTML; foco ao 1º item ao abrir e ao botão ao fechar por botão, `Esc` ou escolha de item; escolher idioma ou tema não fecha), textos `header`, `themeToggle`, `menu` em `ui.ts` (PT e EN) e CSS novo no fim de `shell.css` (classes novas `.hdr`, `.menu`, `.theme-btn`; as antigas `.site-nav` e `.theme-toggle` seguem para o `Header.tsx` atual). Abaixo de 1024 px (`max-width: 63.999rem`) e só com `.js`, botão de 44×44 px e painel em gaveta; sem JS ou em tela larga, linha única.
+
+**Medição do ponto de quebra (Chrome real, Plex carregada, linha única forçada sem a classe `js`, varredura de 1400 a 600 px em passos de 8):** a linha única (marca, 5 itens, tema, PT|EN) cabe sem quebra de linha e sem rolagem horizontal **até 928 px em PT** (falha em 920) e **até 888 px em EN** (falha em 880); altura da barra 63 px. Com 1024 px sobram ≈ 96 px (PT). **Veredito: 1024 px confirmado** (o valor do design cabe com folga; não há motivo para propor outro). O tamanho mínimo de 44×44 px em 1023 e 1024 px fica no e2e V-07 (T5), como o TD-010 já prevê, porque o vitest roda com `css: false`. Os arquivos temporários da medição (página, script e entrada) foram apagados e o servidor, encerrado.
+
+```
+Claim:     botão do menu com aria-expanded/aria-controls; foco ao abrir e ao fechar (botão, Esc, escolha); itens na ordem de `order`; marca, itens, tema, idioma nessa ordem de DOM; tema com nome fixo e aria-pressed após montar
+Command:   npx vitest run src/components/shell/Menu.test.tsx
+Exit code: 0
+Summary:   9 testes passam: botão liga ao painel e começa fechado; abrir foca o 1º item; botão, Esc e escolha de item devolvem o foco ao botão; escolher idioma não fecha; nav na ordem de `order`; ordem do DOM; aria-current em /en/...; ThemeToggle alterna e mantém o nome
+Verdict:   PASS
+```
+```
+Claim:     o gate passa
+Command:   npm run verify
+Exit code: 0
+Summary:   OK em ≈ 95 s (orçamento 180 s): formatação 7,6; lint 19,9; tipos 14,4; testes 48,4; geração 4,7. A primeira execução falhou no lint (regra jsx-a11y inexistente num comentário; setState em efeito no ThemeToggle; linhas em branco do estilo), corrigidos
+Verdict:   PASS
+```
