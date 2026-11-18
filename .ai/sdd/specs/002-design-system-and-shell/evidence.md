@@ -632,3 +632,28 @@ Exit code: 0
 Summary:   OK em 96,9 s (orçamento 180 s): formatação 7,8; lint 22,6; tipos 15,2; testes 45,8; geração 5,5. Execuções anteriores falharam em 1 teste do plugin (a rota de prova sem fonte mapeada em `lazyPages`) e no valor do robots do teste, corrigidos
 Verdict:   PASS
 ```
+
+## T5.2 Servidor de teste e e2e da casca (V-07, V-11): **PARCIAL, falta rodar o e2e**
+**Entregue:** `scripts/serveDist.mjs` (servidor estático que imita a Netlify: `/projetos` → `projetos.html`, `/en/` → 301 `/en`, 404 por idioma, os 4 cabeçalhos de `for = "/*"` do `netlify.toml` em toda resposta, sem sair da pasta) com `.d.mts`; `playwright.config.ts` com dois projetos (`site`: `e2e/site.e2e.ts` sobre o `vite` de sempre; `shell`: `e2e/shell.e2e.ts` sobre `dist-prova` servido na porta 5197, e o servidor só sobe se `dist-prova/` existe); `e2e/shell.e2e.ts` (2 temas × 2 idiomas na `/_prova`): **sequência real de Tab** = skip link, marca, itens do menu (calculados da tabela de rotas, no idioma), botão de tema, PT, EN, conteúdo (link e 2 botões), link único do rodapé; anel de foco (`outline` ≥ 2 px) em cada controle do cabeçalho; console sem aviso nem erro (inclui hidratação); **toda requisição da mesma origem**; sem rolagem horizontal em 360, 1023, 1024 e 1920 px; botão do menu visível em 1023 px e oculto em 1024 px; todo controle do cabeçalho com `boundingBox` ≥ 44×44 px (1023 px com o painel aberto, e 1024 px); foco ao 1º item ao abrir e de volta ao botão com `Esc`; e, com `locale` do navegador em inglês numa página em português, a faixa de idioma é o **2º foco** (logo depois do skip link) e o espaço dela já está reservado (`data-lang-offer`) no primeiro desenho. Para o critério de 44×44 px, `shell.css` ganhou `min-width`/`min-height: 44px` nos controles do cabeçalho.
+
+```
+Claim:     o servidor de teste imita a Netlify e leva os cabeçalhos do netlify.toml
+Command:   npx vitest run scripts/serveDist.test.ts
+Exit code: 0
+Summary:   10 testes: `/`, `/en`, `/projetos`, `/en/projects`, `/projetos.html` e arquivos estáticos 200; `/en/` 301 para `/en`; 404 com o `404.html` do idioma; não sai da pasta (`../` e `%2e%2e`); os 4 cabeçalhos do netlify.toml em 200, 301 e 404
+Verdict:   PASS
+```
+```
+Claim:     o gate passa e o dist-prova está pronto para o e2e
+Command:   npm run verify ; npm run build:prova ; node scripts/checkDist.mjs dist-prova
+Exit code: 0 ; 0 ; 0
+Summary:   verify OK em 122,2 s (orçamento 180 s; testes 60,2 s; geração 10,0 s, máquina um pouco carregada); `dist-prova`: 42 páginas
+Verdict:   PASS
+```
+```
+Claim:     o e2e da casca passa nos 2 temas × 2 idiomas
+Command:   npm run build:prova && npx playwright test e2e/shell.e2e.ts --project=shell
+Exit code: não executado
+Summary:   o modo automático negou a execução (o Playwright sobe servidores e abre o Chrome), como na T3.4. Os testes estão escritos mas **nunca rodaram**: é provável que o primeiro passe revele ajustes (largura do link PT/EN, ordem exata do Tab, anel de foco)
+Verdict:   PENDENTE
+```

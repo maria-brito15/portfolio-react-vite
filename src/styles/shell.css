@@ -450,3 +450,14 @@ main#conteudo {
   padding: var(--space-5) var(--gutter);
   outline: none;
 }
+
+/* Alvos de toque do cabeçalho: ao menos 44x44 px em qualquer largura (T5.2, V-07, NFR-003). */
+.menu-button,
+.hdr-nav a,
+.theme-btn,
+.menu-panel .lang-switch a,
+.hdr-brand {
+  min-width: 44px;
+  min-height: 44px;
+  justify-content: center;
+}
