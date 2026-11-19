@@ -3,6 +3,13 @@ export { RichTextSchema, richProblem, type RichText } from './rich';
 export { CalendarDateSchema, calendarDateProblem, type CalendarDate } from './calendarDate';
 export { withNoPlaceholders } from './placeholder';
 export {
+  AcademicsSchema,
+  type ContentAcademics,
+  type ContentCourse,
+  type ContentProgram,
+  type ContentSemester,
+} from './academics';
+export {
   ExperienceGroupsSchema,
   type ContentExperience,
   type ContentExperienceGroup,

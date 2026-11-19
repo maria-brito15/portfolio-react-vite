@@ -83,3 +83,13 @@ Summary:   1 arquivo, 9 testes passando (o primeiro confere exatamente 7 itens r
 Verdict:   PASS
 ```
 Observação: o teste importa o módulo antigo só para ler; nenhum arquivo antigo foi alterado.
+
+## T2.3 Schema do acadêmico
+**Entregue:** `src/content/schema/academics.ts` (`AcademicsSchema`, tipos), reexportado em `schema/index.ts`, e `academics.test.ts`. Nenhum teto de nota no schema (Q-002).
+```
+Claim:     o schema do acadêmico aceita nota 0 e 120 (sem teto) e semestre em andamento com courses vazio; recusa nota -1, NaN, null e texto, programa inexistente em semestre, end < start, hours 0 ou fracionado, modalidade fora da lista, id de semestre repetido ou fora de AAAA-N, ano sem 4 dígitos e kind desconhecido; a referência years[].items[].id não é regra deste schema
+Command:   npx vitest run src/content/schema/academics.test.ts ; npx tsc --noEmit ; npx eslint src/content --max-warnings 0
+Exit code: 0 ; 0 ; 0
+Summary:   1 arquivo, 13 testes passando; tipos e lint sem aviso
+Verdict:   PASS
+```
