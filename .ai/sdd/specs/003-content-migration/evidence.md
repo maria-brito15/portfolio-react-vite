@@ -114,3 +114,16 @@ Summary:   2 arquivos, 16 testes passando; tipos e lint sem aviso
 Verdict:   PASS
 ```
 Observação: a regra "itens exigem data" vale só para o "agora", como no design §5.7; `uses` aceita data opcional sem exigir quando há grupos.
+
+## T3.1 Arcabouço da equivalência: projetores, comparador e trava de cobertura
+**Entregue:** `src/content/__migration__/{compare.ts,legacy.ts,coverage.ts,legacyFacts.ts,newFacts.ts,equivalence.test.ts,projectors.test.ts,README.md}`. Só essa pasta nova (apagável de uma vez na T6.2).
+```
+Claim:     o comparador acusa faltando, a mais, mudou e fora de ordem com o caminho; a trava falha por contagem diferente, chave nova não mapeada e PT/EN com tamanhos diferentes; richToText converte <strong> em **negrito**, decodifica apóstrofo e &, e falha com qualquer outra marcação; o teste roda no projeto unit (Node, sem DOM)
+Command:   npx vitest run src/content/__migration__ ; npx tsc --noEmit ; npx eslint src/content --max-warnings 0 ; git status --short -- src
+Exit code: 0 ; 0 ; 0 ; 0
+Summary:   14 testes passando e 8 todo (um por domínio, sem projetor ainda; aparecem como todo, não como passou); tsc 64 s e eslint 24 s sem erro; `git status` mostra só `?? src/content/__migration__/` além das alterações da 002 que já existiam
+Verdict:   PASS
+```
+Observações:
+- Os 8 `todo` são intencionais: cada T4.x liga o projetor do seu domínio. Um domínio sem projetor não conta como equivalente.
+- Uma execução de `tsc` levou 10 min 44 s por contenção da máquina (outra execução em paralelo); a repetição isolada levou 64 s. Sem erro de tipo.
