@@ -124,7 +124,7 @@ Regra cruzada (TD-006): `period.label.pt` contém o ano de `start`; se `start.mo
 | `years[]`: `year`, `items[]` = `{kind: 'project'\|'experience', id}` | a ordem da lista é a ordem de hoje; a existência do `id` é conferida em `references.test.ts` (TD-010) |
 | `semesters[]`: `id` (`AAAA-N`), `label` (`LocalizedText`), `program` (id de `programs`, **conferido no schema**), `inProgress` (opcional), `courses[]` | `id` único; semestre em andamento pode ter `courses: []` (válido) |
 | `courses[]`: `name` (`LocalizedText`), `hours` (inteiro > 0, opcional), `modality` (`presencial`\|`hibrida`\|`virtual`, opcional), `grade` (número, opcional) | **`grade`: número finito >= 0, sem teto** (Q-002: o schema não inventa escala; TD-012). `grade: null` do antigo vira ausente |
-Hoje nenhuma disciplina tem `hours` nem `modality`: continuam ausentes. 13 disciplinas, todas com nota, migram sem omissão (o teste de equivalência confere a contagem).
+Hoje nenhuma disciplina tem `hours` nem `modality`: continuam ausentes. 17 disciplinas (emenda anotada em 2026-11-19: o texto dizia 13, o módulo antigo tem 17 em 3 semestres), todas com nota, migram sem omissão (o teste de equivalência confere a contagem).
 
 ### 5.4 Currículo normalizado (`ContentResume`) — FR-005, Q-004
 `resume.content.ts` exporta `resume`: **um objeto, dois idiomas por campo** (não mais `resume.pt` / `resume.en`).

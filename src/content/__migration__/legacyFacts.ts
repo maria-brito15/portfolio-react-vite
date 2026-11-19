@@ -1,5 +1,6 @@
 // Projetores do lado ANTIGO: leem a forma antiga (`pt`/`en` aninhados, `null`, `ReactNode`) e devolvem fatos.
 // Cada tarefa T4.x liga o seu domínio aqui. Escritos separadamente de `newFacts.ts` de propósito (TD-009).
+import { academics as oldAcademics } from '../../data/academics';
 import { experienceGroups as oldExperiences } from '../../data/experiences';
 import { projects as oldProjects } from '../../data/projects';
 import { parsePeriodStart } from '../../utils/projectDate';
@@ -188,18 +189,105 @@ function experienceGuards(): string[] {
   return problems;
 }
 
+function academicsFacts(): Fact[] {
+  const facts: Fact[] = [
+    ['academics/programs/count', String(oldAcademics.programs.length)],
+    ['academics/timeline/count', String(oldAcademics.timeline.length)],
+    ['academics/years/count', String(oldAcademics.years.length)],
+    ['academics/semesters/count', String(oldAcademics.semesters.length)],
+    ['academics/courses/count', String(oldAcademics.semesters.flatMap((s) => s.courses).length)],
+  ];
+
+  for (const pr of oldAcademics.programs) {
+    const at = (...rest: (string | number)[]) => path('academics', 'programs', pr.id, ...rest);
+
+    facts.push([at('institution'), pr.institution]);
+    facts.push([at('degree', 'pt'), pr.degree.pt], [at('degree', 'en'), pr.degree.en]);
+    facts.push([at('start'), String(pr.start)], [at('end'), String(pr.end)]);
+    if (pr.expected !== undefined) facts.push([at('expected'), String(pr.expected)]);
+  }
+
+  oldAcademics.timeline.forEach((t, i) => {
+    facts.push([path('academics', 'timeline', i, 'year'), String(t.year)]);
+    facts.push([path('academics', 'timeline', i, 'label', 'pt'), t.label.pt]);
+    facts.push([path('academics', 'timeline', i, 'label', 'en'), t.label.en]);
+  });
+
+  for (const y of oldAcademics.years) {
+    facts.push([path('academics', 'years', y.year, 'count'), String(y.items.length)]);
+    y.items.forEach((item, i) => {
+      facts.push([path('academics', 'years', y.year, i, 'kind'), item.kind]);
+      facts.push([path('academics', 'years', y.year, i, 'id'), item.id]);
+    });
+  }
+
+  for (const sem of oldAcademics.semesters) {
+    const at = (...rest: (string | number)[]) => path('academics', 'semesters', sem.id, ...rest);
+
+    facts.push([at('label', 'pt'), sem.label.pt], [at('label', 'en'), sem.label.en]);
+    facts.push([at('program'), sem.program]);
+    if (sem.inProgress !== undefined) facts.push([at('inProgress'), String(sem.inProgress)]);
+    facts.push([at('courses', 'count'), String(sem.courses.length)]);
+
+    sem.courses.forEach((c, j) => {
+      facts.push([at('courses', j, 'name', 'pt'), c.name.pt]);
+      facts.push([at('courses', j, 'name', 'en'), c.name.en]);
+      if (c.hours !== undefined) facts.push([at('courses', j, 'hours'), String(c.hours)]);
+      if (c.modality !== undefined) facts.push([at('courses', j, 'modality'), c.modality]);
+      // `grade: null` do antigo é ausente: não gera fato (e o novo não pode ter nota a mais).
+      if (c.grade !== null && c.grade !== undefined) {
+        facts.push([at('courses', j, 'grade'), String(c.grade)]);
+      }
+    });
+  }
+
+  return facts;
+}
+
+function academicsGuards(): string[] {
+  const problems = unmappedKeys(
+    'acadêmico',
+    oldAcademics,
+    ['programs', 'timeline', 'years', 'semesters'],
+    [],
+  );
+
+  for (const pr of oldAcademics.programs) {
+    const keys = ['id', 'institution', 'degree', 'start', 'end', 'expected'];
+
+    problems.push(...unmappedKeys(`programa ${pr.id}`, pr, keys, []));
+  }
+
+  for (const sem of oldAcademics.semesters) {
+    const keys = ['id', 'label', 'program', 'inProgress', 'courses'];
+
+    problems.push(...unmappedKeys(`semestre ${sem.id}`, sem, keys, []));
+
+    sem.courses.forEach((c, j) => {
+      const courseKeys = ['name', 'hours', 'modality', 'grade'];
+
+      problems.push(...unmappedKeys(`semestre ${sem.id} disciplina ${j}`, c, courseKeys, []));
+    });
+  }
+
+  return problems;
+}
+
 export const legacyFacts: Partial<Record<Domain, () => Fact[]>> = {
   projects: projectFacts,
   experiences: experienceFacts,
+  academics: academicsFacts,
 };
 
 export const legacyGuards: Partial<Record<Domain, () => string[]>> = {
   projects: projectGuards,
   experiences: experienceGuards,
+  academics: academicsGuards,
 };
 
 // A contagem esperada vem do próprio módulo antigo (não de um número digitado aqui).
 export const legacyCounts: Partial<Record<Domain, () => number>> = {
   projects: () => oldProjects.length,
   experiences: () => oldExperiences.flatMap((g) => g.items).length,
+  academics: () => oldAcademics.semesters.flatMap((s) => s.courses).length,
 };

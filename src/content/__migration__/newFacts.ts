@@ -1,4 +1,5 @@
 // Projetores do lado NOVO: leem o conteúdo em `src/content/*.content.ts`. Cada tarefa T4.x liga o seu.
+import { academics } from '../academics.content';
 import { experienceGroups } from '../experiences.content';
 import { projects } from '../projects.content';
 import type { Fact } from './compare';
@@ -96,12 +97,66 @@ function experienceFacts(): Fact[] {
   return facts;
 }
 
+function academicsFacts(): Fact[] {
+  const facts: Fact[] = [
+    ['academics/programs/count', String(academics.programs.length)],
+    ['academics/timeline/count', String(academics.timeline.length)],
+    ['academics/years/count', String(academics.years.length)],
+    ['academics/semesters/count', String(academics.semesters.length)],
+    ['academics/courses/count', String(academics.semesters.flatMap((s) => s.courses).length)],
+  ];
+
+  for (const pr of academics.programs) {
+    const at = (...rest: (string | number)[]) => path('academics', 'programs', pr.id, ...rest);
+
+    facts.push([at('institution'), pr.institution]);
+    facts.push([at('degree', 'pt'), pr.degree.pt], [at('degree', 'en'), pr.degree.en]);
+    facts.push([at('start'), String(pr.start)], [at('end'), String(pr.end)]);
+    if (pr.expected !== undefined) facts.push([at('expected'), String(pr.expected)]);
+  }
+
+  academics.timeline.forEach((t, i) => {
+    facts.push([path('academics', 'timeline', i, 'year'), String(t.year)]);
+    facts.push([path('academics', 'timeline', i, 'label', 'pt'), t.label.pt]);
+    facts.push([path('academics', 'timeline', i, 'label', 'en'), t.label.en]);
+  });
+
+  for (const y of academics.years) {
+    facts.push([path('academics', 'years', y.year, 'count'), String(y.items.length)]);
+    y.items.forEach((item, i) => {
+      facts.push([path('academics', 'years', y.year, i, 'kind'), item.kind]);
+      facts.push([path('academics', 'years', y.year, i, 'id'), item.id]);
+    });
+  }
+
+  for (const sem of academics.semesters) {
+    const at = (...rest: (string | number)[]) => path('academics', 'semesters', sem.id, ...rest);
+
+    facts.push([at('label', 'pt'), sem.label.pt], [at('label', 'en'), sem.label.en]);
+    facts.push([at('program'), sem.program]);
+    if (sem.inProgress !== undefined) facts.push([at('inProgress'), String(sem.inProgress)]);
+    facts.push([at('courses', 'count'), String(sem.courses.length)]);
+
+    sem.courses.forEach((c, j) => {
+      facts.push([at('courses', j, 'name', 'pt'), c.name.pt]);
+      facts.push([at('courses', j, 'name', 'en'), c.name.en]);
+      if (c.hours !== undefined) facts.push([at('courses', j, 'hours'), String(c.hours)]);
+      if (c.modality !== undefined) facts.push([at('courses', j, 'modality'), c.modality]);
+      if (c.grade !== undefined) facts.push([at('courses', j, 'grade'), String(c.grade)]);
+    });
+  }
+
+  return facts;
+}
+
 export const newFacts: Partial<Record<Domain, () => Fact[]>> = {
   projects: projectFacts,
   experiences: experienceFacts,
+  academics: academicsFacts,
 };
 
 export const newCounts: Partial<Record<Domain, () => number>> = {
   projects: () => projects.length,
   experiences: () => experienceGroups.flatMap((g) => g.items).length,
+  academics: () => academics.semesters.flatMap((s) => s.courses).length,
 };

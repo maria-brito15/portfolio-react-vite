@@ -187,12 +187,12 @@ Em cada tarefa: (1) criar o `*.content.ts` copiando os textos como estão; (2) r
 
 ### T4.3 Conteúdo do acadêmico e fatia de equivalência
 - **Requisito:** FR-004, FR-008, FR-011 · **Prioridade:** P0 · **Estimativa:** 3 h · **Dependências:** T2.3, T3.1
-- **Trabalho:** `src/content/academics.content.ts` exporta `academics`: formação, linha do tempo, atividades por ano (referências `{kind, id}` na ordem de hoje), semestres e **as 13 disciplinas, todas com nota**, sem omissão e sem escala inventada; `grade: null` vira ausente; `hours` e `modality` ausentes (hoje não existem). Registro. Fatia `academics` da equivalência (contagem de semestres e disciplinas lida do módulo antigo).
+- **Trabalho:** `src/content/academics.content.ts` exporta `academics`: formação, linha do tempo, atividades por ano (referências `{kind, id}` na ordem de hoje), semestres e **as 17 disciplinas (emenda anotada: o texto dizia 13; o módulo antigo tem 17), todas com nota**, sem omissão e sem escala inventada; `grade: null` vira ausente; `hours` e `modality` ausentes (hoje não existem). Registro. Fatia `academics` da equivalência (contagem de semestres e disciplinas lida do módulo antigo).
 - **Testes:** a fatia de equivalência (programas, linha do tempo, anos e itens, semestres, disciplinas e notas; semestre em andamento com lista vazia, se existir).
-- **Critérios de aceitação:** (1) 13 disciplinas com a nota de hoje; (2) nenhuma carga horária ou modalidade preenchida; (3) `src/data/academics.ts` intacto.
+- **Critérios de aceitação:** (1) as 17 disciplinas (contagem lida do módulo antigo) com a nota de hoje; (2) nenhuma carga horária ou modalidade preenchida; (3) `src/data/academics.ts` intacto.
 - **Arquivos prováveis:** `src/content/academics.content.ts`, `src/content/registry.ts`, `src/content/__migration__/*`
 - **Verificação:** `npx vitest run src/content/__migration__/equivalence.test.ts` (exit 0); `npm run content:check` (exit 0); `git diff --quiet -- src/data/academics.ts` (exit 0). (V-10 fatia, V-04 conteúdo real)
-- **Commit:** `feat(content): migra o academico e as 13 disciplinas (T4.3)`
+- **Commit:** `feat(content): migra o academico e as 17 disciplinas (T4.3)`
 
 ### T4.4 Conteúdo de competências e currículo e fatia de equivalência
 - **Requisito:** FR-005, FR-008, FR-011, TD-008 · **Prioridade:** P0 · **Estimativa:** 3 h · **Dependências:** T2.4, T3.1, T4.1
@@ -308,7 +308,7 @@ Leitura: T2.x dependem de T1.2/T1.3 (T2.1 e T2.2 das duas; T2.3 e T2.4 de T1.2; 
 
 ## Confirm before building
 Antes de qualquer tarefa, o implementador **restata com as próprias palavras** e espera o **OK explícito da Duda**:
-1. **FRs (resumo):** mover o conteúdo atual (6 projetos com as 3 capturas do EcoShop, 7 experiências, acadêmico com 13 disciplinas, currículo, 4 grupos de competências, contato, "agora" e setup vazio) para 8 arquivos tipados, registrados e validados, sem alterar um fato; PT e EN em tudo; datas só com mês confirmado; sem nota de projeto, sem texto de exemplo; um teste de equivalência ao vivo antigo x novo, apagado só com a aprovação dela.
+1. **FRs (resumo):** mover o conteúdo atual (6 projetos com as 3 capturas do EcoShop, 7 experiências, acadêmico com 17 disciplinas (emenda anotada: eram 13 no texto), currículo, 4 grupos de competências, contato, "agora" e setup vazio) para 8 arquivos tipados, registrados e validados, sem alterar um fato; PT e EN em tudo; datas só com mês confirmado; sem nota de projeto, sem texto de exemplo; um teste de equivalência ao vivo antigo x novo, apagado só com a aprovação dela.
 2. **Restrições:** esta spec é aditiva (nenhum arquivo antigo é alterado; nenhuma página muda; o JavaScript do navegador não muda); só `**negrito**` (D5); `variant` e `icon` fora (D3); referências entre arquivos só no `verify` (D6); `/agora` e `/setup` são da 007 (D4); branch `rebuild/sdd`, sem `push`; só a Duda promove o `.status`.
 3. **Perguntas abertas:** nenhuma de design; ver "Ação da Duda".
 Nada de código antes de `tasks:approved`.

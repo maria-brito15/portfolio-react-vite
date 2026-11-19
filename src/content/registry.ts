@@ -3,9 +3,11 @@
 // Um `*.content.ts` que existe no disco e não está aqui é problema de verificação (EC-10).
 import type { ZodType } from 'zod';
 import { credits } from './credits.content';
+import { academics } from './academics.content';
 import { experienceGroups } from './experiences.content';
 import { projects } from './projects.content';
 import { CreditsSchema } from './schema/credits';
+import { AcademicsSchema } from './schema/academics';
 import { ExperienceGroupsSchema } from './schema/experience';
 import { ProjectsSchema } from './schema/project';
 
@@ -24,4 +26,5 @@ export const registry: RegistryEntry[] = [
     schema: ExperienceGroupsSchema,
     data: experienceGroups,
   },
+  { file: 'src/content/academics.content.ts', schema: AcademicsSchema, data: academics },
 ];

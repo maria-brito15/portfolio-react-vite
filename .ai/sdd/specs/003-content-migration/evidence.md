@@ -151,3 +151,14 @@ Exit code: 0 ; 0 ; 0 ; 0 ; 0
 Summary:   equivalência: 6 passando e 6 todo (projects e experiences ligados); content:check: 23 arquivos, 351 testes passando e 6 todo; contagem 7 e 3 grupos lidas do módulo antigo; `git diff --quiet src/data/experiences.ts` sem diferença; tsc 44 s e eslint sem aviso. Teste de mutação: trocar "WebTech" por "WebTech2" no conteúdo novo faz a equivalência falhar com `mudou: experiences/academic/webtech/org/pt antigo="WebTech" novo="WebTech2"`; arquivo restaurado e teste de novo verde.
 Verdict:   PASS
 ```
+
+## T4.3 Conteúdo do acadêmico e fatia de equivalência
+**Entregue:** `src/content/academics.content.ts` (2 programas, linha do tempo, atividades por ano, 4 semestres e **17 disciplinas, todas com nota**), registro em `registry.ts` e a fatia `academics` da equivalência. Gerado por script descartável (não commitado) e conferido pelo teste, escrito à parte.
+```
+Claim:     o acadêmico migrou sem diferença; todas as disciplinas do módulo antigo estão no novo, com a nota de hoje, sem omissão e sem escala inventada; nenhuma carga horária ou modalidade foi preenchida; o módulo antigo não mudou
+Command:   npx vitest run src/content/__migration__/equivalence.test.ts ; npm run content:check ; git diff --quiet -- src/data/academics.ts ; npx tsc --noEmit ; npx eslint src/content --max-warnings 0 ; grep -c "hours\|modality" src/content/academics.content.ts
+Exit code: 0 ; 0 ; 0 ; 0 ; 0 ; 1 (grep -c sem ocorrência: o esperado)
+Summary:   equivalência: 9 passando e 5 todo (projects, experiences e academics ligados); content:check: 23 arquivos, 354 testes passando e 5 todo; contagem de disciplinas (17) e de semestres lida do módulo antigo; `git diff --quiet src/data/academics.ts` sem diferença; tsc 51 s e eslint sem aviso; `grep -c "hours\|modality"` = 0 no conteúdo novo. Teste de mutação: trocar `grade: 75` por `grade: 76` faz a equivalência falhar com `mudou: academics/semesters/2025-1/courses/0/grade antigo="75" novo="76"`; arquivo restaurado e teste de novo verde.
+Verdict:   PASS
+```
+**Correção da spec (emenda anotada, 2026-11-19):** o design (§5.3) e o `tasks.md` diziam "13 disciplinas", mas o módulo antigo tem **17** (7 em 2025-1, 5 em 2025-2, 5 em 2026-1; o semestre 2026-2 está em andamento e vazio). A tarefa migrou todas, como o requisito ("sem omissão") manda, e a contagem esperada é lida do módulo antigo, não de um número digitado. O texto foi corrigido em `design.md` (linha 127) e `tasks.md` (T4.3 e o resumo final), com a anotação visível.
