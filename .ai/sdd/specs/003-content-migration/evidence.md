@@ -72,3 +72,14 @@ Summary:   1 arquivo, 17 testes passando; tipos e lint sem aviso
 Verdict:   PASS
 ```
 Observação: a existência do arquivo da imagem em `public/` não é regra do schema (é do validador da 001, `scripts/contentValidator.ts`), então o teste de imagem usa o caminho de uma captura real do EcoShop e confere só a forma. Dado de teste marcado como exemplo.
+
+## T2.2 Schema de experiência
+**Entregue:** `src/content/schema/experience.ts` (`ExperienceGroupsSchema`, tipos), reexportado em `schema/index.ts`, e `experience.test.ts`.
+```
+Claim:     os 7 períodos reais (lidos de src/data/experiences.ts) passam com o início que parsePeriodStart extrai; mês inventado, mês que o rótulo não mostra, ano divergente, id repetido entre grupos, grupo repetido, grupo vazio e campo desconhecido falham nomeando o item e o campo
+Command:   npx vitest run src/content/schema/experience.test.ts ; npx tsc --noEmit ; npx eslint src/content --max-warnings 0
+Exit code: 0 ; 0 ; 0
+Summary:   1 arquivo, 9 testes passando (o primeiro confere exatamente 7 itens reais, 3 grupos); tipos e lint sem aviso
+Verdict:   PASS
+```
+Observação: o teste importa o módulo antigo só para ler; nenhum arquivo antigo foi alterado.
