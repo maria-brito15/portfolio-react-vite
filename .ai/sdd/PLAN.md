@@ -12,6 +12,8 @@
 - A spec 001 é a dona da remoção do código fora do MVP (a Duda aprova a lista no `design.md`); os 3 temas extras saem com a 002.
 - Netlify publica a partir da `main`: nada é publicado só enquanto a Duda não der `push`.
 
+- **Correção a pedido da Duda (2026-11-19):** a spec 006 migra **1** estudo de caso (WhatsApp Dispatcher), não 3: o código só tem esse. A linha "migra os 3 casos existentes" da tabela abaixo é lida como "migra o caso existente". A página de serviços fica fora do MVP e da 007.
+
 ## Como este plano muda a proposta inicial
 - **Cortei do MVP:** diário, listas, busca e "ano em revisão". O MVP definido na entrevista (V-D-003) é projetos, casos, currículo, acadêmico, contato e `/pessoal`. Esses quatro ficam em "Fora do MVP".
 - **Adicionei `003-content-migration`:** o conteúdo existente é o único ativo insubstituível (auditoria §4) e precisa de spec própria, com o schema e as regras de data.
