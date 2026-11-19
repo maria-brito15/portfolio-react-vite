@@ -1,6 +1,8 @@
 // Projetores do lado ANTIGO: leem a forma antiga (`pt`/`en` aninhados, `null`, `ReactNode`) e devolvem fatos.
 // Cada tarefa T4.x liga o seu domínio aqui. Escritos separadamente de `newFacts.ts` de propósito (TD-009).
+import { experienceGroups as oldExperiences } from '../../data/experiences';
 import { projects as oldProjects } from '../../data/projects';
+import { parsePeriodStart } from '../../utils/projectDate';
 import type { Fact } from './compare';
 import { pairedProblem, unmappedKeys } from './coverage';
 import { richToText } from './legacy';
@@ -127,15 +129,77 @@ function projectGuards(): string[] {
   return problems;
 }
 
+function experienceFacts(): Fact[] {
+  const facts: Fact[] = [
+    ['experiences/groups', String(oldExperiences.length)],
+    ['experiences/count', String(oldExperiences.flatMap((g) => g.items).length)],
+  ];
+
+  for (const g of oldExperiences) {
+    facts.push([path('experiences', g.id, 'title', 'pt'), g.title.pt]);
+    facts.push([path('experiences', g.id, 'title', 'en'), g.title.en]);
+
+    for (const it of g.items) {
+      const at = (...rest: (string | number)[]) => path('experiences', g.id, it.id, ...rest);
+      // O início vem do rótulo antigo, como o design manda (§6.3 item 6): nenhum mês é suposto.
+      const start = parsePeriodStart(it.period.pt);
+
+      if (it.highlight !== undefined) facts.push([at('highlight'), String(it.highlight)]);
+      if (start) facts.push([at('period', 'start', 'year'), String(start.year)]);
+      if (start?.month !== undefined) {
+        facts.push([at('period', 'start', 'month'), String(start.month)]);
+      }
+
+      facts.push([at('period', 'label', 'pt'), it.period.pt]);
+      facts.push([at('period', 'label', 'en'), it.period.en]);
+
+      // `org` é texto único (copiado nos dois idiomas) ou já localizado.
+      facts.push([at('org', 'pt'), typeof it.org === 'string' ? it.org : it.org.pt]);
+      facts.push([at('org', 'en'), typeof it.org === 'string' ? it.org : it.org.en]);
+      facts.push([at('role', 'pt'), it.role.pt], [at('role', 'en'), it.role.en]);
+      facts.push([at('description', 'pt'), it.description.pt]);
+      facts.push([at('description', 'en'), it.description.en]);
+
+      if (it.tag) facts.push([at('tag', 'pt'), it.tag.pt], [at('tag', 'en'), it.tag.en]);
+    }
+  }
+
+  return facts;
+}
+
+function experienceGuards(): string[] {
+  const problems: string[] = [];
+
+  for (const g of oldExperiences) {
+    problems.push(...unmappedKeys(`grupo ${g.id}`, g, ['id', 'title', 'items'], []));
+
+    for (const it of g.items) {
+      problems.push(
+        ...unmappedKeys(
+          `experiência ${it.id}`,
+          it,
+          ['id', 'highlight', 'period', 'org', 'role', 'description', 'tag'],
+          [],
+        ),
+      );
+    }
+  }
+
+  return problems;
+}
+
 export const legacyFacts: Partial<Record<Domain, () => Fact[]>> = {
   projects: projectFacts,
+  experiences: experienceFacts,
 };
 
 export const legacyGuards: Partial<Record<Domain, () => string[]>> = {
   projects: projectGuards,
+  experiences: experienceGuards,
 };
 
 // A contagem esperada vem do próprio módulo antigo (não de um número digitado aqui).
 export const legacyCounts: Partial<Record<Domain, () => number>> = {
   projects: () => oldProjects.length,
+  experiences: () => oldExperiences.flatMap((g) => g.items).length,
 };

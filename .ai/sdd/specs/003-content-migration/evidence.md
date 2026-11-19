@@ -141,3 +141,13 @@ Observações:
 - O alt das capturas ("EcoShop — captura de tela N de 3" / "EcoShop — screenshot N of 3") é o modelo do site (design D1); texto alternativo e dimensões são dado novo, sem par no antigo, então a equivalência compara só o caminho e a contagem das imagens.
 - Um erro de lint de linha em branco no `legacyFacts.ts` apareceu e foi corrigido com `eslint --fix` antes do fechamento.
 - Esta tarefa contradiz a resposta "sem imagem" da Q-001 do requirements; vale a decisão D1, aprovada depois pela Duda, e a emenda está anotada na Q-001.
+
+## T4.2 Conteúdo das experiências (7) e fatia de equivalência
+**Entregue:** `src/content/experiences.content.ts` (3 grupos, 7 itens: 3 + 3 + 1), registro em `registry.ts` e a fatia `experiences` da equivalência. Gerado por script descartável (não commitado) e conferido pelo teste, escrito à parte.
+```
+Claim:     as 7 experiências migraram sem diferença (grupos, ordem, destaque, período, org, papel, descrição, etiqueta); o início de cada uma é o que parsePeriodStart extrai do rótulo antigo (nenhum mês inventado); o módulo antigo não mudou
+Command:   npx vitest run src/content/__migration__/equivalence.test.ts ; npm run content:check ; git diff --quiet -- src/data/experiences.ts ; npx tsc --noEmit ; npx eslint src/content --max-warnings 0
+Exit code: 0 ; 0 ; 0 ; 0 ; 0
+Summary:   equivalência: 6 passando e 6 todo (projects e experiences ligados); content:check: 23 arquivos, 351 testes passando e 6 todo; contagem 7 e 3 grupos lidas do módulo antigo; `git diff --quiet src/data/experiences.ts` sem diferença; tsc 44 s e eslint sem aviso. Teste de mutação: trocar "WebTech" por "WebTech2" no conteúdo novo faz a equivalência falhar com `mudou: experiences/academic/webtech/org/pt antigo="WebTech" novo="WebTech2"`; arquivo restaurado e teste de novo verde.
+Verdict:   PASS
+```
