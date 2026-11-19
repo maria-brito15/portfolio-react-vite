@@ -50,3 +50,14 @@ Summary:   2 arquivos, 18 testes passando; tipos e lint sem aviso; `grep -n "^im
 Verdict:   PASS com ressalva
 ```
 Ressalva: o critério (1) ("a descrição do WhatsApp Dispatcher vira os segmentos esperados") depende de o conteúdo existir; ele é conferido na T4.1, quando a descrição é migrada. Aqui os segmentos foram testados com texto de exemplo equivalente.
+
+## T1.3 `CalendarDate` e `withNoPlaceholders`
+**Entregue:** `src/content/schema/calendarDate.ts` (`CalendarDateSchema`, `calendarDateProblem`), `src/content/schema/placeholder.ts` (`withNoPlaceholders`), reexportados em `schema/index.ts`, e os dois testes. Nenhum schema da 001 foi alterado (só uma linha de reexport em `index.ts`).
+```
+Claim:     CalendarDate aceita só dia real (inclui bissexto) em AAAA-MM-DD; withNoPlaceholders acusa [x], lorem ipsum, TODO, TBD e FIXME com o caminho do campo, em lista e objeto aninhados, sem alterar o dado
+Command:   npx vitest run src/content/schema/calendarDate.test.ts src/content/schema/placeholder.test.ts ; npx tsc --noEmit ; npx eslint src/content --max-warnings 0
+Exit code: 0 ; 0 ; 0
+Summary:   2 arquivos, 29 testes passando; 2026-02-30, 2027-02-29, 2026-13-01, 2026-11-1, "" e null recusados; 2028-02-29 válida; caminho acusado `itens[1].pontos[0].en`; `[]` e "todos"/"mastodon" não casam
+Verdict:   PASS
+```
+Limite conhecido: `daysInMonth` usa `Date.UTC`, que trata anos de 0 a 99 como 1900 a 1999; o formato exige 4 dígitos e a data é "atualizado em" recente, então não afeta o uso real.
