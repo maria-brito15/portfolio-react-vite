@@ -61,3 +61,14 @@ Summary:   2 arquivos, 29 testes passando; 2026-02-30, 2027-02-29, 2026-13-01, 2
 Verdict:   PASS
 ```
 Limite conhecido: `daysInMonth` usa `Date.UTC`, que trata anos de 0 a 99 como 1900 a 1999; o formato exige 4 dígitos e a data é "atualizado em" recente, então não afeta o uso real.
+
+## T2.1 Schema de projeto
+**Entregue:** `src/content/schema/project.ts` (`ProjectSchema`, `ProjectsSchema`, `tagIdFromLabel`, tipos), reexportado em `schema/index.ts`, e `project.test.ts`. Tudo dentro de `withNoPlaceholders`. Sem `rating`, `variant` nem `icon` (campo desconhecido é recusado por `strictObject`).
+```
+Claim:     o schema de projeto aceita o projeto completo, sem mês e sem repo; recusa sem EN na descrição (`[2].description.en: texto ausente`), etiqueta repetida, repo http, versão anterior ao início, rótulo de versão repetido, versão sem pontos, dateLabel de outro ano, rating/variant/icon, id repetido, alt só em PT e marcador [x]; tagIdFromLabel dá next-js-15, ci-cd, javascript-es6
+Command:   npx vitest run src/content/schema/project.test.ts ; npx tsc --noEmit ; npx eslint src/content --max-warnings 0
+Exit code: 0 ; 0 ; 0
+Summary:   1 arquivo, 17 testes passando; tipos e lint sem aviso
+Verdict:   PASS
+```
+Observação: a existência do arquivo da imagem em `public/` não é regra do schema (é do validador da 001, `scripts/contentValidator.ts`), então o teste de imagem usa o caminho de uma captura real do EcoShop e confere só a forma. Dado de teste marcado como exemplo.

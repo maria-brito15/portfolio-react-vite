@@ -3,6 +3,13 @@ export { RichTextSchema, richProblem, type RichText } from './rich';
 export { CalendarDateSchema, calendarDateProblem, type CalendarDate } from './calendarDate';
 export { withNoPlaceholders } from './placeholder';
 export {
+  ProjectSchema,
+  ProjectsSchema,
+  tagIdFromLabel,
+  type ContentProject,
+  type ContentProjectVersion,
+} from './project';
+export {
   MAX_PROBLEMS,
   formatPath,
   formatProblems,
