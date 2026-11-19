@@ -1,4 +1,5 @@
 export { LocalizedTextSchema, textProblem, typeNameInPt, type LocalizedText } from './localized';
+export { RichTextSchema, richProblem, type RichText } from './rich';
 export {
   MAX_PROBLEMS,
   formatPath,

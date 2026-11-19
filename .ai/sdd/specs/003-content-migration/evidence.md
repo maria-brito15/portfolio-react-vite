@@ -39,3 +39,14 @@ Verdict:   PASS
 | `src/data/uses.ts` | `465993b2325c3a1c5589b224f773bed45ae3162f` |
 
 Observação: o `verify` avisou "AUMENTO de 29 % na etapa geração (6,3 s → 8,1 s)"; é variação de execução, dentro do orçamento. Os arquivos `.verify/` e `dist/` são ignorados pelo git.
+
+## T1.2 Marcação `**negrito**`: `parseRich`, `plainText` e `RichTextSchema`
+**Entregue:** `src/content/rich.ts` (puro, sem import de zod), `src/content/schema/rich.ts` (`RichTextSchema`, `richProblem`, reexportados em `schema/index.ts`) e os dois testes.
+```
+Claim:     parseRich/plainText e RichTextSchema funcionam; `**` desbalanceado, vazio, aninhado e tag HTML falham nomeando arquivo, campo, idioma e motivo; `a < b` e texto comum passam
+Command:   npx vitest run src/content/rich.test.ts src/content/schema/rich.test.ts ; npx tsc --noEmit ; npx eslint src/content --max-warnings 0
+Exit code: 0 ; 0 ; 0
+Summary:   2 arquivos, 18 testes passando; tipos e lint sem aviso; `grep -n "^import" src/content/rich.ts` sem resultado (nenhum import)
+Verdict:   PASS com ressalva
+```
+Ressalva: o critério (1) ("a descrição do WhatsApp Dispatcher vira os segmentos esperados") depende de o conteúdo existir; ele é conferido na T4.1, quando a descrição é migrada. Aqui os segmentos foram testados com texto de exemplo equivalente.
