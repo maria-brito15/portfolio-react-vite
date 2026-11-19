@@ -93,3 +93,13 @@ Exit code: 0 ; 0 ; 0
 Summary:   1 arquivo, 13 testes passando; tipos e lint sem aviso
 Verdict:   PASS
 ```
+
+## T2.4 Schemas de competências e currículo
+**Entregue:** `src/content/schema/skills.ts` (`SkillGroupsSchema`), `src/content/schema/resume.ts` (`ResumeSchema`), reexportados em `schema/index.ts`, e os dois testes.
+```
+Claim:     competência sem fonte e sem ano é válida (nunca ano estimado); `since` sem `source` e o inverso falham; since 99999, "2020" e 2020.5 falham; nome repetido no grupo falha; o currículo recusa `print` (texto de interface) e nome/links copiados do projeto como campo desconhecido, exige `project` e pelo menos 1 ponto, e acusa EN ausente com o índice (`summary[1].en`)
+Command:   npx vitest run src/content/schema/skills.test.ts src/content/schema/resume.test.ts ; npx tsc --noEmit ; npx eslint src/content --max-warnings 0
+Exit code: 0 ; 0 ; 0
+Summary:   2 arquivos, 15 testes passando; tipos e lint sem aviso
+Verdict:   PASS
+```
