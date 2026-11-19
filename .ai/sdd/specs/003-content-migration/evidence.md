@@ -127,3 +127,17 @@ Verdict:   PASS
 Observações:
 - Os 8 `todo` são intencionais: cada T4.x liga o projetor do seu domínio. Um domínio sem projetor não conta como equivalente.
 - Uma execução de `tsc` levou 10 min 44 s por contenção da máquina (outra execução em paralelo); a repetição isolada levou 64 s. Sem erro de tipo.
+
+## T4.1 Conteúdo dos projetos (6) e fatia de equivalência
+**Entregue:** `src/content/projects.content.ts` (6 projetos, ordem de hoje), registro em `registry.ts`, e a fatia `projects` da equivalência (`legacyFacts.ts`, `newFacts.ts`, `equivalence.test.ts` com contagem, trava de chaves e comparação de fatos). O arquivo de conteúdo foi gerado por um script descartável a partir do módulo antigo (para não digitar à mão) e o script não foi commitado; o teste de equivalência, escrito à parte, é quem confere o resultado.
+```
+Claim:     os 6 projetos migraram sem diferença de fato (nome, início, rótulo de data, stack, repo, caso, caminho das imagens, selo, descrição com **negrito**, versões e pontos PT/EN); o EcoShop tem as 3 capturas com as dimensões reais; nenhum projeto tem rating, variant ou icon; o módulo antigo não mudou
+Command:   npx vitest run src/content ; npm run content:check ; git diff --quiet -- src/data/projects.tsx ; npx tsc --noEmit ; npx eslint src/content --max-warnings 0
+Exit code: 0 ; 0 ; 0 ; 0 ; 0
+Summary:   content:check: 23 arquivos, 348 testes passando e 7 todo (os domínios ainda sem projetor); a equivalência de projetos tem 3 testes (trava, contagem 6 lida do antigo, fatos); `git diff --quiet src/data/projects.tsx` sem diferença; tsc 49 s e eslint sem aviso. Teste de mutação: trocar "Planoriza" por "Planoriza X" no conteúdo novo faz a equivalência falhar com `mudou: projects/planoriza/name/pt`; o arquivo foi restaurado. Dimensões lidas do cabeçalho JPEG: 1.jpeg, 2.jpeg e 3.jpeg têm 1280x631, iguais às declaradas.
+Verdict:   PASS
+```
+Observações:
+- O alt das capturas ("EcoShop — captura de tela N de 3" / "EcoShop — screenshot N of 3") é o modelo do site (design D1); texto alternativo e dimensões são dado novo, sem par no antigo, então a equivalência compara só o caminho e a contagem das imagens.
+- Um erro de lint de linha em branco no `legacyFacts.ts` apareceu e foi corrigido com `eslint --fix` antes do fechamento.
+- Esta tarefa contradiz a resposta "sem imagem" da Q-001 do requirements; vale a decisão D1, aprovada depois pela Duda, e a emenda está anotada na Q-001.
