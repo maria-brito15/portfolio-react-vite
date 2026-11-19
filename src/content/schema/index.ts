@@ -2,6 +2,8 @@ export { LocalizedTextSchema, textProblem, typeNameInPt, type LocalizedText } fr
 export { RichTextSchema, richProblem, type RichText } from './rich';
 export { CalendarDateSchema, calendarDateProblem, type CalendarDate } from './calendarDate';
 export { withNoPlaceholders } from './placeholder';
+export { ContactSchema, type ContentContact } from './contact';
+export { NowSchema, UsesSchema, type ContentNow, type ContentUses } from './now';
 export { SkillGroupsSchema, type ContentSkill, type ContentSkillGroup } from './skills';
 export { ResumeSchema, type ContentResume } from './resume';
 export {

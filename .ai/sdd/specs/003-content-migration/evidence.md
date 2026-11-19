@@ -103,3 +103,14 @@ Exit code: 0 ; 0 ; 0
 Summary:   2 arquivos, 15 testes passando; tipos e lint sem aviso
 Verdict:   PASS
 ```
+
+## T2.5 Schemas de contato, "agora" e setup
+**Entregue:** `src/content/schema/contact.ts` (`ContactSchema`), `src/content/schema/now.ts` (`NowSchema`, `UsesSchema`), reexportados em `schema/index.ts`, e os dois testes.
+```
+Claim:     contato aceita https no host esperado (com ou sem www) e recusa http, host trocado, foto sem alt ou com alt só em PT, mailto com parâmetros e e-mail que não é mailto; "agora" recusa 2026-02-30 e itens sem `updated` (mensagem: "a data de atualização é obrigatória quando há itens (AAAA-MM-DD)") e aceita { items: [] } sem data; setup aceita { groups: [] }
+Command:   npx vitest run src/content/schema/contact.test.ts src/content/schema/now.test.ts ; npx tsc --noEmit ; npx eslint src/content --max-warnings 0
+Exit code: 0 ; 0 ; 0
+Summary:   2 arquivos, 16 testes passando; tipos e lint sem aviso
+Verdict:   PASS
+```
+Observação: a regra "itens exigem data" vale só para o "agora", como no design §5.7; `uses` aceita data opcional sem exigir quando há grupos.
