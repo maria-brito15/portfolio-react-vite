@@ -1,9 +1,12 @@
 // Projetores do lado NOVO: leem o conteúdo em `src/content/*.content.ts`. Cada tarefa T4.x liga o seu.
 import { academics } from '../academics.content';
+import { contact } from '../contact.content';
 import { experienceGroups } from '../experiences.content';
+import { now } from '../now.content';
 import { projects } from '../projects.content';
 import { resume } from '../resume.content';
 import { skillGroups } from '../skills.content';
+import { uses } from '../uses.content';
 import type { Fact } from './compare';
 import type { Domain } from './legacyFacts';
 
@@ -222,12 +225,66 @@ function resumeFacts(): Fact[] {
   return facts;
 }
 
+// O endereço puro do e-mail é o link sem o `mailto:` (quem exibe faz o mesmo).
+const bare = (href: string) => href.slice('mailto:'.length);
+
+function contactFacts(): Fact[] {
+  // Só o caminho da foto entra: texto alternativo e dimensões são dado novo, sem par no antigo.
+  return [
+    ['contact/email', bare(contact.email)],
+    ['contact/servicesEmail', bare(contact.servicesEmail)],
+    ['contact/github', contact.github],
+    ['contact/linkedin', contact.linkedin],
+    ['contact/photo/path', contact.photo.path],
+  ];
+}
+
+function nowFacts(): Fact[] {
+  const facts: Fact[] = [['now/items/count', String(now.items.length)]];
+
+  if (now.updated !== undefined) facts.push(['now/updated', now.updated]);
+
+  now.items.forEach((item, i) => {
+    facts.push([path('now', 'items', i, 'label', 'pt'), item.label.pt]);
+    facts.push([path('now', 'items', i, 'label', 'en'), item.label.en]);
+    facts.push([path('now', 'items', i, 'text', 'pt'), item.text.pt]);
+    facts.push([path('now', 'items', i, 'text', 'en'), item.text.en]);
+  });
+
+  return facts;
+}
+
+function usesFacts(): Fact[] {
+  const facts: Fact[] = [['uses/groups/count', String(uses.groups.length)]];
+
+  if (uses.updated !== undefined) facts.push(['uses/updated', uses.updated]);
+
+  uses.groups.forEach((g, i) => {
+    facts.push([path('uses', 'groups', i, 'title', 'pt'), g.title.pt]);
+    facts.push([path('uses', 'groups', i, 'title', 'en'), g.title.en]);
+    facts.push([path('uses', 'groups', i, 'items', 'count'), String(g.items.length)]);
+
+    g.items.forEach((it, j) => {
+      facts.push([path('uses', 'groups', i, 'items', j, 'name'), it.name]);
+      if (it.note) {
+        facts.push([path('uses', 'groups', i, 'items', j, 'note', 'pt'), it.note.pt]);
+        facts.push([path('uses', 'groups', i, 'items', j, 'note', 'en'), it.note.en]);
+      }
+    });
+  });
+
+  return facts;
+}
+
 export const newFacts: Partial<Record<Domain, () => Fact[]>> = {
   projects: projectFacts,
   experiences: experienceFacts,
   academics: academicsFacts,
   skills: skillsFacts,
   resume: resumeFacts,
+  contact: contactFacts,
+  now: nowFacts,
+  uses: usesFacts,
 };
 
 export const newCounts: Partial<Record<Domain, () => number>> = {
@@ -236,4 +293,7 @@ export const newCounts: Partial<Record<Domain, () => number>> = {
   academics: () => academics.semesters.flatMap((s) => s.courses).length,
   skills: () => skillGroups.flatMap((g) => g.items).length,
   resume: () => resume.featuredProjects.length,
+  contact: () => Object.keys(contact).length,
+  now: () => now.items.length,
+  uses: () => uses.groups.length,
 };

@@ -2,9 +2,12 @@
 // Cada tarefa T4.x liga o seu domínio aqui. Escritos separadamente de `newFacts.ts` de propósito (TD-009).
 import { academics as oldAcademics } from '../../data/academics';
 import { experienceGroups as oldExperiences } from '../../data/experiences';
+import { now as oldNow } from '../../data/now';
+import { profile as oldProfile } from '../../data/profile';
 import { projects as oldProjects } from '../../data/projects';
 import { resume as oldResume } from '../../data/resume';
 import { skillTimeline } from '../../data/skillTimeline';
+import { uses as oldUses } from '../../data/uses';
 import { parsePeriodStart } from '../../utils/projectDate';
 import type { Fact } from './compare';
 import { pairedProblem, unmappedKeys } from './coverage';
@@ -421,12 +424,77 @@ function resumeGuards(): string[] {
   return problems;
 }
 
+function contactFacts(): Fact[] {
+  return [
+    ['contact/email', oldProfile.email],
+    ['contact/servicesEmail', oldProfile.servicesEmail],
+    ['contact/github', oldProfile.github],
+    ['contact/linkedin', oldProfile.linkedin],
+    ['contact/photo/path', oldProfile.photo],
+  ];
+}
+
+function nowFacts(): Fact[] {
+  const facts: Fact[] = [['now/items/count', String(oldNow.items.length)]];
+
+  // `updated: null` do antigo é ausente: não gera fato.
+  if (oldNow.updated !== null) facts.push(['now/updated', oldNow.updated]);
+
+  oldNow.items.forEach((item, i) => {
+    facts.push([path('now', 'items', i, 'label', 'pt'), item.label.pt]);
+    facts.push([path('now', 'items', i, 'label', 'en'), item.label.en]);
+    facts.push([path('now', 'items', i, 'text', 'pt'), item.text.pt]);
+    facts.push([path('now', 'items', i, 'text', 'en'), item.text.en]);
+  });
+
+  return facts;
+}
+
+function usesFacts(): Fact[] {
+  const facts: Fact[] = [['uses/groups/count', String(oldUses.groups.length)]];
+
+  if (oldUses.updated !== null) facts.push(['uses/updated', oldUses.updated]);
+
+  oldUses.groups.forEach((g, i) => {
+    facts.push([path('uses', 'groups', i, 'title', 'pt'), g.title.pt]);
+    facts.push([path('uses', 'groups', i, 'title', 'en'), g.title.en]);
+    facts.push([path('uses', 'groups', i, 'items', 'count'), String(g.items.length)]);
+
+    g.items.forEach((it, j) => {
+      facts.push([path('uses', 'groups', i, 'items', j, 'name'), it.name]);
+      if (it.note) {
+        facts.push([path('uses', 'groups', i, 'items', j, 'note', 'pt'), it.note.pt]);
+        facts.push([path('uses', 'groups', i, 'items', j, 'note', 'en'), it.note.en]);
+      }
+    });
+  });
+
+  return facts;
+}
+
+function contactGuards(): string[] {
+  const keys = ['email', 'servicesEmail', 'github', 'linkedin', 'photo'];
+
+  return unmappedKeys('contato', oldProfile, keys, []);
+}
+
+function nowGuards(): string[] {
+  return unmappedKeys('agora', oldNow, ['updated', 'items'], []);
+}
+
+function usesGuards(): string[] {
+  return unmappedKeys('setup', oldUses, ['updated', 'groups'], []);
+}
+
 export const legacyFacts: Partial<Record<Domain, () => Fact[]>> = {
   projects: projectFacts,
   experiences: experienceFacts,
   academics: academicsFacts,
   skills: skillsFacts,
   resume: resumeFacts,
+  contact: contactFacts,
+  now: nowFacts,
+  uses: usesFacts,
 };
 
 export const legacyGuards: Partial<Record<Domain, () => string[]>> = {
@@ -435,6 +503,9 @@ export const legacyGuards: Partial<Record<Domain, () => string[]>> = {
   academics: academicsGuards,
   skills: skillsGuards,
   resume: resumeGuards,
+  contact: contactGuards,
+  now: nowGuards,
+  uses: usesGuards,
 };
 
 // A contagem esperada vem do próprio módulo antigo (não de um número digitado aqui).
@@ -444,4 +515,7 @@ export const legacyCounts: Partial<Record<Domain, () => number>> = {
   academics: () => oldAcademics.semesters.flatMap((s) => s.courses).length,
   skills: () => skillTimeline.flatMap((g) => g.items).length,
   resume: () => oldResume.pt.projects.length,
+  contact: () => Object.keys(oldProfile).length,
+  now: () => oldNow.items.length,
+  uses: () => oldUses.groups.length,
 };

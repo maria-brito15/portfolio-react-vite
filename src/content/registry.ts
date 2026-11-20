@@ -4,16 +4,21 @@
 import type { ZodType } from 'zod';
 import { credits } from './credits.content';
 import { academics } from './academics.content';
+import { contact } from './contact.content';
 import { experienceGroups } from './experiences.content';
+import { now } from './now.content';
 import { projects } from './projects.content';
 import { resume } from './resume.content';
 import { CreditsSchema } from './schema/credits';
 import { AcademicsSchema } from './schema/academics';
+import { ContactSchema } from './schema/contact';
 import { ExperienceGroupsSchema } from './schema/experience';
+import { NowSchema, UsesSchema } from './schema/now';
 import { ProjectsSchema } from './schema/project';
 import { ResumeSchema } from './schema/resume';
 import { SkillGroupsSchema } from './schema/skills';
 import { skillGroups } from './skills.content';
+import { uses } from './uses.content';
 
 export interface RegistryEntry {
   /** Caminho relativo à raiz do projeto, com `/`: `src/content/exemplo.content.ts`. */
@@ -33,4 +38,7 @@ export const registry: RegistryEntry[] = [
   { file: 'src/content/academics.content.ts', schema: AcademicsSchema, data: academics },
   { file: 'src/content/skills.content.ts', schema: SkillGroupsSchema, data: skillGroups },
   { file: 'src/content/resume.content.ts', schema: ResumeSchema, data: resume },
+  { file: 'src/content/contact.content.ts', schema: ContactSchema, data: contact },
+  { file: 'src/content/now.content.ts', schema: NowSchema, data: now },
+  { file: 'src/content/uses.content.ts', schema: UsesSchema, data: uses },
 ];

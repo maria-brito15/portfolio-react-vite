@@ -173,3 +173,14 @@ Summary:   equivalência: 15 passando e 3 todo (contact, now e uses ainda sem pr
 Verdict:   PASS
 ```
 Observação: a trava de chaves do currículo exclui de propósito os 13 textos de interface (`print`, `printHint`, `sections`, `skillsSummary`, `experienceSummary`, `awardsSummary`, `received`, `showMore`, `showLess`, `since`, `expected`, `languagesLabel`, `academicsLink`) e o rótulo do link; eles vão para o `ui` na spec 007. Uma chave nova no `resume.ts` antigo faz o teste falhar.
+
+## T4.5 Conteúdo de contato, "agora" e setup e fatia de equivalência
+**Entregue:** `src/content/contact.content.ts`, `src/content/now.content.ts` (1 item, `updated: '2026-11-11'`), `src/content/uses.content.ts` (`{ groups: [] }`, sem `updated`), registro das três em `registry.ts` e as fatias `contact`, `now` e `uses` da equivalência. Com esta tarefa os 8 domínios têm projetor: a equivalência não tem mais nenhum `todo`.
+```
+Claim:     contato, "agora" e setup migraram sem diferença; os endereços batem com os de hoje (o e-mail antigo é o endereço do link sem `mailto:`); o setup continua vazio, sem texto inventado; a foto tem as dimensões declaradas (768x768, lidas do cabeçalho do JPEG); os módulos antigos não mudaram
+Command:   npx vitest run src/content/__migration__/equivalence.test.ts ; npm run content:check ; git diff --quiet -- src/data/profile.ts src/data/now.ts src/data/uses.ts ; npx tsc --noEmit ; npx eslint src/content --max-warnings 0
+Exit code: 0 ; 0 ; 0 ; 0 ; 0
+Summary:   equivalência: 24 testes passando e 0 todo (8 domínios x 3 testes: trava, contagem, fatos); content:check: 23 arquivos e 369 testes passando; `git diff --quiet` dos 3 módulos sem diferença; tsc 29 s e eslint sem aviso. Testes de mutação: (1) e-mail de serviços alterado falha com `mudou: contact/servicesEmail antigo="mariab.dev@zohomail.com" novo="mariac.dev@zohomail.com"`; (2) data do "agora" alterada falha com `mudou: now/updated antigo="2026-11-11" novo="2026-11-12"`; arquivos restaurados e teste de novo verde.
+Verdict:   PASS
+```
+Observação: `/agora` e `/setup` continuam como rascunho porque `routeStatus.ts` ainda lê os módulos antigos (L-003); a spec 007 reescreve essas páginas (decisão D4).
