@@ -217,3 +217,53 @@ Exit code: 0 ; 0 ; 0
 Summary:   3 testes passando em cada uma das 3 execuções (1,2 a 1,4 s de duração total do arquivo). Tempo medido de import frio + validação: 227 ms, 209 ms e 719 ms (9 arquivos, 0 problemas), todos abaixo do aviso de 1000 ms e a mais de 6 vezes de folga do limite de 5000 ms. Antes: tsc 30 s e eslint sem aviso.
 Verdict:   PASS
 ```
+
+## T6.1 Verificação completa e comparação com a linha de base
+**Entregue:** só esta evidência (nenhum código de produção).
+```
+Claim:     o verify completo passa com a 003; os chunks do navegador não mudaram (nenhuma página importa o conteúdo novo); os 8 módulos antigos estão intactos; rotas e SEO seguem verdes; a validação do conteúdo real custa menos de 1 s
+Command:   npm run verify (2 execuções) ; npx vitest run src/data/routes.test.ts src/data/seo.test.ts ; git hash-object dos 8 módulos antigos ; git diff --quiet -- <os 8 módulos> ; git status --short
+Exit code: 0 ; 0 ; 0 ; 0 ; 0
+Summary:   ver as tabelas abaixo.
+Verdict:   PASS com ressalva (a 1ª execução do verify estourou o orçamento por carga da máquina; a 2ª, no mesmo código, ficou dentro)
+```
+
+### `npm run verify`: linha de base (T1.1) × agora
+| Etapa | T1.1 | 1ª execução | 2ª execução |
+| --- | --- | --- | --- |
+| formatação | 7,8 s | 20,9 s | 10,1 s |
+| lint | 21,0 s | 40,7 s | 25,7 s |
+| tipos | 15,3 s | 33,5 s | 18,6 s |
+| testes | 60,3 s | **114,5 s** | 62,4 s |
+| geração | 8,1 s | 17,0 s | 8,9 s |
+| **total** | 112,5 s | **226,7 s** | 125,7 s |
+
+- A 1ª execução saiu com exit 0, mas o `verify` imprimiu `ORÇAMENTO excedido: suíte em 114,5 s (limite 90 s)` e `total em 226,7 s (limite 180 s)`. **Todas** as etapas dobraram, inclusive a formatação (7,8 → 20,9 s), que os arquivos novos quase não afetam, e a máquina estava com 43 a 87% de CPU ocupada por processos de fora do projeto (medido com `Win32_Processor.LoadPercentage`; maiores consumidores: Brave, VS Code, um `python` antigo). É o caso que o PEND-008 já registra (variação grande entre execuções).
+- A 2ª execução, no mesmo código e logo depois: **125,7 s** no total e **62,4 s** de suíte, dentro do orçamento de 180 s e 90 s. A diferença para a linha de base (+13,2 s no total, +2,1 s nos testes) cabe nos 83 testes que a 003 acrescentou à suíte do `src/content` (de 331 para 395 no `content:check`), mais ruído de carga.
+- Custo da validação do conteúdo real (T5.3): 209 a 719 ms, bem abaixo dos 5 s do NFR-001.
+
+### Chunks do navegador (`vite build`): linha de base × agora
+- A listagem completa do build (43 arquivos, nomes sem o hash e tamanhos em kB) da T1.1 e a de agora são **iguais** (`diff` sem saída). O CSS tem o mesmo hash (`index-Dfxkm-7A.css`, 68,02 kB).
+- Os hashes dos JS **mudam a cada build por desenho**: o `vite.config.ts` injeta `__BUILD__` (`commits` e `builtAt` em ISO, de `scripts/buildInfo.ts`), então o hash muda com a contagem de commits e o horário. Prova: a entrada foi de `index-CwZXIN4m.js` (97,80 kB gzip) para `index-s_QrfvuV.js` (97,79 kB gzip) com o mesmo tamanho bruto de 304 176 bytes, e a data `2026-11-20` aparece no chunk do terminal. Por isso a comparação vale por nome sem hash e tamanho, não pelo hash.
+- Nenhum chunk é novo e nenhuma página importa o conteúdo novo (o teste `importers.test.ts`, T5.1, confere em `src/`).
+
+### Módulos antigos e repositório
+- Os 8 `git hash-object` são **idênticos** aos da T1.1 (`0435ccaa…`, `07804e66…`, `065f44fc…`, `d04f8240…`, `6d547dfd…`, `08ea8572…`, `2e6ad2d5…`, `465993b2…`); `git diff --quiet` nos 8: exit 0.
+- `git status --short`: só as alterações da 002 que já existiam antes da 003 (arquivos de `src/styles`, `src/pages/Prova.tsx`, testes da casca, etc., todas com data anterior à linha de base); nenhum arquivo novo sem commit.
+
+### V-14: rotas e SEO; rascunho
+- `npx vitest run src/data/routes.test.ts src/data/seo.test.ts`: 2 arquivos, 46 testes passando, sem mudança de teste.
+- `routeStatus.ts` continua lendo os módulos antigos: `setup` é rascunho (`uses.groups` vazio) e `agora` não é rascunho hoje (tem 1 item). **Correção ao texto da tarefa:** o `tasks.md` diz que `/agora` e `/setup` "continuam rascunho", mas só o `/setup` é rascunho; o `/agora` já estava publicado antes da 003 (1 item, `updated: 2026-11-11`) e segue assim. A 003 não mudou o estado de nenhum dos dois.
+
+### Success Metrics do requirements (checklist)
+- [x] 100% dos itens de projetos (6), experiências (7), acadêmico (17 disciplinas), competências (4 grupos), currículo, contato, "agora" e setup estão em conteúdo registrado e validado (`registry.test.ts`: 9 entradas; `migration.parity.test.ts`: o registro real valida sem problema).
+- [x] O teste de equivalência passa e cobre os 8 domínios (24 testes; mutações provaram que ele detecta alteração, T4.1 a T4.5).
+- [x] A verificação completa passa (`verify` exit 0 em ambas as execuções) e a validação do conteúdo real custa ≤ 5 s (209 a 719 ms).
+- [x] Zero marcador `[...]` e zero dado inventado: `withNoPlaceholders` passa no conteúdo real (e a T5.2 corrigiu o falso positivo de "todo"); dado que não existe hoje (nota de projeto, mês, carga horária, modalidade, `since` sem fonte, capa) continua ausente.
+- [x] Paridade PT/EN testada para os 8 arquivos (`migration.parity.test.ts`).
+
+### Pendências para a Duda (da 003)
+1. **Aprovar o fechamento** para a T6.2 apagar `src/content/__migration__/` (o teste de equivalência). Se preferir manter o teste até a 007 remover os módulos antigos, a T6.2 não roda.
+2. **Aceitar a emenda FR-015 da 007** (`/agora` e `/setup`), registrada em `007/requirements.md` v1.1.
+3. Confirmar que o e-mail de serviços (`mariab.dev@zohomail.com`) fica no conteúdo de contato.
+4. A 1ª execução do `verify` estourou o orçamento sob carga da máquina; é o caso do PEND-008. Se a Duda quiser que o orçamento seja medido só com a máquina ociosa, vale registrar a regra.
