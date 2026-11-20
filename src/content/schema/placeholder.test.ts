@@ -48,6 +48,11 @@ describe('withNoPlaceholders', () => {
     expect(Schema.safeParse(base('todos os projetos; mastodon')).success).toBe(true);
   });
 
+  it('"todo" em português não é marcador (só TODO em maiúsculas)', () => {
+    expect(Schema.safeParse(base('quase todo estudante conhece')).success).toBe(true);
+    expect(Schema.safeParse(base('Todo projeto tem um caso')).success).toBe(true);
+  });
+
   it('não altera o dado validado', () => {
     const value = base('igual');
     const result = Schema.safeParse(value);

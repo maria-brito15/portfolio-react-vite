@@ -195,3 +195,15 @@ Summary:   2 arquivos, 12 testes passando (o conteúdo real passa; 5 casos negat
 Verdict:   PASS
 ```
 Observação: o conteúdo da spec 002 (`credits.content.ts`) e `pick.ts` são importados por `Footer.tsx` e ficam fora da regra, porque não são um dos 8 arquivos novos.
+
+## T5.2 Paridade PT/EN e registro completo
+**Entregue:** `src/content/migration.parity.test.ts`, `src/content/registry.test.ts` e **uma correção em `src/content/schema/placeholder.ts` (T1.3) + um teste novo em `placeholder.test.ts`**, descobertos por esta tarefa (abaixo).
+```
+Claim:     nos 8 arquivos migrados, uma cópia em memória com o EN removido de um item faz a validação falhar com exatamente uma linha `conteúdo inválido: <arquivo> › <campo exato>.en — texto ausente`; o dado real não é alterado (instantâneo antes e depois) e continua válido; o registro tem 9 entradas (credits + 8) com os caminhos certos e sem repetição; um `*.content.ts` sem registro é recusado
+Command:   npx vitest run src/content/migration.parity.test.ts src/content/registry.test.ts ; npm run content:check ; npx tsc --noEmit ; npx eslint src/content --max-warnings 0
+Exit code: 0 ; 0 ; 0 ; 0
+Summary:   2 arquivos, 13 testes passando; content:check: 27 arquivos e 395 testes passando; tsc 32 s e eslint sem aviso
+Verdict:   PASS
+```
+**Bug achado e corrigido (da T1.3):** `withNoPlaceholders` tinha o padrão `TODO` sem distinção de caixa e acusava a palavra portuguesa "todo" ("quase **todo** estudante conhece", descrição do Planoriza): `conteúdo inválido: src/content/projects.content.ts › [0].description.pt — marcador "TODO"`. Nenhum teste anterior pegou porque a validação do registro **real** com `validateAll` só rodou aqui (a T4.1 usou o teste de equivalência, que não passa pelo schema, e o `content:check` não valida o registro real; o `vite build` com o `contentGuard` só rodaria no `verify`). O design §6.5 cita `TODO` em maiúsculas; a correção torna só o `TODO` case-sensitive (`lorem ipsum`, `TBD`, `FIXME` seguem em qualquer caixa) e o teste novo confere que "quase todo estudante conhece" e "Todo projeto tem um caso" passam. O `verify` completo (T6.1) é a prova final, porque roda o `contentGuard` no build.
+Observação: o `uses` não tem texto PT/EN (setup vazio de propósito, sem inventar). O teste dele usa uma cópia em memória com um grupo de EXEMPLO sem EN, só para ter o que remover; o arquivo real não é tocado.

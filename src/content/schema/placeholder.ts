@@ -1,11 +1,12 @@
 import { z } from 'zod';
 
 // Marcador de pendência ou texto de exemplo (003, FR-012). `[]` vazio não casa: só colchetes com texto.
-// O `lorem ipsum` e as siglas valem em qualquer caixa; `TODO` dentro de outra palavra não é marcador.
+// `TODO` só em maiúsculas: "todo" é uma palavra comum em português ("quase todo estudante"). `lorem ipsum`,
+// `TBD` e `FIXME` valem em qualquer caixa; nenhum é marcador dentro de outra palavra.
 const PATTERNS: readonly { re: RegExp; reason: string }[] = [
   { re: /\[[^\]]+\]/, reason: 'marcador [entre colchetes] (texto de exemplo ou pendência)' },
   { re: /lorem ipsum/i, reason: 'texto de exemplo "lorem ipsum"' },
-  { re: /\bTODO\b/i, reason: 'marcador "TODO"' },
+  { re: /\bTODO\b/, reason: 'marcador "TODO"' },
   { re: /\bTBD\b/i, reason: 'marcador "TBD"' },
   { re: /\bFIXME\b/i, reason: 'marcador "FIXME"' },
 ];
