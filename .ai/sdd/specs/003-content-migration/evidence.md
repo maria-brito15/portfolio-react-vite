@@ -207,3 +207,13 @@ Verdict:   PASS
 ```
 **Bug achado e corrigido (da T1.3):** `withNoPlaceholders` tinha o padrão `TODO` sem distinção de caixa e acusava a palavra portuguesa "todo" ("quase **todo** estudante conhece", descrição do Planoriza): `conteúdo inválido: src/content/projects.content.ts › [0].description.pt — marcador "TODO"`. Nenhum teste anterior pegou porque a validação do registro **real** com `validateAll` só rodou aqui (a T4.1 usou o teste de equivalência, que não passa pelo schema, e o `content:check` não valida o registro real; o `vite build` com o `contentGuard` só rodaria no `verify`). O design §6.5 cita `TODO` em maiúsculas; a correção torna só o `TODO` case-sensitive (`lorem ipsum`, `TBD`, `FIXME` seguem em qualquer caixa) e o teste novo confere que "quase todo estudante conhece" e "Todo projeto tem um caso" passam. O `verify` completo (T6.1) é a prova final, porque roda o `contentGuard` no build.
 Observação: o `uses` não tem texto PT/EN (setup vazio de propósito, sem inventar). O teste dele usa uma cópia em memória com um grupo de EXEMPLO sem EN, só para ter o que remover; o arquivo real não é tocado.
+
+## T5.3 Custo da validação (NFR-001)
+**Entregue:** `src/content/contentCost.test.ts`: mede o `await import('./registry')` frio mais `validateAll` com o conteúdo real; falha acima de 5000 ms e avisa acima de 1000 ms. O limite é injetável só para provar a falha.
+```
+Claim:     importar o registro (9 arquivos de conteúdo) e validar o conteúdo real leva bem menos que o limite de 5 s; o limite real é 5000 ms; com limite artificial de 0 ms o teste falha
+Command:   npx vitest run src/content/contentCost.test.ts (3 vezes seguidas, com --reporter=verbose para ver o tempo)
+Exit code: 0 ; 0 ; 0
+Summary:   3 testes passando em cada uma das 3 execuções (1,2 a 1,4 s de duração total do arquivo). Tempo medido de import frio + validação: 227 ms, 209 ms e 719 ms (9 arquivos, 0 problemas), todos abaixo do aviso de 1000 ms e a mais de 6 vezes de folga do limite de 5000 ms. Antes: tsc 30 s e eslint sem aviso.
+Verdict:   PASS
+```
