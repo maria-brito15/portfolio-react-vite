@@ -2,6 +2,8 @@
 import { academics } from '../academics.content';
 import { experienceGroups } from '../experiences.content';
 import { projects } from '../projects.content';
+import { resume } from '../resume.content';
+import { skillGroups } from '../skills.content';
 import type { Fact } from './compare';
 import type { Domain } from './legacyFacts';
 
@@ -149,14 +151,89 @@ function academicsFacts(): Fact[] {
   return facts;
 }
 
+function skillsFacts(): Fact[] {
+  const facts: Fact[] = [
+    ['skills/groups', String(skillGroups.length)],
+    ['skills/count', String(skillGroups.flatMap((g) => g.items).length)],
+  ];
+
+  for (const g of skillGroups) {
+    facts.push([path('skills', g.id, 'title', 'pt'), g.title.pt]);
+    facts.push([path('skills', g.id, 'title', 'en'), g.title.en]);
+
+    g.items.forEach((it, i) => {
+      const at = (...rest: (string | number)[]) => path('skills', g.id, i, ...rest);
+
+      facts.push([at('name'), it.name]);
+      if (it.since !== undefined) facts.push([at('since'), String(it.since)]);
+      if (it.source)
+        facts.push([at('source', 'pt'), it.source.pt], [at('source', 'en'), it.source.en]);
+    });
+  }
+
+  return facts;
+}
+
+// O nome e o endereço do projeto em destaque são lidos do PROJETO (um fato, um lugar).
+function resumeFacts(): Fact[] {
+  const facts: Fact[] = [
+    ['resume/summary/count', String(resume.summary.length)],
+    ['resume/skillAreas/count', String(resume.skillAreas.length)],
+    ['resume/featuredProjects/count', String(resume.featuredProjects.length)],
+    ['resume/name', resume.name],
+    ['resume/headline/pt', resume.headline.pt],
+    ['resume/headline/en', resume.headline.en],
+    ['resume/location/pt', resume.location.pt],
+    ['resume/location/en', resume.location.en],
+    ['resume/languages/pt', resume.languages.pt],
+    ['resume/languages/en', resume.languages.en],
+  ];
+
+  resume.summary.forEach((text, i) => {
+    facts.push([path('resume', 'summary', i, 'pt'), text.pt]);
+    facts.push([path('resume', 'summary', i, 'en'), text.en]);
+  });
+
+  resume.skillAreas.forEach((area, i) => {
+    facts.push([path('resume', 'skillAreas', i, 'label', 'pt'), area.label.pt]);
+    facts.push([path('resume', 'skillAreas', i, 'label', 'en'), area.label.en]);
+    facts.push([path('resume', 'skillAreas', i, 'text', 'pt'), area.text.pt]);
+    facts.push([path('resume', 'skillAreas', i, 'text', 'en'), area.text.en]);
+  });
+
+  resume.featuredProjects.forEach((fp, i) => {
+    const at = (...rest: (string | number)[]) => path('resume', 'featuredProjects', i, ...rest);
+    const project = projects.find((p) => p.id === fp.project);
+
+    if (!project) throw new Error(`destaque ${i}: projeto "${fp.project}" não existe`);
+
+    const link = project.repo ?? project.caseStudy;
+
+    facts.push([at('name'), project.name.pt]);
+    if (link) facts.push([at('link'), link]);
+    facts.push([at('subtitle', 'pt'), fp.subtitle.pt], [at('subtitle', 'en'), fp.subtitle.en]);
+    if (fp.award) facts.push([at('award', 'pt'), fp.award.pt], [at('award', 'en'), fp.award.en]);
+
+    fp.points.forEach((point, j) => {
+      facts.push([at('points', j, 'pt'), point.pt], [at('points', j, 'en'), point.en]);
+    });
+  });
+
+  return facts;
+}
+
 export const newFacts: Partial<Record<Domain, () => Fact[]>> = {
   projects: projectFacts,
   experiences: experienceFacts,
   academics: academicsFacts,
+  skills: skillsFacts,
+  resume: resumeFacts,
 };
 
 export const newCounts: Partial<Record<Domain, () => number>> = {
   projects: () => projects.length,
   experiences: () => experienceGroups.flatMap((g) => g.items).length,
   academics: () => academics.semesters.flatMap((s) => s.courses).length,
+  skills: () => skillGroups.flatMap((g) => g.items).length,
+  resume: () => resume.featuredProjects.length,
 };

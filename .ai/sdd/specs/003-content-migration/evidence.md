@@ -162,3 +162,14 @@ Summary:   equivalência: 9 passando e 5 todo (projects, experiences e academics
 Verdict:   PASS
 ```
 **Correção da spec (emenda anotada, 2026-11-19):** o design (§5.3) e o `tasks.md` diziam "13 disciplinas", mas o módulo antigo tem **17** (7 em 2025-1, 5 em 2025-2, 5 em 2026-1; o semestre 2026-2 está em andamento e vazio). A tarefa migrou todas, como o requisito ("sem omissão") manda, e a contagem esperada é lida do módulo antigo, não de um número digitado. O texto foi corrigido em `design.md` (linha 127) e `tasks.md` (T4.3 e o resumo final), com a anotação visível.
+
+## T4.4 Conteúdo de competências e currículo e fatia de equivalência
+**Entregue:** `src/content/skills.content.ts` (4 grupos), `src/content/resume.content.ts` (um objeto, dois idiomas por campo: 2 parágrafos de resumo, 7 áreas, 4 projetos em destaque que apontam para o projeto por id), registro das duas em `registry.ts` e as fatias `skills` e `resume` da equivalência. Gerados por script descartável (não commitado) e conferidos pelo teste, escrito à parte.
+```
+Claim:     competências e currículo migraram sem diferença; `since: null` do antigo virou ausente (nunca ano estimado); o nome e o endereço de cada projeto em destaque, lidos do projeto, são iguais aos do currículo antigo; os textos de interface do currículo ficaram de fora; os módulos antigos não mudaram
+Command:   npx vitest run src/content/__migration__/equivalence.test.ts ; npm run content:check ; git diff --quiet -- src/data/resume.ts src/data/skillTimeline.ts ; npx tsc --noEmit ; npx eslint src/content --max-warnings 0
+Exit code: 0 ; 0 ; 0 ; 0 ; 0
+Summary:   equivalência: 15 passando e 3 todo (contact, now e uses ainda sem projetor); content:check: 23 arquivos, 360 testes passando e 3 todo; contagens (competências, projetos em destaque, resumo, áreas) lidas dos módulos antigos; `git diff --quiet` dos dois módulos sem diferença; tsc 30 s e eslint sem aviso. Testes de mutação: (1) `since: 2025` -> 2024 em skills falha com `mudou: skills/languages/0/since antigo="2025" novo="2024"`; (2) apontar o destaque de ShortURL para `planoriza` falha com `mudou: resume/featuredProjects/1/name antigo="ShortURL" novo="Planoriza"` e `faltando: resume/featuredProjects/1/link ...`; arquivos restaurados e teste de novo verde.
+Verdict:   PASS
+```
+Observação: a trava de chaves do currículo exclui de propósito os 13 textos de interface (`print`, `printHint`, `sections`, `skillsSummary`, `experienceSummary`, `awardsSummary`, `received`, `showMore`, `showLess`, `since`, `expected`, `languagesLabel`, `academicsLink`) e o rótulo do link; eles vão para o `ui` na spec 007. Uma chave nova no `resume.ts` antigo faz o teste falhar.

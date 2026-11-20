@@ -6,10 +6,14 @@ import { credits } from './credits.content';
 import { academics } from './academics.content';
 import { experienceGroups } from './experiences.content';
 import { projects } from './projects.content';
+import { resume } from './resume.content';
 import { CreditsSchema } from './schema/credits';
 import { AcademicsSchema } from './schema/academics';
 import { ExperienceGroupsSchema } from './schema/experience';
 import { ProjectsSchema } from './schema/project';
+import { ResumeSchema } from './schema/resume';
+import { SkillGroupsSchema } from './schema/skills';
+import { skillGroups } from './skills.content';
 
 export interface RegistryEntry {
   /** Caminho relativo à raiz do projeto, com `/`: `src/content/exemplo.content.ts`. */
@@ -27,4 +31,6 @@ export const registry: RegistryEntry[] = [
     data: experienceGroups,
   },
   { file: 'src/content/academics.content.ts', schema: AcademicsSchema, data: academics },
+  { file: 'src/content/skills.content.ts', schema: SkillGroupsSchema, data: skillGroups },
+  { file: 'src/content/resume.content.ts', schema: ResumeSchema, data: resume },
 ];
