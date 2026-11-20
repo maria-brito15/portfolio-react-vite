@@ -184,3 +184,14 @@ Summary:   equivalência: 24 testes passando e 0 todo (8 domínios x 3 testes: t
 Verdict:   PASS
 ```
 Observação: `/agora` e `/setup` continuam como rascunho porque `routeStatus.ts` ainda lê os módulos antigos (L-003); a spec 007 reescreve essas páginas (decisão D4).
+
+## T5.1 Referências entre arquivos, consistência de etiquetas e importadores
+**Entregue:** `src/content/references.test.ts` e `src/content/importers.test.ts`. Só testes; o validador da 001 não foi alterado (D6: a regra vale no `verify`).
+```
+Claim:     toda referência do acadêmico (years[].items[].id, conforme o kind) e do currículo (featuredProjects[].project) aponta para um id que existe; o mesmo id de etiqueta tem o mesmo rótulo e rótulos diferentes não colidem num id; nenhum arquivo de src/ fora de src/content/, dos testes e de __migration__/ importa o registro, os schemas (fora de import type) nem os 8 arquivos novos
+Command:   npx vitest run src/content/references.test.ts src/content/importers.test.ts ; npx tsc --noEmit ; npx eslint src/content --max-warnings 0 ; git diff --quiet -- scripts/contentValidator.ts
+Exit code: 0 ; 0 ; 0 ; 0
+Summary:   2 arquivos, 12 testes passando (o conteúdo real passa; 5 casos negativos de referência e 3 de importador, em cópia em memória ou em lista de caminhos simulada, falham nomeando o arquivo e a referência); a varredura real leu mais de 50 arquivos de src/; tsc 26 s e eslint sem aviso; `git diff --quiet scripts/contentValidator.ts` sem diferença
+Verdict:   PASS
+```
+Observação: o conteúdo da spec 002 (`credits.content.ts`) e `pick.ts` são importados por `Footer.tsx` e ficam fora da regra, porque não são um dos 8 arquivos novos.
