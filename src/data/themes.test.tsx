@@ -141,7 +141,7 @@ describe('botão do cabeçalho (TB-05) e persistência (TB-03)', () => {
     renderApp('/');
 
     // O terminal é uma rota sem casca (FR-041): o comando `tema` é testado nele; o botão, na casca.
-    const toggle = screen.getByRole('button', { name: 'Alternar tema' });
+    const toggle = screen.getByRole('button', { name: /^Alternar tema: / });
 
     expect(toggle).toHaveAttribute('aria-pressed', 'true');
     await user.click(toggle);

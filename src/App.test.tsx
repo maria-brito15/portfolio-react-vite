@@ -94,7 +94,7 @@ describe('página inicial', () => {
 
     renderApp('/');
     document.documentElement.setAttribute('data-theme', 'dark');
-    await user.click(screen.getByRole('button', { name: 'Alternar tema' }));
+    await user.click(screen.getByRole('button', { name: /^Alternar tema: / }));
     expect(document.documentElement.getAttribute('data-theme')).toBe('light');
     expect(localStorage.getItem('portfolio-theme')).toBe('light');
   });
@@ -111,7 +111,7 @@ describe('página inicial', () => {
     expect(
       within(header).getByRole('navigation', { name: 'Navegação principal' }),
     ).toBeInTheDocument();
-    expect(within(header).getByRole('button', { name: 'Alternar tema' })).toBeInTheDocument();
+    expect(within(header).getByRole('button', { name: /^Alternar tema: / })).toBeInTheDocument();
   });
 });
 

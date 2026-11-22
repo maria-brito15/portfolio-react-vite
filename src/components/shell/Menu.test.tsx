@@ -112,14 +112,16 @@ describe('Header novo (FR-008, FR-016)', () => {
     expect(nav.querySelector('[aria-current="page"]')).toHaveAttribute('href', menuEn);
   });
 
-  it('o botão de tema tem nome fixo, aria-pressed depois de montar, e alterna', () => {
+  it('o botão de tema nomeia o destino, tem aria-pressed depois de montar, e alterna', () => {
     open();
 
-    const toggle = screen.getByRole('button', { name: 'Alternar tema' });
+    const toggle = screen.getByRole('button', { name: /^Alternar tema: / });
+
+    expect(toggle).toHaveAccessibleName('Alternar tema: escuro');
 
     expect(toggle).toHaveAttribute('aria-pressed', 'false');
     fireEvent.click(toggle);
     expect(toggle).toHaveAttribute('aria-pressed', 'true');
-    expect(screen.getByRole('button', { name: 'Alternar tema' })).toBe(toggle);
+    expect(toggle).toHaveAccessibleName('Alternar tema: claro');
   });
 });

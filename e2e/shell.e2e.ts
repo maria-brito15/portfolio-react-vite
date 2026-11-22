@@ -55,7 +55,7 @@ for (const theme of THEMES) {
           'a:#conteudo',
           `a:${home}`,
           ...menu.map((route) => `a:${lang === 'pt' ? route.path : route.enPath}`),
-          `button:${themeName}`,
+          `button:${themeName}: ${theme === 'light' ? (lang === 'pt' ? 'escuro' : 'dark') : lang === 'pt' ? 'claro' : 'light'}`,
           'a:/_prova',
           'a:/en/_prova',
           // o conteúdo da página de prova: link de texto e os dois botões
