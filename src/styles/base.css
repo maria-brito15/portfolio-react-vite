@@ -96,7 +96,8 @@ button {
 }
 .btn-o {
   border: 1px solid var(--border);
-  color: var(--text-2);
+  background: transparent;
+  color: var(--text);
   padding: 0.7rem 1.7rem;
   border-radius: var(--radius-sm);
   text-decoration: none;

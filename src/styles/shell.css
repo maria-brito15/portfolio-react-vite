@@ -467,3 +467,30 @@ main#conteudo {
   max-width: 100%;
   height: auto;
 }
+
+/* O idioma atual mantém o texto sobre o acento (a regra de tamanho acima fixa a cor do texto). */
+.menu-panel .lang-switch a[aria-current='true'] {
+  color: var(--on-accent);
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+/* Plex Sans na casca (TD-002): cabeçalho, faixa de idioma, rodapé de créditos e skip link. As páginas
+   antigas seguem em mono até a spec de cada uma (LEGADO). Links do menu sem sublinhado: só a página
+   atual, o botão ligado e o menu aberto sublinham (FR-040). */
+.hdr,
+.lang-offer,
+.skip-link,
+.credits {
+  font-family: var(--font-sans);
+}
+.hdr-nav a,
+.menu-panel .lang-switch a {
+  text-decoration: none;
+}
+.hdr-nav a:hover {
+  text-decoration: underline;
+}
+.hdr-nav a[aria-current] {
+  text-decoration: underline;
+}
