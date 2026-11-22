@@ -5,6 +5,15 @@
 import { pathToFileURL } from 'node:url';
 
 export const INP_GOAL_MS = 200;
+const RUNS = 3;
+
+/** Mediana das execuções (a máquina de laboratório oscila muito de uma execução para outra). */
+export function medianOf(values) {
+  const sorted = [...values].sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+
+  return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+}
 
 /** Pior duração entre as interações (o INP de laboratório); sem eventos = 0. */
 export function worstInteraction(durations) {
@@ -25,38 +34,48 @@ if (isMain) {
     ['pt', '/_prova'],
     ['en', '/en/_prova'],
   ]) {
-    const context = await browser.newContext({
-      viewport: { width: 390, height: 844 },
-      deviceScaleFactor: 2,
-      isMobile: true,
-      hasTouch: true,
+    const runs = [];
+
+    for (let run = 0; run < RUNS; run++) {
+      const context = await browser.newContext({
+        viewport: { width: 390, height: 844 },
+        deviceScaleFactor: 2,
+        isMobile: true,
+        hasTouch: true,
+      });
+      const page = await context.newPage();
+      const cdp = await context.newCDPSession(page);
+
+      await cdp.send('Emulation.setCPUThrottlingRate', { rate: 4 });
+      await page.addInitScript(() => {
+        globalThis.__inp = [];
+        new PerformanceObserver((list) => {
+          for (const e of list.getEntries()) if (e.interactionId) globalThis.__inp.push(e.duration);
+        }).observe({ type: 'event', durationThreshold: 16, buffered: true });
+      });
+      await page.goto(`http://localhost:${PORT}${path}`);
+      await page.waitForSelector('.theme-btn[aria-pressed]', { state: 'attached' });
+      await page.tap('.menu-button');
+      await page.waitForSelector('.menu-panel[data-open]');
+      await page.tap('.theme-btn');
+      await page.keyboard.press('Escape');
+      await page.tap('.prova-actions .btn');
+      await page.tap('.prova-actions .btn-o');
+      await page.tap('.menu-button');
+      await page.keyboard.press('Escape');
+      await page.waitForTimeout(500);
+
+      const durations = await page.evaluate(() => globalThis.__inp);
+
+      runs.push({ inp: worstInteraction(durations), count: durations.length });
+      await context.close();
+    }
+    results.push({
+      name,
+      inp: medianOf(runs.map((r) => r.inp)),
+      count: Math.min(...runs.map((r) => r.count)),
+      all: runs.map((r) => Math.round(r.inp)),
     });
-    const page = await context.newPage();
-    const cdp = await context.newCDPSession(page);
-
-    await cdp.send('Emulation.setCPUThrottlingRate', { rate: 4 });
-    await page.addInitScript(() => {
-      globalThis.__inp = [];
-      new PerformanceObserver((list) => {
-        for (const e of list.getEntries()) if (e.interactionId) globalThis.__inp.push(e.duration);
-      }).observe({ type: 'event', durationThreshold: 16, buffered: true });
-    });
-    await page.goto(`http://localhost:${PORT}${path}`);
-    await page.waitForSelector('.theme-btn[aria-pressed]');
-    await page.tap('.menu-button');
-    await page.waitForSelector('.menu-panel[data-open]');
-    await page.tap('.theme-btn');
-    await page.keyboard.press('Escape');
-    await page.tap('.prova-actions .btn');
-    await page.tap('.prova-actions .btn-o');
-    await page.tap('.menu-button');
-    await page.keyboard.press('Escape');
-    await page.waitForTimeout(500);
-
-    const durations = await page.evaluate(() => globalThis.__inp);
-
-    results.push({ name, inp: worstInteraction(durations), count: durations.length });
-    await context.close();
   }
 
   await browser.close();
@@ -66,7 +85,7 @@ if (isMain) {
 
   for (const r of results) {
     console.log(
-      `inpRun: ${r.name}: INP (lab, CPU 4×) ${Math.round(r.inp)} ms em ${r.count} interações`,
+      `inpRun: ${r.name}: INP (lab, CPU 4×) mediana ${Math.round(r.inp)} ms de ${RUNS} execuções (${r.all.join(', ')}), ≥ ${r.count} interações`,
     );
     if (r.count === 0) {
       console.error(`inpRun: ${r.name}: nenhuma interação registrada (medida inválida)`);
