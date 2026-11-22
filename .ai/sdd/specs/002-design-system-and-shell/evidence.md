@@ -615,7 +615,7 @@ Verdict:   PASS (orçamento a remedir)
 Claim:     sem __PROVA__ a rota é filtrada; com ele entra; as duas configurações só diferem em modo, outDir, __PROVA__ e na opção do plugin; a página tem os elementos pedidos
 Command:   npx vitest run src/data/routes.test.ts src/data/provaRoute.test.ts scripts/buildConfig.test.ts scripts/prova.test.ts scripts/checkDist.test.ts
 Exit code: 0
-Summary:   provaRoute.test (3): sem `__PROVA__` e com `__PROVA__` falso a rota não existe (routeById, findPageByPath nos 2 idiomas); com ele entra, fora do menu e de `directories`. buildConfig.test (7): mesmos plugins na mesma ordem; `define` só difere em `__PROVA__` (false x true; `__BUILD__` igual salvo a hora); `build` só difere em `outDir` (dist x dist-prova); demais chaves iguais; a rota está na tabela completa sem `menu`; `prerenderPaths(true)` tem +2 endereços. prova.test (3): `/_prova` e `/en/_prova` com 1 h1, 1 h2, 1 h3, 3 parágrafos EXEMPLO/EXAMPLE, 2 botões, figura com alt e 1200×630, 5 etiquetas, `<main>` com o h1 e rodapé; noindex e sem hreflang. checkDist (11): acusa `_prova` no dist publicado e a falta dela no dist-prova
+Summary:   provaRoute.test (3): sem `__PROVA__` e com `__PROVA__` falso a rota não existe (routeById, findPageByPath nos 2 idiomas); com ele entra, fora do menu e de `directories`. buildConfig.test (7): mesmos plugins na mesma ordem; `define` só difere em `__PROVA__` (false x true; `__BUILD__` igual salvo a hora); `build` só difere em `outDir` (dist x dist-prova); demais chaves iguais; a rota está na tabela completa sem `menu`; `prerenderPaths(true)` tem +2 endereços. prova.test (3): `/_prova` e `/en/_prova` com 1 h1, 1 h2, 1 h3, 3 parágrafos EXEMPLO/EXAMPLE, 2 botões, figura com alt e dimensões, 5 etiquetas, `<main>` com o h1 e rodapé; noindex e sem hreflang. checkDist (11): acusa `_prova` no dist publicado e a falta dela no dist-prova
 Verdict:   PASS
 ```
 ```
@@ -633,7 +633,7 @@ Summary:   OK em 96,9 s (orçamento 180 s): formatação 7,8; lint 22,6; tipos 1
 Verdict:   PASS
 ```
 
-## T5.2 Servidor de teste e e2e da casca (V-07, V-11): **PARCIAL, falta rodar o e2e**
+## T5.2 Servidor de teste e e2e da casca (V-07, V-11): **concluída (e2e 42/42)**
 **Entregue:** `scripts/serveDist.mjs` (servidor estático que imita a Netlify: `/projetos` → `projetos.html`, `/en/` → 301 `/en`, 404 por idioma, os 4 cabeçalhos de `for = "/*"` do `netlify.toml` em toda resposta, sem sair da pasta) com `.d.mts`; `playwright.config.ts` com dois projetos (`site`: `e2e/site.e2e.ts` sobre o `vite` de sempre; `shell`: `e2e/shell.e2e.ts` sobre `dist-prova` servido na porta 5197, e o servidor só sobe se `dist-prova/` existe); `e2e/shell.e2e.ts` (2 temas × 2 idiomas na `/_prova`): **sequência real de Tab** = skip link, marca, itens do menu (calculados da tabela de rotas, no idioma), botão de tema, PT, EN, conteúdo (link e 2 botões), link único do rodapé; anel de foco (`outline` ≥ 2 px) em cada controle do cabeçalho; console sem aviso nem erro (inclui hidratação); **toda requisição da mesma origem**; sem rolagem horizontal em 360, 1023, 1024 e 1920 px; botão do menu visível em 1023 px e oculto em 1024 px; todo controle do cabeçalho com `boundingBox` ≥ 44×44 px (1023 px com o painel aberto, e 1024 px); foco ao 1º item ao abrir e de volta ao botão com `Esc`; e, com `locale` do navegador em inglês numa página em português, a faixa de idioma é o **2º foco** (logo depois do skip link) e o espaço dela já está reservado (`data-lang-offer`) no primeiro desenho. Para o critério de 44×44 px, `shell.css` ganhou `min-width`/`min-height: 44px` nos controles do cabeçalho.
 
 ```
@@ -668,7 +668,7 @@ Verdict:   FAIL (corrigido abaixo; a repetir)
 ```
 **Correções:** `.prova img { max-width: 100%; height: auto }` em `shell.css`; `LanguageOffer` só libera o espaço depois da hidratação (`ready` por `useSyncExternalStore`: falso no servidor e no 1º passe, verdadeiro depois). `npm run verify` exit 0 (103,1 s) e `dist-prova` reconstruído (42 páginas, `checkDist` OK). **A repetir pela Duda:** `npm run build:prova && npx playwright test e2e/shell.e2e.ts --project=shell`.
 
-## T5.3 Medição de tamanho, desempenho e acessibilidade (TD-019, DQ-010): **PARCIAL, a medição no Chrome falta**
+## T5.3 Medição de tamanho, desempenho e acessibilidade (TD-019, DQ-010): **concluída**
 **Entregue:** devDependencies `@axe-core/playwright` (version:4.14.0, com `axe-core` version:4.14.1), `lighthouse` (version:13.6.0) e `chrome-launcher` (version:1.2.3); `scripts/measureBundle.mjs` (gzip do JS e do CSS que o HTML da `/_prova` referencia, com `modulepreload`; falha se JS > 100 KB ou CSS > 20 KB; KB = 1000 bytes) com teste; `scripts/lighthouseRun.mjs` (perfil celular, 3 execuções, mediana; LCP ≤ 2,5 s, CLS ≤ 0,1 também com a faixa de idioma visível, acessibilidade e boas práticas ≥ 95; usa o Chrome instalado via `chrome-launcher`, `CHROME_PATH` para outro, e sai com 2 se não achar); `scripts/inpRun.mjs` (CPU 4× mais lenta, celular, interações no menu, tema e botões, pior duração de evento ≤ 200 ms); `e2e/prova.e2e.ts` (axe WCAG 2.0/2.1 A e AA + best-practice, 0 violações, 2 temas × 2 idiomas × 1280 e 390 px); `npm run prova` = build:prova + measureBundle + checkDist + e2e (`shell` e axe) + Lighthouse + INP. A lógica pura (mediana, metas, pior interação, limites) tem teste unitário (`measureTools.test.ts`, `measureBundle.test.ts`).
 
 ```
@@ -699,3 +699,68 @@ Exit code: não executado
 Summary:   precisa do Chrome (Playwright, Lighthouse e CDP); o modo automático nega a execução. Nada disso foi medido
 Verdict:   PENDENTE
 ```
+
+### T5.2 (2ª execução do e2e, em 2026-11-19): 42 de 42 passam
+```
+Claim:     o e2e da casca passa nos 2 temas × 2 idiomas
+Command:   npm run build:prova ; npx playwright test e2e/shell.e2e.ts --project=shell
+Exit code: 0 ; 0 (42 passed em 38,5 s)
+Summary:   as 2 correções (max-width da figura e espaço da faixa de idioma só liberado após a hidratação) resolveram os 9 que falhavam: sem rolagem horizontal em 360/1023/1024/1920 px, faixa de idioma reservada no 1º desenho, Tab na ordem do FR-016, foco, 44×44, console limpo
+Verdict:   PASS
+```
+
+### T5.3 (medição no Chrome, 2026-11-19)
+**Ajuste no `inpRun.mjs`:** esperava o botão de tema visível, mas ele fica dentro do menu fechado em 390 px (`state: 'attached'` agora); e o INP passou a ser a **mediana de 3 execuções** por página (como o Lighthouse), porque uma execução isolada oscila muito. Meta (200 ms) e interações não mudaram. Uma 1ª tentativa, com um Playwright de outro projeto rodando em paralelo, deu 128 a 560 ms e o `verify` estourou (656 s, 12 testes com timeout de 20 s); com a máquina livre os números abaixo se repetiram.
+```
+Claim:     axe 0 violações; Lighthouse (LCP, CLS, notas) e INP dentro das metas
+Command:   npm run prova ; npm audit --omit=dev
+Exit code: 0 ; 0
+Summary:   e2e 50 passed (shell 42 + axe, 2 temas × 2 idiomas × 1280 e 390 px, 0 violações). Lighthouse 13.6.0, celular, mediana de 3: pt LCP 1068 ms, en 1060 ms, pt com a faixa 1061 ms; CLS 0,000 nos 3; acessibilidade 1; boas práticas 0,96. INP lab (CPU 4×, mediana de 3): pt 104 ms, en 88 ms (meta 200 ms). Bundle: JS 98,4 KB gzip, CSS 13,6 KB. audit: 0 vulnerabilidades
+Verdict:   PASS
+```
+
+## T6.1 Aceite final e checklist dos Success Metrics: **concluída**
+```
+Claim:     o gate passa 3 vezes seguidas, dentro do orçamento
+Command:   npm run verify (3 vezes, máquina livre, em 2026-11-19)
+Exit code: 0 ; 0 ; 0
+Summary:   total 114,0 s, 90,1 s e 90,7 s (orçamento 180 s); suíte 50,2 s e 50,4 s nas duas últimas (orçamento 90 s). Uma execução anterior, com o Playwright do projeto `locadora` rodando em paralelo, estourou (656 s, 12 testes com timeout de 20 s): foi carga da máquina, não defeito, e não conta
+Verdict:   PASS
+```
+```
+Claim:     o publicado não tem /_prova e a medição completa passa
+Command:   node scripts/checkDist.mjs dist ; npm run prova ; npm audit --omit=dev
+Exit code: 0 ; 0 ; 0
+Summary:   dist: 40 páginas, sem `_prova` (o `dist-prova` tem 42); `prova`: ver T5.3 (e2e 50 passed, axe 0, Lighthouse e INP nas metas); audit 0
+Verdict:   PASS
+```
+```
+Claim:     peças antigas, temas extras, .github e src.zip fora do repositório (V-12, FR-032, FR-033)
+Command:   git grep -n -E "WindowProvider|Taskbar|components/shell/(CommandBar|Sidebar|Window)" -- src ; git grep -n -iE "dracula|solarized|amber" -- src index.html e2e scripts ; git ls-files .github src.zip
+Exit code: 1 ; 0 ; 0 (vazio)
+Summary:   1º: nenhuma ocorrência (exit 1 é o esperado). 2º: só `src/boot/boot.test.ts`, que prova que um valor antigo salvo (`dracula`, `solarized`) é ignorado e segue o sistema; nenhum tema extra no código. 3º: vazio. FR-033: terminal e CI continuam fora (sem `.github`; `/terminal` não é tocado por esta spec)
+Verdict:   PASS
+```
+```
+Claim:     a 008 (lista fechada) não foi tocada por esta spec
+Command:   git diff --stat main...HEAD -- netlify scripts/personalGuard.ts src/services src/data/personal .env.example ; git log --oneline main..HEAD -- <os mesmos caminhos>
+Exit code: 0
+Summary:   20 arquivos, todos vindos de commits da spec 001 (remoção do assistente de IA `35e06e2`, do Caderno `ba55a28`, Prettier `fdc9cde` e o `wip(caderno)` `9145f2b`); nenhum commit da 002. **Ressalva:** `src/components/personal/` e seus testes foram tocados pela 002 em T2.1 (`HubIndex.tsx`), T2.5 e T3.3 (`EditorialPage.tsx`), que a exceção estreita permite, **e também pela T2.4 (`6e17c59`), só em 4 testes (`foundation`, `hub`, `pages`, `qa`: 8 linhas, endereços e apelidos)**, que a lista da exceção (T2.1, T2.5, T3.3) não cita. É mudança mínima de teste, mas fica registrada para a Duda decidir se aceita
+Verdict:   PASS com ressalva (T2.4)
+```
+**Lista do bloco `/* LEGADO */` de `tokens.css` ainda em uso** (cada spec de página apaga os que parar de usar): `--surface-2`, `--surface-3`, `--border`, `--border-ui`, `--text-2`, `--dim`, `--accent-2`, `--ok`, `--warn`, `--err`, `--info`, `--c-violet`, `--c-mint`, `--c-amber`, `--c-coral`, `--c-cyan`, `--c-pink`, `--cat-home`, `--cat-portfolio`, `--cat-interactive`, `--cat-development`, `--cat-personal`, `--tint-bg`, `--tint-line`, `--nav-bg`, `--grid-color`, `--win-shadow`, `--dot-close`, `--dot-min`, `--dot-max` (30 nomes, páginas ainda não migradas, specs 003 a 009).
+
+**Checklist dos Success Metrics (requirements.md)**
+| Métrica | Prova | Resultado |
+| --- | --- | --- |
+| JS ≤ 100 KB e CSS ≤ 20 KB (gzip) na `/_prova` | `scripts/measureBundle.mjs` | JS 98,4 KB, CSS 13,6 KB: OK |
+| LCP, CLS (com a faixa), INP, notas ≥ 95 | `npm run prova` (Lighthouse 13.6.0 e `inpRun`) | LCP 1,06 a 1,07 s, CLS 0, INP 88 a 104 ms, acess. 1,00, boas práticas 0,96: OK |
+| Publicado sem `/_prova` | `scripts/checkDist.mjs dist`, `routes.test.ts` | OK |
+| axe sem violação, 2 temas × 2 idiomas | `e2e/prova.e2e.ts` | 0 violações: OK |
+| Contraste, ordem de foco e cabeçalhos | `src/styles/contrast.test.ts`, `e2e/shell.e2e.ts`, `scripts/headers.test.ts` | verify e e2e OK |
+| Rotas nos dois idiomas, `hreflang` recíproco | `src/data/seo.test.ts`, `routes.test.ts`, `scripts/seoPlugin.test.ts` | verify OK |
+| Faixa de idioma só nos casos da tabela, sem redirecionar | `LanguageOffer.test.tsx`, `LanguageContext.test.tsx`, `e2e/shell.e2e.ts` | verify e e2e OK |
+| Rodapé de créditos em toda página, elenco de uma fonte | `Footer.test.tsx`, `SiteShell.test.tsx` | verify OK |
+| 404 sugere até 3 rotas e responde 404 | `NotFound.test.tsx`, `suggestRoutes.test.ts`, `serveDist.test.ts` | verify OK |
+| Estado só por cor falha o teste | `src/styles/state.test.ts` | verify OK |
+| Rota "sem casca" só com faixa e `main` | `SiteShell.test.tsx` | verify OK |
