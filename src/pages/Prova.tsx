@@ -37,10 +37,10 @@ export default function Prova() {
       </p>
       <figure>
         <img
-          src="/assets/og-image.png"
+          src="/favicon-48.png"
           alt={p.figureAlt}
-          width={1200}
-          height={630}
+          width={48}
+          height={48}
           loading="lazy"
           decoding="async"
         />

@@ -38,7 +38,7 @@ describe('página /_prova', () => {
       expect(html).toContain(`<h1>${title}</h1>`);
       expect(count(html, /<p>(EXEMPLO|EXAMPLE):/g)).toBe(3);
       expect(count(html, /<button type="button" class="btn(-o)?">/g)).toBe(2);
-      expect(html).toMatch(/<img[^>]*alt="[^"]{10,}"[^>]*width="1200"[^>]*height="630"/);
+      expect(html).toMatch(/<img[^>]*alt="[^"]{10,}"[^>]*width="48"[^>]*height="48"/);
       expect(count(html, /class="chip chip--default/g)).toBe(5);
       expect(html).toMatch(/<main[^>]*>[\s\S]*<h1[\s\S]*<\/main>/);
       // o rodapé da casca leva o link único para a home (no idioma da página)
